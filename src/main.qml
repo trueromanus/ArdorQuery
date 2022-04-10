@@ -14,11 +14,15 @@ ApplicationWindow {
     }
     title: "ArdorQuery"
 
+    HttpRequestEditor {
+        viewModel: viewModel
+    }
+
     HttpRequestViewModel {
         id: viewModel
     }
 
-    HttpRequestEditor {
-        viewModel: viewModel
+    TextAdvisorViewModel {
+        id: textAdvisorViewModel
     }
 }

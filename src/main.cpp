@@ -17,6 +17,7 @@
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include "ViewModels/httprequestviewmodel.h"
+#include "ViewModels/textadvisorviewmodel.h"
 
 void registerQmlTypes();
 
@@ -46,4 +47,5 @@ int main(int argc, char *argv[])
 
 void registerQmlTypes() {
     qmlRegisterType<HttpRequestViewModel>("ArdorQuery.Backend", 1, 0, "HttpRequestViewModel");
+    qmlRegisterType<TextAdvisorViewModel>("ArdorQuery.Backend", 1, 0, "TextAdvisorViewModel");
 }
