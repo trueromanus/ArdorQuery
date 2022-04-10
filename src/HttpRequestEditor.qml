@@ -10,7 +10,11 @@ Item {
             event.accepted = false;
         }
         if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.AltModifier) {
-            //viewModel.addItem(-1);
+            if (listView.model.selectedItem > 0) viewModel.addItem(listView.model.selectedItem - 1);
+            event.accepted = false;
+        }
+        if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ShiftModifier) {
+            viewModel.addItem(listView.model.selectedItem + 1);
             event.accepted = false;
         }
     }

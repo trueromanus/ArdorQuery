@@ -5,6 +5,7 @@ CONFIG += c++17
 SOURCES += \
         Models/httprequestitem.cpp \
         ViewModels/httprequestviewmodel.cpp \
+        ViewModels/textadvisorviewmodel.cpp \
         main.cpp
 
 resources.files = main.qml 
@@ -18,7 +19,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Models/httprequestitem.h \
-    ViewModels/httprequestviewmodel.h
+    ViewModels/httprequestviewmodel.h \
+    ViewModels/textadvisorviewmodel.h
 
 DISTFILES += \
     HttpRequestEditor.qml
