@@ -2,5 +2,18 @@
     <qresource prefix="/">
         <file>HttpRequestEditor.qml</file>
         <file>main.qml</file>
+        <file>Views/Controls/ApplicationHeader.qml</file>
+        <file>Views/Controls/BorderedPanel.qml</file>
+        <file>Views/Controls/ContentPopup.qml</file>
+        <file>Views/Controls/IconButton.qml</file>
+        <file>Views/Controls/LinkedText.qml</file>
+        <file>Views/Controls/TextButton.qml</file>
+        <file>Views/Icons/cancel.svg</file>
+        <file>Views/Icons/delete.svg</file>
+        <file>Views/Icons/emptybox.svg</file>
+        <file>Views/Icons/error.svg</file>
+        <file>Views/Icons/info.svg</file>
+        <file>Views/Icons/save.svg</file>
+        <file>Views/Icons/warn.svg</file>
     </qresource>
 </RCC>

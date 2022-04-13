@@ -13,27 +13,19 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef HTTPREQUESTITEM_H
-#define HTTPREQUESTITEM_H
+#ifndef BACKENDVIEWMODEL_H
+#define BACKENDVIEWMODEL_H
 
-#include <QString>
+#include <QObject>
 
-class HttpRequestItem
+class BackendViewModel : public QObject
 {
-
-private:
-    int m_type { 0 };
-    QString m_text { "" };
-
+    Q_OBJECT
 public:
-    HttpRequestItem();
+    explicit BackendViewModel(QObject *parent = nullptr);
 
-    int type() const noexcept { return m_type; }
-    void setType(int type) noexcept;
-
-    QString text() const noexcept { return m_text; }
-    void setText(QString text) noexcept;
+signals:
 
 };
 
-#endif // HTTPREQUESTITEM_H
+#endif // BACKENDVIEWMODEL_H

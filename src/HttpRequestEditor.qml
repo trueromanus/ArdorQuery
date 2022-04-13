@@ -1,5 +1,5 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 Item {
     anchors.fill: parent
@@ -30,19 +30,19 @@ Item {
 
             TextArea {
                 id: textArea
+                focus: listView.model.selectedItem === currentIndex
                 anchors.fill: parent
                 text: textContent
                 wrapMode: Text.WrapAnywhere
                 background: Rectangle {
                     anchors.fill: parent
-                    color: "#CDCDB4" // "#FDD12D" //"#E3D970" //"#CD919E" //"#83838D"
+                    color: typeColor
                     opacity: .3
                     border.width: isActive ? 1 : 0
-                    //border.color: "#809fff"
                     border.color: "blue"
                 }
                 onTextChanged: {
-                    listView.model.setItemContent(listView.model.selectedItem, text);
+                    listView.model.setItemContent(currentIndex, text);
                 }
                 onFocusChanged: {
                     if (!focus) return;

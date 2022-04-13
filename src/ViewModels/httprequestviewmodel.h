@@ -29,8 +29,19 @@ class HttpRequestViewModel : public QAbstractListModel
 private:
     QScopedPointer<QList<HttpRequestItem*>> m_items { new QList<HttpRequestItem*>() };
     int m_selectedItem { 0 };
+
+    enum class HttpRequestTypes {
+        UnknownType = 0,
+        UrlType,
+        MethodType,
+        HeaderType,
+        BodyType,
+        FormItemType
+    };
+
     enum HttpRequestRoles {
         TypeRole = Qt::UserRole + 1,
+        TypeColor,
         TextRole,
         IsActiveRole,
         IndexRole,
@@ -49,6 +60,9 @@ public:
     Q_INVOKABLE void addItem(const int position);
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
+
+private:
+    QString getTypeColor(int type) const;
 
 signals:
     void selectedItemChanged();

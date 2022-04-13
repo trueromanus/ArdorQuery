@@ -49,6 +49,9 @@ QVariant HttpRequestViewModel::data(const QModelIndex &index, int role) const
             case IndexRole: {
                 return QVariant(rowIndex);
             }
+            case TypeColor: {
+                return QVariant(getTypeColor(item->type()));
+            }
         }
 
         return QVariant();
@@ -73,6 +76,10 @@ QHash<int, QByteArray> HttpRequestViewModel::roleNames() const
         {
             IndexRole,
             "currentIndex"
+        },
+        {
+            TypeColor,
+            "typeColor"
         }
     };
 }
@@ -91,19 +98,23 @@ void HttpRequestViewModel::setSelectedItem(const int selectedItem) noexcept
 
 void HttpRequestViewModel::addItem(const int position)
 {
+    int actualPosition = position;
+
     beginResetModel();
 
     auto item = new HttpRequestItem();
 
-    int actualPosition = position;
     if (actualPosition == -1) {
         m_items->append(item);
+        actualPosition = m_items->count() - 1;
     } else {
         if (actualPosition >= m_items->count()) actualPosition = m_items->count();
         m_items->insert(actualPosition, item);
     }
 
     endResetModel();
+
+    setSelectedItem(actualPosition);
 }
 
 void HttpRequestViewModel::refreshItem(const int position, const QString &content)
@@ -118,4 +129,46 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
 {
     auto item = m_items->value(position);
     item->setText(content);
+
+    auto lowerContent = content.toLower();
+    auto itemType = static_cast<HttpRequestTypes>(item->type());
+    bool needRefresh = false;
+
+    if (lowerContent.startsWith("url ") && itemType != HttpRequestTypes::UrlType) {
+        item->setType(static_cast<int>(HttpRequestTypes::UrlType));
+        needRefresh = true;
+    }
+    if (lowerContent.startsWith("method ") && itemType != HttpRequestTypes::MethodType) {
+        item->setType(static_cast<int>(HttpRequestTypes::MethodType));
+        needRefresh = true;
+    }
+
+    if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
+        item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
+        needRefresh = true;
+    }
+
+    if (needRefresh) emit dataChanged(index(position, 0), index(position, 0));
+}
+
+QString HttpRequestViewModel::getTypeColor(int type) const
+{
+    auto requestType = static_cast<HttpRequestTypes>(type);
+
+    switch (requestType) {
+        case HttpRequestTypes::UnknownType:
+            return "#CDCDB4";
+        case HttpRequestTypes::UrlType:
+            return  "#FDD12D";
+        case HttpRequestTypes::MethodType:
+            return "#E3D970";
+        case HttpRequestTypes::HeaderType:
+            return "#CD919E";
+        case HttpRequestTypes::BodyType:
+            return "#83838D";
+        case HttpRequestTypes::FormItemType:
+            return "#9FC088";
+        default:
+            return "#CDCDB4";
+    }
 }
