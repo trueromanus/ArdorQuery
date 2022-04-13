@@ -21,6 +21,23 @@ TextAdvisorViewModel::TextAdvisorViewModel(QObject *parent)
     fillCompletings();
 }
 
+bool TextAdvisorViewModel::isContainsHeader(const QString &text) const noexcept
+{
+    auto firstTwoCharacter = text.mid(0, 2).toLower();
+    if (m_singleCompletings->contains(firstTwoCharacter)) {
+        auto value = m_singleCompletings->value(firstTwoCharacter);
+        if (text.startsWith(value)) return true;
+    }
+    if (m_multipleCompletings->contains(firstTwoCharacter)) {
+        auto completings = m_multipleCompletings->value(firstTwoCharacter);
+        foreach (auto completing, completings) {
+            if (text.startsWith(completing)) return true;
+        }
+    }
+
+    return false;
+}
+
 void TextAdvisorViewModel::makeSuggestions(const QString &text)
 {
     if (text.length() == 0) return;

@@ -29,6 +29,8 @@ private:
 public:
     explicit TextAdvisorViewModel(QObject *parent = nullptr);
 
+    bool isContainsHeader(const QString& text) const noexcept;
+
     Q_INVOKABLE void makeSuggestions(const QString& text);
 
 private:

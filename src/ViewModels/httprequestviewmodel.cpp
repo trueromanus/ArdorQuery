@@ -96,6 +96,14 @@ void HttpRequestViewModel::setSelectedItem(const int selectedItem) noexcept
     emit dataChanged(index(oldIndex, 0), index(oldIndex, 0));
 }
 
+void HttpRequestViewModel::setTextAdvisor(const TextAdvisorViewModel *viewModel) noexcept
+{
+    if (m_textAdvisor == viewModel) return;
+
+    m_textAdvisor = const_cast<TextAdvisorViewModel*>(viewModel);
+    emit textAdvisorChanged();
+}
+
 void HttpRequestViewModel::addItem(const int position)
 {
     int actualPosition = position;
@@ -143,8 +151,23 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith("body ") && itemType != HttpRequestTypes::BodyType) {
+        item->setType(static_cast<int>(HttpRequestTypes::BodyType));
+        needRefresh = true;
+    }
+
+    if (lowerContent.startsWith("form ") && itemType != HttpRequestTypes::FormItemType) {
+        item->setType(static_cast<int>(HttpRequestTypes::FormItemType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
+        needRefresh = true;
+    }
+
+    if (itemType == HttpRequestTypes::UnknownType && m_textAdvisor->isContainsHeader(content)) {
+        item->setType(static_cast<int>(HttpRequestTypes::HeaderType));
         needRefresh = true;
     }
 
@@ -161,11 +184,11 @@ QString HttpRequestViewModel::getTypeColor(int type) const
         case HttpRequestTypes::UrlType:
             return  "#FDD12D";
         case HttpRequestTypes::MethodType:
-            return "#E3D970";
+            return "#F68989";
         case HttpRequestTypes::HeaderType:
-            return "#CD919E";
+            return "#8FBDD3";
         case HttpRequestTypes::BodyType:
-            return "#83838D";
+            return "#78938A";
         case HttpRequestTypes::FormItemType:
             return "#9FC088";
         default:

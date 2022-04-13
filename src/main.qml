@@ -25,6 +25,7 @@ ApplicationWindow {
     Item {
         HttpRequestViewModel {
             id: viewModel
+            textAdvisor: textAdvisor
         }
 
         HttpPerformerViewModel {
@@ -33,7 +34,7 @@ ApplicationWindow {
         }
 
         TextAdvisorViewModel {
-            id: textAdvisorViewModel
+            id: textAdvisor
         }
 
         Item {
