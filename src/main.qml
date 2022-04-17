@@ -19,22 +19,12 @@ ApplicationWindow {
     }
 
     HttpRequestEditor {
-        viewModel: viewModel
+        viewModel: backend.requests.selectedItem.requestModel
     }
 
     Item {
-        HttpRequestViewModel {
-            id: viewModel
-            textAdvisor: textAdvisor
-        }
-
-        HttpPerformerViewModel {
-            id: httpPerformer
-            httpRequest: viewModel
-        }
-
-        TextAdvisorViewModel {
-            id: textAdvisor
+        BackendViewModel {
+            id: backend
         }
 
         Item {

@@ -96,12 +96,9 @@ void HttpRequestViewModel::setSelectedItem(const int selectedItem) noexcept
     emit dataChanged(index(oldIndex, 0), index(oldIndex, 0));
 }
 
-void HttpRequestViewModel::setTextAdvisor(const TextAdvisorViewModel *viewModel) noexcept
+void HttpRequestViewModel::setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept
 {
-    if (m_textAdvisor == viewModel) return;
-
-    m_textAdvisor = const_cast<TextAdvisorViewModel*>(viewModel);
-    emit textAdvisorChanged();
+    m_textAdvisor = textAdviser;
 }
 
 void HttpRequestViewModel::addItem(const int position)

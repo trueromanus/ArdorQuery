@@ -13,14 +13,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "backendviewmodel.h"
+#include "httprequestmodel.h"
 
-BackendViewModel::BackendViewModel(QObject *parent)
+HttpRequestModel::HttpRequestModel(QObject *parent)
     : QObject{parent}
 {
-    auto model = new HttpRequestModel(this);
-    model->setTitle("New Query");
-    auto request = model->requestModel();
-    request->setTextAdvisor(m_textAdviser);
-    m_requests->addItem(model);
+
+}
+
+void HttpRequestModel::setTitle(const QString &title) noexcept
+{
+    if (m_title == title) return;
+
+    m_title = title;
+    emit titleChanged();
 }

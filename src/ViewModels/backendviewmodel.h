@@ -17,14 +17,33 @@
 #define BACKENDVIEWMODEL_H
 
 #include <QObject>
+#include "../ViewModels/httpperformerviewmodel.h"
+#include "../ViewModels/textadvisorviewmodel.h"
+#include "../ListModels/httprequestslistmodel.h"
 
 class BackendViewModel : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(HttpPerformerViewModel* requestPerformer READ requestPerformer NOTIFY requestPerformerChanged)
+    Q_PROPERTY(TextAdvisorViewModel* textAdviser READ textAdviser NOTIFY textAdviserChanged)
+    Q_PROPERTY(HttpRequestsListModel* requests READ requests NOTIFY requestsChanged)
+
+private:
+    QScopedPointer<HttpPerformerViewModel> m_requestPerformer { new HttpPerformerViewModel(this) };
+    QSharedPointer<TextAdvisorViewModel> m_textAdviser { new TextAdvisorViewModel(this) };
+    QScopedPointer<HttpRequestsListModel> m_requests { new HttpRequestsListModel(this) };
+
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
 
+    HttpPerformerViewModel* requestPerformer() const noexcept { return m_requestPerformer.get(); }
+    TextAdvisorViewModel* textAdviser() const noexcept { return m_textAdviser.get(); }
+    HttpRequestsListModel* requests() const noexcept { return m_requests.get(); }
+
 signals:
+    void requestPerformerChanged();
+    void textAdviserChanged();
+    void requestsChanged();
 
 };
 

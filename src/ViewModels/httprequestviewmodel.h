@@ -26,12 +26,11 @@ class HttpRequestViewModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int selectedItem READ selectedItem WRITE setSelectedItem NOTIFY selectedItemChanged)
-    Q_PROPERTY(TextAdvisorViewModel* textAdvisor READ textAdvisor WRITE setTextAdvisor NOTIFY textAdvisorChanged)
 
 private:
     QScopedPointer<QList<HttpRequestItem*>> m_items { new QList<HttpRequestItem*>() };
     int m_selectedItem { 0 };
-    TextAdvisorViewModel* m_textAdvisor { nullptr };
+    QSharedPointer<TextAdvisorViewModel> m_textAdvisor { nullptr };
 
     enum class HttpRequestTypes {
         UnknownType = 0,
@@ -60,8 +59,7 @@ public:
     int selectedItem() const noexcept { return m_selectedItem; }
     void setSelectedItem(const int selectedItem) noexcept;
 
-    TextAdvisorViewModel* textAdvisor() const noexcept { return m_textAdvisor; }
-    void setTextAdvisor(const TextAdvisorViewModel* viewModel) noexcept;
+    void setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept;
 
     Q_INVOKABLE void addItem(const int position);
     Q_INVOKABLE void refreshItem(const int position, const QString& content);

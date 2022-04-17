@@ -71,7 +71,7 @@ Item {
         width: 100
         text: "Perform Query"
         onPressed: {
-            httpPerformer.performRequest();
+            backend.requestPerformer.performRequest();
         }
     }
 

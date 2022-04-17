@@ -3,10 +3,13 @@ QT += quick network websockets quickcontrols2
 CONFIG += c++17
 
 SOURCES += \
+        ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
         Models/httprequestitem.cpp \
+        Models/httprequestmodel.cpp \
         ViewModels/backendviewmodel.cpp \
         ViewModels/httpperformerviewmodel.cpp \
+        ViewModels/httprequestresultviewmodel.cpp \
         ViewModels/httprequestviewmodel.cpp \
         ViewModels/textadvisorviewmodel.cpp \
         main.cpp
@@ -21,10 +24,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
     Models/httprequestitem.h \
+    Models/httprequestmodel.h \
     ViewModels/backendviewmodel.h \
     ViewModels/httpperformerviewmodel.h \
+    ViewModels/httprequestresultviewmodel.h \
     ViewModels/httprequestviewmodel.h \
     ViewModels/textadvisorviewmodel.h
 
