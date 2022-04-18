@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 Item {
     anchors.fill: parent
@@ -15,6 +15,11 @@ Item {
         }
         if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ShiftModifier) {
             viewModel.addItem(listView.model.selectedItem + 1);
+            event.accepted = false;
+        }
+        // Ctrl-S
+        if (event.nativeScanCode === 31 && (event.modifiers & Qt.ControlModifier)) {
+            backend.requestPerformer.performRequest();
             event.accepted = false;
         }
     }

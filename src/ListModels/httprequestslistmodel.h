@@ -47,6 +47,7 @@ public:
     void addItem(const HttpRequestModel* model) noexcept;
 
     Q_INVOKABLE void selectItem(const int index) noexcept;
+    Q_INVOKABLE void changeNameForSelectedItem(const QString& newName) noexcept;
 
 signals:
     void selectedItemChanged();

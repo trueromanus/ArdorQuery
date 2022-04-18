@@ -29,7 +29,9 @@ private:
 
     enum PagesTabsRoles {
         TitleRole = Qt::UserRole + 1,
-        IsActiveRole
+        IsActiveRole,
+        IdentifierRole,
+        IsRequestsRole,
     };
 
 public:

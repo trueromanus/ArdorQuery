@@ -1,6 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import ArdorQuery.Backend 1.0
+import QtQuick
+import QtQuick.Controls
+import ArdorQuery.Backend
 import "Views/Controls"
 
 ApplicationWindow {

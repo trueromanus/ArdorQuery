@@ -15,5 +15,7 @@
         <file>Views/Icons/info.svg</file>
         <file>Views/Icons/save.svg</file>
         <file>Views/Icons/warn.svg</file>
+        <file>Views/Icons/downmenu.svg</file>
+        <file>Views/Controls/RequestDropDownPopup.qml</file>
     </qresource>
 </RCC>

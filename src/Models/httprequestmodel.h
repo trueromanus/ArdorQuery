@@ -29,8 +29,8 @@ class HttpRequestModel : public QObject
 
 private:
     QString m_title { "" };
-    QScopedPointer<HttpRequestViewModel> m_requestModel { new HttpRequestViewModel(this) };
-    QScopedPointer<HttpRequestResultViewModel> m_resultModel { new HttpRequestResultViewModel(this) };
+    QScopedPointer<HttpRequestViewModel> m_requestModel { new HttpRequestViewModel() };
+    QScopedPointer<HttpRequestResultViewModel> m_resultModel { new HttpRequestResultViewModel() };
 
 public:
     explicit HttpRequestModel(QObject *parent = nullptr);

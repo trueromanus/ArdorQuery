@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 Item {
     id: root
@@ -21,7 +21,7 @@ Item {
             model: backend.tabs
             delegate: Item {
                 id: itemRoot
-                width: 120
+                width: isRequests ? 200 : 120
                 height: root.height
                 property bool itemHovered: false
 
@@ -42,9 +42,18 @@ Item {
                 }
 
                 Text {
-                    anchors.centerIn: parent
+                    anchors.right: isRequests ? dropMenuButton.left : parent.right
+                    anchors.left: parent.left
+                    anchors.leftMargin: 4
+                    anchors.rightMargin: 4
+                    height: parent.height
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                     font.pointSize: 11
-                    text: title
+                    elide: Text.ElideRight
+                    wrapMode: Text.Wrap
+                    maximumLineCount: 1
+                    text: isRequests ? backend.requests.selectedItem.title : title
                     color: isActived || itemRoot.itemHovered ? "black" : "gray"
                 }
 
@@ -63,19 +72,36 @@ Item {
                         itemRoot.itemHovered = false;
                     }
                 }
+
+                IconButton {
+                    id: dropMenuButton
+                    visible: isRequests
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 24
+                    height: 24
+                    iconWidth: 14
+                    iconHeight: 14
+                    icon: storagePaths.icons + "downmenu.svg"
+                    onPressed: {
+                        requestsPopup.open();
+                    }
+                }
             }
         }
     }
 
-    Button {
+    TextButton {
+        anchors.right: infoButton.left
         width: 100
-        text: "Perform Query"
+        title: "Run (Ctrl-S)"
         onPressed: {
             backend.requestPerformer.performRequest();
         }
     }
 
     IconButton {
+        id: infoButton
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         icon: storagePaths.icons + "info.svg"
@@ -89,4 +115,9 @@ Item {
         }
     }
 
+    RequestDropDownPopup {
+        id: requestsPopup
+        x: 10
+        y: 30
+    }
 }

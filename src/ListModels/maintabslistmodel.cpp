@@ -18,7 +18,8 @@
 MainTabsListModel::MainTabsListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-    m_tabs->append("Empty");
+    m_tabs->append("Request");
+    m_tabs->append("Result");
 }
 
 int MainTabsListModel::rowCount(const QModelIndex &parent) const
@@ -42,6 +43,12 @@ QVariant MainTabsListModel::data(const QModelIndex &index, int role) const
             case IsActiveRole: {
                 return QVariant(m_activatedTab == tabIndex);
             }
+            case IdentifierRole: {
+                return QVariant(index.row());
+            }
+            case IsRequestsRole: {
+                return QVariant(index.row() == 0);
+            }
         }
 
         return QVariant();
@@ -57,6 +64,14 @@ QHash<int, QByteArray> MainTabsListModel::roleNames() const
         {
             IsActiveRole,
             "isActived"
+        },
+        {
+            IdentifierRole,
+            "identifier"
+        },
+        {
+            IsRequestsRole,
+            "isRequests"
         }
     };
 }

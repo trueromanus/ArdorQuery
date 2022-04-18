@@ -20,6 +20,7 @@
 #include "../ViewModels/httpperformerviewmodel.h"
 #include "../ViewModels/textadvisorviewmodel.h"
 #include "../ListModels/httprequestslistmodel.h"
+#include "../ListModels/maintabslistmodel.h"
 
 class BackendViewModel : public QObject
 {
@@ -27,23 +28,27 @@ class BackendViewModel : public QObject
     Q_PROPERTY(HttpPerformerViewModel* requestPerformer READ requestPerformer NOTIFY requestPerformerChanged)
     Q_PROPERTY(TextAdvisorViewModel* textAdviser READ textAdviser NOTIFY textAdviserChanged)
     Q_PROPERTY(HttpRequestsListModel* requests READ requests NOTIFY requestsChanged)
+    Q_PROPERTY(MainTabsListModel* tabs READ tabs NOTIFY tabsChanged)
 
 private:
-    QScopedPointer<HttpPerformerViewModel> m_requestPerformer { new HttpPerformerViewModel(this) };
-    QSharedPointer<TextAdvisorViewModel> m_textAdviser { new TextAdvisorViewModel(this) };
-    QScopedPointer<HttpRequestsListModel> m_requests { new HttpRequestsListModel(this) };
+    HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
+    QSharedPointer<TextAdvisorViewModel> m_textAdviser { new TextAdvisorViewModel() };
+    HttpRequestsListModel* m_requests { new HttpRequestsListModel(this) };
+    MainTabsListModel* m_tabs { new MainTabsListModel(this) };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
 
-    HttpPerformerViewModel* requestPerformer() const noexcept { return m_requestPerformer.get(); }
+    HttpPerformerViewModel* requestPerformer() const noexcept { return m_requestPerformer; }
     TextAdvisorViewModel* textAdviser() const noexcept { return m_textAdviser.get(); }
-    HttpRequestsListModel* requests() const noexcept { return m_requests.get(); }
+    HttpRequestsListModel* requests() const noexcept { return m_requests; }
+    MainTabsListModel* tabs() const noexcept { return m_tabs; }
 
 signals:
     void requestPerformerChanged();
     void textAdviserChanged();
     void requestsChanged();
+    void tabsChanged();
 
 };
 

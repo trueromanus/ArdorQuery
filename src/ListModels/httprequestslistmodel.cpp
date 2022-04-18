@@ -79,3 +79,9 @@ void HttpRequestsListModel::selectItem(const int index) noexcept
     m_selectedIndex = index;
     emit selectedItemChanged();
 }
+
+void HttpRequestsListModel::changeNameForSelectedItem(const QString &newName) noexcept
+{
+    selectedItem()->setTitle(newName);
+    emit dataChanged(index(m_selectedIndex,0), index(m_selectedIndex,0));
+}
