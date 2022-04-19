@@ -12,10 +12,66 @@ Popup {
     RowLayout {
         anchors.fill: parent
 
-        Rectangle {
-            color: "green"
+        Item {
+            id: requestsContainer
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            Text {
+                id: titleRequests
+                anchors.top: parent.top
+                font.pointSize: 11
+                text: "Requests"
+            }
+
+            ListView {
+                id: requestsListView
+                anchors.top: titleRequests.bottom
+                anchors.topMargin: 9
+                anchors.right: parent.right
+                anchors.rightMargin: 20
+                anchors.left: parent.left
+                anchors.bottomMargin: 4
+                anchors.bottom: parent.bottom
+                model: backend.requests
+                delegate: Item {
+                    width: requestsListView.width
+                    height: 30
+
+                    Rectangle {
+                        anchors.fill: parent
+                        border.width: 1
+                        border.color: isSelected ? "blue" : "transparent"
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 4
+                        anchors.right: parent.right
+                        anchors.rightMargin: 4
+                        text: title
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        wrapMode: Text.Wrap
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onPressed: {
+                            backend.requests.selectItem(currentIndex);
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                anchors.right: parent.right
+                anchors.rightMargin: 9
+                color: "black"
+                width: 1
+                height: parent.height
+            }
         }
 
         Item {
@@ -25,7 +81,7 @@ Popup {
             Text {
                 id: titleChangeName
                 anchors.top: parent.top
-                font.pointSize: 12
+                font.pointSize: 11
                 text: "Change name"
             }
 
@@ -56,6 +112,15 @@ Popup {
                             backend.requests.changeNameForSelectedItem(changeNameField.text);
                         }
                     }
+                }
+            }
+
+            TextButton {
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                title: "Add new request"
+                onPressed: {
+                    backend.addNewRequest("New Query");
                 }
             }
         }

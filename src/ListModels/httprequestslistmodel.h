@@ -33,6 +33,8 @@ private:
         RequestTitleRole = Qt::UserRole + 1,
         ViewModelRole,
         ResultViewModelRole,
+        IsSelectedRole,
+        IndexRole,
     };
 
 public:
@@ -46,7 +48,7 @@ public:
 
     void addItem(const HttpRequestModel* model) noexcept;
 
-    Q_INVOKABLE void selectItem(const int index) noexcept;
+    Q_INVOKABLE void selectItem(const int newIndex) noexcept;
     Q_INVOKABLE void changeNameForSelectedItem(const QString& newName) noexcept;
 
 signals:

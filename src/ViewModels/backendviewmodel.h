@@ -44,6 +44,8 @@ public:
     HttpRequestsListModel* requests() const noexcept { return m_requests; }
     MainTabsListModel* tabs() const noexcept { return m_tabs; }
 
+    Q_INVOKABLE void addNewRequest(const QString& name);
+
 signals:
     void requestPerformerChanged();
     void textAdviserChanged();

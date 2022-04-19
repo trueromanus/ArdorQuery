@@ -18,9 +18,16 @@
 BackendViewModel::BackendViewModel(QObject *parent)
     : QObject{parent}
 {
+    addNewRequest("New Query");
+}
+
+void BackendViewModel::addNewRequest(const QString &name)
+{
     auto model = new HttpRequestModel(this);
-    model->setTitle("New Query");
+    model->setTitle(name);
+
     auto request = model->requestModel();
     request->setTextAdvisor(m_textAdviser);
+
     m_requests->addItem(model);
 }

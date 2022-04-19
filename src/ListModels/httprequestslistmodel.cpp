@@ -43,6 +43,12 @@ QVariant HttpRequestsListModel::data(const QModelIndex &index, int role) const
         case ResultViewModelRole: {
             return QVariant::fromValue(request->resultModel());
         }
+        case IsSelectedRole: {
+            return QVariant(index.row() == m_selectedIndex);
+        }
+        case IndexRole: {
+            return QVariant(index.row());
+        }
     }
 
     return QVariant();
@@ -62,21 +68,36 @@ QHash<int, QByteArray> HttpRequestsListModel::roleNames() const
         {
             ResultViewModelRole,
             "resultViewModel"
+        },
+        {
+            IsSelectedRole,
+            "isSelected"
+        },
+        {
+            IndexRole,
+            "currentIndex"
         }
     };
 }
 
 void HttpRequestsListModel::addItem(const HttpRequestModel* model) noexcept
 {
+    beginResetModel();
+
     m_requests->append(const_cast<HttpRequestModel*>(model));
+
+    endResetModel();
 }
 
-void HttpRequestsListModel::selectItem(const int index) noexcept
+void HttpRequestsListModel::selectItem(const int newIndex) noexcept
 {
-    if (index < 0) return;
-    if (index > m_requests->count() - 1) return;
+    if (newIndex < 0) return;
+    if (newIndex > m_requests->count() - 1) return;
 
-    m_selectedIndex = index;
+    auto oldSelectedIndex = m_selectedIndex;
+    m_selectedIndex = newIndex;
+    emit dataChanged(index(m_selectedIndex, 0), index(m_selectedIndex, 0));
+    emit dataChanged(index(oldSelectedIndex, 0), index(oldSelectedIndex, 0));
     emit selectedItemChanged();
 }
 
