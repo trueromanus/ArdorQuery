@@ -65,6 +65,12 @@ public:
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
 
+    QString getMethod() const noexcept;
+    QString getUrl() const noexcept;
+    QString getBody() const noexcept;
+    QStringList getFormParameters() const noexcept;
+    QStringList getHeaders() const noexcept;
+
 private:
     QString getTypeColor(int type) const;
 

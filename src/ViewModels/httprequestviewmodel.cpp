@@ -171,6 +171,85 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
     if (needRefresh) emit dataChanged(index(position, 0), index(position, 0));
 }
 
+QString HttpRequestViewModel::getMethod() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::MethodType;
+        }
+    );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text();
+        return text.replace("method ", "", Qt::CaseInsensitive);
+    }
+
+    return "get";
+}
+
+QString HttpRequestViewModel::getUrl() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::UrlType;
+        }
+    );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text();
+        return text.replace("url ", "", Qt::CaseInsensitive);
+    }
+
+    return "";
+}
+
+QString HttpRequestViewModel::getBody() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::BodyType;
+        }
+    );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text();
+        return text;
+    }
+
+    return "";
+}
+
+QStringList HttpRequestViewModel::getFormParameters() const noexcept
+{
+    QStringList parameters;
+    foreach (auto item, *m_items) {
+        auto type = static_cast<HttpRequestTypes>(item->type());
+        if (type == HttpRequestTypes::FormItemType) {
+            parameters.append(item->text());
+        }
+    }
+    return parameters;
+}
+
+QStringList HttpRequestViewModel::getHeaders() const noexcept
+{
+    QStringList headers;
+    foreach (auto item, *m_items) {
+        auto type = static_cast<HttpRequestTypes>(item->type());
+        if (type == HttpRequestTypes::HeaderType) headers.append(item->text());
+    }
+    return headers;
+}
+
 QString HttpRequestViewModel::getTypeColor(int type) const
 {
     auto requestType = static_cast<HttpRequestTypes>(type);

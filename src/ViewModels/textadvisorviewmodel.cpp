@@ -124,9 +124,9 @@ void TextAdvisorViewModel::fillCompletings()
     //TE only in HTTP2
 
     QStringList trList;
-    trList.append("trailer");
-    trList.append("transfer-Encoding");
-    m_multipleCompletings->insert("pr", trList);
+    trList.append("Trailer");
+    trList.append("Transfer-Encoding");
+    m_multipleCompletings->insert("tr", trList);
 
     m_singleCompletings->insert("re", "Referer");
 

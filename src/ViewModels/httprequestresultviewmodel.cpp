@@ -18,5 +18,49 @@
 HttpRequestResultViewModel::HttpRequestResultViewModel(QObject *parent)
     : QObject{parent}
 {
+    m_startResultTime = QDateTime::currentDateTimeUtc();
+}
 
+void HttpRequestResultViewModel::setStatusCode(const int statusCode) noexcept
+{
+    if (m_statusCode == statusCode) return;
+
+    m_statusCode = statusCode;
+    emit statusCodeChanged();
+}
+
+void HttpRequestResultViewModel::setHeaders(const QStringList &headers) noexcept
+{
+    m_headers->clear();
+    m_headers->append(headers);
+
+    emit headersChanged();
+}
+
+void HttpRequestResultViewModel::setBody(const QString &body) noexcept
+{
+    if (m_body == body) return;
+
+    m_body = body;
+    emit bodyChanged();
+}
+
+QString HttpRequestResultViewModel::responseTime() const noexcept
+{
+    auto difference = m_startResultTime.msecsTo(m_endResultTime);
+    QTime time;
+    time = time.addMSecs(static_cast<int>(difference));
+
+    return QString::number(time.minute()) + ":" + QString::number(time.second()) + ":" + QString::number(time.msec());
+}
+
+void HttpRequestResultViewModel::trackRequestTime() noexcept
+{
+    m_startResultTime = QDateTime::currentDateTimeUtc();
+}
+
+void HttpRequestResultViewModel::untrackRequestTime() noexcept
+{
+    m_endResultTime = QDateTime::currentDateTimeUtc();
+    emit responseTimeChanged();
 }

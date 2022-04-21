@@ -25,6 +25,8 @@ ApplicationWindow {
     Item {
         BackendViewModel {
             id: backend
+            requestPerformer.httpRequest: backend.requests.selectedItem.requestModel
+            requestPerformer.httpRequestResult: backend.requests.selectedItem.resultModel
         }
 
         Item {

@@ -19,16 +19,23 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QMap>
 #include "httprequestviewmodel.h"
+#include "httprequestresultviewmodel.h"
 
 class HttpPerformerViewModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(HttpRequestViewModel* httpRequest READ httpRequest WRITE setHttpRequest NOTIFY httpRequestChanged)
+    Q_PROPERTY(HttpRequestResultViewModel* httpRequestResult READ httpRequestResult WRITE setHttpRequestResult NOTIFY httpRequestResultChanged)
 
 private:
     HttpRequestViewModel* m_httpRequest;
+    HttpRequestResultViewModel* m_httpRequestResult;
     QScopedPointer<QNetworkAccessManager> m_networkManager { new QNetworkAccessManager() };
+    QScopedPointer<QMap<QString, QString>> m_rawHeaders { new QMap<QString, QString>() };
+    QScopedPointer<QMap<QString, HttpRequestResultViewModel*>> m_runningRequests { new QMap<QString, HttpRequestResultViewModel*>() };
 
 public:
     explicit HttpPerformerViewModel(QObject *parent = nullptr);
@@ -36,13 +43,23 @@ public:
     HttpRequestViewModel* httpRequest() const noexcept { return m_httpRequest; }
     void setHttpRequest(const HttpRequestViewModel* viewModel) noexcept;
 
+    HttpRequestResultViewModel* httpRequestResult() const noexcept { return m_httpRequestResult; }
+    void setHttpRequestResult(const HttpRequestResultViewModel* httpRequestResult) noexcept;
+
     Q_INVOKABLE void performRequest();
+
+private:
+    QByteArray setupSimpleForm(QStringList&& parameters);
+    void adjustHeaders(QNetworkRequest& request) noexcept;
+    void fillHeader(QNetworkRequest& request, const QString& name, const QString& value) noexcept;
+    void startTrackRequest(QNetworkReply* reply) noexcept;
 
 private slots:
     void requestFinished(QNetworkReply *reply);
 
 signals:
     void httpRequestChanged();
+    void httpRequestResultChanged();
 
 };
 

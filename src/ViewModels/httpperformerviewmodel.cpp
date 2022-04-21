@@ -13,12 +13,46 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QUrlQuery>
+#include <QUuid>
 #include "httpperformerviewmodel.h"
 
 HttpPerformerViewModel::HttpPerformerViewModel(QObject *parent)
     : QObject{parent}
 {
     connect(m_networkManager.get(), &QNetworkAccessManager::finished, this, &HttpPerformerViewModel::requestFinished);
+
+    m_rawHeaders->insert("accept", "Accept");
+    m_rawHeaders->insert("accept-charset", "Accept-Charset");
+    m_rawHeaders->insert("accept-encoding", "Accept-Encoding");
+    m_rawHeaders->insert("accept-language", "Accept-Language");
+    m_rawHeaders->insert("accept-datetime", "Accept-Datetime");
+    m_rawHeaders->insert("access-control-request-method", "Access-Control-Request-Method");
+    m_rawHeaders->insert("access-control-request-headers", "Access-Control-Request-Headers");
+    m_rawHeaders->insert("cache-control", "Cache-Control");
+    m_rawHeaders->insert("connection", "Connection");
+    m_rawHeaders->insert("if-range", "If-Range");
+    m_rawHeaders->insert("if-unmodified-since", "If-Unmodified-Since");
+    m_rawHeaders->insert("date", "Date");
+    m_rawHeaders->insert("expect", "Expect");
+    m_rawHeaders->insert("forwarded", "Forwarded");
+    m_rawHeaders->insert("from", "From");
+    m_rawHeaders->insert("host", "Host");
+    m_rawHeaders->insert("mandatory", "Mandatory");
+    m_rawHeaders->insert("max-forwards", "Max-Forwards");
+    m_rawHeaders->insert("http2-settings", "HTTP2-Settings");
+    m_rawHeaders->insert("origin", "Origin");
+    m_rawHeaders->insert("pragma", "Pragma");
+    m_rawHeaders->insert("prefer", "Prefer");
+    m_rawHeaders->insert("proxy-authorization", "Proxy-Authorization");
+    m_rawHeaders->insert("range", "Range");
+    m_rawHeaders->insert("referer", "Referer");
+    m_rawHeaders->insert("trailer", "Trailer");
+    m_rawHeaders->insert("transfer-encoding", "Transfer-Encoding");
+    m_rawHeaders->insert("referer", "Referer");
+    m_rawHeaders->insert("upgrade", "Upgrade");
+    m_rawHeaders->insert("via", "Via");
+    m_rawHeaders->insert("warning", "Warning");
 }
 
 void HttpPerformerViewModel::setHttpRequest(const HttpRequestViewModel *viewModel) noexcept
@@ -29,24 +63,199 @@ void HttpPerformerViewModel::setHttpRequest(const HttpRequestViewModel *viewMode
     emit httpRequestChanged();
 }
 
+void HttpPerformerViewModel::setHttpRequestResult(const HttpRequestResultViewModel *httpRequestResult) noexcept
+{
+    if (m_httpRequestResult == httpRequestResult) return;
+
+    m_httpRequestResult = const_cast<HttpRequestResultViewModel*>(httpRequestResult);
+    emit httpRequestResultChanged();
+}
+
+/*
+QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+QHttpPart textPart;
+textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"text\""));
+textPart.setBody("my text");
+
+QHttpPart imagePart;
+imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
+imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"image\""));
+QFile *file = new QFile("image.jpg");
+file->open(QIODevice::ReadOnly);
+imagePart.setBodyDevice(file);
+file->setParent(multiPart); // we cannot delete the file now, so delete it with the multiPart
+
+multiPart->append(textPart);
+multiPart->append(imagePart);
+*/
+
 void HttpPerformerViewModel::performRequest()
 {
-    //TODO: get info about url and
+    if (m_httpRequest == nullptr) return;
+    if (m_httpRequestResult == nullptr) return;
+
+    auto url = m_httpRequest->getUrl();
+    if (url.isEmpty()) {
+        //TODO: push error message for user
+        return;
+    }
+
+    auto requestUrl = QUrl(url);
+    if(!requestUrl.isValid()) {
+        //TODO: push error message for user
+        return;
+    }
+
+    QNetworkRequest request(requestUrl);
+
+    adjustHeaders(request);
+
+    auto method = m_httpRequest->getMethod().toLower();
+    if (method == "get") {
+        auto getReply = m_networkManager->get(request);
+        startTrackRequest(getReply);
+        return;
+    }
+    if (method == "delete") {
+        auto deleteReply = m_networkManager->deleteResource(request);
+        startTrackRequest(deleteReply);
+        return;
+    }
+
+    auto body = m_httpRequest->getBody();
+    auto forms = m_httpRequest->getFormParameters();
+    if (body.isEmpty() || forms.isEmpty()) {
+        //TODO: push error message for user
+        return;
+    }
+    if (!body.isEmpty() && !forms.isEmpty()) {
+        //TODO: push error message for user (need understand body or form)
+        return;
+    }
+
+    if (method == "post") {
+        QNetworkReply* postReply = nullptr;
+        if (!body.isEmpty()) {
+            postReply = m_networkManager->post(request, body.toUtf8());
+        }
+
+        if (!forms.isEmpty()) {
+            postReply = m_networkManager->post(request, setupSimpleForm(std::move(forms)));
+        }
+        if (postReply != nullptr) startTrackRequest(postReply);
+    }
+    if (method == "put") {
+        QNetworkReply* putReply = nullptr;
+        if (!body.isEmpty()) putReply = m_networkManager->put(request, body.toUtf8());
+        if (!forms.isEmpty()) putReply = m_networkManager->put(request, setupSimpleForm(std::move(forms)));
+
+        if (putReply != nullptr) startTrackRequest(putReply);
+    }
+}
+
+QByteArray HttpPerformerViewModel::setupSimpleForm(QStringList&& parameters)
+{
+    QUrlQuery postData;
+
+    foreach (auto parameter, parameters) {
+        auto pair = parameter.replace("form ", "", Qt::CaseSensitive);
+
+        auto parts = pair.split("=");
+        if (parts.count() < 2) continue;
+
+        postData.addQueryItem(parts[0], parts[1]);
+    }
+
+    return postData.toString(QUrl::FullyEncoded).toUtf8();
+}
+
+void HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request) noexcept
+{
+    auto headers = m_httpRequest->getHeaders();
+    foreach (auto header, headers) {
+        auto parts = header.split(" ");
+        if (parts.length() == 1) {
+            fillHeader(request, header, "");
+            continue;
+        }
+        fillHeader(request, parts[0], parts[1]);
+    }
+}
+
+void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString &name, const QString &value) noexcept
+{
+    auto lowerName = name.toLower();
+
+    if (lowerName == "content-type") {
+        request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, value);
+        return;
+    }
+    if (lowerName == "content-encoding") {
+        request.setRawHeader("Content-Encoding", value.toUtf8());
+        return;
+    }
+    if (lowerName == "content-length") {
+        request.setHeader(QNetworkRequest::KnownHeaders::ContentLengthHeader, value.toUtf8());
+        return;
+    }
+    if (lowerName == "cookie") {
+        request.setHeader(QNetworkRequest::KnownHeaders::CookieHeader, value.toUtf8());
+        return;
+    }
+    if (lowerName == "if-match") {
+        request.setHeader(QNetworkRequest::KnownHeaders::IfMatchHeader, value.toUtf8());
+        return;
+    }
+    if (lowerName == "if-none-match") {
+        request.setHeader(QNetworkRequest::KnownHeaders::IfNoneMatchHeader, value.toUtf8());
+        return;
+    }
+    if (lowerName == "if-modified-since") {
+        request.setHeader(QNetworkRequest::KnownHeaders::IfModifiedSinceHeader, value.toUtf8());
+        return;
+    }
+    if (lowerName == "user-agent") {
+        request.setHeader(QNetworkRequest::KnownHeaders::UserAgentHeader, value.toUtf8());
+        return;
+    }
+
+    if (m_rawHeaders->contains(lowerName)) {
+        auto rawHeader = m_rawHeaders->value(lowerName);
+        request.setRawHeader(rawHeader.toUtf8(), value.toUtf8());
+    }
+}
+
+void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply) noexcept
+{
+    m_httpRequestResult->trackRequestTime();
+
+    auto uuid = QUuid::createUuid().toString();
+
+    reply->setProperty("id", uuid);
+
+    m_runningRequests->insert(uuid, m_httpRequestResult);
 }
 
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 {
-    if (reply->error() == QNetworkReply::TimeoutError) return;
-    if (reply->error() == QNetworkReply::ProtocolFailure) return;
-    if (reply->error() == QNetworkReply::HostNotFoundError) return;
+    auto id = reply->property("id").toString();
+    if (!m_runningRequests->contains(id)) return;
 
-    //QString data = reply->readAll();
+    auto result = m_runningRequests->value(id);
+
+    /*if (reply->error() == QNetworkReply::TimeoutError) return;
+    if (reply->error() == QNetworkReply::ProtocolFailure) return;
+    if (reply->error() == QNetworkReply::HostNotFoundError) return;*/
+
+    /*QString data = reply->readAll();
+
+    qDebug() << data;*/
 
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    if (status_code.isValid()) {
-        auto statusCode = status_code.toInt();
-        qDebug() << statusCode;
-    }
+    if (status_code.isValid()) result->setStatusCode(status_code.toInt());
+
+    qDebug() << result->statusCode();
 
     // auto headers = reply->rawHeaderPairs();
 
