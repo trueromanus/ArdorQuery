@@ -27,6 +27,7 @@ void HttpRequestResultViewModel::setStatusCode(const int statusCode) noexcept
 
     m_statusCode = statusCode;
     emit statusCodeChanged();
+    emit displayStatusCodeChanged();
 }
 
 void HttpRequestResultViewModel::setHeaders(const QStringList &headers) noexcept
@@ -43,6 +44,8 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
 
     m_body = body;
     emit bodyChanged();
+    m_responseSize = m_body.length();
+    emit responseSizeChanged();
 }
 
 QString HttpRequestResultViewModel::responseTime() const noexcept
@@ -51,7 +54,30 @@ QString HttpRequestResultViewModel::responseTime() const noexcept
     QTime time;
     time = time.addMSecs(static_cast<int>(difference));
 
+    if (time.minute() < 0) return " - ";
+
     return QString::number(time.minute()) + ":" + QString::number(time.second()) + ":" + QString::number(time.msec());
+}
+
+void HttpRequestResultViewModel::setNetworkError(const QString &networkError) noexcept
+{
+    if (m_networkError == networkError) return;
+
+    m_networkError = networkError;
+    emit networkErrorChanged();
+}
+
+void HttpRequestResultViewModel::reset() noexcept
+{
+    setStatusCode(0);
+    QStringList empty;
+    setHeaders(empty);
+    setBody("");
+    m_startResultTime = QDateTime::currentDateTimeUtc();
+    m_endResultTime =  QDateTime::currentDateTimeUtc();
+    m_responseSize = 0;
+    emit responseTimeChanged();
+    emit responseSizeChanged();
 }
 
 void HttpRequestResultViewModel::trackRequestTime() noexcept

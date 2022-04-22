@@ -107,6 +107,8 @@ void HttpPerformerViewModel::performRequest()
         return;
     }
 
+    m_httpRequestResult->reset();
+
     QNetworkRequest request(requestUrl);
 
     adjustHeaders(request);
@@ -243,21 +245,26 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     if (!m_runningRequests->contains(id)) return;
 
     auto result = m_runningRequests->value(id);
+    result->untrackRequestTime();
+    m_runningRequests->remove(id);
 
-    /*if (reply->error() == QNetworkReply::TimeoutError) return;
-    if (reply->error() == QNetworkReply::ProtocolFailure) return;
-    if (reply->error() == QNetworkReply::HostNotFoundError) return;*/
+    if (reply->error() != QNetworkReply::NoError) {
+        result->setNetworkError(reply->errorString());
+        return;
+    }
 
-    /*QString data = reply->readAll();
-
-    qDebug() << data;*/
+    QString data = reply->readAll();
+    result->setBody(data);
 
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (status_code.isValid()) result->setStatusCode(status_code.toInt());
 
-    qDebug() << result->statusCode();
-
-    // auto headers = reply->rawHeaderPairs();
-
-    //TODO: handling response and emit result
+    QStringList responseHeaders;
+    auto headers = reply->rawHeaderPairs();
+    foreach (auto header, headers) {
+        auto name = std::get<0>(header);
+        auto value = std::get<1>(header);
+        responseHeaders.append(name + ": " + value);
+    }
+    result->setHeaders(responseHeaders);
 }

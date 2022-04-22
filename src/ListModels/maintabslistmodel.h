@@ -22,6 +22,7 @@
 class MainTabsListModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString currentTab READ currentTab NOTIFY currentTabChanged)
 
 private:
     QScopedPointer<QStringList> m_tabs { new QStringList() };
@@ -44,10 +45,13 @@ public:
     void addTab(const QString& name) noexcept;
     void removeTab(const int index) noexcept;
 
+    QString currentTab() const noexcept { return m_tabs->value(m_activatedTab); }
+
     Q_INVOKABLE void activateTab(const int newIndex);
 
 signals:
     void tabActivated(const int index);
+    void currentTabChanged();
 
 };
 

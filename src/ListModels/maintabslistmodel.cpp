@@ -101,6 +101,7 @@ void MainTabsListModel::activateTab(const int newIndex)
 
     emit dataChanged(index(oldIndex), index(oldIndex));
     emit dataChanged(index(m_activatedTab), index(m_activatedTab));
+    emit currentTabChanged();
 }
 
 

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import ArdorQuery.Backend
 import "Views/Controls"
+import "Views"
 
 ApplicationWindow {
     id: window
@@ -19,7 +20,13 @@ ApplicationWindow {
     }
 
     HttpRequestEditor {
+        visible: backend.tabs.currentTab === 'Request'
         viewModel: backend.requests.selectedItem.requestModel
+    }
+
+    HttpResultViewer {
+        visible: backend.tabs.currentTab === 'Result'
+        viewModel: backend.requests.selectedItem.resultModel
     }
 
     Item {

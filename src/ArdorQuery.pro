@@ -2,6 +2,8 @@ QT += quick network websockets quickcontrols2
 
 CONFIG += c++17
 
+RC_ICONS = logo.ico
+
 SOURCES += \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
