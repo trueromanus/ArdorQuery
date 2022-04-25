@@ -1,5 +1,6 @@
-import QtQuick
-import QtQuick.Layouts
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15
 import "Controls"
 
 Item {
@@ -9,10 +10,10 @@ Item {
     property var viewModel
 
     ColumnLayout {
+        id: fieldContainer
         anchors.fill: parent
 
         Item {
-            Layout.preferredHeight: 120
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -24,6 +25,7 @@ Item {
                 anchors.bottomMargin: 4
 
                 Column {
+                    id: panelsContainer
                     BorderedHeader {
                         width: responsePanel.width
                         title: "Response data"
@@ -74,13 +76,71 @@ Item {
                         width: responsePanel.width
                     }
 
-                    /*Text {
-                        id: bodyText
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        text: viewModel.body
-                        wrapMode: Text.WordWrap
-                    }*/
+                    Item {
+                        id: headersContainer
+                        height: 180
+                        width: responsePanel.width
+
+                        Flickable {
+                            clip: true
+                            anchors.fill: parent
+                            contentHeight: headersList.height
+                            contentWidth: width
+                            ScrollBar.vertical: ScrollBar {
+                                active: true
+                            }
+
+                            Column {
+                                id: headersList
+                                width: headersContainer.width
+
+                                Repeater {
+                                    model: viewModel.headers
+                                    delegate: Text {
+                                        width: headersContainer.width
+                                        wrapMode: Text.Wrap
+                                        text: modelData
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    HorizontalDivider {
+                        width: responsePanel.width
+                    }
+
+                    BorderedHeader {
+                        width: responsePanel.width
+                        title: "Body"
+                    }
+
+                    HorizontalDivider {
+                        width: responsePanel.width
+                    }
+                }
+
+                Item {
+                    id: bodyContainer
+                    anchors.top: panelsContainer.bottom
+                    width: responsePanel.width
+                    height: fieldContainer.height - panelsContainer.height - 4
+
+                    ListView {
+                        clip: true
+                        anchors.fill: parent
+                        model: viewModel.body
+                        delegate: Text {
+                            textFormat: Text.PlainText
+                            text: modelData
+                        }
+                        ScrollBar.vertical: ScrollBar {
+                            active: true
+                        }
+                        ScrollBar.horizontal: ScrollBar {
+                            active: true
+                        }
+                    }
                 }
             }
         }

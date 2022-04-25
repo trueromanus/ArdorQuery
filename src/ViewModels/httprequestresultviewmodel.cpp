@@ -18,7 +18,6 @@
 HttpRequestResultViewModel::HttpRequestResultViewModel(QObject *parent)
     : QObject{parent}
 {
-    m_startResultTime = QDateTime::currentDateTimeUtc();
 }
 
 void HttpRequestResultViewModel::setStatusCode(const int statusCode) noexcept
@@ -32,17 +31,20 @@ void HttpRequestResultViewModel::setStatusCode(const int statusCode) noexcept
 
 void HttpRequestResultViewModel::setHeaders(const QStringList &headers) noexcept
 {
-    m_headers->clear();
-    m_headers->append(headers);
+    m_headers.clear();
+    foreach (auto header, headers) {
+        m_headers.append(header);
+    }
 
     emit headersChanged();
 }
 
 void HttpRequestResultViewModel::setBody(const QString &body) noexcept
 {
-    if (m_body == body) return;
+    m_body.clear();
 
-    m_body = body;
+    m_body = body.split("\n");
+
     emit bodyChanged();
     m_responseSize = m_body.length();
     emit responseSizeChanged();
@@ -50,13 +52,17 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
 
 QString HttpRequestResultViewModel::responseTime() const noexcept
 {
-    auto difference = m_startResultTime.msecsTo(m_endResultTime);
-    QTime time;
-    time = time.addMSecs(static_cast<int>(difference));
+    if (!m_hasResultTime) return " - ";
 
-    if (time.minute() < 0) return " - ";
+    QTime time(0,0,0,0);
+    time = time.addMSecs(m_elapsedTime);
 
-    return QString::number(time.minute()) + ":" + QString::number(time.second()) + ":" + QString::number(time.msec());
+    QString result;
+    if (time.minute() > 0) result.append(QString::number(time.minute()) + " mins ");
+    if (time.second() > 0) result.append(QString::number(time.second()) + " secs ");
+    if (time.msec() > 0) result.append(QString::number(time.msec()) + " msecs ");
+
+    return result;
 }
 
 void HttpRequestResultViewModel::setNetworkError(const QString &networkError) noexcept
@@ -73,8 +79,8 @@ void HttpRequestResultViewModel::reset() noexcept
     QStringList empty;
     setHeaders(empty);
     setBody("");
-    m_startResultTime = QDateTime::currentDateTimeUtc();
-    m_endResultTime =  QDateTime::currentDateTimeUtc();
+    m_elapsedTimer = nullptr;
+    m_hasResultTime = false;
     m_responseSize = 0;
     emit responseTimeChanged();
     emit responseSizeChanged();
@@ -82,11 +88,16 @@ void HttpRequestResultViewModel::reset() noexcept
 
 void HttpRequestResultViewModel::trackRequestTime() noexcept
 {
-    m_startResultTime = QDateTime::currentDateTimeUtc();
+    m_elapsedTimer = new QElapsedTimer();
+    m_elapsedTimer->start();
+    emit responseTimeChanged();
 }
 
 void HttpRequestResultViewModel::untrackRequestTime() noexcept
 {
-    m_endResultTime = QDateTime::currentDateTimeUtc();
+    m_hasResultTime = true;
+    m_elapsedTime = m_elapsedTimer->elapsed();
+    m_elapsedTimer = nullptr;
+
     emit responseTimeChanged();
 }

@@ -253,8 +253,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
         return;
     }
 
-    QString data = reply->readAll();
-    result->setBody(data);
+    result->setBody(reply->readAll());
 
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (status_code.isValid()) result->setStatusCode(status_code.toInt());
