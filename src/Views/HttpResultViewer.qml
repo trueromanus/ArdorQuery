@@ -97,6 +97,8 @@ Item {
                                 Repeater {
                                     model: viewModel.headers
                                     delegate: Text {
+                                        leftPadding: 4
+                                        rightPadding: 10
                                         width: headersContainer.width
                                         wrapMode: Text.Wrap
                                         text: modelData
@@ -131,6 +133,7 @@ Item {
                         anchors.fill: parent
                         model: viewModel.body
                         delegate: Text {
+                            leftPadding: 4
                             textFormat: Text.PlainText
                             text: modelData
                         }
