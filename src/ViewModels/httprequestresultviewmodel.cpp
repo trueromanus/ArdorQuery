@@ -41,12 +41,10 @@ void HttpRequestResultViewModel::setHeaders(const QStringList &headers) noexcept
 
 void HttpRequestResultViewModel::setBody(const QString &body) noexcept
 {
-    m_body.clear();
-
-    m_body = body.split("\n");
+    m_bodyModel->setBody(body);
 
     emit bodyChanged();
-    m_responseSize = m_body.length();
+    m_responseSize = body.size();
     emit responseSizeChanged();
 }
 

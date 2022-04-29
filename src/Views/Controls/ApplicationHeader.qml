@@ -13,6 +13,7 @@ Item {
     }
 
     Row {
+        id: tabsRow
         anchors.fill: parent
         anchors.leftMargin: 8
         spacing: 2
@@ -94,6 +95,7 @@ Item {
     TextButton {
         anchors.right: infoButton.left
         width: 100
+        height: 28
         title: "Run (Ctrl-S)"
         onPressed: {
             backend.requestPerformer.performRequest();

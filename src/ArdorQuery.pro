@@ -7,6 +7,7 @@ RC_ICONS = logo.ico
 SOURCES += \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
+        ListModels/responsebodylistmodel.cpp \
         Models/httprequestitem.cpp \
         Models/httprequestmodel.cpp \
         ViewModels/backendviewmodel.cpp \
@@ -16,10 +17,7 @@ SOURCES += \
         ViewModels/textadvisorviewmodel.cpp \
         main.cpp
 
-resources.files = main.qml 
-resources.prefix = /$${TARGET}
-RESOURCES += resources \
-    qml.qrc
+RESOURCES += qml.qrc
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
@@ -28,6 +26,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
+    ListModels/responsebodylistmodel.h \
     Models/httprequestitem.h \
     Models/httprequestmodel.h \
     ViewModels/backendviewmodel.h \
@@ -35,6 +34,3 @@ HEADERS += \
     ViewModels/httprequestresultviewmodel.h \
     ViewModels/httprequestviewmodel.h \
     ViewModels/textadvisorviewmodel.h
-
-DISTFILES += \
-    HttpRequestEditor.qml

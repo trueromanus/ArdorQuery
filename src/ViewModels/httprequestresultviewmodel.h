@@ -20,6 +20,7 @@
 #include <QDateTime>
 #include <QTime>
 #include <QElapsedTimer>
+#include "../ListModels/responsebodylistmodel.h"
 
 class HttpRequestResultViewModel : public QObject
 {
@@ -27,20 +28,20 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(int statusCode READ statusCode WRITE setStatusCode NOTIFY statusCodeChanged)
     Q_PROPERTY(QString displayStatusCode READ displayStatusCode NOTIFY displayStatusCodeChanged)
     Q_PROPERTY(QStringList headers READ headers WRITE setHeaders NOTIFY headersChanged)
-    Q_PROPERTY(QStringList body READ body NOTIFY bodyChanged)
     Q_PROPERTY(QString responseSize READ responseSize NOTIFY responseSizeChanged)
     Q_PROPERTY(QString responseTime READ responseTime NOTIFY responseTimeChanged)
     Q_PROPERTY(QString networkError READ networkError WRITE setNetworkError NOTIFY networkErrorChanged)
+    Q_PROPERTY(ResponseBodyListModel* bodyModel READ bodyModel NOTIFY bodyModelChanged)
 
 private:
     int m_statusCode { 0 };
     QStringList m_headers { QStringList() };
-    QStringList m_body { QStringList() };
     QElapsedTimer* m_elapsedTimer { nullptr };
     bool m_hasResultTime { false };
     uint64_t m_elapsedTime { 0 };
     uint64_t m_responseSize { 0 };
     QString m_networkError;
+    QScopedPointer<ResponseBodyListModel> m_bodyModel { new ResponseBodyListModel() };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -51,7 +52,6 @@ public:
     QStringList headers() const noexcept { return m_headers; }
     void setHeaders(const QStringList& headers) noexcept;
 
-    QStringList body() const noexcept { return m_body; }
     void setBody(const QString& body) noexcept;
 
     QString responseSize() const noexcept { return m_responseSize > 0 ? QString::number(m_responseSize) : " - "; }
@@ -59,6 +59,8 @@ public:
     QString responseTime() const noexcept;
 
     QString displayStatusCode() const noexcept { return m_statusCode > 0 ? QString::number(m_statusCode) : " - "; }
+
+    ResponseBodyListModel* bodyModel() const noexcept { return m_bodyModel.get(); }
 
     QString networkError() const noexcept { return m_networkError; }
     void setNetworkError(const QString& networkError) noexcept;
@@ -75,6 +77,7 @@ signals:
     void responseTimeChanged();
     void networkErrorChanged();
     void displayStatusCodeChanged();
+    void bodyModelChanged();
 
 };
 

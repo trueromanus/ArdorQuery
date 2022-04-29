@@ -81,29 +81,19 @@ Item {
                         height: 180
                         width: responsePanel.width
 
-                        Flickable {
+                        ListView {
                             clip: true
                             anchors.fill: parent
-                            contentHeight: headersList.height
-                            contentWidth: width
+                            model: viewModel.headers
+                            delegate: Text {
+                                leftPadding: 4
+                                rightPadding: 10
+                                width: headersContainer.width
+                                wrapMode: Text.Wrap
+                                text: modelData
+                            }
                             ScrollBar.vertical: ScrollBar {
                                 active: true
-                            }
-
-                            Column {
-                                id: headersList
-                                width: headersContainer.width
-
-                                Repeater {
-                                    model: viewModel.headers
-                                    delegate: Text {
-                                        leftPadding: 4
-                                        rightPadding: 10
-                                        width: headersContainer.width
-                                        wrapMode: Text.Wrap
-                                        text: modelData
-                                    }
-                                }
                             }
                         }
                     }
@@ -128,15 +118,27 @@ Item {
                     width: responsePanel.width
                     height: fieldContainer.height - panelsContainer.height - 4
 
-                    ListView {
+                    Flickable {
                         clip: true
                         anchors.fill: parent
-                        model: viewModel.body
-                        delegate: Text {
-                            leftPadding: 4
-                            textFormat: Text.PlainText
-                            text: modelData
+                        flickableDirection: Flickable.HorizontalAndVerticalFlick
+                        contentWidth: lines.width
+                        contentHeight: lines.height
+
+                        Column {
+                            id: lines
+
+                            Repeater {
+                                model: viewModel.bodyModel
+                                delegate: Text {
+                                    id: lineText
+                                    leftPadding: 4
+                                    textFormat: Text.PlainText
+                                    text: currentLine
+                                }
+                            }
                         }
+
                         ScrollBar.vertical: ScrollBar {
                             active: true
                         }
@@ -147,6 +149,9 @@ Item {
                 }
             }
         }
+    }
 
+    onVisibleChanged: {
+        viewModel.bodyModel.visibleBody = root.visible;
     }
 }
