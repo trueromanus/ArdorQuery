@@ -55,7 +55,7 @@ Item {
                     ResultText {
                         id: responseSize
                         width: responsePanel.width
-                        title: "<b>Response size:</b> " + viewModel.responseSize
+                        title: "<b>Response size:</b> " + viewModel.responseReadableSize + viewModel.responseSize
                     }
 
                     Item {

@@ -29,6 +29,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(QString displayStatusCode READ displayStatusCode NOTIFY displayStatusCodeChanged)
     Q_PROPERTY(QStringList headers READ headers WRITE setHeaders NOTIFY headersChanged)
     Q_PROPERTY(QString responseSize READ responseSize NOTIFY responseSizeChanged)
+    Q_PROPERTY(QString responseReadableSize READ responseReadableSize WRITE setResponseReadableSize NOTIFY responseReadableSizeChanged)
     Q_PROPERTY(QString responseTime READ responseTime NOTIFY responseTimeChanged)
     Q_PROPERTY(QString networkError READ networkError WRITE setNetworkError NOTIFY networkErrorChanged)
     Q_PROPERTY(ResponseBodyListModel* bodyModel READ bodyModel NOTIFY bodyModelChanged)
@@ -41,6 +42,8 @@ private:
     uint64_t m_elapsedTime { 0 };
     uint64_t m_responseSize { 0 };
     QString m_networkError;
+    QString m_responseReadableSize { "" };
+    QList<QString> m_sizes { QList<QString>() };
     QScopedPointer<ResponseBodyListModel> m_bodyModel { new ResponseBodyListModel() };
 
 public:
@@ -54,7 +57,7 @@ public:
 
     void setBody(const QString& body) noexcept;
 
-    QString responseSize() const noexcept { return m_responseSize > 0 ? QString::number(m_responseSize) : " - "; }
+    QString responseSize() const noexcept { return m_responseSize > 0 ? "(" + QString::number(m_responseSize) + " total bytes)" : " - "; }
 
     QString responseTime() const noexcept;
 
@@ -62,12 +65,18 @@ public:
 
     ResponseBodyListModel* bodyModel() const noexcept { return m_bodyModel.get(); }
 
+    QString responseReadableSize() const noexcept { return m_responseReadableSize; }
+    void setResponseReadableSize(const QString& responseReadableSize) noexcept;
+
     QString networkError() const noexcept { return m_networkError; }
     void setNetworkError(const QString& networkError) noexcept;
 
     void reset() noexcept;
     void trackRequestTime() noexcept;
     void untrackRequestTime() noexcept;
+
+private:
+    QString getReadableSize(uint64_t size) const noexcept;
 
 signals:
     void statusCodeChanged();
@@ -78,6 +87,7 @@ signals:
     void networkErrorChanged();
     void displayStatusCodeChanged();
     void bodyModelChanged();
+    void responseReadableSizeChanged();
 
 };
 

@@ -18,6 +18,11 @@
 HttpRequestResultViewModel::HttpRequestResultViewModel(QObject *parent)
     : QObject{parent}
 {
+    m_sizes.append("B");
+    m_sizes.append("KB");
+    m_sizes.append("MB");
+    m_sizes.append("GB");
+    m_sizes.append("TB");
 }
 
 void HttpRequestResultViewModel::setStatusCode(const int statusCode) noexcept
@@ -45,6 +50,11 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
 
     emit bodyChanged();
     m_responseSize = body.size();
+    if (m_responseSize > 0) {
+        setResponseReadableSize(getReadableSize(m_responseSize));
+    } else {
+        setResponseReadableSize("");
+    }
     emit responseSizeChanged();
 }
 
@@ -61,6 +71,14 @@ QString HttpRequestResultViewModel::responseTime() const noexcept
     if (time.msec() > 0) result.append(QString::number(time.msec()) + " msecs ");
 
     return result;
+}
+
+void HttpRequestResultViewModel::setResponseReadableSize(const QString &responseReadableSize) noexcept
+{
+    if (m_responseReadableSize == responseReadableSize) return;
+
+    m_responseReadableSize = responseReadableSize;
+    emit responseReadableSizeChanged();
 }
 
 void HttpRequestResultViewModel::setNetworkError(const QString &networkError) noexcept
@@ -98,4 +116,20 @@ void HttpRequestResultViewModel::untrackRequestTime() noexcept
     m_elapsedTimer = nullptr;
 
     emit responseTimeChanged();
+}
+
+QString HttpRequestResultViewModel::getReadableSize(uint64_t size) const noexcept
+{
+    int order = 0;
+    while (size >= 1024 && order < 4) {
+        order++;
+        size = size / 1024;
+    }
+
+    auto stringSize = QString::number(size);
+    QString result;
+    result.append(stringSize);
+    result.append(" ");
+    result.append(m_sizes[order]);
+    return result;
 }
