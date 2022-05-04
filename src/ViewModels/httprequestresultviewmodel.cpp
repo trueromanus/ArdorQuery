@@ -13,6 +13,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QClipboard>
+#include <QGuiApplication>
 #include "httprequestresultviewmodel.h"
 
 HttpRequestResultViewModel::HttpRequestResultViewModel(QObject *parent)
@@ -116,6 +118,12 @@ void HttpRequestResultViewModel::untrackRequestTime() noexcept
     m_elapsedTimer = nullptr;
 
     emit responseTimeChanged();
+}
+
+void HttpRequestResultViewModel::copyHeadersToClipboard()
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(m_headers.join("\n"));
 }
 
 QString HttpRequestResultViewModel::getReadableSize(uint64_t size) const noexcept

@@ -64,6 +64,10 @@ public:
     Q_INVOKABLE void addItem(const int position);
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
+    Q_INVOKABLE void selectUpField();
+    Q_INVOKABLE void selectDownField();
+    Q_INVOKABLE void selectFirstField();
+    Q_INVOKABLE void selectLastField();
 
     QString getMethod() const noexcept;
     QString getUrl() const noexcept;

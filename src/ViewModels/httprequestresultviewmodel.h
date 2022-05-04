@@ -75,6 +75,8 @@ public:
     void trackRequestTime() noexcept;
     void untrackRequestTime() noexcept;
 
+    Q_INVOKABLE void copyHeadersToClipboard();
+
 private:
     QString getReadableSize(uint64_t size) const noexcept;
 

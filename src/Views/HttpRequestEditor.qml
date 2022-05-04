@@ -6,7 +6,7 @@ Item {
     focus: true
     Keys.onPressed: (event) => {
         if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ControlModifier) {
-            viewModel.addItem(-1);
+            viewModel.addItem(listView.model.selectedItem + 1);
             event.accepted = false;
         }
         if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.AltModifier) {
@@ -14,7 +14,7 @@ Item {
             event.accepted = false;
         }
         if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ShiftModifier) {
-            viewModel.addItem(listView.model.selectedItem + 1);
+            viewModel.addItem(-1);
             event.accepted = false;
         }
         // Ctrl-S
@@ -22,6 +22,25 @@ Item {
             backend.requestPerformer.performRequest();
             event.accepted = false;
         }
+        // PgUp/Numpad PgUp or Ctrl-PgUp/Ctrl-Numpad PgUp
+        if (event.nativeScanCode === 329 || event.nativeScanCode === 73) {
+            if (event.modifiers & Qt.ControlModifier) {
+                viewModel.selectFirstField();
+            } else {
+                viewModel.selectUpField();
+            }
+            event.accepted = false;
+        }
+        // PgDown/Numpad PgDown or Ctrl-PgDown/Ctrl-Numpad PgDown
+        if (event.nativeScanCode === 337 || event.nativeScanCode === 81) {
+            if (event.modifiers & Qt.ControlModifier) {
+                viewModel.selectLastField();
+            } else {
+                viewModel.selectDownField();
+            }
+            event.accepted = false;
+        }
+
     }
 
     property alias viewModel: listView.model

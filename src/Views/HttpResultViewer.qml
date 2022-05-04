@@ -70,6 +70,24 @@ Item {
                     BorderedHeader {
                         width: responsePanel.width
                         title: "Headers"
+                        Item {
+                            width: 200
+                            height: 40
+                            IconButton {
+                                anchors.right: parent.right
+                                anchors.rightMargin: 2
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 24
+                                height: 24
+                                iconWidth: 22
+                                iconHeight: 22
+                                icon: storagePaths.icons + "copy.svg"
+                                tooltipMessage: "Copy all headers to clipboard"
+                                onPressed: {
+                                    viewModel.copyHeadersToClipboard();
+                                }
+                            }
+                        }
                     }
 
                     HorizontalDivider {

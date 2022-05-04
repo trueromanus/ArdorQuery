@@ -171,6 +171,30 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
     if (needRefresh) emit dataChanged(index(position, 0), index(position, 0));
 }
 
+void HttpRequestViewModel::selectUpField()
+{
+    if (m_selectedItem == 0) return;
+
+    setSelectedItem(m_selectedItem - 1);
+}
+
+void HttpRequestViewModel::selectDownField()
+{
+    if (m_selectedItem == m_items->length() - 1) return;
+
+    setSelectedItem(m_selectedItem + 1);
+}
+
+void HttpRequestViewModel::selectFirstField()
+{
+    setSelectedItem(0);
+}
+
+void HttpRequestViewModel::selectLastField()
+{
+    setSelectedItem(m_items->length() - 1);
+}
+
 QString HttpRequestViewModel::getMethod() const noexcept
 {
     auto iterator = std::find_if(

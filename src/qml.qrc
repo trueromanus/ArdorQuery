@@ -22,5 +22,6 @@
         <file>Views/Controls/BorderedHeader.qml</file>
         <file>Views/Controls/HorizontalDivider.qml</file>
         <file>Views/Controls/ResultText.qml</file>
+        <file>Views/Icons/copy.svg</file>
     </qresource>
 </RCC>
