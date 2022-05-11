@@ -122,8 +122,18 @@ void HttpRequestResultViewModel::untrackRequestTime() noexcept
 
 void HttpRequestResultViewModel::copyHeadersToClipboard()
 {
+    if (m_headers.isEmpty()) return;
+
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(m_headers.join("\n"));
+}
+
+void HttpRequestResultViewModel::copyBodyToClipboard()
+{
+    if (!m_bodyModel->isHasBody()) return;
+
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(m_bodyModel->getFullBody());
 }
 
 QString HttpRequestResultViewModel::getReadableSize(uint64_t size) const noexcept

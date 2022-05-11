@@ -55,7 +55,7 @@ Item {
                     ResultText {
                         id: responseSize
                         width: responsePanel.width
-                        title: "<b>Response size:</b> " + viewModel.responseReadableSize + viewModel.responseSize
+                        title: "<b>Response size:</b> " + viewModel.responseReadableSize + " " + viewModel.responseSize
                     }
 
                     Item {
@@ -70,6 +70,7 @@ Item {
                     BorderedHeader {
                         width: responsePanel.width
                         title: "Headers"
+
                         Item {
                             width: 200
                             height: 40
@@ -123,6 +124,25 @@ Item {
                     BorderedHeader {
                         width: responsePanel.width
                         title: "Body"
+
+                        Item {
+                            width: 200
+                            height: 40
+                            IconButton {
+                                anchors.right: parent.right
+                                anchors.rightMargin: 2
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 24
+                                height: 24
+                                iconWidth: 22
+                                iconHeight: 22
+                                icon: storagePaths.icons + "copy.svg"
+                                tooltipMessage: "Copy all body to clipboard"
+                                onPressed: {
+                                    viewModel.copyBodyToClipboard();
+                                }
+                            }
+                        }
                     }
 
                     HorizontalDivider {

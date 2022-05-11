@@ -72,6 +72,16 @@ void ResponseBodyListModel::setBody(const QString &body) noexcept
     endResetModel();
 }
 
+QString ResponseBodyListModel::getFullBody() const noexcept
+{
+    return m_originalBody;
+}
+
+bool ResponseBodyListModel::isHasBody() const noexcept
+{
+    return !m_originalBody.isEmpty();
+}
+
 void ResponseBodyListModel::setVisibleBody(const bool visibleBody) noexcept
 {
     if (m_visibleBody == visibleBody) return;
