@@ -86,9 +86,6 @@ Item {
                     listView.model.selectedItem = currentIndex;
                 }
             }
-            Text {
-                text: isNeedFocused
-            }
         }
         flickDeceleration: 5000
         ScrollBar.vertical: ScrollBar {
