@@ -229,7 +229,7 @@ QString HttpRequestViewModel::getMethod() const noexcept
     if (iterator != m_items->end()) {
         auto item = *iterator;
         auto text = item->text();
-        return text.replace("method ", "", Qt::CaseInsensitive);
+        return text.replace("met ", "", Qt::CaseInsensitive);
     }
 
     return "get";

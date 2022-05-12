@@ -127,7 +127,7 @@ void HttpPerformerViewModel::performRequest()
 
     auto body = m_httpRequest->getBody();
     auto forms = m_httpRequest->getFormParameters();
-    if (body.isEmpty() || forms.isEmpty()) {
+    if (body.isEmpty() && forms.isEmpty()) {
         //TODO: push error message for user
         return;
     }
