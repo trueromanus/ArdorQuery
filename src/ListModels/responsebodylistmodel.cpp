@@ -25,7 +25,7 @@ int ResponseBodyListModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
 
-    return  m_visibleBody ? m_lines.size() : 0;
+    return  m_lines.size();
 }
 
 QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
@@ -80,23 +80,4 @@ QString ResponseBodyListModel::getFullBody() const noexcept
 bool ResponseBodyListModel::isHasBody() const noexcept
 {
     return !m_originalBody.isEmpty();
-}
-
-void ResponseBodyListModel::setVisibleBody(const bool visibleBody) noexcept
-{
-    if (m_visibleBody == visibleBody) return;
-
-    beginResetModel();
-
-    m_visibleBody = visibleBody;
-
-    if (m_visibleBody) {
-        m_lines.append(m_originalBody.split("\n"));
-    } else {
-        m_lines.clear();
-    }
-
-    endResetModel();
-
-    emit visibleBodyChanged();
 }

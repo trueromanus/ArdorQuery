@@ -47,6 +47,7 @@ private:
         TextRole,
         IsActiveRole,
         IndexRole,
+        IsFocusedRole
     };
 
 public:
@@ -68,6 +69,7 @@ public:
     Q_INVOKABLE void selectDownField();
     Q_INVOKABLE void selectFirstField();
     Q_INVOKABLE void selectLastField();
+    Q_INVOKABLE void clearFields();
 
     QString getMethod() const noexcept;
     QString getUrl() const noexcept;

@@ -22,6 +22,11 @@ Item {
             backend.requestPerformer.performRequest();
             event.accepted = false;
         }
+        // Ctrl-R
+        if (event.nativeScanCode === 19 && (event.modifiers & Qt.ControlModifier)) {
+            viewModel.clearFields()
+            event.accepted = false;
+        }
         // PgUp/Numpad PgUp or Ctrl-PgUp/Ctrl-Numpad PgUp
         if (event.nativeScanCode === 329 || event.nativeScanCode === 73) {
             if (event.modifiers & Qt.ControlModifier) {
@@ -55,7 +60,7 @@ Item {
 
             TextArea {
                 id: textArea
-                focus: listView.model.selectedItem === currentIndex
+                focus: isNeedFocused
                 anchors.fill: parent
                 text: textContent
                 wrapMode: Text.WrapAnywhere
@@ -70,10 +75,19 @@ Item {
                     listView.model.setItemContent(currentIndex, text);
                 }
                 onFocusChanged: {
-                    if (!focus) return;
+                    if (!focus) {
+                        if (isNeedFocused) {
+                            focus = true;
+                        }
+
+                        return;
+                    }
 
                     listView.model.selectedItem = currentIndex;
                 }
+            }
+            Text {
+                text: isNeedFocused
             }
         }
         flickDeceleration: 5000

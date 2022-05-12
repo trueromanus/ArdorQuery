@@ -156,40 +156,25 @@ Item {
                     width: responsePanel.width
                     height: fieldContainer.height - panelsContainer.height - 4
 
-                    Flickable {
+                    ListView {
                         clip: true
                         anchors.fill: parent
                         flickableDirection: Flickable.HorizontalAndVerticalFlick
-                        contentWidth: lines.width
-                        contentHeight: lines.height
-
-                        Column {
-                            id: lines
-
-                            Repeater {
-                                model: viewModel.bodyModel
-                                delegate: Text {
-                                    id: lineText
-                                    leftPadding: 4
-                                    textFormat: Text.PlainText
-                                    text: currentLine
-                                }
-                            }
+                        model: viewModel.bodyModel
+                        delegate: Text {
+                            leftPadding: 4
+                            rightPadding: 10
+                            textFormat: Text.PlainText
+                            text: currentLine
+                            width: bodyContainer.width
+                            wrapMode: Text.Wrap
                         }
-
                         ScrollBar.vertical: ScrollBar {
-                            active: true
-                        }
-                        ScrollBar.horizontal: ScrollBar {
                             active: true
                         }
                     }
                 }
             }
         }
-    }
-
-    onVisibleChanged: {
-        viewModel.bodyModel.visibleBody = root.visible;
     }
 }

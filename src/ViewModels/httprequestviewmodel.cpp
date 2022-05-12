@@ -52,6 +52,9 @@ QVariant HttpRequestViewModel::data(const QModelIndex &index, int role) const
             case TypeColor: {
                 return QVariant(getTypeColor(item->type()));
             }
+            case IsFocusedRole: {
+                return QVariant(rowIndex == m_selectedItem);
+            }
         }
 
         return QVariant();
@@ -80,6 +83,10 @@ QHash<int, QByteArray> HttpRequestViewModel::roleNames() const
         {
             TypeColor,
             "typeColor"
+        },
+        {
+            IsFocusedRole,
+            "isNeedFocused"
         }
     };
 }
@@ -93,6 +100,8 @@ void HttpRequestViewModel::setSelectedItem(const int selectedItem) noexcept
     m_selectedItem = selectedItem;
     emit selectedItemChanged();
     emit dataChanged(index(selectedItem, 0), index(selectedItem, 0));
+
+    if (oldIndex == selectedItem) return;
     emit dataChanged(index(oldIndex, 0), index(oldIndex, 0));
 }
 
@@ -143,7 +152,7 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         item->setType(static_cast<int>(HttpRequestTypes::UrlType));
         needRefresh = true;
     }
-    if (lowerContent.startsWith("method ") && itemType != HttpRequestTypes::MethodType) {
+    if (lowerContent.startsWith("met ") && itemType != HttpRequestTypes::MethodType) {
         item->setType(static_cast<int>(HttpRequestTypes::MethodType));
         needRefresh = true;
     }
@@ -193,6 +202,18 @@ void HttpRequestViewModel::selectFirstField()
 void HttpRequestViewModel::selectLastField()
 {
     setSelectedItem(m_items->length() - 1);
+}
+
+void HttpRequestViewModel::clearFields()
+{
+    beginResetModel();
+
+    m_items->clear();
+    addItem(-1);
+
+    endResetModel();
+
+    setSelectedItem(0);
 }
 
 QString HttpRequestViewModel::getMethod() const noexcept

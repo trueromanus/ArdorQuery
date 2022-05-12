@@ -161,7 +161,7 @@ QByteArray HttpPerformerViewModel::setupSimpleForm(QStringList&& parameters)
     QUrlQuery postData;
 
     foreach (auto parameter, parameters) {
-        auto pair = parameter.replace("form ", "", Qt::CaseSensitive);
+        auto pair = parameter.replace("form ", "", Qt::CaseInsensitive);
 
         auto parts = pair.split("=");
         if (parts.count() < 2) continue;
@@ -262,6 +262,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     auto headers = reply->rawHeaderPairs();
     foreach (auto header, headers) {
         auto name = std::get<0>(header);
+        if (m_rawHeaders->contains(name)) name = m_rawHeaders->value(name).toUtf8();
         auto value = std::get<1>(header);
         responseHeaders.append(name + ": " + value);
     }

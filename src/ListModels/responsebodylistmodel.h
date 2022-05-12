@@ -22,12 +22,10 @@
 class ResponseBodyListModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(bool visibleBody READ visibleBody WRITE setVisibleBody NOTIFY visibleBodyChanged)
 
 private:
     QStringList m_lines { QStringList() };
     QString m_originalBody { "" };
-    bool m_visibleBody { false };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
@@ -44,9 +42,6 @@ public:
     void setBody(const QString& body) noexcept;
     QString getFullBody() const noexcept;
     bool isHasBody() const noexcept;
-
-    bool visibleBody() const noexcept { return m_visibleBody; }
-    void setVisibleBody(const bool visibleBody) noexcept;
 
 signals:
     void visibleBodyChanged();
