@@ -20,6 +20,7 @@
 #include "ViewModels/textadvisorviewmodel.h"
 #include "ViewModels/httpperformerviewmodel.h"
 #include "ViewModels/backendviewmodel.h"
+#include "ViewModels/requestexternalviewmodel.h"
 
 void registerQmlTypes();
 
@@ -52,4 +53,5 @@ void registerQmlTypes() {
     qmlRegisterType<TextAdvisorViewModel>("ArdorQuery.Backend", 1, 0, "TextAdvisorViewModel");
     qmlRegisterType<HttpPerformerViewModel>("ArdorQuery.Backend", 1, 0, "HttpPerformerViewModel");
     qmlRegisterType<BackendViewModel>("ArdorQuery.Backend", 1, 0, "BackendViewModel");
+    qmlRegisterType<RequestExternalViewModel>("ArdorQuery.Backend", 1, 0, "RequestExternalViewModel");
 }

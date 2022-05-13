@@ -1,5 +1,5 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick /* 2.15 */
+import QtQuick.Controls /* 2.15 */
 
 Item {
     id: root
@@ -22,7 +22,7 @@ Item {
             model: backend.tabs
             delegate: Item {
                 id: itemRoot
-                width: isRequests ? 200 : 120
+                width: 200
                 height: root.height
                 property bool itemHovered: false
 
@@ -31,13 +31,13 @@ Item {
                     anchors.fill: parent
 
                     Rectangle {
-                        color: isActived ? "white" : (itemRoot.itemHovered ? Qt.rgba(1,1,1,.2) : "transparent")
+                        color: isActived ? "white" : "transparent"
                         width: parent.width
                         height: parent.height + 4
                         anchors.leftMargin: 2
                         anchors.rightMargin: 2
                         border.width: 1
-                        border.color: isActived ? "#e7eaec" : "transparent"
+                        border.color: isActived ? "#e7eaec" : (itemRoot.itemHovered ? "#e7eaec" : "transparent")
                         radius: 4
                     }
                 }
@@ -75,6 +75,21 @@ Item {
                 }
 
                 IconButton {
+                    id: pendingButton
+                    visible: isResult
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 24
+                    height: 24
+                    iconWidth: 18
+                    iconHeight: 18
+                    icon: storagePaths.icons + backend.requests.selectedItem.resultModel.displayStatus + ".svg"
+                    onPressed: {
+                        backend.requestPerformer.performRequest();
+                    }
+                }
+
+                IconButton {
                     id: dropMenuButton
                     visible: isRequests
                     anchors.right: parent.right
@@ -92,13 +107,18 @@ Item {
         }
     }
 
-    TextButton {
+    IconButton {
+        id: helpButton
         anchors.right: infoButton.left
-        width: 100
-        height: 28
-        title: "Run (Ctrl-S)"
+        anchors.verticalCenter: parent.verticalCenter
+        icon: storagePaths.icons + "question.svg"
+        width: 30
+        height: parent.height
+        iconWidth: 20
+        iconHeight: 20
+        tooltipMessage: "About"
         onPressed: {
-            backend.requestPerformer.performRequest();
+            aboutWindow.show();
         }
     }
 

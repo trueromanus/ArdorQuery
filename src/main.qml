@@ -1,6 +1,6 @@
-import QtQuick
-import QtQuick.Controls
-import ArdorQuery.Backend
+import QtQuick /* 2.15 */
+import QtQuick.Controls /* 2.15 */
+import ArdorQuery.Backend /* 1.0 */
 import "Views/Controls"
 import "Views"
 
@@ -34,6 +34,7 @@ ApplicationWindow {
             id: backend
             requestPerformer.httpRequest: backend.requests.selectedItem.requestModel
             requestPerformer.httpRequestResult: backend.requests.selectedItem.resultModel
+            requestExternal.httpRequest: backend.requests.selectedItem.requestModel
         }
 
         Item {

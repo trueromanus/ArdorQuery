@@ -23,5 +23,8 @@
         <file>Views/Controls/HorizontalDivider.qml</file>
         <file>Views/Controls/ResultText.qml</file>
         <file>Views/Icons/copy.svg</file>
+        <file>Views/Icons/pending.svg</file>
+        <file>Views/Icons/checked.svg</file>
+        <file>Views/Icons/question.svg</file>
     </qresource>
 </RCC>

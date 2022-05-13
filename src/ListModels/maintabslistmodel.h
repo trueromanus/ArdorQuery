@@ -33,6 +33,7 @@ private:
         IsActiveRole,
         IdentifierRole,
         IsRequestsRole,
+        IsResultRole
     };
 
 public:

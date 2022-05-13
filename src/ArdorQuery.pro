@@ -14,7 +14,9 @@ SOURCES += \
         ViewModels/httpperformerviewmodel.cpp \
         ViewModels/httprequestresultviewmodel.cpp \
         ViewModels/httprequestviewmodel.cpp \
+        ViewModels/requestexternalviewmodel.cpp \
         ViewModels/textadvisorviewmodel.cpp \
+        globalconstants.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -33,4 +35,6 @@ HEADERS += \
     ViewModels/httpperformerviewmodel.h \
     ViewModels/httprequestresultviewmodel.h \
     ViewModels/httprequestviewmodel.h \
-    ViewModels/textadvisorviewmodel.h
+    ViewModels/requestexternalviewmodel.h \
+    ViewModels/textadvisorviewmodel.h \
+    globalconstants.h

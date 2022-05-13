@@ -1,5 +1,5 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick /* 2.15 */
+import QtQuick.Controls /* 2.15 */
 
 Item {
     anchors.fill: parent
@@ -17,11 +17,21 @@ Item {
             viewModel.addItem(-1);
             event.accepted = false;
         }
-        // Ctrl-S
-        if (event.nativeScanCode === 31 && (event.modifiers & Qt.ControlModifier)) {
+        // Ctrl-S or F5
+        if ((event.nativeScanCode === 31 && (event.modifiers & Qt.ControlModifier)) || event.nativeScanCode === 63) {
             backend.requestPerformer.performRequest();
             event.accepted = false;
         }
+
+        console.log(event.nativeScanCode)
+
+        // Ctrl-L or F3
+        if ((event.nativeScanCode === 38 && (event.modifiers & Qt.ControlModifier)) || event.nativeScanCode === 61) {
+            //TODO: load from clipboard
+            backend.requestExternal.appendFromClipboard();
+            event.accepted = false;
+        }
+
         // Ctrl-R
         if (event.nativeScanCode === 19 && (event.modifiers & Qt.ControlModifier)) {
             viewModel.clearFields()

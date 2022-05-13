@@ -21,6 +21,7 @@
 #include "../ViewModels/textadvisorviewmodel.h"
 #include "../ListModels/httprequestslistmodel.h"
 #include "../ListModels/maintabslistmodel.h"
+#include "../ViewModels/requestexternalviewmodel.h"
 
 class BackendViewModel : public QObject
 {
@@ -29,10 +30,12 @@ class BackendViewModel : public QObject
     Q_PROPERTY(TextAdvisorViewModel* textAdviser READ textAdviser NOTIFY textAdviserChanged)
     Q_PROPERTY(HttpRequestsListModel* requests READ requests NOTIFY requestsChanged)
     Q_PROPERTY(MainTabsListModel* tabs READ tabs NOTIFY tabsChanged)
+    Q_PROPERTY(RequestExternalViewModel* requestExternal READ requestExternal NOTIFY requestExternalChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
     QSharedPointer<TextAdvisorViewModel> m_textAdviser { new TextAdvisorViewModel() };
+    QScopedPointer<RequestExternalViewModel> m_requestExternal { new RequestExternalViewModel() };
     HttpRequestsListModel* m_requests { new HttpRequestsListModel(this) };
     MainTabsListModel* m_tabs { new MainTabsListModel(this) };
 
@@ -43,6 +46,7 @@ public:
     TextAdvisorViewModel* textAdviser() const noexcept { return m_textAdviser.get(); }
     HttpRequestsListModel* requests() const noexcept { return m_requests; }
     MainTabsListModel* tabs() const noexcept { return m_tabs; }
+    RequestExternalViewModel* requestExternal() const noexcept { return m_requestExternal.get(); }
 
     Q_INVOKABLE void addNewRequest(const QString& name);
 
@@ -51,6 +55,7 @@ signals:
     void textAdviserChanged();
     void requestsChanged();
     void tabsChanged();
+    void requestExternalChanged();
 
 };
 

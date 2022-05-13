@@ -33,6 +33,8 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(QString responseTime READ responseTime NOTIFY responseTimeChanged)
     Q_PROPERTY(QString networkError READ networkError WRITE setNetworkError NOTIFY networkErrorChanged)
     Q_PROPERTY(ResponseBodyListModel* bodyModel READ bodyModel NOTIFY bodyModelChanged)
+    Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged)
+    Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
 
 private:
     int m_statusCode { 0 };
@@ -43,6 +45,7 @@ private:
     uint64_t m_responseSize { 0 };
     QString m_networkError;
     QString m_responseReadableSize { "" };
+    bool m_isRunning { false };
     QList<QString> m_sizes { QList<QString>() };
     QScopedPointer<ResponseBodyListModel> m_bodyModel { new ResponseBodyListModel() };
 
@@ -75,6 +78,10 @@ public:
     void trackRequestTime() noexcept;
     void untrackRequestTime() noexcept;
 
+    bool isRunning() const noexcept { return m_isRunning; }
+
+    QString displayStatus() const noexcept;
+
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
 
@@ -91,6 +98,8 @@ signals:
     void displayStatusCodeChanged();
     void bodyModelChanged();
     void responseReadableSizeChanged();
+    void isRunningChanged();
+    void displayStatusChanged();
 
 };
 

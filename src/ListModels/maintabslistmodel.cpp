@@ -49,6 +49,9 @@ QVariant MainTabsListModel::data(const QModelIndex &index, int role) const
             case IsRequestsRole: {
                 return QVariant(index.row() == 0);
             }
+            case IsResultRole: {
+                return QVariant(index.row() == 1);
+            }
         }
 
         return QVariant();
@@ -72,6 +75,10 @@ QHash<int, QByteArray> MainTabsListModel::roleNames() const
         {
             IsRequestsRole,
             "isRequests"
+        },
+        {
+            IsResultRole,
+            "isResult"
         }
     };
 }

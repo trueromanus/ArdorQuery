@@ -13,6 +13,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QClipboard>
+#include <QGuiApplication>
 #include "httprequestviewmodel.h"
 
 HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
@@ -110,13 +112,15 @@ void HttpRequestViewModel::setTextAdvisor(const QSharedPointer<TextAdvisorViewMo
     m_textAdvisor = textAdviser;
 }
 
-void HttpRequestViewModel::addItem(const int position)
+void HttpRequestViewModel::addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType, const QString initialValue)
 {
     int actualPosition = position;
 
     beginResetModel();
 
     auto item = new HttpRequestItem();
+    if (itemType != HttpRequestTypes::UnknownType) item->setType(static_cast<int>(itemType));
+    if (!initialValue.isEmpty()) item->setText(initialValue);
 
     if (actualPosition == -1) {
         m_items->append(item);

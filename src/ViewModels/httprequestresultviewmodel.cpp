@@ -106,18 +106,32 @@ void HttpRequestResultViewModel::reset() noexcept
 
 void HttpRequestResultViewModel::trackRequestTime() noexcept
 {
+    m_isRunning = true;
     m_elapsedTimer = new QElapsedTimer();
     m_elapsedTimer->start();
     emit responseTimeChanged();
+    emit displayStatusChanged();
+    emit isRunningChanged();
 }
 
 void HttpRequestResultViewModel::untrackRequestTime() noexcept
 {
+    m_isRunning = false;
     m_hasResultTime = true;
     m_elapsedTime = m_elapsedTimer->elapsed();
     m_elapsedTimer = nullptr;
 
     emit responseTimeChanged();
+    emit displayStatusChanged();
+    emit isRunningChanged();
+}
+
+QString HttpRequestResultViewModel::displayStatus() const noexcept
+{
+    if (m_isRunning) return "pending";
+    if (m_hasResultTime) return "checked";
+
+    return "emptybox";
 }
 
 void HttpRequestResultViewModel::copyHeadersToClipboard()

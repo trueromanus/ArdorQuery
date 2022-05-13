@@ -32,15 +32,6 @@ private:
     int m_selectedItem { 0 };
     QSharedPointer<TextAdvisorViewModel> m_textAdvisor { nullptr };
 
-    enum class HttpRequestTypes {
-        UnknownType = 0,
-        UrlType,
-        MethodType,
-        HeaderType,
-        BodyType,
-        FormItemType
-    };
-
     enum HttpRequestRoles {
         TypeRole = Qt::UserRole + 1,
         TypeColor,
@@ -51,6 +42,15 @@ private:
     };
 
 public:
+    enum class HttpRequestTypes {
+        UnknownType = 0,
+        UrlType,
+        MethodType,
+        HeaderType,
+        BodyType,
+        FormItemType
+    };
+
     explicit HttpRequestViewModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -62,7 +62,7 @@ public:
 
     void setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept;
 
-    Q_INVOKABLE void addItem(const int position);
+    Q_INVOKABLE void addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType = HttpRequestTypes::UnknownType, const QString initialValue = "");
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
     Q_INVOKABLE void selectUpField();
@@ -79,6 +79,7 @@ public:
 
 private:
     QString getTypeColor(int type) const;
+    QString getTextFromClipboard() const noexcept;
 
 signals:
     void selectedItemChanged();

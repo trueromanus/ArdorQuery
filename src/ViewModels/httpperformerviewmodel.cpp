@@ -230,6 +230,8 @@ void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString 
 
 void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply) noexcept
 {
+    if (m_httpRequestResult->isRunning()) return; // already runned
+
     m_httpRequestResult->trackRequestTime();
 
     auto uuid = QUuid::createUuid().toString();
@@ -262,7 +264,6 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     auto headers = reply->rawHeaderPairs();
     foreach (auto header, headers) {
         auto name = std::get<0>(header);
-        if (m_rawHeaders->contains(name)) name = m_rawHeaders->value(name).toUtf8();
         auto value = std::get<1>(header);
         responseHeaders.append(name + ": " + value);
     }
