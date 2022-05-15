@@ -63,6 +63,7 @@ public:
     void setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept;
 
     Q_INVOKABLE void addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType = HttpRequestTypes::UnknownType, const QString initialValue = "");
+    Q_INVOKABLE void removeFirstItem();
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
     Q_INVOKABLE void selectUpField();
@@ -76,6 +77,8 @@ public:
     QString getBody() const noexcept;
     QStringList getFormParameters() const noexcept;
     QStringList getHeaders() const noexcept;
+    bool isOnlyEmptyFirstItem() const noexcept;
+    int countItems() const noexcept;
 
 private:
     QString getTypeColor(int type) const;

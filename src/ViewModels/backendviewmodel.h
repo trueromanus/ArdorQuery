@@ -49,6 +49,7 @@ public:
     RequestExternalViewModel* requestExternal() const noexcept { return m_requestExternal.get(); }
 
     Q_INVOKABLE void addNewRequest(const QString& name);
+    Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
 
 signals:
     void requestPerformerChanged();

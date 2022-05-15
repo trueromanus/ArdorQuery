@@ -2,10 +2,11 @@ import QtQuick /* 2.15 */
 import QtQuick.Controls /* 2.15 */
 
 Item {
+    id: root
     anchors.fill: parent
     focus: true
     Keys.onPressed: (event) => {
-        if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ControlModifier) {
+        /*if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ControlModifier) {
             viewModel.addItem(listView.model.selectedItem + 1);
             event.accepted = false;
         }
@@ -23,12 +24,19 @@ Item {
             event.accepted = false;
         }
 
-        console.log(event.nativeScanCode)
+        // console.log(event.nativeScanCode)
 
         // Ctrl-L or F3
         if ((event.nativeScanCode === 38 && (event.modifiers & Qt.ControlModifier)) || event.nativeScanCode === 61) {
             //TODO: load from clipboard
             backend.requestExternal.appendFromClipboard();
+            event.accepted = false;
+        }
+
+        // Shift-L
+        if ((event.nativeScanCode === 38 && (event.modifiers & Qt.ShiftModifier))) {
+            //TODO: load from clipboard
+            backend.requestExternal.replaceFromClipboard();
             event.accepted = false;
         }
 
@@ -39,6 +47,7 @@ Item {
         }
         // PgUp/Numpad PgUp or Ctrl-PgUp/Ctrl-Numpad PgUp
         if (event.nativeScanCode === 329 || event.nativeScanCode === 73) {
+            console.log(`PgUp`);
             if (event.modifiers & Qt.ControlModifier) {
                 viewModel.selectFirstField();
             } else {
@@ -54,8 +63,16 @@ Item {
                 viewModel.selectDownField();
             }
             event.accepted = false;
-        }
+        }*/
 
+        const needAccepted = backend.keysHandler(
+            event.key,
+            event.nativeScanCode,
+            (event.modifiers & Qt.ControlModifier),
+            (event.modifiers & Qt.ShiftModifier),
+            (event.modifiers & Qt.AltModifier)
+        );
+        if (needAccepted) event.accepted = true;
     }
 
     property alias viewModel: listView.model
@@ -67,6 +84,16 @@ Item {
         delegate: Item {
             width: listView.width
             height: textArea.contentHeight + textArea.font.pixelSize
+
+            required property bool isNeedFocused
+            required property string typeColor
+            required property bool isActive
+            required property string textContent
+            required property int currentIndex
+
+            onIsNeedFocusedChanged: {
+                textArea.focus = isNeedFocused;
+            }
 
             TextArea {
                 id: textArea
@@ -84,16 +111,15 @@ Item {
                 onTextChanged: {
                     listView.model.setItemContent(currentIndex, text);
                 }
-                onFocusChanged: {
-                    if (!focus) {
-                        if (isNeedFocused) {
-                            focus = true;
-                        }
-
-                        return;
-                    }
-
-                    listView.model.selectedItem = currentIndex;
+                Keys.onPressed: (event) => {
+                    const needAccepted = backend.keysHandler(
+                        event.key,
+                        event.nativeScanCode,
+                        (event.modifiers & Qt.ControlModifier),
+                        (event.modifiers & Qt.ShiftModifier),
+                        (event.modifiers & Qt.AltModifier)
+                    );
+                    if (needAccepted) event.accepted = true;
                 }
             }
         }

@@ -101,10 +101,9 @@ void HttpRequestViewModel::setSelectedItem(const int selectedItem) noexcept
 
     m_selectedItem = selectedItem;
     emit selectedItemChanged();
-    emit dataChanged(index(selectedItem, 0), index(selectedItem, 0));
 
-    if (oldIndex == selectedItem) return;
-    emit dataChanged(index(oldIndex, 0), index(oldIndex, 0));
+    if (oldIndex != selectedItem) emit dataChanged(index(oldIndex, 0), index(oldIndex, 0));
+    emit dataChanged(index(selectedItem, 0), index(selectedItem, 0));
 }
 
 void HttpRequestViewModel::setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept
@@ -133,6 +132,17 @@ void HttpRequestViewModel::addItem(const int position, const HttpRequestViewMode
     endResetModel();
 
     setSelectedItem(actualPosition);
+}
+
+void HttpRequestViewModel::removeFirstItem()
+{
+    beginResetModel();
+
+    m_items->removeFirst();
+
+    endResetModel();
+
+    if (m_selectedItem >= m_items->count()) setSelectedItem(m_items->count() - 1);
 }
 
 void HttpRequestViewModel::refreshItem(const int position, const QString &content)
@@ -297,6 +307,16 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
         if (type == HttpRequestTypes::HeaderType) headers.append(item->text());
     }
     return headers;
+}
+
+bool HttpRequestViewModel::isOnlyEmptyFirstItem() const noexcept
+{
+    return m_items->count() == 1 && m_items->value(0)->text().isEmpty();
+}
+
+int HttpRequestViewModel::countItems() const noexcept
+{
+    return m_items->count();
 }
 
 QString HttpRequestViewModel::getTypeColor(int type) const

@@ -16,7 +16,7 @@ private:
 public:
     explicit RequestExternalViewModel(QObject *parent = nullptr);
 
-    QString parseFromString(const QString& input) noexcept;
+    void parseFromString(const QString& input) noexcept;
 
     HttpRequestViewModel* httpRequest() const noexcept { return m_httpRequest; }
     void setHttpRequest(const HttpRequestViewModel* httpRequest) noexcept;

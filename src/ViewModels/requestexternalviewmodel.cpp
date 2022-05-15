@@ -8,30 +8,44 @@ RequestExternalViewModel::RequestExternalViewModel(QObject *parent)
 
 }
 
-QString RequestExternalViewModel::parseFromString(const QString &input) noexcept
+void RequestExternalViewModel::parseFromString(const QString &input) noexcept
 {
     auto lines = input.split("\n");
+    bool isBodyType = false;
+    QString bodyContent = "";
+    auto currentIndex = m_httpRequest->selectedItem();
+    auto insertToEnd = currentIndex == 0;
     foreach (auto line, lines) {
         HttpRequestViewModel::HttpRequestTypes type = HttpRequestViewModel::HttpRequestTypes::UnknownType;
         if (line.startsWith(UrlPrefix)) {
             type = HttpRequestViewModel::HttpRequestTypes::UrlType;
+            isBodyType = false;
         }
         if (line.startsWith(MethodPrefix)) {
             type = HttpRequestViewModel::HttpRequestTypes::MethodType;
+            isBodyType = false;
         }
         if (line.startsWith(FormPrefix)) {
             type = HttpRequestViewModel::HttpRequestTypes::FormItemType;
+            isBodyType = false;
         }
         if (line.startsWith(BodyPrefix)) {
             type = HttpRequestViewModel::HttpRequestTypes::BodyType;
+            isBodyType = true;
         }
 
-        if (type == HttpRequestViewModel::HttpRequestTypes::UnknownType) continue;
+        if (type == HttpRequestViewModel::HttpRequestTypes::UnknownType) {
+            if (!isBodyType) continue;
 
-        m_httpRequest->addItem(-1, type, line);
+            bodyContent.append(line);
+            continue;
+        }
+
+        m_httpRequest->addItem(insertToEnd ? -1 : currentIndex, type, line);
+        currentIndex++;
     }
 
-    return "";
+    if (!bodyContent.isEmpty()) m_httpRequest->addItem(-1, HttpRequestViewModel::HttpRequestTypes::BodyType, bodyContent);
 }
 
 void RequestExternalViewModel::setHttpRequest(const HttpRequestViewModel *httpRequest) noexcept
@@ -47,7 +61,11 @@ void RequestExternalViewModel::appendFromClipboard()
     auto text = getTextFromClipboard();
     if (text.isEmpty()) return;
 
+    auto isEmptyList = m_httpRequest->isOnlyEmptyFirstItem();
+
     parseFromString(text);
+
+    if (isEmptyList && m_httpRequest->countItems() > 1) m_httpRequest->removeFirstItem();
 }
 
 void RequestExternalViewModel::replaceFromClipboard()
@@ -58,6 +76,8 @@ void RequestExternalViewModel::replaceFromClipboard()
     m_httpRequest->clearFields();
 
     parseFromString(text);
+
+    m_httpRequest->removeFirstItem(); //it need for remove empty first item
 }
 
 QString RequestExternalViewModel::getTextFromClipboard() const noexcept
