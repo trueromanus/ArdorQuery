@@ -6,65 +6,6 @@ Item {
     anchors.fill: parent
     focus: true
     Keys.onPressed: (event) => {
-        /*if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ControlModifier) {
-            viewModel.addItem(listView.model.selectedItem + 1);
-            event.accepted = false;
-        }
-        if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.AltModifier) {
-            if (listView.model.selectedItem > 0) viewModel.addItem(listView.model.selectedItem - 1);
-            event.accepted = false;
-        }
-        if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && event.modifiers & Qt.ShiftModifier) {
-            viewModel.addItem(-1);
-            event.accepted = false;
-        }
-        // Ctrl-S or F5
-        if ((event.nativeScanCode === 31 && (event.modifiers & Qt.ControlModifier)) || event.nativeScanCode === 63) {
-            backend.requestPerformer.performRequest();
-            event.accepted = false;
-        }
-
-        // console.log(event.nativeScanCode)
-
-        // Ctrl-L or F3
-        if ((event.nativeScanCode === 38 && (event.modifiers & Qt.ControlModifier)) || event.nativeScanCode === 61) {
-            //TODO: load from clipboard
-            backend.requestExternal.appendFromClipboard();
-            event.accepted = false;
-        }
-
-        // Shift-L
-        if ((event.nativeScanCode === 38 && (event.modifiers & Qt.ShiftModifier))) {
-            //TODO: load from clipboard
-            backend.requestExternal.replaceFromClipboard();
-            event.accepted = false;
-        }
-
-        // Ctrl-R
-        if (event.nativeScanCode === 19 && (event.modifiers & Qt.ControlModifier)) {
-            viewModel.clearFields()
-            event.accepted = false;
-        }
-        // PgUp/Numpad PgUp or Ctrl-PgUp/Ctrl-Numpad PgUp
-        if (event.nativeScanCode === 329 || event.nativeScanCode === 73) {
-            console.log(`PgUp`);
-            if (event.modifiers & Qt.ControlModifier) {
-                viewModel.selectFirstField();
-            } else {
-                viewModel.selectUpField();
-            }
-            event.accepted = false;
-        }
-        // PgDown/Numpad PgDown or Ctrl-PgDown/Ctrl-Numpad PgDown
-        if (event.nativeScanCode === 337 || event.nativeScanCode === 81) {
-            if (event.modifiers & Qt.ControlModifier) {
-                viewModel.selectLastField();
-            } else {
-                viewModel.selectDownField();
-            }
-            event.accepted = false;
-        }*/
-
         const needAccepted = backend.keysHandler(
             event.key,
             event.nativeScanCode,
@@ -110,6 +51,9 @@ Item {
                 }
                 onTextChanged: {
                     listView.model.setItemContent(currentIndex, text);
+                }
+                onPressed: {
+                    if (listView.model.selectedItem !== currentIndex) listView.model.selectedItem = currentIndex;
                 }
                 Keys.onPressed: (event) => {
                     const needAccepted = backend.keysHandler(

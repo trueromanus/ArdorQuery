@@ -14,7 +14,8 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
     bool isBodyType = false;
     QString bodyContent = "";
     auto currentIndex = m_httpRequest->selectedItem();
-    auto insertToEnd = currentIndex == 0;
+    auto insertToEnd = currentIndex == m_httpRequest->countItems() - 1;
+    if (!insertToEnd) currentIndex += 1;
     foreach (auto line, lines) {
         HttpRequestViewModel::HttpRequestTypes type = HttpRequestViewModel::HttpRequestTypes::UnknownType;
         if (line.startsWith(UrlPrefix)) {
