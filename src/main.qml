@@ -29,6 +29,10 @@ ApplicationWindow {
         viewModel: backend.requests.selectedItem.resultModel
     }
 
+    ShorcutsHelperPanel {
+        id: shortcutPanel
+    }
+
     Item {
         BackendViewModel {
             id: backend

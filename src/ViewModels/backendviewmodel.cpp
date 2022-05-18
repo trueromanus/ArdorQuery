@@ -100,3 +100,11 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
 
     return false;
 }
+
+void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
+{
+    if (m_helpVisible == helpVisible) return;
+
+    m_helpVisible = helpVisible;
+    emit helpVisibleChanged();
+}

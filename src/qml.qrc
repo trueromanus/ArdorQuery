@@ -26,5 +26,6 @@
         <file>Views/Icons/pending.svg</file>
         <file>Views/Icons/checked.svg</file>
         <file>Views/Icons/question.svg</file>
+        <file>Views/Controls/ShorcutsHelperPanel.qml</file>
     </qresource>
 </RCC>

@@ -8,8 +8,10 @@ SOURCES += \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
         ListModels/responsebodylistmodel.cpp \
+        ListModels/shortcutslistmodel.cpp \
         Models/httprequestitem.cpp \
         Models/httprequestmodel.cpp \
+        Models/shortcutsection.cpp \
         ViewModels/backendviewmodel.cpp \
         ViewModels/httpperformerviewmodel.cpp \
         ViewModels/httprequestresultviewmodel.cpp \
@@ -29,8 +31,10 @@ HEADERS += \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
     ListModels/responsebodylistmodel.h \
+    ListModels/shortcutslistmodel.h \
     Models/httprequestitem.h \
     Models/httprequestmodel.h \
+    Models/shortcutsection.h \
     ViewModels/backendviewmodel.h \
     ViewModels/httpperformerviewmodel.h \
     ViewModels/httprequestresultviewmodel.h \

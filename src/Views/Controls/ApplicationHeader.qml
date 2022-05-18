@@ -116,9 +116,9 @@ Item {
         height: parent.height
         iconWidth: 20
         iconHeight: 20
-        tooltipMessage: "About"
+        tooltipMessage: "Show keyboard shortcut description"
         onPressed: {
-            aboutWindow.show();
+            backend.helpVisible = !backend.helpVisible;
         }
     }
 

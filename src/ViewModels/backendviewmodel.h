@@ -31,6 +31,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(HttpRequestsListModel* requests READ requests NOTIFY requestsChanged)
     Q_PROPERTY(MainTabsListModel* tabs READ tabs NOTIFY tabsChanged)
     Q_PROPERTY(RequestExternalViewModel* requestExternal READ requestExternal NOTIFY requestExternalChanged)
+    Q_PROPERTY(bool helpVisible READ helpVisible WRITE setHelpVisible NOTIFY helpVisibleChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -38,6 +39,7 @@ private:
     QScopedPointer<RequestExternalViewModel> m_requestExternal { new RequestExternalViewModel() };
     HttpRequestsListModel* m_requests { new HttpRequestsListModel(this) };
     MainTabsListModel* m_tabs { new MainTabsListModel(this) };
+    bool m_helpVisible { false };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
@@ -51,12 +53,16 @@ public:
     Q_INVOKABLE void addNewRequest(const QString& name);
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
 
+    bool helpVisible() const noexcept { return m_helpVisible; }
+    void setHelpVisible(const bool helpVisible) noexcept;
+
 signals:
     void requestPerformerChanged();
     void textAdviserChanged();
     void requestsChanged();
     void tabsChanged();
     void requestExternalChanged();
+    void helpVisibleChanged();
 
 };
 

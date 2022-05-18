@@ -21,6 +21,7 @@
 #include "ViewModels/httpperformerviewmodel.h"
 #include "ViewModels/backendviewmodel.h"
 #include "ViewModels/requestexternalviewmodel.h"
+#include "ListModels/shortcutslistmodel.h"
 
 void registerQmlTypes();
 
@@ -54,4 +55,5 @@ void registerQmlTypes() {
     qmlRegisterType<HttpPerformerViewModel>("ArdorQuery.Backend", 1, 0, "HttpPerformerViewModel");
     qmlRegisterType<BackendViewModel>("ArdorQuery.Backend", 1, 0, "BackendViewModel");
     qmlRegisterType<RequestExternalViewModel>("ArdorQuery.Backend", 1, 0, "RequestExternalViewModel");
+    qmlRegisterType<ShortcutsListModel>("ArdorQuery.Backend", 1, 0, "ShortcutsListModel");
 }
