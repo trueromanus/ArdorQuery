@@ -66,7 +66,25 @@ void ResponseBodyListModel::setBody(const QString &body) noexcept
     beginResetModel();
 
     m_lines.clear();
-    m_lines.append(body.split("\n"));
+    auto lines = body.split("\n");
+    foreach (auto line, lines) {
+        if (line.length() < 100) {
+            m_lines.append(line);
+            continue;
+        }
+
+        int currentStart = 0;
+        int count = line.count();
+
+        while (currentStart < count) {
+            int end = currentStart + 100;
+            end = end > count ? count - currentStart : 100;
+
+            auto part = line.mid(currentStart, end);
+            m_lines.append(part);
+            currentStart += 100;
+        }
+    }
     m_originalBody = body;
 
     endResetModel();
