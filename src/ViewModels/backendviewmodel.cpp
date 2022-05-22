@@ -36,27 +36,27 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
 {
     auto request = m_requests->selectedItem()->requestModel();
 
-    // Ctrl-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && control) {
-        request->addItem(request->selectedItem() + 1);
-        return true;
-    }
-
-    // Alt-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && alt) {
-        if (request->selectedItem() > 0) request->addItem(request->selectedItem() - 1);
-        return true;
-    }
-
-    // Shift-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && alt) {
-        request->addItem(-1);
-        return true;
-    }
+    // ---------
+    // Perform requests
 
     // Ctrl-S or F5
     if ((nativeCode == 31 && control) || nativeCode == 63) {
         m_requestPerformer->performRequest();
+        return true;
+    }
+
+    // Ctrl-B or F4
+    if ((nativeCode == 48 && control) || nativeCode == 62) {
+        m_requestPerformer->cancelRequest();
+        return true;
+    }
+
+    // ---------
+    // Clipboard
+
+    // Shift-L
+    if (nativeCode == 38 && shift) {
+        m_requestExternal->replaceFromClipboard();
         return true;
     }
 
@@ -66,17 +66,8 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
-    // Shift-L
-    if (nativeCode == 38 && shift) {
-        m_requestExternal->replaceFromClipboard();
-        return true;
-    }
-
-    // Ctrl-R
-    if (nativeCode == 19 && control) {
-        request->clearFields();
-        return true;
-    }
+    // ---------
+    // Change selection
 
     // PgUp/Numpad PgUp or Ctrl-PgUp/Ctrl-Numpad PgUp
     if (nativeCode == 329 || nativeCode == 73) {
@@ -95,6 +86,48 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         } else {
             request->selectDownField();
         }
+        return true;
+    }
+
+    // ---------
+    // Miscellanious
+
+    // Ctrl-H or F1
+    if ((nativeCode == 35 && control) || nativeCode == 59) {
+        setHelpVisible(!m_helpVisible);
+        return true;
+    }
+
+    // ---------
+    // Fields
+
+    // Ctrl-R
+    if (nativeCode == 19 && control) {
+        request->clearFields();
+        return true;
+    }
+
+    // Shift-R
+    if (nativeCode == 19 && shift) {
+        request->clearSelectedField();
+        return true;
+    }
+
+    // Ctrl-Enter
+    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && control) {
+        request->addItem(request->selectedItem() + 1);
+        return true;
+    }
+
+    // Alt-Enter
+    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && alt) {
+        if (request->selectedItem() > 0) request->addItem(request->selectedItem() - 1);
+        return true;
+    }
+
+    // Shift-Enter
+    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && alt) {
+        request->addItem(-1);
         return true;
     }
 

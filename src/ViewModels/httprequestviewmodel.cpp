@@ -230,6 +230,23 @@ void HttpRequestViewModel::clearFields()
     setSelectedItem(0);
 }
 
+void HttpRequestViewModel::clearSelectedField()
+{
+    if (m_items->count() == 1) {
+        clearFields();
+        return;
+    }
+
+    beginResetModel();
+
+    auto oldSelectedItem = m_selectedItem;
+    m_items->removeAt(oldSelectedItem);
+
+    endResetModel();
+
+    if (oldSelectedItem > 0) setSelectedItem(oldSelectedItem - 1);
+}
+
 QString HttpRequestViewModel::getMethod() const noexcept
 {
     auto iterator = std::find_if(

@@ -46,6 +46,8 @@ public:
     HttpRequestResultViewModel* httpRequestResult() const noexcept { return m_httpRequestResult; }
     void setHttpRequestResult(const HttpRequestResultViewModel* httpRequestResult) noexcept;
 
+    void cancelRequest();
+
     Q_INVOKABLE void performRequest();
 
 private:

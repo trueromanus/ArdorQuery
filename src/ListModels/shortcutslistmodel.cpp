@@ -28,6 +28,21 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     movingSection->formatShortcuts();
     m_sections.append(movingSection);
 
+    auto performSection = new ShortcutSection();
+    performSection->setTitle("Execution of a query");
+    performSection->setDescription("Start the execution of a query or cancel the execution of an already running query");
+    performSection->addShortcut("Ctrl-S or F5", "Run request");
+    performSection->addShortcut("Ctrl-B or F4", "Cancel request");
+    performSection->formatShortcuts();
+    m_sections.append(performSection);
+
+    auto removeFieldsSection = new ShortcutSection();
+    removeFieldsSection->setTitle("Deleting fields");
+    removeFieldsSection->setDescription("Delete all fields or only specific ones depending on the position");
+    removeFieldsSection->addShortcut("Ctrl-R", "Delete all fields");
+    removeFieldsSection->addShortcut("Shift-R", "Delete selected field");
+    removeFieldsSection->formatShortcuts();
+    m_sections.append(removeFieldsSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const

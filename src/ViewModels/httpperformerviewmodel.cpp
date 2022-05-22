@@ -71,6 +71,11 @@ void HttpPerformerViewModel::setHttpRequestResult(const HttpRequestResultViewMod
     emit httpRequestResultChanged();
 }
 
+void HttpPerformerViewModel::cancelRequest()
+{
+    //TODO: cancel request
+}
+
 /*
 QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 

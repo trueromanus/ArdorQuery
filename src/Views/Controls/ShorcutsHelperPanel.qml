@@ -49,7 +49,7 @@ Rectangle {
                 required property string description
 
                 width: listView.width
-                height: 80
+                height: titleText.height + descriptionText.height + shortcutsText.height + 20
                 Text {
                     id: titleText
                     anchors.left: parent.left
@@ -73,6 +73,7 @@ Rectangle {
                     wrapMode: Text.WordWrap
                 }
                 Text {
+                    id: shortcutsText
                     anchors.top: descriptionText.bottom
                     anchors.topMargin: 8
                     anchors.left: parent.left

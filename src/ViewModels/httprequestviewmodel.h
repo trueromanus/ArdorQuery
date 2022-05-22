@@ -71,6 +71,7 @@ public:
     Q_INVOKABLE void selectFirstField();
     Q_INVOKABLE void selectLastField();
     Q_INVOKABLE void clearFields();
+    Q_INVOKABLE void clearSelectedField();
 
     QString getMethod() const noexcept;
     QString getUrl() const noexcept;
