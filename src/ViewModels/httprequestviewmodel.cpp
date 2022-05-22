@@ -16,6 +16,7 @@
 #include <QClipboard>
 #include <QGuiApplication>
 #include "httprequestviewmodel.h"
+#include "../globalconstants.h"
 
 HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
     : QAbstractListModel{parent}
@@ -162,21 +163,21 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
     auto itemType = static_cast<HttpRequestTypes>(item->type());
     bool needRefresh = false;
 
-    if (lowerContent.startsWith("url ") && itemType != HttpRequestTypes::UrlType) {
+    if (lowerContent.startsWith(UrlPrefix) && itemType != HttpRequestTypes::UrlType) {
         item->setType(static_cast<int>(HttpRequestTypes::UrlType));
         needRefresh = true;
     }
-    if (lowerContent.startsWith("met ") && itemType != HttpRequestTypes::MethodType) {
+    if (lowerContent.startsWith(MethodPrefix) && itemType != HttpRequestTypes::MethodType) {
         item->setType(static_cast<int>(HttpRequestTypes::MethodType));
         needRefresh = true;
     }
 
-    if (lowerContent.startsWith("body ") && itemType != HttpRequestTypes::BodyType) {
+    if (lowerContent.startsWith(BodyPrefix) && itemType != HttpRequestTypes::BodyType) {
         item->setType(static_cast<int>(HttpRequestTypes::BodyType));
         needRefresh = true;
     }
 
-    if (lowerContent.startsWith("form ") && itemType != HttpRequestTypes::FormItemType) {
+    if (lowerContent.startsWith(FormPrefix) && itemType != HttpRequestTypes::FormItemType) {
         item->setType(static_cast<int>(HttpRequestTypes::FormItemType));
         needRefresh = true;
     }
