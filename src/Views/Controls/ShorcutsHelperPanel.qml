@@ -4,7 +4,7 @@ import QtQuick.Controls /* 2.15 */
 import ArdorQuery.Backend /* 1.0 */
 
 Rectangle {
-    width: 250
+    width: 280
     height: parent.height
     anchors.right: parent.right
     visible: backend.helpVisible
@@ -40,6 +40,7 @@ Rectangle {
 
         ListView {
             id: listView
+            clip: true
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: listModel
@@ -84,6 +85,9 @@ Rectangle {
                     text: shortcuts
                     wrapMode: Text.WordWrap
                 }
+            }
+            ScrollBar.vertical: ScrollBar {
+                active: true
             }
         }
     }

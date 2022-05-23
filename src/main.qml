@@ -39,6 +39,7 @@ ApplicationWindow {
             requestPerformer.httpRequest: backend.requests.selectedItem.requestModel
             requestPerformer.httpRequestResult: backend.requests.selectedItem.resultModel
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel
+            requestExternal.textAdvisor: backend.textAdviser
         }
 
         Item {

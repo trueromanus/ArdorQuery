@@ -30,6 +30,10 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             type = HttpRequestViewModel::HttpRequestTypes::FormItemType;
             isBodyType = false;
         }
+        if (m_textAdvisor->isContainsHeader(line)) {
+            type = HttpRequestViewModel::HttpRequestTypes::HeaderType;
+            isBodyType = false;
+        }
         if (line.startsWith(BodyPrefix)) {
             type = HttpRequestViewModel::HttpRequestTypes::BodyType;
             isBodyType = true;
@@ -55,6 +59,14 @@ void RequestExternalViewModel::setHttpRequest(const HttpRequestViewModel *httpRe
 
     m_httpRequest = const_cast<HttpRequestViewModel*>(httpRequest);
     emit httpRequestChanged();
+}
+
+void RequestExternalViewModel::setTextAdvisor(const TextAdvisorViewModel *textAdvisor) noexcept
+{
+    if (m_textAdvisor == textAdvisor) return;
+
+    m_textAdvisor = const_cast<TextAdvisorViewModel*>(textAdvisor);
+    emit textAdvisorChanged();
 }
 
 void RequestExternalViewModel::appendFromClipboard()

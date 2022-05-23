@@ -195,7 +195,7 @@ void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString 
     auto lowerName = name.toLower();
 
     if (lowerName == "content-type") {
-        request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, value);
+        request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, QVariant(value));
         return;
     }
     if (lowerName == "content-encoding") {
@@ -203,27 +203,27 @@ void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString 
         return;
     }
     if (lowerName == "content-length") {
-        request.setHeader(QNetworkRequest::KnownHeaders::ContentLengthHeader, value.toUtf8());
+        request.setHeader(QNetworkRequest::KnownHeaders::ContentLengthHeader, QVariant(value));
         return;
     }
     if (lowerName == "cookie") {
-        request.setHeader(QNetworkRequest::KnownHeaders::CookieHeader, value.toUtf8());
+        request.setHeader(QNetworkRequest::KnownHeaders::CookieHeader, QVariant(value));
         return;
     }
     if (lowerName == "if-match") {
-        request.setHeader(QNetworkRequest::KnownHeaders::IfMatchHeader, value.toUtf8());
+        request.setHeader(QNetworkRequest::KnownHeaders::IfMatchHeader, QVariant(value));
         return;
     }
     if (lowerName == "if-none-match") {
-        request.setHeader(QNetworkRequest::KnownHeaders::IfNoneMatchHeader, value.toUtf8());
+        request.setHeader(QNetworkRequest::KnownHeaders::IfNoneMatchHeader, QVariant(value));
         return;
     }
     if (lowerName == "if-modified-since") {
-        request.setHeader(QNetworkRequest::KnownHeaders::IfModifiedSinceHeader, value.toUtf8());
+        request.setHeader(QNetworkRequest::KnownHeaders::IfModifiedSinceHeader, QVariant(value));
         return;
     }
     if (lowerName == "user-agent") {
-        request.setHeader(QNetworkRequest::KnownHeaders::UserAgentHeader, value.toUtf8());
+        request.setHeader(QNetworkRequest::KnownHeaders::UserAgentHeader, QVariant(value));
         return;
     }
 

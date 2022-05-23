@@ -18,6 +18,13 @@
 ShortcutsListModel::ShortcutsListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
+    auto performSection = new ShortcutSection();
+    performSection->setTitle("Execution of a query");
+    performSection->setDescription("Start the execution of a query or cancel the execution of an already running query");
+    performSection->addShortcut("Ctrl-S or F5", "Run request");
+    performSection->addShortcut("Ctrl-B or F4", "Cancel request");
+    performSection->formatShortcuts();
+    m_sections.append(performSection);
 
     auto movingSection = new ShortcutSection();
     movingSection->setTitle("Adding fields");
@@ -28,14 +35,6 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     movingSection->formatShortcuts();
     m_sections.append(movingSection);
 
-    auto performSection = new ShortcutSection();
-    performSection->setTitle("Execution of a query");
-    performSection->setDescription("Start the execution of a query or cancel the execution of an already running query");
-    performSection->addShortcut("Ctrl-S or F5", "Run request");
-    performSection->addShortcut("Ctrl-B or F4", "Cancel request");
-    performSection->formatShortcuts();
-    m_sections.append(performSection);
-
     auto removeFieldsSection = new ShortcutSection();
     removeFieldsSection->setTitle("Deleting fields");
     removeFieldsSection->setDescription("Delete all fields or only specific ones depending on the position");
@@ -43,6 +42,22 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     removeFieldsSection->addShortcut("Shift-R", "Delete selected field");
     removeFieldsSection->formatShortcuts();
     m_sections.append(removeFieldsSection);
+
+    auto selectingFieldsSection = new ShortcutSection();
+    selectingFieldsSection->setTitle("Selecting fields");
+    selectingFieldsSection->setDescription("Delete all fields or only specific ones depending on the position");
+    selectingFieldsSection->addShortcut("PgUp or PgDown", "Select a text field above/below the currently selected field");
+    selectingFieldsSection->addShortcut("Ctrl-PgUp or Ctrl-PgDown", "Selecting start/end a text field");
+    selectingFieldsSection->formatShortcuts();
+    m_sections.append(selectingFieldsSection);
+
+    auto importFieldsSection = new ShortcutSection();
+    importFieldsSection->setTitle("Import fields");
+    importFieldsSection->setDescription("Import fields from file, clipboard etc");
+    importFieldsSection->addShortcut("Shift-L", "Clear all fields and load fields from clipboard");
+    importFieldsSection->addShortcut("Ctrl-L or F3", "Add fields from the clipboard below the currently selected field");
+    importFieldsSection->formatShortcuts();
+    m_sections.append(importFieldsSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const
