@@ -48,7 +48,8 @@ public:
         MethodType,
         HeaderType,
         BodyType,
-        FormItemType
+        FormItemType,
+        FormFileType
     };
 
     explicit HttpRequestViewModel(QObject *parent = nullptr);
@@ -77,6 +78,7 @@ public:
     QString getUrl() const noexcept;
     QString getBody() const noexcept;
     QStringList getFormParameters() const noexcept;
+    QStringList getFileParameters() const noexcept;
     QStringList getHeaders() const noexcept;
     bool isOnlyEmptyFirstItem() const noexcept;
     int countItems() const noexcept;

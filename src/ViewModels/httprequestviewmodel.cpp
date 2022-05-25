@@ -182,6 +182,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(FilePrefix) && itemType != HttpRequestTypes::FormFileType) {
+        item->setType(static_cast<int>(HttpRequestTypes::FormFileType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
         needRefresh = true;
@@ -317,6 +322,18 @@ QStringList HttpRequestViewModel::getFormParameters() const noexcept
     return parameters;
 }
 
+QStringList HttpRequestViewModel::getFileParameters() const noexcept
+{
+    QStringList parameters;
+    foreach (auto item, *m_items) {
+        auto type = static_cast<HttpRequestTypes>(item->type());
+        if (type == HttpRequestTypes::FormFileType) {
+            parameters.append(item->text());
+        }
+    }
+    return parameters;
+}
+
 QStringList HttpRequestViewModel::getHeaders() const noexcept
 {
     QStringList headers;
@@ -354,6 +371,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#78938A";
         case HttpRequestTypes::FormItemType:
             return "#9FC088";
+        case HttpRequestTypes::FormFileType:
+            return "#FFD9C0";
         default:
             return "#CDCDB4";
     }

@@ -30,6 +30,10 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             type = HttpRequestViewModel::HttpRequestTypes::FormItemType;
             isBodyType = false;
         }
+        if (line.startsWith(FilePrefix)) {
+            type = HttpRequestViewModel::HttpRequestTypes::FormFileType;
+            isBodyType = false;
+        }
         if (m_textAdvisor->isContainsHeader(line)) {
             type = HttpRequestViewModel::HttpRequestTypes::HeaderType;
             isBodyType = false;

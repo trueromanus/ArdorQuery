@@ -15,7 +15,11 @@
 
 #include <QUrlQuery>
 #include <QUuid>
+#include <QFile>
+#include <QMimeDatabase>
+#include <QFileInfo>
 #include "httpperformerviewmodel.h"
+#include "../globalconstants.h"
 
 HttpPerformerViewModel::HttpPerformerViewModel(QObject *parent)
     : QObject{parent}
@@ -76,25 +80,6 @@ void HttpPerformerViewModel::cancelRequest()
     //TODO: cancel request
 }
 
-/*
-QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-
-QHttpPart textPart;
-textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"text\""));
-textPart.setBody("my text");
-
-QHttpPart imagePart;
-imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
-imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"image\""));
-QFile *file = new QFile("image.jpg");
-file->open(QIODevice::ReadOnly);
-imagePart.setBodyDevice(file);
-file->setParent(multiPart); // we cannot delete the file now, so delete it with the multiPart
-
-multiPart->append(textPart);
-multiPart->append(imagePart);
-*/
-
 void HttpPerformerViewModel::performRequest()
 {
     if (m_httpRequest == nullptr) return;
@@ -132,10 +117,12 @@ void HttpPerformerViewModel::performRequest()
 
     auto body = m_httpRequest->getBody();
     auto forms = m_httpRequest->getFormParameters();
-    if (body.isEmpty() && forms.isEmpty()) {
+    auto files = m_httpRequest->getFileParameters();
+    if (body.isEmpty() && forms.isEmpty() && files.isEmpty()) {
         //TODO: push error message for user
         return;
     }
+
     if (!body.isEmpty() && !forms.isEmpty()) {
         //TODO: push error message for user (need understand body or form)
         return;
@@ -147,8 +134,11 @@ void HttpPerformerViewModel::performRequest()
             postReply = m_networkManager->post(request, body.toUtf8());
         }
 
-        if (!forms.isEmpty()) {
+        if (!forms.isEmpty() && files.isEmpty()) {
             postReply = m_networkManager->post(request, setupSimpleForm(std::move(forms)));
+        }
+        if (!files.isEmpty() && !forms.isEmpty()) {
+            postReply = m_networkManager->post(request, setupMultiPartForm(std::move(files), std::move(forms)));
         }
         if (postReply != nullptr) startTrackRequest(postReply);
     }
@@ -175,6 +165,56 @@ QByteArray HttpPerformerViewModel::setupSimpleForm(QStringList&& parameters)
     }
 
     return postData.toString(QUrl::FullyEncoded).toUtf8();
+}
+
+QHttpMultiPart* HttpPerformerViewModel::setupMultiPartForm(QStringList&& files, QStringList &&parameters)
+{
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    foreach (auto parameter, parameters) {
+        auto pair = parameter.replace(FormPrefix, "", Qt::CaseInsensitive);
+
+        auto parts = pair.split("=");
+        if (parts.count() < 2) continue;
+
+        QHttpPart textPart;
+        textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"" + parts[0] + "\""));
+        textPart.setBody(parts[1].toUtf8());
+
+        multiPart->append(textPart);
+    }
+
+    QMimeDatabase mimeDatabase;
+
+    foreach (auto fileItem, files) {
+        auto pair = fileItem.replace(FilePrefix, "", Qt::CaseInsensitive);
+
+        auto parts = pair.split("=");
+        if (parts.count() < 2) continue;
+
+        auto fileName = parts[1];
+
+        if (!QFile::exists(fileName)) continue;
+
+        QHttpPart filePart;
+
+        auto type = mimeDatabase.mimeTypeForFile(fileName);
+        filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(type.name()));
+
+        QFileInfo fileInfo(fileName);
+        auto onlyFileName = fileInfo.fileName();
+
+        filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"" + parts[0] + "\"; filename=\"" + onlyFileName + "\""));
+
+        auto file = new QFile(parts[1]);
+        file->open(QIODevice::ReadOnly);
+        filePart.setBodyDevice(file);
+        file->setParent(multiPart);
+
+        multiPart->append(filePart);
+    }
+
+    return multiPart;
 }
 
 void HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request) noexcept
