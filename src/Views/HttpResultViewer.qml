@@ -43,7 +43,7 @@ Item {
                     ResultText {
                         id: statusCodeText
                         width: responsePanel.width
-                        title: "<b>Status:</b> " + viewModel.displayStatusCode
+                        title: "<b>Status:</b> " + viewModel.displayStatusCode + viewModel.networkError
                     }
 
                     ResultText {

@@ -64,7 +64,7 @@ public:
 
     QString responseTime() const noexcept;
 
-    QString displayStatusCode() const noexcept { return m_statusCode > 0 ? QString::number(m_statusCode) : " - "; }
+    QString displayStatusCode() const noexcept { return m_statusCode > 0 ? QString::number(m_statusCode) : (m_networkError.isEmpty() ? " - " : ""); }
 
     ResponseBodyListModel* bodyModel() const noexcept { return m_bodyModel.get(); }
 

@@ -300,6 +300,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
         return;
     }
 
+    result->setNetworkError("");
     result->setBody(reply->readAll());
 
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
