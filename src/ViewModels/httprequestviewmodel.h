@@ -27,8 +27,20 @@ class HttpRequestViewModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int selectedItem READ selectedItem WRITE setSelectedItem NOTIFY selectedItemChanged)
 
+public:
+    enum class HttpRequestTypes {
+        UnknownType = 0,
+        UrlType,
+        MethodType,
+        HeaderType,
+        BodyType,
+        FormItemType,
+        FormFileType
+    };
+
 private:
     QScopedPointer<QList<HttpRequestItem*>> m_items { new QList<HttpRequestItem*>() };
+    QScopedPointer<QMap<int, int>> m_sortWeight { new QMap<int, int>() };
     int m_selectedItem { 0 };
     QSharedPointer<TextAdvisorViewModel> m_textAdvisor { nullptr };
 
@@ -42,16 +54,6 @@ private:
     };
 
 public:
-    enum class HttpRequestTypes {
-        UnknownType = 0,
-        UrlType,
-        MethodType,
-        HeaderType,
-        BodyType,
-        FormItemType,
-        FormFileType
-    };
-
     explicit HttpRequestViewModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -82,6 +84,7 @@ public:
     QStringList getHeaders() const noexcept;
     bool isOnlyEmptyFirstItem() const noexcept;
     int countItems() const noexcept;
+    void sortingFields(const bool descending) noexcept;
 
 private:
     QString getTypeColor(int type) const;

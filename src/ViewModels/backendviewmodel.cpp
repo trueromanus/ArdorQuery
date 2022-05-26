@@ -131,6 +131,19 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    // Ctrl-{
+    if ((nativeCode == 26) && control) {
+        request->sortingFields(false);
+        return true;
+    }
+
+    // Ctrl-}
+    if ((nativeCode == 27) && control) {
+        request->sortingFields(true);
+        return true;
+    }
+
+
     return false;
 }
 

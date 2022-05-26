@@ -23,6 +23,14 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
 {
     auto zeroItem = new HttpRequestItem();
     m_items->append(zeroItem);
+
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UrlType), 0);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::MethodType), 1);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HeaderType), 2);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormItemType), 3);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormFileType), 4);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 5);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 10);
 }
 
 int HttpRequestViewModel::rowCount(const QModelIndex &parent) const
@@ -352,6 +360,22 @@ bool HttpRequestViewModel::isOnlyEmptyFirstItem() const noexcept
 int HttpRequestViewModel::countItems() const noexcept
 {
     return m_items->count();
+}
+
+void HttpRequestViewModel::sortingFields(const bool descending) noexcept
+{
+    beginResetModel();
+
+    auto weigths = m_sortWeight.get();
+    std::sort(
+        m_items->begin(),
+        m_items->end(),
+        [weigths, descending](HttpRequestItem* left, HttpRequestItem* right) {
+            return descending ? weigths->value(left->type()) > weigths->value(right->type()) : weigths->value(left->type()) < weigths->value(right->type());
+        }
+    );
+
+    endResetModel();
 }
 
 QString HttpRequestViewModel::getTypeColor(int type) const
