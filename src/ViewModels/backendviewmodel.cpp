@@ -19,6 +19,8 @@ BackendViewModel::BackendViewModel(QObject *parent)
     : QObject{parent}
 {
     addNewRequest("New Query");
+
+    connect(m_requestPerformer, &HttpPerformerViewModel::pushErrorMessage, this, &BackendViewModel::errorNotification);
 }
 
 void BackendViewModel::addNewRequest(const QString &name)
@@ -153,4 +155,9 @@ void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
 
     m_helpVisible = helpVisible;
     emit helpVisibleChanged();
+}
+
+void BackendViewModel::errorNotification(const QString &title, const QString &message)
+{
+    m_notifications->pushErrorMessage(title, message);
 }

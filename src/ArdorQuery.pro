@@ -7,6 +7,7 @@ RC_ICONS = logo.ico
 SOURCES += \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
+        ListModels/notificationlistmodel.cpp \
         ListModels/responsebodylistmodel.cpp \
         ListModels/shortcutslistmodel.cpp \
         Models/httprequestitem.cpp \
@@ -30,6 +31,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
+    ListModels/notificationlistmodel.h \
     ListModels/responsebodylistmodel.h \
     ListModels/shortcutslistmodel.h \
     Models/httprequestitem.h \
@@ -41,4 +43,5 @@ HEADERS += \
     ViewModels/httprequestviewmodel.h \
     ViewModels/requestexternalviewmodel.h \
     ViewModels/textadvisorviewmodel.h \
-    globalconstants.h
+    globalconstants.h \
+    globalenums.h

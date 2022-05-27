@@ -64,6 +64,7 @@ private slots:
 signals:
     void httpRequestChanged();
     void httpRequestResultChanged();
+    void pushErrorMessage(const QString &title, const QString &message);
 
 };
 

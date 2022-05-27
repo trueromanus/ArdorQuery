@@ -33,6 +33,13 @@ ApplicationWindow {
         id: shortcutPanel
     }
 
+    NotificationPool {
+        anchors.right: parent.right
+        anchors.top: parent.top
+        width: 290
+        height: 200
+    }
+
     Item {
         BackendViewModel {
             id: backend

@@ -27,5 +27,6 @@
         <file>Views/Icons/checked.svg</file>
         <file>Views/Icons/question.svg</file>
         <file>Views/Controls/ShorcutsHelperPanel.qml</file>
+        <file>Views/Controls/NotificationPool.qml</file>
     </qresource>
 </RCC>

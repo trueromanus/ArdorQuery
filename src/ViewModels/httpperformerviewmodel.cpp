@@ -119,12 +119,12 @@ void HttpPerformerViewModel::performRequest()
     auto forms = m_httpRequest->getFormParameters();
     auto files = m_httpRequest->getFileParameters();
     if (body.isEmpty() && forms.isEmpty() && files.isEmpty()) {
-        //TODO: push error message for user
+        emit pushErrorMessage("Request perform", "You need specified body, form or files");
         return;
     }
 
     if (!body.isEmpty() && !forms.isEmpty()) {
-        //TODO: push error message for user (need understand body or form)
+        emit pushErrorMessage("Request perform", "You have filled in both the body and the fields of the form, you need to leave only one of them");
         return;
     }
 
