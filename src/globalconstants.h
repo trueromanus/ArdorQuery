@@ -8,3 +8,8 @@ extern QString FilePrefix;
 
 extern QString NotificationErrorTopic;
 extern QString NotificationInfoTopic;
+
+extern QString OutputFormatAuto;
+extern QString OutputFormatJson;
+extern QString OutputFormatXml;
+extern QString OutputFormatImage;

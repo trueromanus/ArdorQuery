@@ -21,6 +21,7 @@
 #include <QTime>
 #include <QElapsedTimer>
 #include "../ListModels/responsebodylistmodel.h"
+#include "../globalconstants.h"
 
 class HttpRequestResultViewModel : public QObject
 {
@@ -35,6 +36,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(ResponseBodyListModel* bodyModel READ bodyModel NOTIFY bodyModelChanged)
     Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged)
     Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
+    Q_PROPERTY(QString outputFormat READ outputFormat WRITE setOutputFormat NOTIFY outputFormatChanged)
 
 private:
     int m_statusCode { 0 };
@@ -48,6 +50,7 @@ private:
     bool m_isRunning { false };
     QList<QString> m_sizes { QList<QString>() };
     QScopedPointer<ResponseBodyListModel> m_bodyModel { new ResponseBodyListModel() };
+    QString m_outputFormat { OutputFormatAuto };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -82,6 +85,9 @@ public:
 
     QString displayStatus() const noexcept;
 
+    QString outputFormat() const noexcept { return m_outputFormat; }
+    void setOutputFormat(const QString& outputFormat) noexcept;
+
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
 
@@ -100,6 +106,7 @@ signals:
     void responseReadableSizeChanged();
     void isRunningChanged();
     void displayStatusChanged();
+    void outputFormatChanged();
 
 };
 

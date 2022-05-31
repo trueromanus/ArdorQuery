@@ -134,6 +134,14 @@ QString HttpRequestResultViewModel::displayStatus() const noexcept
     return "emptybox";
 }
 
+void HttpRequestResultViewModel::setOutputFormat(const QString &outputFormat) noexcept
+{
+    if (m_outputFormat == outputFormat) return;
+
+    m_outputFormat = outputFormat;
+    emit outputFormatChanged();
+}
+
 void HttpRequestResultViewModel::copyHeadersToClipboard()
 {
     if (m_headers.isEmpty()) return;

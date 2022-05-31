@@ -128,7 +128,48 @@ Item {
                         Item {
                             width: 200
                             height: 40
+
                             IconButton {
+                                anchors.right: copyBodyButton.left
+                                anchors.rightMargin: 2
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 24
+                                height: 24
+                                iconWidth: 22
+                                iconHeight: 22
+                                icon: storagePaths.icons + "format.svg"
+                                tooltipMessage: "Change output format"
+                                onPressed: {
+                                    outputFormatMenu.open();
+                                }
+
+                                Menu {
+                                    id: outputFormatMenu
+                                    modal: true
+                                    focus: true
+                                    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                                    Instantiator {
+                                        model: backend.outputFormats
+
+                                        MenuItem {
+                                            text: title
+                                            onPressed: {
+                                                viewModel.outputFormat = identifier;
+                                            }
+                                        }
+
+                                        onObjectAdded: function (index, object) {
+                                            outputFormatMenu.insertItem(index, object)
+                                        }
+                                        onObjectRemoved: function (object) {
+                                            outputFormatMenu.removeItem(object)
+                                        }
+                                    }
+                                }
+                            }
+
+                            IconButton {
+                                id: copyBodyButton
                                 anchors.right: parent.right
                                 anchors.rightMargin: 2
                                 anchors.verticalCenter: parent.verticalCenter

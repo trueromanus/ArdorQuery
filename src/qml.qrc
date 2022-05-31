@@ -29,5 +29,6 @@
         <file>Views/Controls/ShorcutsHelperPanel.qml</file>
         <file>Views/Controls/NotificationPool.qml</file>
         <file>Views/Icons/spinner.svg</file>
+        <file>Views/Icons/format.svg</file>
     </qresource>
 </RCC>
