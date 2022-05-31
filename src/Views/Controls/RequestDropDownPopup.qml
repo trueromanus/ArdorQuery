@@ -21,7 +21,7 @@ Popup {
                 id: titleRequests
                 anchors.top: parent.top
                 font.pointSize: 11
-                text: "Requests"
+                text: "Queries"
             }
 
             ListView {
@@ -118,7 +118,7 @@ Popup {
             TextButton {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
-                title: "Add new request"
+                title: "Add new query"
                 onPressed: {
                     backend.addNewRequest("New Query");
                 }

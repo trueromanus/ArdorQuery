@@ -177,4 +177,38 @@ Item {
             }
         }
     }
+
+    Item {
+        id: spinnerContainer
+        anchors.fill: parent
+        visible: viewModel.isRunning
+
+        Rectangle {
+            anchors.fill: parent
+            color: "lightgray"
+            opacity: .5
+        }
+
+        Image {
+            id: image
+            anchors.centerIn: parent
+            source: storagePaths.icons + "spinner.svg"
+            width: 40
+            height: 40
+            mipmap: true
+            RotationAnimation on rotation {
+                loops: Animation.Infinite
+                from: 0
+                to: 360
+                running: spinnerContainer.visible
+                duration: 1500
+            }
+        }
+
+        MouseArea {
+            enabled: spinnerContainer.visible
+            propagateComposedEvents: false
+            anchors.fill: parent
+        }
+    }
 }

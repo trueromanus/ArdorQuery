@@ -96,8 +96,8 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 24
                     height: 24
-                    iconWidth: 14
-                    iconHeight: 14
+                    iconWidth: 15
+                    iconHeight: 15
                     icon: storagePaths.icons + "downmenu.svg"
                     onPressed: {
                         requestsPopup.open();
