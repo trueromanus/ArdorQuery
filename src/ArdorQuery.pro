@@ -1,10 +1,16 @@
 QT += quick network websockets quickcontrols2
 
+CONFIG(debug, debug|release) {
+    QT += testlib
+}
+
 CONFIG += c++17
 
 RC_ICONS = logo.ico
 
 SOURCES += \
+        Formatters/jsonformatter.cpp \
+        Formatters/outputformatter.cpp \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
         ListModels/notificationlistmodel.cpp \
@@ -22,6 +28,10 @@ SOURCES += \
         ViewModels/textadvisorviewmodel.cpp \
         globalconstants.cpp \
         main.cpp
+# Adding tests for debug
+CONFIG(debug, debug|release) {
+SOURCES += Tests/jsonformatterunittests.cpp
+}
 
 RESOURCES += qml.qrc
 
@@ -30,6 +40,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Formatters/jsonformatter.h \
+    Formatters/outputformatter.h \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
     ListModels/notificationlistmodel.h \
@@ -47,3 +59,8 @@ HEADERS += \
     ViewModels/textadvisorviewmodel.h \
     globalconstants.h \
     globalenums.h
+
+# Adding tests for debug
+CONFIG(debug, debug|release) {
+HEADERS += Tests/jsonformatterunittests.h
+}

@@ -22,12 +22,29 @@
 #include "ViewModels/backendviewmodel.h"
 #include "ViewModels/requestexternalviewmodel.h"
 #include "ListModels/shortcutslistmodel.h"
+#ifdef QT_DEBUG
+#include <QtTest/QtTest>
+#include "Tests/jsonformatterunittests.h"
+#endif
+
 
 void registerQmlTypes();
+void runTest(int argc, char *argv[]);
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+
+#ifdef QT_DEBUG
+    if (argc > 0) {
+        auto command = QString(argv[1]);
+
+        if (command == "test") {
+            runTest(argc, argv);
+            return 0;
+        }
+    }
+#endif
 
     QQuickStyle::setStyle("Universal");
 
@@ -56,4 +73,8 @@ void registerQmlTypes() {
     qmlRegisterType<BackendViewModel>("ArdorQuery.Backend", 1, 0, "BackendViewModel");
     qmlRegisterType<RequestExternalViewModel>("ArdorQuery.Backend", 1, 0, "RequestExternalViewModel");
     qmlRegisterType<ShortcutsListModel>("ArdorQuery.Backend", 1, 0, "ShortcutsListModel");
+}
+
+void runTest(int argc, char *argv[]) {
+    QTest::qExec(new JsonFormatterUnitTests, argc - 1, argv);
 }
