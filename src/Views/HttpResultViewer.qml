@@ -205,7 +205,7 @@ Item {
                         delegate: Text {
                             leftPadding: 4
                             rightPadding: 10
-                            textFormat: Text.PlainText
+                            textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
                             text: currentLine
                             width: bodyContainer.width
                             wrapMode: Text.Wrap

@@ -48,7 +48,20 @@ void HttpRequestResultViewModel::setHeaders(const QStringList &headers) noexcept
 
 void HttpRequestResultViewModel::setBody(const QString &body) noexcept
 {
-    m_bodyModel->setBody(body);
+    if (body.isEmpty()) {
+        m_bodyModel->setBody("", "");
+        m_isFormatting = false;
+        emit bodyChanged();
+        emit isFormattingChanged();
+        return;
+    }
+
+    auto outputFormat = m_outputFormat;
+    if (m_outputFormat == OutputFormatAuto) outputFormat = getFormatFromContentType();
+
+    if (!outputFormat.isEmpty()) m_isFormatting = true;
+
+    m_bodyModel->setBody(body, outputFormat);
 
     emit bodyChanged();
     m_responseSize = body.size();
@@ -58,6 +71,7 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
         setResponseReadableSize("");
     }
     emit responseSizeChanged();
+    emit isFormattingChanged();
 }
 
 QString HttpRequestResultViewModel::responseTime() const noexcept
@@ -172,4 +186,29 @@ QString HttpRequestResultViewModel::getReadableSize(uint64_t size) const noexcep
     result.append(" ");
     result.append(m_sizes[order]);
     return result;
+}
+
+QString HttpRequestResultViewModel::getFormatFromContentType() const noexcept
+{
+    QString contentTypeHeader = "";
+    foreach (auto header, m_headers) {
+        if (header.startsWith("content-type:", Qt::CaseInsensitive)) {
+            contentTypeHeader = header.toLower();
+            break;
+        }
+    }
+    if (contentTypeHeader.isEmpty()) return "";
+
+    auto isJson = contentTypeHeader.contains("application/json");
+    if (isJson) return OutputFormatJson;
+
+    auto isXml = contentTypeHeader.contains("application/xml") || contentTypeHeader.contains("application/xhtml+xml");
+    if (isXml) return OutputFormatXml;
+
+    if (contentTypeHeader.contains("image/jpeg") || contentTypeHeader.contains("image/png") ||
+        contentTypeHeader.contains("image/svg+xml") || contentTypeHeader.contains("image/webp")) {
+        return OutputFormatImage;
+    }
+
+    return "";
 }

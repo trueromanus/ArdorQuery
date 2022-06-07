@@ -61,14 +61,19 @@ QHash<int, QByteArray> ResponseBodyListModel::roleNames() const
     };
 }
 
-void ResponseBodyListModel::setBody(const QString &body) noexcept
+void ResponseBodyListModel::setBody(const QString &body, const QString& formatter) noexcept
 {
     beginResetModel();
 
     m_lines.clear();
+    auto isHasFormatter = !formatter.isEmpty();
     auto lines = body.split("\n");
+    if (isHasFormatter) {
+        auto formatterInstance = m_formatterFactory->getFormatter(formatter);
+        lines = formatterInstance->format(body).split("\n");
+    }
     foreach (auto line, lines) {
-        if (line.length() < 100) {
+        if (isHasFormatter || line.length() < 100) {
             m_lines.append(line);
             continue;
         }

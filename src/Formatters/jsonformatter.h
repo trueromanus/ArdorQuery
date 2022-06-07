@@ -12,12 +12,12 @@ private:
     QString m_comma { "," };
     QString m_space { " " };
     QString m_colon { ":" };
-    const QString m_jsonTab { "    " };
+    const QString m_jsonTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
 
 public:
     JsonFormatter();
 
-    QString format(const QString& data);
+    QString format(const QString& data) override;
     void setOffset(int stackSize, QString& target, bool newLine = false) noexcept;
 };
 

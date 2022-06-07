@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include "../Formatters/formatterfactory.h"
 
 class ResponseBodyListModel : public QAbstractListModel
 {
@@ -26,6 +27,7 @@ class ResponseBodyListModel : public QAbstractListModel
 private:
     QStringList m_lines { QStringList() };
     QString m_originalBody { "" };
+    QScopedPointer<FormatterFactory> m_formatterFactory { new FormatterFactory() };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
@@ -39,7 +41,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void setBody(const QString& body) noexcept;
+    void setBody(const QString& body, const QString& formatter) noexcept;
     QString getFullBody() const noexcept;
     bool isHasBody() const noexcept;
 

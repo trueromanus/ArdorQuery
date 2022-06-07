@@ -301,7 +301,6 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     }
 
     result->setNetworkError("");
-    result->setBody(reply->readAll());
 
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (status_code.isValid()) result->setStatusCode(status_code.toInt());
@@ -314,4 +313,6 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
         responseHeaders.append(name + ": " + value);
     }
     result->setHeaders(responseHeaders);
+
+    result->setBody(reply->readAll());
 }

@@ -18,14 +18,14 @@ QString JsonFormatter::format(const QString &data)
         auto charIndex = m_array.indexOf(latinCharacter);
         if (charIndex > -1) {
             if (charIndex == 0) {
-                result += "<font color=\"#cc00ff\">[</font>\n";
+                result += "<font color=\"black\">[</font>\n";
                 stackSize += 1;
                 setOffset(stackSize, result);
             }
             if (charIndex == 1) {
                 stackSize -= 1;
                 setOffset(stackSize, result, true);
-                result += "<font color=\"#cc00ff\">]</font>";
+                result += "<font color=\"black\">]</font>";
             }
             continue;
         }
@@ -33,27 +33,27 @@ QString JsonFormatter::format(const QString &data)
         charIndex = m_object.indexOf(latinCharacter);
         if (charIndex > -1) {
             if (charIndex == 0) {
-                result += "<font color=\"#cc00ff\">{</font>\n";
+                result += "<font color=\"black\">{</font>\n";
                 stackSize += 1;
                 setOffset(stackSize, result);
             }
             if (charIndex == 1) {
                 stackSize -= 1;
                 setOffset(stackSize, result);
-                result += "\n<font color=\"#cc00ff\">}</font>";
+                result += "\n<font color=\"black\">}</font>";
             }
             continue;
         }
 
         if (m_string == latinCharacter) {
-            if (!stringStarted) result += "<font color=\"#ff66b3\">\"";
+            if (!stringStarted) result += "<font color=\"#ac0097\">\"";
             if (stringStarted) result += "\"</font>";
 
             stringStarted = !stringStarted;
             continue;
         }
 
-        if (m_comma == latinCharacter) {
+        if (m_comma == latinCharacter && !stringStarted) {
             result += ",\n";
             setOffset(stackSize, result);
             continue;

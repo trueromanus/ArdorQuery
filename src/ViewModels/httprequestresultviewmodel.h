@@ -37,6 +37,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged)
     Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
     Q_PROPERTY(QString outputFormat READ outputFormat WRITE setOutputFormat NOTIFY outputFormatChanged)
+    Q_PROPERTY(bool isFormatting READ isFormatting NOTIFY isFormattingChanged)
 
 private:
     int m_statusCode { 0 };
@@ -51,6 +52,7 @@ private:
     QList<QString> m_sizes { QList<QString>() };
     QScopedPointer<ResponseBodyListModel> m_bodyModel { new ResponseBodyListModel() };
     QString m_outputFormat { OutputFormatAuto };
+    bool m_isFormatting { false };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -88,11 +90,14 @@ public:
     QString outputFormat() const noexcept { return m_outputFormat; }
     void setOutputFormat(const QString& outputFormat) noexcept;
 
+    bool isFormatting() const noexcept { return m_isFormatting; }
+
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
 
 private:
     QString getReadableSize(uint64_t size) const noexcept;
+    QString getFormatFromContentType() const noexcept;
 
 signals:
     void statusCodeChanged();
@@ -107,6 +112,7 @@ signals:
     void isRunningChanged();
     void displayStatusChanged();
     void outputFormatChanged();
+    void isFormattingChanged();
 
 };
 

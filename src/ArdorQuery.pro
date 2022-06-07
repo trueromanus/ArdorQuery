@@ -9,6 +9,7 @@ CONFIG += c++17
 RC_ICONS = logo.ico
 
 SOURCES += \
+        Formatters/formatterfactory.cpp \
         Formatters/jsonformatter.cpp \
         Formatters/outputformatter.cpp \
         ListModels/httprequestslistmodel.cpp \
@@ -40,6 +41,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Formatters/formatterfactory.h \
     Formatters/jsonformatter.h \
     Formatters/outputformatter.h \
     ListModels/httprequestslistmodel.h \
