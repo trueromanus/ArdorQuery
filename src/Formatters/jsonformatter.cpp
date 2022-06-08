@@ -11,9 +11,14 @@ QString JsonFormatter::format(const QString &data)
     bool stringStarted = false;
     QString result;
     int iterator = -1;
+    int skipNextCharacters = 0;
 
     for (auto character: data) {
         iterator++;
+        if (skipNextCharacters > 0) {
+            skipNextCharacters--;
+            continue;
+        }
         auto latinCharacter = character.toLatin1();
         auto charIndex = m_array.indexOf(latinCharacter);
         if (charIndex > -1) {
@@ -39,8 +44,8 @@ QString JsonFormatter::format(const QString &data)
             }
             if (charIndex == 1) {
                 stackSize -= 1;
-                setOffset(stackSize, result);
-                result += "\n<font color=\"black\">}</font>";
+                setOffset(stackSize, result, true);
+                result += "<font color=\"black\">}</font>";
             }
             continue;
         }
@@ -53,16 +58,31 @@ QString JsonFormatter::format(const QString &data)
             continue;
         }
 
+        if (m_backslash == latinCharacter && stringStarted) {
+            if (iterator < data.count()) {
+                auto nextCharacter = data[iterator + 1].toLatin1();
+                if (nextCharacter == m_reverse || nextCharacter == m_newline) skipNextCharacters += 1;
+                if (nextCharacter == m_unicode) {
+                    skipNextCharacters += 5;
+                    auto code = data.mid(iterator, 6).toUtf8();
+                    result.append(code);
+                }
+            }
+            continue;
+        }
+
         if (m_comma == latinCharacter && !stringStarted) {
             result += ",\n";
             setOffset(stackSize, result);
             continue;
         }
 
-        if (m_space == latinCharacter && !stringStarted) {
-            if (iterator > 0 && data[iterator - 1].toLatin1() != m_colon) continue;
-            if (iterator == 0) continue;
+        if (m_colon == latinCharacter && !stringStarted) {
+            result.append(":&nbsp;");
+            continue;
         }
+
+        if (m_space == latinCharacter && !stringStarted) continue;
 
         result.append(character);
     }

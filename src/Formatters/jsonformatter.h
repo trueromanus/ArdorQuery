@@ -12,6 +12,10 @@ private:
     QString m_comma { "," };
     QString m_space { " " };
     QString m_colon { ":" };
+    QString m_backslash { "\\" };
+    QString m_reverse { "r" };
+    QString m_newline { "n" };
+    QString m_unicode { "u" };
     const QString m_jsonTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
 
 public:
