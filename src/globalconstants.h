@@ -11,5 +11,6 @@ extern QString NotificationInfoTopic;
 
 extern QString OutputFormatAuto;
 extern QString OutputFormatJson;
+extern QString OutputFormatHtml;
 extern QString OutputFormatXml;
 extern QString OutputFormatImage;

@@ -10,6 +10,7 @@ RC_ICONS = logo.ico
 
 SOURCES += \
         Formatters/formatterfactory.cpp \
+        Formatters/htmlformatter.cpp \
         Formatters/jsonformatter.cpp \
         Formatters/outputformatter.cpp \
         ListModels/httprequestslistmodel.cpp \
@@ -42,6 +43,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Formatters/formatterfactory.h \
+    Formatters/htmlformatter.h \
     Formatters/jsonformatter.h \
     Formatters/outputformatter.h \
     ListModels/httprequestslistmodel.h \

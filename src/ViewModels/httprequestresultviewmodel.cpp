@@ -205,6 +205,9 @@ QString HttpRequestResultViewModel::getFormatFromContentType() const noexcept
     auto isXml = contentTypeHeader.contains("application/xml") || contentTypeHeader.contains("application/xhtml+xml");
     if (isXml) return OutputFormatXml;
 
+    auto isHtml = contentTypeHeader.contains("text/html") || contentTypeHeader.contains("text/plain");
+    if (isHtml) return OutputFormatHtml;
+
     if (contentTypeHeader.contains("image/jpeg") || contentTypeHeader.contains("image/png") ||
         contentTypeHeader.contains("image/svg+xml") || contentTypeHeader.contains("image/webp")) {
         return OutputFormatImage;

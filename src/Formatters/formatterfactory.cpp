@@ -1,6 +1,7 @@
 #include "formatterfactory.h"
 #include "../globalconstants.h"
 #include "jsonformatter.h"
+#include "htmlformatter.h"
 
 FormatterFactory::FormatterFactory()
 {
@@ -16,6 +17,13 @@ OutputFormatter* FormatterFactory::getFormatter(const QString& formatter)
         m_instanceCache->insert(OutputFormatJson, jsonFormatter);
         return jsonFormatter;
     }
+
+    if (formatter == OutputFormatHtml) {
+        auto htmlFormatter = new HtmlFormatter();
+        m_instanceCache->insert(OutputFormatHtml, htmlFormatter);
+        return htmlFormatter;
+    }
+
     //TODO: implement xml formatter
     //if (formatter == OutputFormatXml) m_instanceCache->insert(OutputFormatJson, JsonFormatter());
 

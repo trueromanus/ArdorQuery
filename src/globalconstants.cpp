@@ -11,5 +11,6 @@ QString NotificationInfoTopic = "info";
 
 QString OutputFormatAuto = "auto";
 QString OutputFormatJson = "json";
+QString OutputFormatHtml = "html";
 QString OutputFormatXml = "xml";
 QString OutputFormatImage = "image";

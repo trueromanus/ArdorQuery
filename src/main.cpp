@@ -33,6 +33,8 @@ void runTest(int argc, char *argv[]);
 
 int main(int argc, char *argv[])
 {
+    qputenv("QML_DISABLE_DISK_CACHE", "1");
+
     QGuiApplication app(argc, argv);
 
 #ifdef QT_DEBUG
