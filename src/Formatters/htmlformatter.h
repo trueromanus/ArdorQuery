@@ -14,6 +14,8 @@ private:
     QString m_comment { "!--" };
     QString m_space { " " };
     QString m_newline { "\n" };
+    QString m_caretBack { "\r" };
+    QString m_scriptTag { "script" };
     const QString m_htmlTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
 
 public:
