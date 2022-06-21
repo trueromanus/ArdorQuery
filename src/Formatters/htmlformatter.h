@@ -1,6 +1,7 @@
 #ifndef HTMLFORMATTER_H
 #define HTMLFORMATTER_H
 
+#include <QSet>
 #include "outputformatter.h"
 
 class HtmlFormatter : public OutputFormatter
@@ -16,6 +17,7 @@ private:
     QString m_newline { "\n" };
     QString m_caretBack { "\r" };
     QString m_scriptTag { "script" };
+    QSet<QString> m_selfClosingTags { QSet<QString>() };
     const QString m_htmlTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
 
 public:

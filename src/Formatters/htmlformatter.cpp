@@ -2,7 +2,20 @@
 
 HtmlFormatter::HtmlFormatter()
 {
-
+    m_selfClosingTags.insert("area");
+    m_selfClosingTags.insert("base");
+    m_selfClosingTags.insert("br");
+    m_selfClosingTags.insert("col");
+    m_selfClosingTags.insert("embed");
+    m_selfClosingTags.insert("hr");
+    m_selfClosingTags.insert("img");
+    m_selfClosingTags.insert("input");
+    m_selfClosingTags.insert("link");
+    m_selfClosingTags.insert("meta");
+    m_selfClosingTags.insert("param");
+    m_selfClosingTags.insert("source");
+    m_selfClosingTags.insert("track");
+    m_selfClosingTags.insert("wbr");
 }
 
 QString HtmlFormatter::format(const QString &data)
@@ -14,10 +27,9 @@ QString HtmlFormatter::format(const QString &data)
     bool tagNameEnded = false;
     bool contentStarted = false;
     int iterator = -1;
-    bool isClosedTag = false;
-    bool isPreviousClosedTag = false;
-    int closedTagStackSize = 0;
+    bool isLastSelfClosedTag = false;
     QString result;
+    QString currentTag = "";
 
     for(auto character: data) {
         iterator++;
@@ -35,15 +47,10 @@ QString HtmlFormatter::format(const QString &data)
             tagNameEnded = false;
             if (charIndex == 0) {
                 if (iterator + 1 < data.length() && data[iterator + 1] == m_closedTag) {
-                    isClosedTag = true;
                     stackSize -= 1;
-                    if (isPreviousClosedTag && closedTagStackSize > 0 && closedTagStackSize - stackSize > 1) {
-                        stackSize += 1;
-                    }
-                    closedTagStackSize = stackSize;
                 } else {
-                    isPreviousClosedTag = false;
-                    stackSize += 1;
+                    if (!isLastSelfClosedTag) stackSize += 1;
+                    isLastSelfClosedTag = false;
                 }
                 setOffset(stackSize, result);
                 result += "<font color=\"#8812a1\">&lt;";
@@ -53,11 +60,11 @@ QString HtmlFormatter::format(const QString &data)
                 tagStarted = false;
                 attributeStarted = false;
                 result += "<font color=\"#8812a1\">&gt;</font>\n";
-                if (isClosedTag || data[iterator - 1] == m_closedTag) {
-                    isClosedTag = false;
-                    if (!isPreviousClosedTag) stackSize -= 1;
-                    isPreviousClosedTag = true;
+                if (data[iterator - 1] == m_closedTag || m_selfClosingTags.contains(currentTag)) {
+                    //stackSize -= 1;
+                    isLastSelfClosedTag = true;
                 }
+                currentTag.clear();
             }
             continue;
         }
@@ -108,6 +115,8 @@ QString HtmlFormatter::format(const QString &data)
         if (character == m_space && !tagStarted) continue;
 
         result += character;
+
+        if (tagStarted && !tagNameEnded) currentTag += character;
     }
 
     return result;
