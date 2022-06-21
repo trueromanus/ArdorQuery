@@ -22,6 +22,8 @@ Item {
         id: listView
         anchors.fill: parent
         clip: true
+        boundsBehavior: ListView.StopAtBounds
+        flickDeceleration: 5000
         delegate: Item {
             width: listView.width
             height: textArea.contentHeight + textArea.font.pixelSize
@@ -67,7 +69,6 @@ Item {
                 }
             }
         }
-        flickDeceleration: 5000
         ScrollBar.vertical: ScrollBar {
             active: true
         }

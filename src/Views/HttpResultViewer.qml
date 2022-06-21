@@ -104,6 +104,7 @@ Item {
                             clip: true
                             anchors.fill: parent
                             model: viewModel.headers
+                            boundsBehavior: ListView.StopAtBounds
                             delegate: Text {
                                 leftPadding: 4
                                 rightPadding: 10
@@ -200,7 +201,9 @@ Item {
                     ListView {
                         clip: true
                         anchors.fill: parent
+                        flickDeceleration: 5000
                         flickableDirection: Flickable.HorizontalAndVerticalFlick
+                        boundsBehavior: ListView.StopAtBounds
                         model: viewModel.bodyModel
                         delegate: Text {
                             leftPadding: 4

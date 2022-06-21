@@ -28,6 +28,7 @@ QString HtmlFormatter::format(const QString &data)
     bool contentStarted = false;
     int iterator = -1;
     bool isLastSelfClosedTag = false;
+    bool isAttributeStringStarted = false;
     QString result;
     QString currentTag = "";
 
@@ -74,15 +75,17 @@ QString HtmlFormatter::format(const QString &data)
             if (character == m_attributeDecorator && attributeStarted) {
                 if (attributeQuoteStarted) {
                     result += "&quot;</font>";
+                    isAttributeStringStarted = false;
                 } else {
                     result += "<font color=\"#2222dd\">&quot;";
+                    isAttributeStringStarted = true;
                 }
                 attributeQuoteStarted = !attributeQuoteStarted;
                 continue;
             }
 
             // <tag attribute=..> handle attribute equal
-            if (character == m_attributeEqual && attributeStarted) {
+            if (character == m_attributeEqual && attributeStarted && !isAttributeStringStarted) {
                 result += "=</font>";
                 continue;
             }
@@ -92,7 +95,7 @@ QString HtmlFormatter::format(const QString &data)
                 result += "<font color=\"#994500\">";
             }
 
-            if (character == m_space && tagStarted && attributeStarted) {
+            if (character == m_space && tagStarted && attributeStarted && !isAttributeStringStarted) {
                 attributeStarted = false;
                 result += "</font> ";
             }
@@ -100,6 +103,11 @@ QString HtmlFormatter::format(const QString &data)
             if (character == m_space && tagStarted && !tagNameEnded) {
                 tagNameEnded = true;
                 result += "</font> ";
+            }
+
+            if (character == m_closedTag && tagStarted && !isAttributeStringStarted) {
+                result += "<font color=\"#8812a1\">/</font>";
+                continue;
             }
         }
 
@@ -112,7 +120,7 @@ QString HtmlFormatter::format(const QString &data)
 
         if (character == m_newline || character == m_caretBack) continue;
 
-        if (character == m_space && !tagStarted) continue;
+        if (character == m_space && !tagStarted && !contentStarted) continue;
 
         result += character;
 
