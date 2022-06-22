@@ -109,6 +109,10 @@ QString HtmlFormatter::format(const QString &data)
                 result += "<font color=\"#8812a1\">/</font>";
                 continue;
             }
+
+            if (character == m_exclamationPoint && tagStarted && !tagNameEnded && data[iterator - 1] == m_tag[0]) {
+                stackSize -= 1;
+            }
         }
 
         // <X> <any content> </X>

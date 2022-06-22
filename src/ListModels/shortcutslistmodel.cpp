@@ -21,7 +21,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     auto performSection = new ShortcutSection();
     performSection->setTitle("Execution of a query");
     performSection->setDescription("Start the execution of a query or cancel the execution of an already running query");
-    performSection->addShortcut("Ctrl-S or F5", "Run request");
+    performSection->addShortcut("Ctrl-Z or F5", "Run request");
     performSection->addShortcut("Ctrl-B or F4", "Cancel request");
     performSection->formatShortcuts();
     m_sections.append(performSection);

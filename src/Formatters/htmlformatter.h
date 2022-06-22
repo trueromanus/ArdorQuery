@@ -13,6 +13,7 @@ private:
     QString m_closedTag { "/" };
     QString m_doctype { "!doctype" };
     QString m_comment { "!--" };
+    QString m_exclamationPoint { "!" };
     QString m_space { " " };
     QString m_newline { "\n" };
     QString m_caretBack { "\r" };

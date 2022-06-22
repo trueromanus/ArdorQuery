@@ -41,8 +41,8 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // ---------
     // Perform requests
 
-    // Ctrl-S or F5
-    if ((nativeCode == 31 && control) || nativeCode == 63) {
+    // Ctrl-Z or F5
+    if ((nativeCode == 44 && control) || nativeCode == 63) {
         m_requestPerformer->performRequest();
         return true;
     }
