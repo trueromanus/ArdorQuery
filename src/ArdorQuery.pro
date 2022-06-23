@@ -13,6 +13,7 @@ SOURCES += \
         Formatters/htmlformatter.cpp \
         Formatters/jsonformatter.cpp \
         Formatters/outputformatter.cpp \
+        Formatters/xmlformatter.cpp \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
         ListModels/notificationlistmodel.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     Formatters/htmlformatter.h \
     Formatters/jsonformatter.h \
     Formatters/outputformatter.h \
+    Formatters/xmlformatter.h \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
     ListModels/notificationlistmodel.h \
