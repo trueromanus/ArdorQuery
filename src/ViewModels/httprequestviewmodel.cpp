@@ -378,6 +378,29 @@ void HttpRequestViewModel::sortingFields(const bool descending) noexcept
     endResetModel();
 }
 
+QString HttpRequestViewModel::getAllFields() const noexcept
+{
+    QString body;
+    QStringList lines(m_items->size());
+    int iterator = 0;
+
+    foreach (auto field, *m_items) {
+        auto text = field->text();
+        auto type = static_cast<HttpRequestTypes>(field->type());
+        if (type == HttpRequestTypes::BodyType) {
+            body = text;
+        }
+        else {
+            lines[iterator] = text.replace("\n", "");
+        }
+        iterator++;
+    }
+
+    if (!body.isEmpty()) lines[iterator] = body;
+
+    return lines.join("\n");
+}
+
 QString HttpRequestViewModel::getTypeColor(int type) const
 {
     auto requestType = static_cast<HttpRequestTypes>(type);

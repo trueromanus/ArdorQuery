@@ -54,6 +54,22 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     }
 
     // ---------
+    // Export
+
+    // Ctrl-S or F10
+    if ((nativeCode == 31 && control) || nativeCode == 68) {
+        m_requestExternal->copyToClipboard();
+        return true;
+    }
+
+    //Shift-S
+    if ((nativeCode == 31 && shift)) {
+        //TODO: export to file
+        //request->exportToFile();
+        return true;
+    }
+
+    // ---------
     // Clipboard
 
     // Shift-L

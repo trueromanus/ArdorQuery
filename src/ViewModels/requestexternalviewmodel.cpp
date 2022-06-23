@@ -97,6 +97,13 @@ void RequestExternalViewModel::replaceFromClipboard()
     m_httpRequest->removeFirstItem(); //it need for remove empty first item
 }
 
+void RequestExternalViewModel::copyToClipboard()
+{
+    auto clipboard = QGuiApplication::clipboard();
+    auto fields = m_httpRequest->getAllFields();
+    clipboard->setText(fields, QClipboard::Clipboard);
+}
+
 QString RequestExternalViewModel::getTextFromClipboard() const noexcept
 {
     auto clipboard = QGuiApplication::clipboard();

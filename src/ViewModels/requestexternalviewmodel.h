@@ -29,6 +29,8 @@ public:
     Q_INVOKABLE void appendFromClipboard();
     Q_INVOKABLE void replaceFromClipboard();
 
+    void copyToClipboard();
+
 private:
     QString getTextFromClipboard() const noexcept;
 

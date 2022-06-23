@@ -85,6 +85,7 @@ public:
     bool isOnlyEmptyFirstItem() const noexcept;
     int countItems() const noexcept;
     void sortingFields(const bool descending) noexcept;
+    QString getAllFields() const noexcept;
 
 private:
     QString getTypeColor(int type) const;
