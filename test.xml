@@ -5,6 +5,7 @@
   <from>Jani</from>
   <address>
     <street>British</street>
+    <allbuilding />
     <building>10</building>
   </address>
   <heading>Reminder</heading>
