@@ -4,9 +4,9 @@
   <to>Tove</to>
   <from>Jani</from>
   <address>
-    <street>British</street>
+    <street complex>British</street>
     <allbuilding />
-    <building>10</building>
+    <building corpus="10" litera="A">10</building>
   </address>
   <heading>Reminder</heading>
   <body>Don't forget me this weekend!</body>
