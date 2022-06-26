@@ -1,6 +1,7 @@
 import QtQuick /* 2.15 */
 
 Item {
+    id: root
     height: 40
 
     property alias title: responseHeaderText.text
@@ -22,7 +23,7 @@ Item {
         Item {
             id: buttons
             height: parent.height
-            width: 200
+            width: root.width
             anchors.right: parent.right
         }
     }

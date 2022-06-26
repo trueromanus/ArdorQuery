@@ -7,12 +7,14 @@ OutputFormatsListModel::OutputFormatsListModel(QObject *parent)
     m_outputFormats.append(OutputFormatAuto);
     m_outputFormats.append(OutputFormatJson);
     m_outputFormats.append(OutputFormatXml);
+    m_outputFormats.append(OutputFormatHtml);
     m_outputFormats.append(OutputFormatImage);
 
     m_outputFormatTitles.insert(OutputFormatAuto, "Auto");
     m_outputFormatTitles.insert(OutputFormatJson, "JSON");
     m_outputFormatTitles.insert(OutputFormatXml, "XML document");
     m_outputFormatTitles.insert(OutputFormatImage, "Image");
+    m_outputFormatTitles.insert(OutputFormatHtml, "HTML");
 }
 
 int OutputFormatsListModel::rowCount(const QModelIndex &parent) const
@@ -59,4 +61,11 @@ QHash<int, QByteArray> OutputFormatsListModel::roleNames() const
             "itemIndex"
         }
     };
+}
+
+QString OutputFormatsListModel::getTitle(const QString &value) noexcept
+{
+    if (!m_outputFormatTitles.contains(value)) return "";
+
+    return m_outputFormatTitles.value(value);
 }

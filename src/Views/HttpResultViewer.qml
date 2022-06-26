@@ -71,22 +71,18 @@ Item {
                         width: responsePanel.width
                         title: "Headers"
 
-                        Item {
-                            width: 200
-                            height: 40
-                            IconButton {
-                                anchors.right: parent.right
-                                anchors.rightMargin: 2
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: 24
-                                height: 24
-                                iconWidth: 22
-                                iconHeight: 22
-                                icon: storagePaths.icons + "copy.svg"
-                                tooltipMessage: "Copy all headers to clipboard"
-                                onPressed: {
-                                    viewModel.copyHeadersToClipboard();
-                                }
+                        IconButton {
+                            anchors.right: parent.right
+                            anchors.rightMargin: 2
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 24
+                            height: 24
+                            iconWidth: 22
+                            iconHeight: 22
+                            icon: storagePaths.icons + "copy.svg"
+                            tooltipMessage: "Copy all headers to clipboard"
+                            onPressed: {
+                                viewModel.copyHeadersToClipboard();
                             }
                         }
                     }
@@ -127,18 +123,28 @@ Item {
                         title: "Body"
 
                         Item {
-                            width: 200
-                            height: 40
+                            width: 100
+                            height: parent.height
+                            anchors.centerIn: parent
+
+                            Text {
+                                anchors.right: changeFormatter.left
+                                anchors.rightMargin: 6
+                                anchors.verticalCenter: parent.verticalCenter
+                                font.pointSize: 10.5
+                                text: backend.outputFormats.getTitle(viewModel.outputFormat)
+                            }
 
                             IconButton {
-                                anchors.right: copyBodyButton.left
+                                id: changeFormatter
+                                anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.rightMargin: 2
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: 24
-                                height: 24
-                                iconWidth: 22
-                                iconHeight: 22
-                                icon: storagePaths.icons + "format.svg"
+                                width: 15
+                                height: 15
+                                iconWidth: 15
+                                iconHeight: 15
+                                icon: storagePaths.icons + "downmenu.svg"
                                 tooltipMessage: "Change output format"
                                 onPressed: {
                                     outputFormatMenu.open();
@@ -146,6 +152,7 @@ Item {
 
                                 Menu {
                                     id: outputFormatMenu
+                                    y: -20
                                     modal: true
                                     focus: true
                                     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
@@ -156,6 +163,7 @@ Item {
                                             text: title
                                             onPressed: {
                                                 viewModel.outputFormat = identifier;
+                                                //TODO: reformatted
                                             }
                                         }
 
@@ -168,21 +176,21 @@ Item {
                                     }
                                 }
                             }
+                        }
 
-                            IconButton {
-                                id: copyBodyButton
-                                anchors.right: parent.right
-                                anchors.rightMargin: 2
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: 24
-                                height: 24
-                                iconWidth: 22
-                                iconHeight: 22
-                                icon: storagePaths.icons + "copy.svg"
-                                tooltipMessage: "Copy all body to clipboard"
-                                onPressed: {
-                                    viewModel.copyBodyToClipboard();
-                                }
+                        IconButton {
+                            id: copyBodyButton
+                            anchors.right: parent.right
+                            anchors.rightMargin: 2
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 24
+                            height: 24
+                            iconWidth: 22
+                            iconHeight: 22
+                            icon: storagePaths.icons + "copy.svg"
+                            tooltipMessage: "Copy all body to clipboard"
+                            onPressed: {
+                                viewModel.copyBodyToClipboard();
                             }
                         }
                     }
