@@ -1,0 +1,13 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<note>
+  <to>Tove</to>
+  <from>Jani</from>
+  <address>
+    <street complex>British</street>
+    <allbuilding />
+    <building corpus="10" litera="A">10</building>
+  </address>
+  <heading>Reminder</heading>
+  <body>Don't forget me this weekend!</body>
+</note>
