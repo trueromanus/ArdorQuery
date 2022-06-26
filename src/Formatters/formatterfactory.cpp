@@ -2,6 +2,7 @@
 #include "../globalconstants.h"
 #include "jsonformatter.h"
 #include "htmlformatter.h"
+#include "xmlformatter.h"
 
 FormatterFactory::FormatterFactory()
 {
@@ -24,8 +25,11 @@ OutputFormatter* FormatterFactory::getFormatter(const QString& formatter)
         return htmlFormatter;
     }
 
-    //TODO: implement xml formatter
-    //if (formatter == OutputFormatXml) m_instanceCache->insert(OutputFormatJson, JsonFormatter());
+    if (formatter == OutputFormatXml) {
+        auto xmlFormatter = new XmlFormatter();
+        m_instanceCache->insert(OutputFormatXml, xmlFormatter);
+        return xmlFormatter;
+    }
 
     return m_nullableFormatter.get();
 }

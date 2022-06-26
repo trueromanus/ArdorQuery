@@ -13,6 +13,7 @@ class XmlFormatter : public OutputFormatter
     QString m_attributeDecorator { "\"" };
     QString m_closedTag { "/" };
     QString m_exclamationPoint { "!" };
+    QString m_question { "?" };
     QString m_space { " " };
     QString m_newline { "\n" };
     QString m_caretBack { "\r" };
