@@ -51,7 +51,6 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
     if (body.isEmpty()) {
         m_bodyModel->setBody("", "");
         m_isFormatting = false;
-        emit bodyChanged();
         emit isFormattingChanged();
         return;
     }
@@ -59,11 +58,10 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
     auto outputFormat = m_outputFormat;
     if (m_outputFormat == OutputFormatAuto) outputFormat = getFormatFromContentType();
 
-    if (!outputFormat.isEmpty()) m_isFormatting = true;
+    m_isFormatting = !outputFormat.isEmpty();
 
     m_bodyModel->setBody(body, outputFormat);
 
-    emit bodyChanged();
     m_responseSize = body.size();
     if (m_responseSize > 0) {
         setResponseReadableSize(getReadableSize(m_responseSize));
@@ -71,6 +69,18 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
         setResponseReadableSize("");
     }
     emit responseSizeChanged();
+    emit isFormattingChanged();
+}
+
+void HttpRequestResultViewModel::reformatting() noexcept
+{
+    auto outputFormat = m_outputFormat;
+    if (outputFormat == OutputFormatAuto) outputFormat = getFormatFromContentType();
+
+    m_isFormatting = !outputFormat.isEmpty();
+
+    m_bodyModel->reformatBody(outputFormat);
+
     emit isFormattingChanged();
 }
 
@@ -170,6 +180,11 @@ void HttpRequestResultViewModel::copyBodyToClipboard()
 
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(m_bodyModel->getFullBody());
+}
+
+void HttpRequestResultViewModel::reformatBody()
+{
+    reformatting();
 }
 
 QString HttpRequestResultViewModel::getReadableSize(uint64_t size) const noexcept

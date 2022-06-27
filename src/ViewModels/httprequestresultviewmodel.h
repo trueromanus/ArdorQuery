@@ -64,6 +64,7 @@ public:
     void setHeaders(const QStringList& headers) noexcept;
 
     void setBody(const QString& body) noexcept;
+    void reformatting() noexcept;
 
     QString responseSize() const noexcept { return m_responseSize > 0 ? "(" + QString::number(m_responseSize) + " total bytes)" : " - "; }
 
@@ -94,6 +95,7 @@ public:
 
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
+    Q_INVOKABLE void reformatBody();
 
 private:
     QString getReadableSize(uint64_t size) const noexcept;
@@ -102,7 +104,6 @@ private:
 signals:
     void statusCodeChanged();
     void headersChanged();
-    void bodyChanged();
     void responseSizeChanged();
     void responseTimeChanged();
     void networkErrorChanged();

@@ -163,7 +163,7 @@ Item {
                                             text: title
                                             onPressed: {
                                                 viewModel.outputFormat = identifier;
-                                                //TODO: reformatted
+                                                viewModel.reformatBody();
                                             }
                                         }
 

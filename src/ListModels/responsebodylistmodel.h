@@ -42,6 +42,8 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void setBody(const QString& body, const QString& formatter) noexcept;
+    void reformatting(const QString& formatter) noexcept;
+    void reformatBody(const QString& formatter) noexcept;
     QString getFullBody() const noexcept;
     bool isHasBody() const noexcept;
 

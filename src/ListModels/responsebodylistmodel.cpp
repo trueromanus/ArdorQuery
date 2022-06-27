@@ -65,7 +65,16 @@ void ResponseBodyListModel::setBody(const QString &body, const QString& formatte
 {
     beginResetModel();
 
+    m_originalBody = body;
+    reformatting(formatter);
+
+    endResetModel();
+}
+
+void ResponseBodyListModel::reformatting(const QString &formatter) noexcept
+{
     m_lines.clear();
+    auto body = m_originalBody;
     auto isHasFormatter = !formatter.isEmpty();
     auto lines = body.split("\n");
     if (isHasFormatter) {
@@ -90,7 +99,13 @@ void ResponseBodyListModel::setBody(const QString &body, const QString& formatte
             currentStart += 100;
         }
     }
-    m_originalBody = body;
+}
+
+void ResponseBodyListModel::reformatBody(const QString &formatter) noexcept
+{
+    beginResetModel();
+
+    reformatting(formatter);
 
     endResetModel();
 }
