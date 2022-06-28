@@ -133,6 +133,13 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 font.pointSize: 10.5
                                 text: backend.outputFormats.getTitle(viewModel.outputFormat)
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onPressed: {
+                                        outputFormatMenu.open();
+                                    }
+                                }
                             }
 
                             IconButton {
