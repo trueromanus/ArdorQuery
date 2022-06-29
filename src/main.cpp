@@ -22,6 +22,7 @@
 #include "ViewModels/backendviewmodel.h"
 #include "ViewModels/requestexternalviewmodel.h"
 #include "ListModels/shortcutslistmodel.h"
+#include "QuickControls/backendimage.h"
 #ifdef QT_DEBUG
 #include <QtTest/QtTest>
 #include "Tests/jsonformatterunittests.h"
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
         },
         Qt::QueuedConnection
     );
+
     engine.load(url);
 
     return app.exec();
@@ -75,6 +77,7 @@ void registerQmlTypes() {
     qmlRegisterType<BackendViewModel>("ArdorQuery.Backend", 1, 0, "BackendViewModel");
     qmlRegisterType<RequestExternalViewModel>("ArdorQuery.Backend", 1, 0, "RequestExternalViewModel");
     qmlRegisterType<ShortcutsListModel>("ArdorQuery.Backend", 1, 0, "ShortcutsListModel");
+    qmlRegisterType<BackendImage>("ArdorQuery.Backend", 1, 0, "BackendImage");
 }
 
 void runTest(int argc, char *argv[]) {

@@ -46,11 +46,12 @@ void HttpRequestResultViewModel::setHeaders(const QStringList &headers) noexcept
     emit headersChanged();
 }
 
-void HttpRequestResultViewModel::setBody(const QString &body) noexcept
+void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
 {
     if (body.isEmpty()) {
         m_bodyModel->setBody("", "");
         m_isFormatting = false;
+        m_showImage = false;
         emit isFormattingChanged();
         return;
     }
@@ -59,6 +60,7 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
     if (m_outputFormat == OutputFormatAuto) outputFormat = getFormatFromContentType();
 
     m_isFormatting = !outputFormat.isEmpty();
+    m_showImage = outputFormat == OutputFormatImage;
 
     m_bodyModel->setBody(body, outputFormat);
 
@@ -70,6 +72,7 @@ void HttpRequestResultViewModel::setBody(const QString &body) noexcept
     }
     emit responseSizeChanged();
     emit isFormattingChanged();
+    emit showImageChanged();
 }
 
 void HttpRequestResultViewModel::reformatting() noexcept
@@ -78,10 +81,12 @@ void HttpRequestResultViewModel::reformatting() noexcept
     if (outputFormat == OutputFormatAuto) outputFormat = getFormatFromContentType();
 
     m_isFormatting = !outputFormat.isEmpty();
+    m_showImage = outputFormat == OutputFormatImage;
 
     m_bodyModel->reformatBody(outputFormat);
 
     emit isFormattingChanged();
+    emit showImageChanged();
 }
 
 QString HttpRequestResultViewModel::responseTime() const noexcept

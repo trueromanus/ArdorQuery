@@ -18,16 +18,20 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QImage>
 #include "../Formatters/formatterfactory.h"
+#include "../globalconstants.h"
 
 class ResponseBodyListModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QImage bodyImage READ bodyImage NOTIFY bodyImageChanged)
 
 private:
     QStringList m_lines { QStringList() };
     QString m_originalBody { "" };
     QScopedPointer<FormatterFactory> m_formatterFactory { new FormatterFactory() };
+    QImage m_imageSource { QImage() };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
@@ -41,14 +45,16 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void setBody(const QString& body, const QString& formatter) noexcept;
+    void setBody(const QByteArray& body, const QString& formatter) noexcept;
     void reformatting(const QString& formatter) noexcept;
     void reformatBody(const QString& formatter) noexcept;
     QString getFullBody() const noexcept;
     bool isHasBody() const noexcept;
+    QImage bodyImage() const noexcept { return m_imageSource; }
 
 signals:
     void visibleBodyChanged();
+    void bodyImageChanged();
 
 };
 

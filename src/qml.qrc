@@ -30,5 +30,6 @@
         <file>Views/Controls/NotificationPool.qml</file>
         <file>Views/Icons/spinner.svg</file>
         <file>Views/Icons/format.svg</file>
+        <file>Views/Icons/broken.svg</file>
     </qresource>
 </RCC>

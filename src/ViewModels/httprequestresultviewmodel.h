@@ -38,6 +38,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
     Q_PROPERTY(QString outputFormat READ outputFormat WRITE setOutputFormat NOTIFY outputFormatChanged)
     Q_PROPERTY(bool isFormatting READ isFormatting NOTIFY isFormattingChanged)
+    Q_PROPERTY(bool showImage READ showImage NOTIFY showImageChanged)
 
 private:
     int m_statusCode { 0 };
@@ -53,6 +54,7 @@ private:
     QScopedPointer<ResponseBodyListModel> m_bodyModel { new ResponseBodyListModel() };
     QString m_outputFormat { OutputFormatAuto };
     bool m_isFormatting { false };
+    bool m_showImage { false };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -63,7 +65,7 @@ public:
     QStringList headers() const noexcept { return m_headers; }
     void setHeaders(const QStringList& headers) noexcept;
 
-    void setBody(const QString& body) noexcept;
+    void setBody(const QByteArray& body) noexcept;
     void reformatting() noexcept;
 
     QString responseSize() const noexcept { return m_responseSize > 0 ? "(" + QString::number(m_responseSize) + " total bytes)" : " - "; }
@@ -92,6 +94,7 @@ public:
     void setOutputFormat(const QString& outputFormat) noexcept;
 
     bool isFormatting() const noexcept { return m_isFormatting; }
+    bool showImage() const noexcept { return m_showImage; }
 
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
@@ -114,6 +117,7 @@ signals:
     void displayStatusChanged();
     void outputFormatChanged();
     void isFormattingChanged();
+    void showImageChanged();
 
 };
 

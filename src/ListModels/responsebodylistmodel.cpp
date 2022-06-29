@@ -13,6 +13,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QPixmap>
 #include "responsebodylistmodel.h"
 
 ResponseBodyListModel::ResponseBodyListModel(QObject *parent)
@@ -61,12 +62,21 @@ QHash<int, QByteArray> ResponseBodyListModel::roleNames() const
     };
 }
 
-void ResponseBodyListModel::setBody(const QString &body, const QString& formatter) noexcept
+void ResponseBodyListModel::setBody(const QByteArray &body, const QString& formatter) noexcept
 {
     beginResetModel();
 
     m_originalBody = body;
-    reformatting(formatter);
+    if (formatter == OutputFormatImage) {
+        auto result = m_imageSource.loadFromData(body);
+        if (!result) m_imageSource.load("qrc:/Views/Icons/broken.svg");
+        emit bodyImageChanged();
+    } else {
+        //WORKAROUND: Clearing image
+        if (m_imageSource.width() > 2) m_imageSource = QPixmap(2,2).toImage();
+
+        reformatting(formatter);
+    }
 
     endResetModel();
 }

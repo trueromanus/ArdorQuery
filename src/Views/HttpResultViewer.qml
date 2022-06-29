@@ -1,6 +1,7 @@
 import QtQuick /* 2.15 */
 import QtQuick.Layouts /* 1.15 */
 import QtQuick.Controls /* 2.15 */
+import ArdorQuery.Backend /* 1.0 */
 import "Controls"
 
 Item {
@@ -213,23 +214,50 @@ Item {
                     width: responsePanel.width
                     height: fieldContainer.height - panelsContainer.height - 4
 
-                    ListView {
-                        clip: true
+                    Loader {
+                        visible: !viewModel.showImage
                         anchors.fill: parent
-                        flickDeceleration: 5000
-                        flickableDirection: Flickable.HorizontalAndVerticalFlick
-                        boundsBehavior: ListView.StopAtBounds
-                        model: viewModel.bodyModel
-                        delegate: Text {
-                            leftPadding: 4
-                            rightPadding: 10
-                            textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
-                            text: currentLine
-                            width: bodyContainer.width
-                            wrapMode: Text.Wrap
+                        sourceComponent: !viewModel.showImage ? listComponent : null
+                    }
+
+                    Component {
+                        id: listComponent
+
+                        ListView {
+                            clip: true
+                            anchors.fill: parent
+                            flickDeceleration: 5000
+                            flickableDirection: Flickable.HorizontalAndVerticalFlick
+                            boundsBehavior: ListView.StopAtBounds
+                            model: viewModel.bodyModel
+                            delegate: Text {
+                                leftPadding: 4
+                                rightPadding: 10
+                                textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
+                                text: currentLine
+                                width: bodyContainer.width
+                                wrapMode: Text.Wrap
+                            }
+                            ScrollBar.vertical: ScrollBar {
+                                active: true
+                            }
                         }
-                        ScrollBar.vertical: ScrollBar {
-                            active: true
+                    }
+
+                    Loader {
+                        visible: viewModel.showImage
+                        anchors.fill: parent
+                        sourceComponent: viewModel.showImage ? imageComponent : null
+                    }
+
+                    Component {
+                        id: imageComponent
+
+                        BackendImage {
+                            visible: viewModel.showImage
+                            anchors.fill: parent
+                            anchors.bottomMargin: 4
+                            source: viewModel.bodyModel.bodyImage
                         }
                     }
                 }
