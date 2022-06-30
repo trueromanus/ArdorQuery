@@ -26,6 +26,8 @@ class ResponseBodyListModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QImage bodyImage READ bodyImage NOTIFY bodyImageChanged)
+    Q_PROPERTY(int bodyImageWidth READ bodyImageWidth NOTIFY bodyImageWidthChanged)
+    Q_PROPERTY(int bodyImageHeight READ bodyImageHeight NOTIFY bodyImageHeightChanged)
 
 private:
     QStringList m_lines { QStringList() };
@@ -51,10 +53,14 @@ public:
     QString getFullBody() const noexcept;
     bool isHasBody() const noexcept;
     QImage bodyImage() const noexcept { return m_imageSource; }
+    int bodyImageWidth() const noexcept { return m_imageSource.width(); }
+    int bodyImageHeight() const noexcept { return m_imageSource.height(); }
 
 signals:
     void visibleBodyChanged();
     void bodyImageChanged();
+    void bodyImageWidthChanged();
+    void bodyImageHeightChanged();
 
 };
 

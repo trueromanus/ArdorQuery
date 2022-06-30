@@ -31,5 +31,6 @@
         <file>Views/Icons/spinner.svg</file>
         <file>Views/Icons/format.svg</file>
         <file>Views/Icons/broken.svg</file>
+        <file>Views/Windows/ImageResponseWindow.qml</file>
     </qresource>
 </RCC>

@@ -258,6 +258,15 @@ Item {
                             anchors.fill: parent
                             anchors.bottomMargin: 4
                             source: viewModel.bodyModel.bodyImage
+
+                            MouseArea {
+                                anchors.fill: parent
+
+                                onPressed: {
+                                    imageWindow.showWindow = true;
+                                    console.log("yahahaha");
+                                }
+                            }
                         }
                     }
                 }

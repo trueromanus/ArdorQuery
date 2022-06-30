@@ -71,6 +71,8 @@ void ResponseBodyListModel::setBody(const QByteArray &body, const QString& forma
         auto result = m_imageSource.loadFromData(body);
         if (!result) m_imageSource.load("qrc:/Views/Icons/broken.svg");
         emit bodyImageChanged();
+        emit bodyImageWidthChanged();
+        emit bodyImageHeightChanged();
     } else {
         //WORKAROUND: Clearing image
         if (m_imageSource.width() > 2) m_imageSource = QPixmap(2,2).toImage();

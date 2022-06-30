@@ -2,6 +2,7 @@ import QtQuick /* 2.15 */
 import QtQuick.Controls /* 2.15 */
 import ArdorQuery.Backend /* 1.0 */
 import "Views/Controls"
+import "Views/Windows"
 import "Views"
 
 ApplicationWindow {
@@ -39,6 +40,31 @@ ApplicationWindow {
         width: 290
         height: 200
     }
+
+    Loader {
+        id: imageWindow
+
+        property bool showWindow
+
+        sourceComponent: showWindow ? imageWindowComponent : null
+
+        onLoaded: {
+            imageWindow.item.show();
+        }
+    }
+
+    Component {
+        id: imageWindowComponent
+
+        ImageResponseWindow {
+            id: imageResponseWindow
+            viewModel: backend.requests.selectedItem.resultModel
+            onClosing: {
+                imageWindow.showWindow = false;
+            }
+        }
+    }
+
 
     Item {
         BackendViewModel {
