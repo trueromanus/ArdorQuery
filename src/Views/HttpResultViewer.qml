@@ -264,7 +264,6 @@ Item {
 
                                 onPressed: {
                                     imageWindow.showWindow = true;
-                                    console.log("yahahaha");
                                 }
                             }
                         }
