@@ -49,7 +49,7 @@ ApplicationWindow {
         sourceComponent: showWindow ? imageWindowComponent : null
 
         onLoaded: {
-            imageWindow.item.show();
+            imageWindow.item.showMaximized();
         }
     }
 

@@ -4,6 +4,7 @@ import ArdorQuery.Backend /* 1.0 */
 
 ApplicationWindow {
     id: root
+    flags: Qt.Dialog | Qt.WindowTitleHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
 
     property var viewModel
 
@@ -16,11 +17,12 @@ ApplicationWindow {
         anchors.fill: parent
         contentHeight: backendImage.height
         contentWidth: backendImage.width
+        boundsBehavior: Flickable.StopAtBounds
 
         BackendImage {
             id: backendImage
-            width: viewModel.bodyModel.bodyImageWidth
-            height: viewModel.bodyModel.bodyImageHeight
+            width: viewModel.bodyModel.bodyImageWidth < root.width ? root.width : viewModel.bodyModel.bodyImageWidth
+            height: viewModel.bodyModel.bodyImageHeight < root.height ? root.height : viewModel.bodyModel.bodyImageHeight
             source: viewModel.bodyModel.bodyImage
         }
 
