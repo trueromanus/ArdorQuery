@@ -22,11 +22,13 @@
 class HtmlFormatter : public OutputFormatter
 {
 private:
-    QString m_tag { "<>" };
+    QString m_tagStart { "<" };
+    QString m_tagEnd { ">" };
     QString m_attributeEqual { "=" };
     QString m_attributeDecorator { "\"" };
     QString m_closedTag { "/" };
     QString m_doctype { "!doctype" };
+    QString m_upperDoctype { "!DOCTYPE" };
     QString m_comment { "!--" };
     QString m_exclamationPoint { "!" };
     QString m_space { " " };
@@ -34,13 +36,18 @@ private:
     QString m_caretBack { "\r" };
     QString m_scriptTag { "script" };
     QSet<QString> m_selfClosingTags { QSet<QString>() };
-    const QString m_htmlTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
+    const QString m_htmlTab { "&nbsp;" };
+    int m_stackSize { -1 };
+    QString m_result { "" };
 
 public:
     HtmlFormatter();
 
     QString format(const QString& data) override;
-    void setOffset(int stackSize, QString& target, bool newLine = false) noexcept;
+    bool isSelfClosedTag(const QString &tag);
+    void formatTagWithOffset(QString &tag);
+    void formatTag(QString &tag);
+    void setOffset(int tabSize = 4) noexcept;
 };
 
 #endif // HTMLFORMATTER_H

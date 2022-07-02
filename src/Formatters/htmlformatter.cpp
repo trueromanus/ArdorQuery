@@ -35,124 +35,170 @@ HtmlFormatter::HtmlFormatter()
 
 QString HtmlFormatter::format(const QString &data)
 {
-    int stackSize = -1;
-    bool attributeStarted = false;
-    bool attributeQuoteStarted = false;
-    bool tagStarted = false;
-    bool tagNameEnded = false;
-    bool contentStarted = false;
+    m_stackSize = -1;
+    QString currentFullTag = "";
     int iterator = -1;
-    bool isLastSelfClosedTag = false;
-    bool isAttributeStringStarted = false;
-    QString result;
-    QString currentTag = "";
+    m_result.clear();
+    bool tagStarted = false;
+    bool contentStarted = false;
 
     for(auto character: data) {
         iterator++;
 
         auto latinCharacter = character.toLatin1();
 
-        // < ... > handle tags
-        auto charIndex = m_tag.indexOf(latinCharacter);
-        if (charIndex > -1) {
+        if (latinCharacter == m_tagStart && !tagStarted) {
+            tagStarted = true;
+            currentFullTag = latinCharacter;
             if (contentStarted) {
                 contentStarted = false;
-                result += "\n";
-            }
-            attributeStarted = false;
-            tagNameEnded = false;
-            if (charIndex == 0) {
-                if (iterator + 1 < data.length() && data[iterator + 1] == m_closedTag) {
-                    stackSize -= 1;
-                } else {
-                    if (!isLastSelfClosedTag) stackSize += 1;
-                    isLastSelfClosedTag = false;
-                }
-                setOffset(stackSize, result);
-                result += "<font color=\"#8812a1\">&lt;";
-                tagStarted = true;
-            }
-            if (charIndex == 1) {
-                tagStarted = false;
-                attributeStarted = false;
-                result += "<font color=\"#8812a1\">&gt;</font>\n";
-                if (data[iterator - 1] == m_closedTag || m_selfClosingTags.contains(currentTag)) {
-                    //stackSize -= 1;
-                    isLastSelfClosedTag = true;
-                }
-                currentTag.clear();
+                m_result.append("\n");
             }
             continue;
         }
 
-        if (!contentStarted) {
-            // <tag attribute=".."> handle attribute content
-            if (character == m_attributeDecorator && attributeStarted) {
-                if (attributeQuoteStarted) {
-                    result += "&quot;</font>";
-                    isAttributeStringStarted = false;
-                } else {
-                    result += "<font color=\"#2222dd\">&quot;";
-                    isAttributeStringStarted = true;
-                }
-                attributeQuoteStarted = !attributeQuoteStarted;
-                continue;
-            }
-
-            // <tag attribute=..> handle attribute equal
-            if (character == m_attributeEqual && attributeStarted && !isAttributeStringStarted) {
-                result += "=</font>";
-                continue;
-            }
-
-            if (character != m_space && tagNameEnded && !attributeStarted) {
-                attributeStarted = true;
-                result += "<font color=\"#994500\">";
-            }
-
-            if (character == m_space && tagStarted && attributeStarted && !isAttributeStringStarted) {
-                attributeStarted = false;
-                result += "</font> ";
-            }
-
-            if (character == m_space && tagStarted && !tagNameEnded) {
-                tagNameEnded = true;
-                result += "</font> ";
-            }
-
-            if (character == m_closedTag && tagStarted && !isAttributeStringStarted) {
-                result += "<font color=\"#8812a1\">/</font>";
-                continue;
-            }
-
-            if (character == m_exclamationPoint && tagStarted && !tagNameEnded && data[iterator - 1] == m_tag[0]) {
-                stackSize -= 1;
-            }
+        if (latinCharacter == m_tagEnd && tagStarted) {
+            tagStarted = false;
+            currentFullTag.append(character);
+            formatTagWithOffset(currentFullTag);
+            currentFullTag.clear();
+            continue;
         }
 
-        // <X> <any content> </X>
-        if (character != m_newline && character != m_space && !contentStarted && !tagStarted && !attributeStarted) {
-            contentStarted = true;
-            stackSize += 1;
-            setOffset(stackSize, result);
+        if (!tagStarted && latinCharacter != m_newline && latinCharacter != m_caretBack && latinCharacter != m_space) {
+            if (!contentStarted) {
+                contentStarted = true;
+                setOffset();
+            }
+            m_result.append(character);
         }
-
-        if (character == m_newline || character == m_caretBack) continue;
-
-        if (character == m_space && !tagStarted && !contentStarted) continue;
-
-        result += character;
-
-        if (tagStarted && !tagNameEnded) currentTag += character;
+        if (latinCharacter == m_space && contentStarted) m_result.append(m_space);
+        if (tagStarted) currentFullTag.append(character);
     }
 
-    return result;
+    auto resultPass = m_result;
+    m_result.clear();
+    return resultPass;
 }
 
-void HtmlFormatter::setOffset(int stackSize, QString &target, bool newLine) noexcept
+bool HtmlFormatter::isSelfClosedTag(const QString &tag)
 {
-    if (newLine) target.append("\n");
-    for (auto i = 0; i < stackSize; i++) {
-        target.append(m_htmlTab);
+    if (tag[tag.length() - 2] == m_closedTag) return true;
+
+    auto innerTag = tag;
+    innerTag = innerTag.replace("<", "").replace(">", "").replace("/", "");
+    auto indexSpace = innerTag.indexOf(" ");
+    if (indexSpace > -1) innerTag = innerTag.mid(0, indexSpace);
+
+    return m_selfClosingTags.contains(innerTag);
+}
+
+void HtmlFormatter::formatTagWithOffset(QString &tag)
+{
+    auto closedTag = tag[1] == m_closedTag;
+    auto selfClosedTag = isSelfClosedTag(tag);
+    auto header = tag.startsWith(m_doctype) || tag.startsWith(m_upperDoctype);
+
+    if (header) {
+        m_result.append("<font color=\"lightgray\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
+        return;
+    }
+
+    if (closedTag) {
+        m_stackSize -= 1;
+        setOffset();
+        formatTag(tag);
+    } else if (selfClosedTag) {
+        setOffset();
+        formatTag(tag);
+    } else {
+        setOffset();
+        formatTag(tag);
+        m_stackSize += 1;
+    }
+}
+
+void HtmlFormatter::formatTag(QString &tag)
+{
+    auto contentIndex = tag.indexOf(m_space);
+    // it means tag without attributes, and we can use shortcut
+    if (contentIndex == -1) {
+        m_result.append("<font color=\"#8812a1\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
+        return;
+    }
+
+    bool attributeStarted = false;
+    bool stringStarted = false;
+    bool tagNameStarted = true;
+    bool closedPartStarted = false;
+
+    m_result.append("<font color=\"#8812a1\">");
+
+    foreach(auto character, tag) {
+        auto latinCharacter = character.toLatin1();
+
+        if (latinCharacter == m_space && !stringStarted) {
+            if (attributeStarted) {
+                attributeStarted = false;
+                m_result.append("</font>");
+            }
+            if (tagNameStarted) {
+                tagNameStarted = false;
+                m_result.append("</font>");
+            }
+            m_result.append(" ");
+        }
+
+        if (latinCharacter == m_tagStart) {
+            m_result.append("&lt;");
+            continue;
+        }
+
+        if (!closedPartStarted && (latinCharacter == m_tagEnd || latinCharacter == m_closedTag)) {
+            m_result.append("</font><font color=\"#8812a1\">");
+            closedPartStarted = true;
+        }
+
+        if (latinCharacter == m_tagEnd) {
+            m_result.append("&gt;");
+            continue;
+        }
+
+        if (latinCharacter == m_closedTag) {
+            m_result.append("/");
+            continue;
+        }
+
+        if (latinCharacter == m_attributeDecorator) {
+            if (stringStarted) {
+                stringStarted = false;
+                m_result.append("&quot;</font>");
+            } else {
+                stringStarted = true;
+                m_result.append("<font color=\"#2222dd\">&quot;");
+            }
+            continue;
+        }
+
+        if (tagNameStarted) {
+            m_result.append(character);
+            continue;
+        }
+
+        if (!attributeStarted) {
+            attributeStarted = true;
+            m_result.append("<font color=\"#994500\">");
+        }
+
+        m_result.append(character);
+    }
+
+    m_result.append("</font>\n");
+}
+
+void HtmlFormatter::setOffset(int tabSize) noexcept
+{
+    for (auto i = 0; i < m_stackSize * tabSize; i++) {
+        m_result.append(m_htmlTab);
     }
 }
