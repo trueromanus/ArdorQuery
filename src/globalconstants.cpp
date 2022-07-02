@@ -5,6 +5,7 @@ QString MethodPrefix = "met ";
 QString FormPrefix = "form ";
 QString BodyPrefix = "body ";
 QString FilePrefix = "file ";
+QString ProtocolPrefix = "protocol ";
 
 QString NotificationErrorTopic = "error";
 QString NotificationInfoTopic = "info";

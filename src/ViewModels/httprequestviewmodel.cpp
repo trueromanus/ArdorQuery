@@ -29,7 +29,8 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HeaderType), 2);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormItemType), 3);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormFileType), 4);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 5);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HttpProtocolType), 5);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 6);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 10);
 }
 
@@ -195,6 +196,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(ProtocolPrefix) && itemType != HttpRequestTypes::HttpProtocolType) {
+        item->setType(static_cast<int>(HttpRequestTypes::HttpProtocolType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
         needRefresh = true;
@@ -274,10 +280,29 @@ QString HttpRequestViewModel::getMethod() const noexcept
     if (iterator != m_items->end()) {
         auto item = *iterator;
         auto text = item->text();
-        return text.replace("met ", "", Qt::CaseInsensitive);
+        return text.replace(MethodPrefix, "", Qt::CaseInsensitive);
     }
 
     return "get";
+}
+
+QString HttpRequestViewModel::getProtocol() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::MethodType;
+        }
+    );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text();
+        return text.replace(ProtocolPrefix, "", Qt::CaseInsensitive).toLower();
+    }
+
+    return "";
 }
 
 QString HttpRequestViewModel::getUrl() const noexcept
@@ -380,23 +405,27 @@ void HttpRequestViewModel::sortingFields(const bool descending) noexcept
 
 QString HttpRequestViewModel::getAllFields() const noexcept
 {
-    QString body;
+    QList<HttpRequestItem*> sortedList(m_items->count());
+
+    auto weigths = m_sortWeight.get();
+    std::partial_sort_copy(
+        m_items->begin(),
+        m_items->end(),
+        sortedList.begin(),
+        sortedList.end(),
+        [weigths](HttpRequestItem* left, HttpRequestItem* right) {
+            return weigths->value(left->type()) < weigths->value(right->type());
+        }
+    );
+
     QStringList lines(m_items->size());
     int iterator = 0;
 
-    foreach (auto field, *m_items) {
-        auto text = field->text();
-        auto type = static_cast<HttpRequestTypes>(field->type());
-        if (type == HttpRequestTypes::BodyType) {
-            body = text;
-        }
-        else {
-            lines[iterator] = text.replace("\n", "");
-        }
+    foreach(auto item, sortedList) {
+        auto text = item->text();
+        lines[iterator] = text.replace("\n", "");
         iterator++;
     }
-
-    if (!body.isEmpty()) lines[iterator] = body;
 
     return lines.join("\n");
 }
@@ -420,6 +449,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#9FC088";
         case HttpRequestTypes::FormFileType:
             return "#FFD9C0";
+        case HttpRequestTypes::HttpProtocolType:
+            return "#A5BECC";
         default:
             return "#CDCDB4";
     }

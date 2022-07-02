@@ -62,8 +62,8 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
-    //Shift-S
-    if ((nativeCode == 31 && shift)) {
+    // Alt-S
+    if ((nativeCode == 31 && alt)) {
         //TODO: export to file
         //request->exportToFile();
         return true;

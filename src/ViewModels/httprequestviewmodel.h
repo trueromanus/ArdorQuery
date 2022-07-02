@@ -35,7 +35,8 @@ public:
         HeaderType,
         BodyType,
         FormItemType,
-        FormFileType
+        FormFileType,
+        HttpProtocolType
     };
 
 private:
@@ -77,6 +78,7 @@ public:
     Q_INVOKABLE void clearSelectedField();
 
     QString getMethod() const noexcept;
+    QString getProtocol() const noexcept;
     QString getUrl() const noexcept;
     QString getBody() const noexcept;
     QStringList getFormParameters() const noexcept;

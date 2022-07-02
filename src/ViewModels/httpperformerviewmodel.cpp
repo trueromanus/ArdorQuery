@@ -103,6 +103,10 @@ void HttpPerformerViewModel::performRequest()
 
     adjustHeaders(request);
 
+    auto protocol = m_httpRequest->getProtocol();
+    // if allowed only HTTP/1.1 version
+    if (protocol == "1.1") request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
+
     auto method = m_httpRequest->getMethod().toLower();
     if (method == "get") {
         auto getReply = m_networkManager->get(request);
