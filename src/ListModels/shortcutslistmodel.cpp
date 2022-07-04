@@ -58,6 +58,14 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     importFieldsSection->addShortcut("Ctrl-L or F3", "Add fields from the clipboard below the currently selected field");
     importFieldsSection->formatShortcuts();
     m_sections.append(importFieldsSection);
+
+    auto sortingSection = new ShortcutSection();
+    sortingSection->setTitle("Sorting fields");
+    sortingSection->setDescription("Sorting fields according to specific criteria");
+    sortingSection->addShortcut("Ctrl-{", "Sorting by type in ascending order");
+    sortingSection->addShortcut("Ctrl-}", "Sorting by type in descending order");
+    sortingSection->formatShortcuts();
+    m_sections.append(sortingSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const
