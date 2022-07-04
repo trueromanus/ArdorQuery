@@ -54,7 +54,9 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             continue;
         }
 
-        m_httpRequest->addItem(insertToEnd ? -1 : currentIndex, type, line);
+        if (type != HttpRequestViewModel::HttpRequestTypes::UnknownType) {
+            m_httpRequest->addItem(insertToEnd ? -1 : currentIndex, type, line);
+        }
         currentIndex++;
     }
 
@@ -98,7 +100,8 @@ void RequestExternalViewModel::replaceFromClipboard()
 
     parseFromString(text);
 
-    m_httpRequest->removeFirstItem(); //it need for remove empty first item
+    //it need for remove empty first item
+    if (m_httpRequest->countItems() > 1) m_httpRequest->removeFirstItem();
 }
 
 void RequestExternalViewModel::copyToClipboard()
