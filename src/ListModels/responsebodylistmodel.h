@@ -31,7 +31,7 @@ class ResponseBodyListModel : public QAbstractListModel
 
 private:
     QStringList m_lines { QStringList() };
-    QString m_originalBody { "" };
+    QByteArray m_originalBody { "" };
     QScopedPointer<FormatterFactory> m_formatterFactory { new FormatterFactory() };
     QImage m_imageSource { QImage() };
 
@@ -51,6 +51,7 @@ public:
     void reformatting(const QString& formatter) noexcept;
     void reformatBody(const QString& formatter) noexcept;
     QString getFullBody() const noexcept;
+    QByteArray getFullBodyArray() const noexcept;
     bool isHasBody() const noexcept;
     QImage bodyImage() const noexcept { return m_imageSource; }
     int bodyImageWidth() const noexcept { return m_imageSource.width(); }

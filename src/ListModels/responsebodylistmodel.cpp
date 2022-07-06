@@ -86,7 +86,7 @@ void ResponseBodyListModel::setBody(const QByteArray &body, const QString& forma
 void ResponseBodyListModel::reformatting(const QString &formatter) noexcept
 {
     m_lines.clear();
-    auto body = m_originalBody;
+    auto body = getFullBody();
     auto isHasFormatter = !formatter.isEmpty();
     auto lines = body.split("\n");
     if (isHasFormatter) {
@@ -123,6 +123,11 @@ void ResponseBodyListModel::reformatBody(const QString &formatter) noexcept
 }
 
 QString ResponseBodyListModel::getFullBody() const noexcept
+{
+    return m_originalBody;
+}
+
+QByteArray ResponseBodyListModel::getFullBodyArray() const noexcept
 {
     return m_originalBody;
 }

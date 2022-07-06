@@ -184,7 +184,17 @@ void HttpRequestResultViewModel::copyBodyToClipboard()
     if (!m_bodyModel->isHasBody()) return;
 
     QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(m_bodyModel->getFullBody());
+
+    auto format = m_outputFormat;
+    if (format == OutputFormatAuto) format = getFormatFromContentType();
+
+    if (format == OutputFormatImage) {
+        QImage image;
+        image.loadFromData(m_bodyModel->getFullBodyArray());
+        clipboard->setImage(image);
+    } else {
+        clipboard->setText(m_bodyModel->getFullBody());
+    }
 }
 
 void HttpRequestResultViewModel::reformatBody()

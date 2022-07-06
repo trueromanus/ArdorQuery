@@ -52,7 +52,7 @@ QString XmlFormatter::format(const QString &data)
             continue;
         }
 
-        if (!tagStarted && latinCharacter != m_newline && latinCharacter != m_caretBack && latinCharacter != m_space) {
+        if (!tagStarted && latinCharacter != m_newline && latinCharacter != m_caretBack && latinCharacter != m_space && latinCharacter != m_tabulator) {
             if (!contentStarted) {
                 contentStarted = true;
                 setOffset();
