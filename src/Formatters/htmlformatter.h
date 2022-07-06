@@ -37,6 +37,7 @@ private:
     QString m_scriptTag { "script" };
     QSet<QString> m_selfClosingTags { QSet<QString>() };
     const QString m_htmlTab { "&nbsp;" };
+    const QString m_tabulator { "\t" };
     int m_stackSize { -1 };
     QString m_result { "" };
 
