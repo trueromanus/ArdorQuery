@@ -27,8 +27,8 @@ private:
     QString m_attributeEqual { "=" };
     QString m_attributeDecorator { "\"" };
     QString m_closedTag { "/" };
-    QString m_doctype { "!doctype" };
-    QString m_upperDoctype { "!DOCTYPE" };
+    QString m_doctype { "<!doctype" };
+    QString m_upperDoctype { "<!DOCTYPE" };
     QString m_comment { "!--" };
     QString m_exclamationPoint { "!" };
     QString m_space { " " };

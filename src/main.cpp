@@ -26,6 +26,7 @@
 #ifdef QT_DEBUG
 #include <QtTest/QtTest>
 #include "Tests/jsonformatterunittests.h"
+#include "Tests/htmlformatterunittests.h"
 #endif
 
 
@@ -82,4 +83,5 @@ void registerQmlTypes() {
 
 void runTest(int argc, char *argv[]) {
     QTest::qExec(new JsonFormatterUnitTests, argc - 1, argv);
+    QTest::qExec(new HtmlFormatterUnitTests, argc - 1, argv);
 }

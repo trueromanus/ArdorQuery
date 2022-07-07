@@ -24,6 +24,7 @@ SOURCES += \
         Models/httprequestmodel.cpp \
         Models/shortcutsection.cpp \
         QuickControls/backendimage.cpp \
+        Tests/htmlformatterunittests.cpp \
         ViewModels/backendviewmodel.cpp \
         ViewModels/httpperformerviewmodel.cpp \
         ViewModels/httprequestresultviewmodel.cpp \
@@ -59,6 +60,7 @@ HEADERS += \
     Models/httprequestmodel.h \
     Models/shortcutsection.h \
     QuickControls/backendimage.h \
+    Tests/htmlformatterunittests.h \
     ViewModels/backendviewmodel.h \
     ViewModels/httpperformerviewmodel.h \
     ViewModels/httprequestresultviewmodel.h \
