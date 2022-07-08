@@ -99,6 +99,12 @@ void MainTabsListModel::removeTab(const int index) noexcept
     endResetModel();
 }
 
+void MainTabsListModel::toggleTabs() noexcept
+{
+    auto newTab = m_activatedTab == 0 ? 1 : 0;
+    activateTab(newTab);
+}
+
 void MainTabsListModel::activateTab(const int newIndex)
 {
     if (newIndex >= m_tabs->count()) return;

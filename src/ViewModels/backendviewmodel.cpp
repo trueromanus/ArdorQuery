@@ -161,6 +161,11 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    // F11
+    if (key == Qt::Key_F11) {
+        m_tabs->toggleTabs();
+        return true;
+    }
 
     return false;
 }

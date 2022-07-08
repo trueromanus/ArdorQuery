@@ -48,6 +48,8 @@ public:
 
     QString currentTab() const noexcept { return m_tabs->value(m_activatedTab); }
 
+    void toggleTabs() noexcept;
+
     Q_INVOKABLE void activateTab(const int newIndex);
 
 signals:

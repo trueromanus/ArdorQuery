@@ -66,6 +66,12 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     sortingSection->addShortcut("Ctrl-}", "Sorting by type in descending order");
     sortingSection->formatShortcuts();
     m_sections.append(sortingSection);
+
+    auto tabsSection = new ShortcutSection();
+    tabsSection->setTitle("Tab management");
+    tabsSection->setDescription("Switching and opening tabs in an app");
+    tabsSection->addShortcut("F11", "Toggle tabs betweens Query and Result");
+    m_sections.append(sortingSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const
