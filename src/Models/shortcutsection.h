@@ -37,6 +37,7 @@ public:
     void setTitle(const QString& title) noexcept;
     void setDescription(const QString& description) noexcept;
     void addShortcut(const QString& key, const QString& description) noexcept;
+    bool inFilter(const QString& filter) const noexcept;
 
     void formatShortcuts();
 

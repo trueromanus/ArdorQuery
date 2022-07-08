@@ -32,6 +32,24 @@ void ShortcutSection::addShortcut(const QString &key, const QString &description
     m_shortcuts.append(std::make_tuple(key, description));
 }
 
+bool ShortcutSection::inFilter(const QString &filter) const noexcept
+{
+    auto iterator = std::find_if(
+        m_shortcuts.cbegin(),
+        m_shortcuts.cend(),
+        [filter] (std::tuple<QString, QString> item) {
+            QString shortcut = std::get<0>(item).toLower();
+            if (shortcut.contains(filter)) return true;
+
+            QString description = std::get<1>(item).toLower();
+            if (description.contains(filter)) return true;
+
+            return false;
+        }
+    );
+    return !(iterator == m_shortcuts.cend());
+}
+
 void ShortcutSection::formatShortcuts()
 {
     auto lines = QScopedPointer<QStringList>(new QStringList());

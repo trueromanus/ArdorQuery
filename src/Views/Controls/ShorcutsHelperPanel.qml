@@ -35,6 +35,10 @@ Rectangle {
             TextField {
                 anchors.margins: 4
                 anchors.fill: parent
+                text: listModel.filter
+                onTextChanged: {
+                    listModel.filter = text;
+                }
             }
         }
 

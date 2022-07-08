@@ -72,14 +72,14 @@ int ShortcutsListModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
 
-    return m_sections.size();
+    return m_filter.isEmpty() ? m_sections.size() : m_filteredSections.size();
 }
 
 QVariant ShortcutsListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
 
-    auto section = m_sections.at(index.row());
+    auto section = m_filter.isEmpty() ? m_sections.at(index.row()) : m_filteredSections.at(index.row());
 
     switch (role) {
         case SectionTitleRole: {
@@ -112,4 +112,36 @@ QHash<int, QByteArray> ShortcutsListModel::roleNames() const
             "description"
         }
     };
+}
+
+void ShortcutsListModel::setFilter(const QString &filter) noexcept
+{
+    if (m_filter == filter) return;
+
+    m_filter = filter;
+    emit filterChanged();
+    emit isFilteredChanged();
+
+    refresh();
+}
+
+void ShortcutsListModel::refresh() noexcept
+{
+    beginResetModel();
+
+    m_filteredSections.clear();
+
+    if (!m_filter.isEmpty()) {
+        auto lowerFilter = m_filter.toLower();
+        foreach (auto section, m_sections) {
+            auto inTitle = section->title().toLower().contains(lowerFilter);
+            auto inDescription = section->description().toLower().contains(lowerFilter);
+            if (inTitle || inDescription || section->inFilter(lowerFilter)) {
+                m_filteredSections.append(section);
+                continue;
+            }
+        }
+    }
+
+    endResetModel();
 }

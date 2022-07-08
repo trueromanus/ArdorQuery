@@ -23,9 +23,13 @@
 class ShortcutsListModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
+    Q_PROPERTY(bool isFiltered READ isFiltered NOTIFY isFilteredChanged)
 
 private:
+    QString m_filter { "" };
     QList<ShortcutSection*> m_sections { QList<ShortcutSection*>() };
+    QList<ShortcutSection*> m_filteredSections { QList<ShortcutSection*>() };
     enum ShortCutRoles {
         SectionTitleRole = Qt::UserRole + 1,
         ShortcutsRole,
@@ -39,7 +43,16 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+    QString filter() const noexcept { return m_filter; }
+    void setFilter(const QString& filter) noexcept;
+
+    bool isFiltered() const noexcept { return m_filter.isEmpty(); }
+
+    void refresh() noexcept;
+
 signals:
+    void filterChanged();
+    void isFilteredChanged();
 
 };
 
