@@ -222,7 +222,7 @@ QString HttpRequestResultViewModel::getFormatFromContentType() const noexcept
 {
     QString contentTypeHeader = "";
     foreach (auto header, m_headers) {
-        if (header.startsWith("content-type:", Qt::CaseInsensitive)) {
+        if (header.contains("content-type:", Qt::CaseInsensitive)) {
             contentTypeHeader = header.toLower();
             break;
         }
