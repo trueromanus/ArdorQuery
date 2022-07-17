@@ -80,8 +80,9 @@ void registerQmlTypes() {
     qmlRegisterType<ShortcutsListModel>("ArdorQuery.Backend", 1, 0, "ShortcutsListModel");
     qmlRegisterType<BackendImage>("ArdorQuery.Backend", 1, 0, "BackendImage");
 }
-
+#ifdef QT_DEBUG
 void runTest(int argc, char *argv[]) {
     QTest::qExec(new JsonFormatterUnitTests, argc - 1, argv);
     QTest::qExec(new HtmlFormatterUnitTests, argc - 1, argv);
 }
+#endif

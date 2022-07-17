@@ -24,7 +24,6 @@ SOURCES += \
         Models/httprequestmodel.cpp \
         Models/shortcutsection.cpp \
         QuickControls/backendimage.cpp \
-        Tests/htmlformatterunittests.cpp \
         ViewModels/backendviewmodel.cpp \
         ViewModels/httpperformerviewmodel.cpp \
         ViewModels/httprequestresultviewmodel.cpp \
@@ -35,7 +34,9 @@ SOURCES += \
         main.cpp
 # Adding tests for debug
 CONFIG(debug, debug|release) {
-SOURCES += Tests/jsonformatterunittests.cpp
+SOURCES += \
+        Tests/jsonformatterunittests.cpp \
+        Tests/htmlformatterunittests.cpp
 }
 
 RESOURCES += qml.qrc
@@ -60,7 +61,6 @@ HEADERS += \
     Models/httprequestmodel.h \
     Models/shortcutsection.h \
     QuickControls/backendimage.h \
-    Tests/htmlformatterunittests.h \
     ViewModels/backendviewmodel.h \
     ViewModels/httpperformerviewmodel.h \
     ViewModels/httprequestresultviewmodel.h \
@@ -72,5 +72,7 @@ HEADERS += \
 
 # Adding tests for debug
 CONFIG(debug, debug|release) {
-HEADERS += Tests/jsonformatterunittests.h
+HEADERS += \
+    Tests/jsonformatterunittests.h \
+    Tests/htmlformatterunittests.h
 }

@@ -41,6 +41,10 @@ ApplicationWindow {
         height: 200
     }
 
+    AboutWindow {
+        id: aboutWindow
+    }
+
     Loader {
         id: imageWindow
 
