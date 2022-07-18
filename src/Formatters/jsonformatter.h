@@ -32,6 +32,8 @@ private:
     QString m_newline { "n" };
     QString m_unicode { "u" };
     const QString m_jsonTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
+    const QString m_propertyStringStart { "<font color=\"#8812a1\">\"" };
+    const QString m_plainStringStart { "<font color=\"#800000\">\"" };
 
 public:
     JsonFormatter();

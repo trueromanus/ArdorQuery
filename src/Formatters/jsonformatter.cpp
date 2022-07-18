@@ -27,6 +27,7 @@ QString JsonFormatter::format(const QString &data)
     QString result;
     int iterator = -1;
     int skipNextCharacters = 0;
+    QString currentString = "";
 
     for (auto character: data) {
         iterator++;
@@ -35,6 +36,10 @@ QString JsonFormatter::format(const QString &data)
             continue;
         }
         auto latinCharacter = character.toLatin1();
+        if (stringStarted && m_string != latinCharacter) {
+            currentString.append(character);
+            continue;
+        }
         auto charIndex = m_array.indexOf(latinCharacter);
         if (charIndex > -1) {
             if (charIndex == 0) {
@@ -66,8 +71,11 @@ QString JsonFormatter::format(const QString &data)
         }
 
         if (m_string == latinCharacter) {
-            if (!stringStarted) result += "<font color=\"#ac0097\">\"";
-            if (stringStarted) result += "\"</font>";
+            if (stringStarted) {
+                auto isProperty = iterator < data.count() - 1 ? data[iterator + 1].toLatin1() == m_colon : false;
+                result += (isProperty ? m_propertyStringStart : m_plainStringStart)  + currentString + "\"</font>";
+                currentString.clear();
+            }
 
             stringStarted = !stringStarted;
             continue;
