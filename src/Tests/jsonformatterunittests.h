@@ -18,6 +18,7 @@ private slots:
     void arrayInObject();
     void objectWithNegativeDigit();
     void objectWithHexDigit();
+    void objectWithDoubleDigit();
 };
 
 #endif // JSONFORMATTERUNITTESTS_H

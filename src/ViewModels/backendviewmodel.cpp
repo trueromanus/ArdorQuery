@@ -139,12 +139,12 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
 
     // Alt-Enter
     if ((key == Qt::Key_Enter || key == Qt::Key_Return) && alt) {
-        if (request->selectedItem() > 0) request->addItem(request->selectedItem() - 1);
+        request->addItem(request->selectedItem());
         return true;
     }
 
     // Shift-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && alt) {
+    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && shift) {
         request->addItem(-1);
         return true;
     }

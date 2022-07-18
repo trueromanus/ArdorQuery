@@ -38,7 +38,7 @@ QString JsonFormatter::format(const QString &data)
         }
         auto latinCharacter = character.toLatin1();
         if (stringStarted && m_string != latinCharacter) {
-            currentString.append(character);
+            if (m_backslash != latinCharacter) currentString.append(character);
             continue;
         }
         if (digitStarted && !m_digits.contains(latinCharacter)) {

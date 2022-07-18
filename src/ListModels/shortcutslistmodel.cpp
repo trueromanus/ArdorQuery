@@ -71,7 +71,8 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     tabsSection->setTitle("Tab management");
     tabsSection->setDescription("Switching and opening tabs in an app");
     tabsSection->addShortcut("F11", "Toggle tabs betweens Query and Result");
-    m_sections.append(sortingSection);
+    tabsSection->formatShortcuts();
+    m_sections.append(tabsSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const

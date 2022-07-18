@@ -81,3 +81,13 @@ void JsonFormatterUnitTests::objectWithHexDigit()
 <font color="black">}</font>)a");
     QCOMPARE(result, expectedResult);
 }
+
+void JsonFormatterUnitTests::objectWithDoubleDigit()
+{
+    JsonFormatter formatter;
+    auto result = formatter.format("{\"property\":0.05}");
+    auto expectedResult = QString(R"a(<font color="black">{</font>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8812a1">"property"</font>:&nbsp;<font color="#e68600">0.05</font>
+<font color="black">}</font>)a");
+    QCOMPARE(result, expectedResult);
+}

@@ -123,35 +123,26 @@ void HttpPerformerViewModel::performRequest()
     auto body = m_httpRequest->getBody();
     auto forms = m_httpRequest->getFormParameters();
     auto files = m_httpRequest->getFileParameters();
-    if (body.isEmpty() && forms.isEmpty() && files.isEmpty()) {
-        emit pushErrorMessage("Request perform", "You need specified body, form or files");
-        return;
-    }
 
-    if (!body.isEmpty() && !forms.isEmpty()) {
-        emit pushErrorMessage("Request perform", "You have filled in both the body and the fields of the form, you need to leave only one of them");
-        return;
-    }
+    auto isBodyAndFormEmpty = body.isEmpty() && forms.isEmpty() && files.empty();
+    auto isSimpleForm = !forms.isEmpty() && files.isEmpty();
+    auto isComplexForm = !forms.isEmpty() && !files.isEmpty();
+    auto isBodyFilled = !body.isEmpty();
 
     if (method == "post") {
         QNetworkReply* postReply = nullptr;
-        if (!body.isEmpty()) {
-            postReply = m_networkManager->post(request, body.toUtf8());
-        }
-
-        if (!forms.isEmpty() && files.isEmpty()) {
-            postReply = m_networkManager->post(request, setupSimpleForm(std::move(forms)));
-        }
-        if (!files.isEmpty() && !forms.isEmpty()) {
-            postReply = m_networkManager->post(request, setupMultiPartForm(std::move(files), std::move(forms)));
-        }
+        if (isBodyAndFormEmpty) postReply = m_networkManager->post(request, "");
+        if (isBodyFilled) postReply = m_networkManager->post(request, body.toUtf8());
+        if (!isBodyFilled && isSimpleForm) postReply = m_networkManager->post(request, setupSimpleForm(std::move(forms)));
+        if (!isBodyFilled && isComplexForm) postReply = m_networkManager->post(request, setupMultiPartForm(std::move(files), std::move(forms)));
         if (postReply != nullptr) startTrackRequest(postReply);
     }
     if (method == "put") {
         QNetworkReply* putReply = nullptr;
-        if (!body.isEmpty()) putReply = m_networkManager->put(request, body.toUtf8());
-        if (!forms.isEmpty()) putReply = m_networkManager->put(request, setupSimpleForm(std::move(forms)));
-
+        if (isBodyAndFormEmpty) putReply = m_networkManager->put(request, "");
+        if (isBodyFilled) putReply = m_networkManager->put(request, body.toUtf8());
+        if (!isBodyFilled && isSimpleForm) putReply = m_networkManager->put(request, setupSimpleForm(std::move(forms)));
+        if (!isBodyFilled && isComplexForm) putReply = m_networkManager->put(request, setupMultiPartForm(std::move(files), std::move(forms)));
         if (putReply != nullptr) startTrackRequest(putReply);
     }
 }
