@@ -26,6 +26,7 @@ HttpPerformerViewModel::HttpPerformerViewModel(QObject *parent)
 {
     connect(m_networkManager.get(), &QNetworkAccessManager::finished, this, &HttpPerformerViewModel::requestFinished);
 
+    m_rawHeaders->insert("authorization", "Authorization");
     m_rawHeaders->insert("accept", "Accept");
     m_rawHeaders->insert("accept-charset", "Accept-Charset");
     m_rawHeaders->insert("accept-encoding", "Accept-Encoding");
@@ -225,12 +226,14 @@ void HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request) noexcept
 {
     auto headers = m_httpRequest->getHeaders();
     foreach (auto header, headers) {
-        auto parts = header.split(" ");
-        if (parts.length() == 1) {
+        auto spaceIndex = header.indexOf(" ");
+        if (spaceIndex == -1) {
             fillHeader(request, header, "");
             continue;
         }
-        fillHeader(request, parts[0], parts[1]);
+        auto headerName = header.mid(0, spaceIndex);
+        auto headerValue = header.mid(spaceIndex + 1);
+        fillHeader(request, headerName, headerValue);
     }
 }
 

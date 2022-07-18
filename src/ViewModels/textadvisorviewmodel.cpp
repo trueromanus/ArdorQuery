@@ -59,7 +59,7 @@ void TextAdvisorViewModel::makeSuggestions(const QString &text)
 
 void TextAdvisorViewModel::fillCompletings()
 {
-    m_singleCompletings->insert("Au", "Authorization");
+    m_singleCompletings->insert("au", "Authorization");
 
     QStringList acceptList;
     acceptList.append("Accept");
