@@ -21,19 +21,21 @@
 class JsonFormatter: public OutputFormatter
 {
 private:
-    QString m_array { "[]" };
-    QString m_object { "{}" };
-    QString m_string { "\"" };
-    QString m_comma { "," };
-    QString m_space { " " };
-    QString m_colon { ":" };
-    QString m_backslash { "\\" };
-    QString m_reverse { "r" };
-    QString m_newline { "n" };
-    QString m_unicode { "u" };
+    const QString m_array { "[]" };
+    const QString m_object { "{}" };
+    const QString m_string { "\"" };
+    const QString m_comma { "," };
+    const QString m_space { " " };
+    const QString m_colon { ":" };
+    const QString m_backslash { "\\" };
+    const QString m_reverse { "r" };
+    const QString m_newline { "n" };
+    const QString m_unicode { "u" };
     const QString m_jsonTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
     const QString m_propertyStringStart { "<font color=\"#8812a1\">\"" };
     const QString m_plainStringStart { "<font color=\"#800000\">\"" };
+    const QString m_startDigits { "-0123456789" };
+    const QString m_digits { "0123456789.EexabcdfABCDF" };
 
 public:
     JsonFormatter();

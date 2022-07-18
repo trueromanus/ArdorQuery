@@ -16,6 +16,8 @@ private slots:
     void objectOnlyMoreProperties();
     void arrayOnly();
     void arrayInObject();
+    void objectWithNegativeDigit();
+    void objectWithHexDigit();
 };
 
 #endif // JSONFORMATTERUNITTESTS_H
