@@ -126,7 +126,7 @@ void HttpPerformerViewModel::performRequest()
 
     auto isBodyAndFormEmpty = body.isEmpty() && forms.isEmpty() && files.empty();
     auto isSimpleForm = !forms.isEmpty() && files.isEmpty();
-    auto isComplexForm = !forms.isEmpty() && !files.isEmpty();
+    auto isComplexForm = !files.isEmpty();
     auto isBodyFilled = !body.isEmpty();
 
     if (method == "post") {
