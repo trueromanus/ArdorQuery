@@ -124,7 +124,7 @@ Item {
                         title: "Body"
 
                         Item {
-                            width: 100
+                            width: 130
                             height: parent.height
                             anchors.centerIn: parent
 
@@ -133,7 +133,8 @@ Item {
                                 anchors.rightMargin: 6
                                 anchors.verticalCenter: parent.verticalCenter
                                 font.pointSize: 10.5
-                                text: backend.outputFormats.getTitle(viewModel.outputFormat)
+                                text: backend.outputFormats.getTitle(viewModel.outputFormat) +
+                                    (viewModel.actualFormat ? " / " + backend.outputFormats.getTitle(viewModel.actualFormat) : "")
 
                                 MouseArea {
                                     anchors.fill: parent

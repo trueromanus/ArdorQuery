@@ -37,6 +37,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged)
     Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
     Q_PROPERTY(QString outputFormat READ outputFormat WRITE setOutputFormat NOTIFY outputFormatChanged)
+    Q_PROPERTY(QString actualFormat READ actualFormat NOTIFY actualFormatChanged)
     Q_PROPERTY(bool isFormatting READ isFormatting NOTIFY isFormattingChanged)
     Q_PROPERTY(bool showImage READ showImage NOTIFY showImageChanged)
 
@@ -55,6 +56,7 @@ private:
     QString m_outputFormat { OutputFormatAuto };
     bool m_isFormatting { false };
     bool m_showImage { false };
+    QString m_actualFormat { "" };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -96,6 +98,8 @@ public:
     bool isFormatting() const noexcept { return m_isFormatting; }
     bool showImage() const noexcept { return m_showImage; }
 
+    QString actualFormat() const noexcept { return m_actualFormat; }
+
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
     Q_INVOKABLE void reformatBody();
@@ -118,6 +122,7 @@ signals:
     void outputFormatChanged();
     void isFormattingChanged();
     void showImageChanged();
+    void actualFormatChanged();
 
 };
 

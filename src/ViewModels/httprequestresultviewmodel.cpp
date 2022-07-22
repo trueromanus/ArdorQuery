@@ -57,7 +57,11 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
     }
 
     auto outputFormat = m_outputFormat;
-    if (m_outputFormat == OutputFormatAuto) outputFormat = getFormatFromContentType();
+    m_actualFormat.clear();
+    if (m_outputFormat == OutputFormatAuto) {
+        outputFormat = getFormatFromContentType();
+        m_actualFormat = outputFormat;
+    }
 
     m_isFormatting = !outputFormat.isEmpty();
     m_showImage = outputFormat == OutputFormatImage;
@@ -73,6 +77,7 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
     emit responseSizeChanged();
     emit isFormattingChanged();
     emit showImageChanged();
+    emit actualFormatChanged();
 }
 
 void HttpRequestResultViewModel::reformatting() noexcept
@@ -239,7 +244,8 @@ QString HttpRequestResultViewModel::getFormatFromContentType() const noexcept
     if (isHtml) return OutputFormatHtml;
 
     if (contentTypeHeader.contains("image/jpeg") || contentTypeHeader.contains("image/png") ||
-        contentTypeHeader.contains("image/svg+xml") || contentTypeHeader.contains("image/webp")) {
+        contentTypeHeader.contains("image/svg+xml") || contentTypeHeader.contains("image/webp") ||
+        contentTypeHeader.contains("image/gif")) {
         return OutputFormatImage;
     }
 

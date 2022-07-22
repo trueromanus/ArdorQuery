@@ -42,7 +42,7 @@ ApplicationWindow {
         anchors.top: applicationName.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 4
-        text: "version 0.0.0"
+        text: "version 0.0.1"
         font.pointSize: 10
     }
 
