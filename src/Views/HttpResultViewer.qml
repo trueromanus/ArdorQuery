@@ -224,23 +224,36 @@ Item {
                     Component {
                         id: listComponent
 
-                        ListView {
-                            clip: true
+                        Item {
                             anchors.fill: parent
-                            flickDeceleration: 5000
-                            flickableDirection: Flickable.HorizontalAndVerticalFlick
-                            boundsBehavior: ListView.StopAtBounds
-                            model: viewModel.bodyModel
-                            delegate: Text {
-                                leftPadding: 4
-                                rightPadding: 10
-                                textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
-                                text: currentLine
-                                width: bodyContainer.width
-                                wrapMode: Text.Wrap
+
+                            ListView {
+                                id: listStrings
+                                clip: true
+                                anchors.fill: parent
+                                flickDeceleration: 5000
+                                flickableDirection: Flickable.HorizontalAndVerticalFlick
+                                boundsBehavior: ListView.StopAtBounds
+                                model: viewModel.bodyModel
+                                delegate: Text {
+                                    leftPadding: 4
+                                    rightPadding: 10
+                                    textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
+                                    text: currentLine
+                                    width: bodyContainer.width
+                                    wrapMode: Text.Wrap
+                                }
+                                ScrollBar.vertical: ScrollBar {
+                                    active: true
+                                }
                             }
-                            ScrollBar.vertical: ScrollBar {
-                                active: true
+                            MouseArea {
+                                anchors.fill: parent
+                                onPressed: function (mouse){
+                                    const content = listStrings.children[0];
+                                    const children = content.childAt(mouse.x, listStrings.contentY + mouse.y);
+                                    console.log(children, children.text);
+                                }
                             }
                         }
                     }
