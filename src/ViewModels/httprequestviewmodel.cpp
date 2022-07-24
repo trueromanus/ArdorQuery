@@ -293,7 +293,7 @@ QString HttpRequestViewModel::getProtocol() const noexcept
         m_items->end(),
         [](const HttpRequestItem* item) {
             auto type = static_cast<HttpRequestTypes>(item->type());
-            return type == HttpRequestTypes::MethodType;
+            return type == HttpRequestTypes::HttpProtocolType;
         }
     );
     if (iterator != m_items->end()) {
@@ -337,7 +337,7 @@ QString HttpRequestViewModel::getBody() const noexcept
     if (iterator != m_items->end()) {
         auto item = *iterator;
         auto text = item->text();
-        return text;
+        return text.mid(6);
     }
 
     return "";
@@ -423,7 +423,8 @@ QString HttpRequestViewModel::getAllFields() const noexcept
 
     foreach(auto item, sortedList) {
         auto text = item->text();
-        lines[iterator] = text.replace("\n", "");
+        auto type = static_cast<HttpRequestTypes>(item->type());
+        lines[iterator] = type != HttpRequestTypes::BodyType ? text.replace("\n", "") : text;
         iterator++;
     }
 

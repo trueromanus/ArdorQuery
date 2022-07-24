@@ -73,6 +73,13 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     tabsSection->addShortcut("F11", "Toggle tabs betweens Query and Result");
     tabsSection->formatShortcuts();
     m_sections.append(tabsSection);
+
+    auto exportSection = new ShortcutSection();
+    exportSection->setTitle("Export fields");
+    exportSection->setDescription("Export fields to clipboard, file etc");
+    exportSection->addShortcut("Ctrl-S or F10", "Copy fields to clipboard");
+    exportSection->formatShortcuts();
+    m_sections.append(exportSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const

@@ -47,12 +47,12 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             isBodyType = true;
         }
 
-        if (type == HttpRequestViewModel::HttpRequestTypes::UnknownType) {
-            if (!isBodyType) continue;
-
-            bodyContent.append(line);
+        if (isBodyType) {
+            bodyContent.append((!bodyContent.isEmpty() ? "\n" : "") + line);
             continue;
         }
+
+        if (type == HttpRequestViewModel::HttpRequestTypes::UnknownType) continue;
 
         if (type != HttpRequestViewModel::HttpRequestTypes::UnknownType) {
             m_httpRequest->addItem(insertToEnd ? -1 : currentIndex, type, line);
@@ -60,7 +60,10 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
         currentIndex++;
     }
 
-    if (!bodyContent.isEmpty()) m_httpRequest->addItem(-1, HttpRequestViewModel::HttpRequestTypes::BodyType, bodyContent);
+    if (!bodyContent.isEmpty()) {
+        if (bodyContent.last(1) == "\n") bodyContent = bodyContent.mid(0, bodyContent.length() - 1);
+        m_httpRequest->addItem(-1, HttpRequestViewModel::HttpRequestTypes::BodyType, bodyContent);
+    }
 }
 
 void RequestExternalViewModel::setHttpRequest(const HttpRequestViewModel *httpRequest) noexcept
