@@ -44,6 +44,7 @@ Item {
                 anchors.fill: parent
                 text: textContent
                 wrapMode: Text.WrapAnywhere
+                selectByMouse: true
                 background: Rectangle {
                     anchors.fill: parent
                     color: typeColor

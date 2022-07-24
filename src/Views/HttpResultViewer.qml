@@ -102,12 +102,23 @@ Item {
                             anchors.fill: parent
                             model: viewModel.headers
                             boundsBehavior: ListView.StopAtBounds
-                            delegate: Text {
+                            delegate: TextArea {
+                                readOnly: true
                                 leftPadding: 4
+                                selectByMouse: true
                                 rightPadding: 10
+                                topPadding: 0
+                                bottomPadding: 0
                                 width: headersContainer.width
+                                textFormat: TextArea.RichText
                                 wrapMode: Text.Wrap
                                 text: modelData
+                                font.pointSize: 9
+                                background: Rectangle {
+                                    anchors.fill: parent
+                                    color: "transparent"
+                                    border.width: 0
+                                }
                             }
                             ScrollBar.vertical: ScrollBar {
                                 active: true
@@ -238,6 +249,7 @@ Item {
                                 text: currentLine
                                 width: bodyContainer.width
                                 wrapMode: Text.Wrap
+                                font.pointSize: 9
                             }
                             ScrollBar.vertical: ScrollBar {
                                 active: true
