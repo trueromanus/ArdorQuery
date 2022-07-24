@@ -236,6 +236,7 @@ Item {
                         id: listComponent
 
                         ListView {
+                            id: listStrings
                             clip: true
                             anchors.fill: parent
                             flickDeceleration: 5000
