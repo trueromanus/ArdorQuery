@@ -337,7 +337,7 @@ QString HttpRequestViewModel::getBody() const noexcept
     if (iterator != m_items->end()) {
         auto item = *iterator;
         auto text = item->text();
-        return text.mid(6);
+        return text.mid(5);
     }
 
     return "";
