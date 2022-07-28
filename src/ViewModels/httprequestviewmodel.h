@@ -36,7 +36,8 @@ public:
         BodyType,
         FormItemType,
         FormFileType,
-        HttpProtocolType
+        HttpProtocolType,
+        BearerType
     };
 
 private:

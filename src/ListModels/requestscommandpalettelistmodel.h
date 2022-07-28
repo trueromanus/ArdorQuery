@@ -13,49 +13,35 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef HTTPREQUESTSLISTMODEL_H
-#define HTTPREQUESTSLISTMODEL_H
+#ifndef REQUESTSCOMMANDPALETTELISTMODEL_H
+#define REQUESTSCOMMANDPALETTELISTMODEL_H
 
-#include <QObject>
 #include <QAbstractListModel>
 #include "../Models/httprequestmodel.h"
 
-class HttpRequestsListModel : public QAbstractListModel
+class RequestsCommandPaletteListModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(HttpRequestModel* selectedItem READ selectedItem NOTIFY selectedItemChanged)
-
 private:
-    QSharedPointer<QList<HttpRequestModel*>> m_requests { new QList<HttpRequestModel*>() };
-    int m_selectedIndex { 0 };
-
-    enum HttpRequestsRoles {
-        RequestTitleRole = Qt::UserRole + 1,
-        ViewModelRole,
-        ResultViewModelRole,
-        IsSelectedRole,
-        IndexRole,
+    QSharedPointer<QList<HttpRequestModel*>> m_requests;
+    int m_selected { 0 };
+    enum CommandPaletterRoles {
+        IdentifierRole = Qt::UserRole + 1,
+        TitleRole,
+        IsSelectedRole
     };
 
 public:
-    explicit HttpRequestsListModel(QObject *parent = nullptr);
+    explicit RequestsCommandPaletteListModel(QObject *parent = nullptr);
+
+    void setup(QSharedPointer<QList<HttpRequestModel*>> requests);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    HttpRequestModel* selectedItem() const noexcept { return m_requests->at(m_selectedIndex); }
-
-    void addItem(const HttpRequestModel* model) noexcept;
-
-    QSharedPointer<QList<HttpRequestModel*>> getList() const noexcept;
-
-    Q_INVOKABLE void selectItem(const int newIndex) noexcept;
-    Q_INVOKABLE void changeNameForSelectedItem(const QString& newName) noexcept;
-
 signals:
-    void selectedItemChanged();
 
 };
 
-#endif // HTTPREQUESTSLISTMODEL_H
+#endif // REQUESTSCOMMANDPALETTELISTMODEL_H

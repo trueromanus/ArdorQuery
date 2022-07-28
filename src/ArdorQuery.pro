@@ -18,6 +18,7 @@ SOURCES += \
         ListModels/maintabslistmodel.cpp \
         ListModels/notificationlistmodel.cpp \
         ListModels/outputformatslistmodel.cpp \
+        ListModels/requestscommandpalettelistmodel.cpp \
         ListModels/responsebodylistmodel.cpp \
         ListModels/shortcutslistmodel.cpp \
         Models/httprequestitem.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     ListModels/maintabslistmodel.h \
     ListModels/notificationlistmodel.h \
     ListModels/outputformatslistmodel.h \
+    ListModels/requestscommandpalettelistmodel.h \
     ListModels/responsebodylistmodel.h \
     ListModels/shortcutslistmodel.h \
     Models/httprequestitem.h \

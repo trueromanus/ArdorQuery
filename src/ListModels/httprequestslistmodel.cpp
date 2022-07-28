@@ -89,6 +89,11 @@ void HttpRequestsListModel::addItem(const HttpRequestModel* model) noexcept
     endResetModel();
 }
 
+QSharedPointer<QList<HttpRequestModel *> > HttpRequestsListModel::getList() const noexcept
+{
+    return m_requests;
+}
+
 void HttpRequestsListModel::selectItem(const int newIndex) noexcept
 {
     if (newIndex < 0) return;

@@ -24,6 +24,7 @@
 #include "../ViewModels/requestexternalviewmodel.h"
 #include "../ListModels/notificationlistmodel.h"
 #include "../ListModels/outputformatslistmodel.h"
+#include "../ListModels/requestscommandpalettelistmodel.h"
 
 class BackendViewModel : public QObject
 {
@@ -36,6 +37,8 @@ class BackendViewModel : public QObject
     Q_PROPERTY(NotificationListModel* notifications READ notifications NOTIFY notificationsChanged)
     Q_PROPERTY(bool helpVisible READ helpVisible WRITE setHelpVisible NOTIFY helpVisibleChanged)
     Q_PROPERTY(OutputFormatsListModel* outputFormats READ outputFormats NOTIFY outputFormatsChanged)
+    Q_PROPERTY(RequestsCommandPaletteListModel* commandPaletter READ commandPaletter NOTIFY commandPaletterChanged)
+    Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette NOTIFY openedCommandPaletteChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -46,6 +49,8 @@ private:
     NotificationListModel* m_notifications { new NotificationListModel(this) };
     OutputFormatsListModel* m_outputFormats { new OutputFormatsListModel(this) };
     bool m_helpVisible { false };
+    RequestsCommandPaletteListModel* m_commandPaletter { new RequestsCommandPaletteListModel(this) };
+    bool m_openedCommandPalette { false };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
@@ -57,6 +62,8 @@ public:
     RequestExternalViewModel* requestExternal() const noexcept { return m_requestExternal.get(); }
     NotificationListModel* notifications() const noexcept { return m_notifications; }
     OutputFormatsListModel* outputFormats() const noexcept { return m_outputFormats; }
+    RequestsCommandPaletteListModel* commandPaletter() const noexcept { return m_commandPaletter; }
+    bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
 
     Q_INVOKABLE void addNewRequest(const QString& name);
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
@@ -73,6 +80,8 @@ signals:
     void helpVisibleChanged();
     void notificationsChanged();
     void outputFormatsChanged();
+    void commandPaletterChanged();
+    void openedCommandPaletteChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

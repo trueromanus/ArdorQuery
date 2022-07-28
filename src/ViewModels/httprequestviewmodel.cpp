@@ -201,6 +201,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(BearerPrefix) && itemType != HttpRequestTypes::BearerType) {
+        item->setType(static_cast<int>(HttpRequestTypes::BearerType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
         needRefresh = true;
@@ -373,6 +378,7 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
     foreach (auto item, *m_items) {
         auto type = static_cast<HttpRequestTypes>(item->type());
         if (type == HttpRequestTypes::HeaderType) headers.append(item->text());
+        if (type == HttpRequestTypes::BearerType) headers.append(item->text().replace(BearerPrefix, "Authorization Bearer "));
     }
     return headers;
 }
@@ -445,13 +451,15 @@ QString HttpRequestViewModel::getTypeColor(int type) const
         case HttpRequestTypes::HeaderType:
             return "#8FBDD3";
         case HttpRequestTypes::BodyType:
-            return "#78938A";
+            return "#D7A86E";
         case HttpRequestTypes::FormItemType:
             return "#9FC088";
         case HttpRequestTypes::FormFileType:
             return "#FFD9C0";
         case HttpRequestTypes::HttpProtocolType:
             return "#A5BECC";
+        case HttpRequestTypes::BearerType:
+            return "#8879B0";
         default:
             return "#CDCDB4";
     }

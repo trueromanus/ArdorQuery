@@ -6,6 +6,7 @@ extern QString FormPrefix;
 extern QString BodyPrefix;
 extern QString FilePrefix;
 extern QString ProtocolPrefix;
+extern QString BearerPrefix;
 
 extern QString NotificationErrorTopic;
 extern QString NotificationInfoTopic;

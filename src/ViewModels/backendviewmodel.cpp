@@ -20,6 +20,8 @@ BackendViewModel::BackendViewModel(QObject *parent)
 {
     addNewRequest("New Query");
 
+    m_commandPaletter->setup(m_requests->getList());
+
     connect(m_requestPerformer, &HttpPerformerViewModel::pushErrorMessage, this, &BackendViewModel::errorNotification);
 }
 
@@ -164,6 +166,18 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // F11
     if (key == Qt::Key_F11) {
         m_tabs->toggleTabs();
+        return true;
+    }
+
+    // ---------
+    // Queries
+
+    // Ctrl-Tab
+    if (key == Qt::Key_Tab && control) {
+        if (!m_openedCommandPalette) {
+            m_openedCommandPalette = true;
+            emit openedCommandPaletteChanged();
+        }
         return true;
     }
 
