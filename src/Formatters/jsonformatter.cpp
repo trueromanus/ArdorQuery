@@ -113,7 +113,7 @@ QString JsonFormatter::format(const QString &data)
         if (m_space == latinCharacter && !stringStarted) continue;
 
         if (!stringStarted && !digitStarted && m_startDigits.contains(latinCharacter)) {
-            result.append("<font color=\"#e68600\">");
+            result.append("<font color=\"#cc7700\">");
             result.append(latinCharacter);
             digitStarted = true;
             continue;

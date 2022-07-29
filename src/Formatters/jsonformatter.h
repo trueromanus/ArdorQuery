@@ -32,7 +32,7 @@ private:
     const QString m_newline { "n" };
     const QString m_unicode { "u" };
     const QString m_jsonTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
-    const QString m_propertyStringStart { "<font color=\"#8812a1\">\"" };
+    const QString m_propertyStringStart { "<font color=\"#750f8a\">\"" };
     const QString m_plainStringStart { "<font color=\"#800000\">\"" };
     const QString m_startDigits { "-0123456789" };
     const QString m_digits { "0123456789.EexabcdfABCDF" };
