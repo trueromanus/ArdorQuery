@@ -37,7 +37,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(NotificationListModel* notifications READ notifications NOTIFY notificationsChanged)
     Q_PROPERTY(bool helpVisible READ helpVisible WRITE setHelpVisible NOTIFY helpVisibleChanged)
     Q_PROPERTY(OutputFormatsListModel* outputFormats READ outputFormats NOTIFY outputFormatsChanged)
-    Q_PROPERTY(RequestsCommandPaletteListModel* commandPaletter READ commandPaletter NOTIFY commandPaletterChanged)
+    Q_PROPERTY(RequestsCommandPaletteListModel* requestsCommandPaletter READ requestsCommandPaletter NOTIFY requestsCommandPaletterChanged)
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette NOTIFY openedCommandPaletteChanged)
 
 private:
@@ -49,7 +49,7 @@ private:
     NotificationListModel* m_notifications { new NotificationListModel(this) };
     OutputFormatsListModel* m_outputFormats { new OutputFormatsListModel(this) };
     bool m_helpVisible { false };
-    RequestsCommandPaletteListModel* m_commandPaletter { new RequestsCommandPaletteListModel(this) };
+    RequestsCommandPaletteListModel* m_requestsCommandPaletter { new RequestsCommandPaletteListModel(this) };
     bool m_openedCommandPalette { false };
 
 public:
@@ -62,11 +62,12 @@ public:
     RequestExternalViewModel* requestExternal() const noexcept { return m_requestExternal.get(); }
     NotificationListModel* notifications() const noexcept { return m_notifications; }
     OutputFormatsListModel* outputFormats() const noexcept { return m_outputFormats; }
-    RequestsCommandPaletteListModel* commandPaletter() const noexcept { return m_commandPaletter; }
+    RequestsCommandPaletteListModel* requestsCommandPaletter() const noexcept { return m_requestsCommandPaletter; }
     bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
 
     Q_INVOKABLE void addNewRequest(const QString& name);
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
+    Q_INVOKABLE void keysReleased(int key) noexcept;
 
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(const bool helpVisible) noexcept;
@@ -80,11 +81,12 @@ signals:
     void helpVisibleChanged();
     void notificationsChanged();
     void outputFormatsChanged();
-    void commandPaletterChanged();
+    void requestsCommandPaletterChanged();
     void openedCommandPaletteChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);
+    void requestsPaletterItemSelected(const QUuid& id);
 
 };
 

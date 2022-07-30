@@ -17,6 +17,7 @@
 #define HTTPREQUESTMODEL_H
 
 #include <QObject>
+#include <QUuid>
 #include "../ViewModels/httprequestviewmodel.h"
 #include "../ViewModels/httprequestresultviewmodel.h"
 
@@ -31,6 +32,7 @@ private:
     QString m_title { "" };
     QScopedPointer<HttpRequestViewModel> m_requestModel { new HttpRequestViewModel() };
     QScopedPointer<HttpRequestResultViewModel> m_resultModel { new HttpRequestResultViewModel() };
+    QUuid m_requestId { QUuid::createUuid() };
 
 public:
     explicit HttpRequestModel(QObject *parent = nullptr);
@@ -41,6 +43,8 @@ public:
     HttpRequestViewModel* requestModel() const noexcept { return m_requestModel.get(); }
 
     HttpRequestResultViewModel* resultModel() const noexcept { return m_resultModel.get(); }
+
+    QUuid requestId() const noexcept { return m_requestId; }
 
 signals:
     void titleChanged();

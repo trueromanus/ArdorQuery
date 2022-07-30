@@ -17,6 +17,9 @@
 #define REQUESTSCOMMANDPALETTELISTMODEL_H
 
 #include <QAbstractListModel>
+#include <QUuid>
+#include <QList>
+#include <QMap>
 #include "../Models/httprequestmodel.h"
 
 class RequestsCommandPaletteListModel : public QAbstractListModel
@@ -24,6 +27,8 @@ class RequestsCommandPaletteListModel : public QAbstractListModel
     Q_OBJECT
 private:
     QSharedPointer<QList<HttpRequestModel*>> m_requests;
+    QMap<QUuid, HttpRequestModel*> m_requestsMap { QMap<QUuid, HttpRequestModel*>() };
+    QList<QUuid> m_history { QList<QUuid>() };
     int m_selected { 0 };
     enum CommandPaletterRoles {
         IdentifierRole = Qt::UserRole + 1,
@@ -40,7 +45,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+    void selectItem();
+    void selectNext();
+    void refresh(bool needRecreateHistory = false);
+    void recreateHistory();
+
 signals:
+    void itemSelected(const QUuid& id);
 
 };
 

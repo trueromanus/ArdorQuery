@@ -20,9 +20,10 @@ BackendViewModel::BackendViewModel(QObject *parent)
 {
     addNewRequest("New Query");
 
-    m_commandPaletter->setup(m_requests->getList());
+    m_requestsCommandPaletter->setup(m_requests->getList());
 
     connect(m_requestPerformer, &HttpPerformerViewModel::pushErrorMessage, this, &BackendViewModel::errorNotification);
+    connect(m_requestsCommandPaletter, &RequestsCommandPaletteListModel::itemSelected, this, &BackendViewModel::requestsPaletterItemSelected);
 }
 
 void BackendViewModel::addNewRequest(const QString &name)
@@ -176,12 +177,24 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     if (key == Qt::Key_Tab && control) {
         if (!m_openedCommandPalette) {
             m_openedCommandPalette = true;
+            m_requestsCommandPaletter->refresh(true);
             emit openedCommandPaletteChanged();
+        } else {
+            m_requestsCommandPaletter->selectNext();
         }
         return true;
     }
 
     return false;
+}
+
+void BackendViewModel::keysReleased(int key) noexcept
+{
+    if (key == Qt::Key_Control && m_openedCommandPalette) {
+        m_openedCommandPalette = false;
+        m_requestsCommandPaletter->selectItem();
+        emit openedCommandPaletteChanged();
+    }
 }
 
 void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
@@ -195,4 +208,9 @@ void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
 void BackendViewModel::errorNotification(const QString &title, const QString &message)
 {
     m_notifications->pushErrorMessage(title, message);
+}
+
+void BackendViewModel::requestsPaletterItemSelected(const QUuid &id)
+{
+    m_requests->selectItemById(id);
 }

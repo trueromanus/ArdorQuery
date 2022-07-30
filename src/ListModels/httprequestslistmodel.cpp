@@ -106,6 +106,21 @@ void HttpRequestsListModel::selectItem(const int newIndex) noexcept
     emit selectedItemChanged();
 }
 
+void HttpRequestsListModel::selectItemById(const QUuid &id) noexcept
+{
+    auto iterator = std::find_if(
+        m_requests->cbegin(),
+        m_requests->cend(),
+        [id](HttpRequestModel* item) {
+           return item->requestId() == id;
+        }
+    );
+    if (iterator == m_requests->cend()) return;
+
+    auto item = *iterator;
+    selectItem(m_requests->indexOf(item));
+}
+
 void HttpRequestsListModel::changeNameForSelectedItem(const QString &newName) noexcept
 {
     selectedItem()->setTitle(newName);

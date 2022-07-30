@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QUuid>
 #include "../Models/httprequestmodel.h"
 
 class HttpRequestsListModel : public QAbstractListModel
@@ -51,6 +52,7 @@ public:
     QSharedPointer<QList<HttpRequestModel*>> getList() const noexcept;
 
     Q_INVOKABLE void selectItem(const int newIndex) noexcept;
+    Q_INVOKABLE void selectItemById(const QUuid& id) noexcept;
     Q_INVOKABLE void changeNameForSelectedItem(const QString& newName) noexcept;
 
 signals:

@@ -33,5 +33,6 @@
         <file>Views/Icons/broken.svg</file>
         <file>Views/Windows/ImageResponseWindow.qml</file>
         <file>Views/AboutWindow.qml</file>
+        <file>Views/Controls/CommandPalette.qml</file>
     </qresource>
 </RCC>

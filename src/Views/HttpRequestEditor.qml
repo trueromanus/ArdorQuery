@@ -15,6 +15,9 @@ Item {
         );
         if (needAccepted) event.accepted = true;
     }
+    Keys.onReleased: (event) => {
+        backend.keysReleased(event.key);
+    }
 
     property alias viewModel: listView.model
 
@@ -67,6 +70,9 @@ Item {
                         (event.modifiers & Qt.AltModifier)
                     );
                     if (needAccepted) event.accepted = true;
+                }
+                Keys.onReleased: (event) => {
+                    backend.keysReleased(event.key);
                 }
             }
         }

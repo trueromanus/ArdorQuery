@@ -34,6 +34,13 @@ ApplicationWindow {
         id: shortcutPanel
     }
 
+    CommandPalette {
+        id: commandPalette
+        anchors.centerIn: parent
+        visible: backend.openedCommandPalette
+        enabled: backend.openedCommandPalette
+    }
+
     NotificationPool {
         anchors.right: parent.right
         anchors.top: parent.top
