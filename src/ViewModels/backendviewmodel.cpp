@@ -128,8 +128,8 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
-    // Shift-R
-    if (nativeCode == 19 && shift) {
+    // Alt-Shift-R
+    if (nativeCode == 19 && alt && shift) {
         request->clearSelectedField();
         return true;
     }

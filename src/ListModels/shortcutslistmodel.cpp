@@ -39,7 +39,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     removeFieldsSection->setTitle("Deleting fields");
     removeFieldsSection->setDescription("Delete all fields or only specific ones depending on the position");
     removeFieldsSection->addShortcut("Ctrl-R", "Delete all fields");
-    removeFieldsSection->addShortcut("Shift-R", "Delete selected field");
+    removeFieldsSection->addShortcut("Alt-Shift-R", "Delete selected field");
     removeFieldsSection->formatShortcuts();
     m_sections.append(removeFieldsSection);
 
