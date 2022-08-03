@@ -73,7 +73,7 @@ QString HtmlFormatter::format(const QString &data)
             m_result.append(character);
         }
         if (latinCharacter == m_space && contentStarted) m_result.append(m_space);
-        if (tagStarted) currentFullTag.append(character);
+        if (tagStarted && latinCharacter != m_newline) currentFullTag.append(character);
     }
 
     auto resultPass = m_result;
@@ -105,7 +105,7 @@ void HtmlFormatter::formatTagWithOffset(QString &tag)
     }
 
     if (closedTag) {
-        m_stackSize -= 1;
+        if (!selfClosedTag) m_stackSize -= 1;
         setOffset();
         formatTag(tag);
     } else if (selfClosedTag) {

@@ -135,7 +135,7 @@ Item {
                         title: "Body"
 
                         Item {
-                            width: 130
+                            width: 100
                             height: parent.height
                             anchors.centerIn: parent
 
