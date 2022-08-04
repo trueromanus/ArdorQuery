@@ -75,7 +75,7 @@ void XmlFormatter::formatTagWithOffset(QString &tag)
     auto header = tag[1] == m_question;
 
     if (header) {
-        m_result.append("<font color=\"#8812a1\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
+        m_result.append("<font color=\"gray\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
         return;
     }
 
