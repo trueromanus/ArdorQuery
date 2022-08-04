@@ -34,3 +34,13 @@ void HtmlFormatterUnitTests::emptyFullTag()
 )");
     QCOMPARE(result, expectedResult);
 }
+
+void HtmlFormatterUnitTests::attributeWithUrl()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.format(R"(<test attr="http://www.test.com"></test>)");
+    auto expectedResult = QString(R"(<font color="#8812a1">&lt;test</font> <font color="#994500"> attr=<font color="#2222dd">&quot;http://www.test.com&quot;</font>&gt;</font>
+<font color="#8812a1">&lt;/test&gt;</font>
+)");
+    QCOMPARE(result, expectedResult);
+}

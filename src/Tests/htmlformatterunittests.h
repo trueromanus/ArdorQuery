@@ -14,6 +14,7 @@ private slots:
     void htmlLowerHeader();
     void htmlUpperHeader();
     void emptyFullTag();
+    void attributeWithUrl();
 };
 
 #endif // HTMLFORMATTERUNITTESTS_H

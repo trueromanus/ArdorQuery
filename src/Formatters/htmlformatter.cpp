@@ -154,7 +154,7 @@ void HtmlFormatter::formatTag(QString &tag)
             continue;
         }
 
-        if (!closedPartStarted && (latinCharacter == m_tagEnd || latinCharacter == m_closedTag)) {
+        if (!closedPartStarted && !attributeStarted && (latinCharacter == m_tagEnd || latinCharacter == m_closedTag)) {
             m_result.append("</font><font color=\"#8812a1\">");
             closedPartStarted = true;
         }
