@@ -10,6 +10,12 @@ Item {
 
     property var viewModel
 
+    signal refreshFocus()
+
+    onRefreshFocus: {
+        searchTextField.forceActiveFocus();
+    }
+
     ColumnLayout {
         id: fieldContainer
         anchors.fill: parent
@@ -134,6 +140,39 @@ Item {
                         width: responsePanel.width
                         title: "Body"
 
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: searchTextField.left
+                            anchors.rightMargin: 4
+                            text: viewModel.bodyModel.countFindedLinesText
+                        }
+
+                        TextField {
+                            id: searchTextField
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: copyBodyButton.left
+                            anchors.rightMargin: 10
+                            width: 150
+                            selectByMouse: true
+                            onEditingFinished: {
+                                viewModel.bodyModel.searchText(text);
+                                backend.refreshFindedIndex();
+                            }
+                            Keys.onPressed: (event) => {
+                                const needAccepted = backend.keysHandler(
+                                    event.key,
+                                    event.nativeScanCode,
+                                    (event.modifiers & Qt.ControlModifier),
+                                    (event.modifiers & Qt.ShiftModifier),
+                                    (event.modifiers & Qt.AltModifier)
+                                );
+                                if (needAccepted) event.accepted = true;
+                            }
+                            Keys.onReleased: (event) => {
+                                backend.keysReleased(event.key);
+                            }
+                        }
+
                         Item {
                             width: 100
                             height: parent.height
@@ -227,6 +266,7 @@ Item {
                     height: fieldContainer.height - panelsContainer.height - 4
 
                     Loader {
+                        id: listComponentLoader
                         visible: !viewModel.showImage
                         anchors.fill: parent
                         sourceComponent: !viewModel.showImage ? listComponent : null
@@ -243,14 +283,26 @@ Item {
                             flickableDirection: Flickable.HorizontalAndVerticalFlick
                             boundsBehavior: ListView.StopAtBounds
                             model: viewModel.bodyModel
-                            delegate: Text {
-                                leftPadding: 4
-                                rightPadding: 10
-                                textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
-                                text: currentLine
-                                width: bodyContainer.width
-                                wrapMode: Text.Wrap
-                                font.pointSize: 9
+                            delegate: Item {
+                                width: listStrings.width
+                                height: line.height
+
+                                Rectangle {
+                                    color: "black"
+                                    opacity: .05
+                                    anchors.fill: parent
+                                    visible: isFindIndex
+                                }
+                                Text {
+                                    id: line
+                                    leftPadding: 4
+                                    rightPadding: 10
+                                    textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
+                                    text: currentLine
+                                    width: bodyContainer.width
+                                    wrapMode: Text.Wrap
+                                    font.pointSize: 9
+                                }
                             }
                             ScrollBar.vertical: ScrollBar {
                                 active: true
@@ -318,6 +370,13 @@ Item {
             enabled: spinnerContainer.visible
             propagateComposedEvents: false
             anchors.fill: parent
+        }
+    }
+
+    Connections {
+        target: backend
+        function onChangedFindedIndex(findedLine){
+            listComponentLoader.item.positionViewAtIndex(findedLine, ListView.Contain);
         }
     }
 }

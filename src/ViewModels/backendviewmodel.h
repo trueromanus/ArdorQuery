@@ -68,6 +68,7 @@ public:
     Q_INVOKABLE void addNewRequest(const QString& name);
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
     Q_INVOKABLE void keysReleased(int key) noexcept;
+    Q_INVOKABLE void refreshFindedIndex() noexcept;
 
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(const bool helpVisible) noexcept;
@@ -83,6 +84,7 @@ signals:
     void outputFormatsChanged();
     void requestsCommandPaletterChanged();
     void openedCommandPaletteChanged();
+    void changedFindedIndex(int findedLine);
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

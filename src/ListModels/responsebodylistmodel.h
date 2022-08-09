@@ -19,6 +19,9 @@
 #include <QObject>
 #include <QAbstractListModel>
 #include <QImage>
+#include <QMap>
+#include <QList>
+#include <QRegularExpression>
 #include "../Formatters/formatterfactory.h"
 #include "../globalconstants.h"
 
@@ -28,16 +31,25 @@ class ResponseBodyListModel : public QAbstractListModel
     Q_PROPERTY(QImage bodyImage READ bodyImage NOTIFY bodyImageChanged)
     Q_PROPERTY(int bodyImageWidth READ bodyImageWidth NOTIFY bodyImageWidthChanged)
     Q_PROPERTY(int bodyImageHeight READ bodyImageHeight NOTIFY bodyImageHeightChanged)
+    Q_PROPERTY(int countFindedLines READ countFindedLines NOTIFY countFindedLinesChanged)
+    Q_PROPERTY(QString countFindedLinesText READ countFindedLinesText NOTIFY countFindedLinesTextChanged)
 
 private:
     QStringList m_lines { QStringList() };
     QByteArray m_originalBody { "" };
+    QList<std::tuple<int, int>> m_findedLines { QList<std::tuple<int, int>>() };
+    QMap<int, int> m_findedLinesMap { QMap<int, int>() };
     QScopedPointer<FormatterFactory> m_formatterFactory { new FormatterFactory() };
     QImage m_imageSource { QImage() };
+    int m_currentFindedIndex { -1 };
+    int m_currentFindedLine { -1 };
+    QRegularExpression m_fontTagStartRegExp { R"a(<font color=\"\#[A-Za-z0-9]{1,6}\">)a" };
+    bool m_notFounded { false };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
-        IndexRole
+        IndexRole,
+        IsFindIndexRole
     };
 
 public:
@@ -56,12 +68,24 @@ public:
     QImage bodyImage() const noexcept { return m_imageSource; }
     int bodyImageWidth() const noexcept { return m_imageSource.width(); }
     int bodyImageHeight() const noexcept { return m_imageSource.height(); }
+    int countFindedLines() const noexcept { return m_findedLines.count(); }
+    QString countFindedLinesText() const noexcept;
+    int nextFindedResult() noexcept;
+    int previousFindedResult() noexcept;
+    int getCurrentFindedLine() noexcept;
+
+    Q_INVOKABLE void searchText(const QString& filter) noexcept;
+
+private:
+    QString& cleanLineFromTags(QString& line) noexcept;
 
 signals:
     void visibleBodyChanged();
     void bodyImageChanged();
     void bodyImageWidthChanged();
     void bodyImageHeightChanged();
+    void countFindedLinesChanged();
+    void countFindedLinesTextChanged();
 
 };
 

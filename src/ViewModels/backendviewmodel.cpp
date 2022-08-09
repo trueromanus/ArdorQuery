@@ -40,6 +40,7 @@ void BackendViewModel::addNewRequest(const QString &name)
 bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept
 {
     auto request = m_requests->selectedItem()->requestModel();
+    auto result = m_requests->selectedItem()->resultModel();
 
     // ---------
     // Perform requests
@@ -185,6 +186,21 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    // ---------
+    // Body search
+
+    // Ctrl-Alt-Down
+    if (nativeCode == 336 && control && alt) {
+        auto index = result->bodyModel()->nextFindedResult();
+        if (index > -1) emit changedFindedIndex(index);
+    }
+
+    // Ctrl-Alt-Up
+    if (nativeCode == 328 && control && alt) {
+        auto index = result->bodyModel()->previousFindedResult();
+        if (index > -1) emit changedFindedIndex(index);
+    }
+
     return false;
 }
 
@@ -195,6 +211,13 @@ void BackendViewModel::keysReleased(int key) noexcept
         m_requestsCommandPaletter->selectItem();
         emit openedCommandPaletteChanged();
     }
+}
+
+void BackendViewModel::refreshFindedIndex() noexcept
+{
+    auto bodyModel = m_requests->selectedItem()->resultModel()->bodyModel();
+    auto findedLine = bodyModel->getCurrentFindedLine();
+    if (findedLine > -1) emit changedFindedIndex(findedLine);
 }
 
 void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept

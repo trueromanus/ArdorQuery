@@ -21,11 +21,13 @@ ApplicationWindow {
     }
 
     HttpRequestEditor {
+        id: requestEditor
         visible: backend.tabs.currentTab === 'Request'
         viewModel: backend.requests.selectedItem.requestModel
     }
 
     HttpResultViewer {
+        id: resultViewer
         visible: backend.tabs.currentTab === 'Result'
         viewModel: backend.requests.selectedItem.resultModel
     }
@@ -84,6 +86,20 @@ ApplicationWindow {
             requestPerformer.httpRequestResult: backend.requests.selectedItem.resultModel
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel
             requestExternal.textAdvisor: backend.textAdviser
+        }
+
+        Connections {
+            target: backend.tabs
+            function onCurrentTabChanged () {
+                switch (backend.tabs.currentTab) {
+                    case 'Request':
+                        requestEditor.refreshFocus();
+                        break;
+                    case 'Result':
+                        resultViewer.refreshFocus();
+                        break;
+                }
+            }
         }
 
         Item {

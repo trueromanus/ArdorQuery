@@ -14,6 +14,7 @@
 */
 
 #include <QPixmap>
+#include <QRegularExpression>
 #include "responsebodylistmodel.h"
 
 ResponseBodyListModel::ResponseBodyListModel(QObject *parent)
@@ -43,6 +44,9 @@ QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
         case IndexRole: {
             return QVariant::fromValue(currentIndex);
         }
+        case IsFindIndexRole: {
+            return QVariant(!m_findedLines.isEmpty() && m_currentFindedLine == currentIndex);
+        }
     }
 
     return QVariant();
@@ -58,6 +62,10 @@ QHash<int, QByteArray> ResponseBodyListModel::roleNames() const
         {
             IndexRole,
             "currentIndex"
+        },
+        {
+            IsFindIndexRole,
+            "isFindIndex"
         }
     };
 }
@@ -81,6 +89,13 @@ void ResponseBodyListModel::setBody(const QByteArray &body, const QString& forma
     }
 
     endResetModel();
+
+    m_currentFindedLine = -1;
+    m_currentFindedIndex = -1;
+    m_findedLines.clear();
+    m_findedLinesMap.clear();
+    emit countFindedLinesChanged();
+    emit countFindedLinesTextChanged();
 }
 
 void ResponseBodyListModel::reformatting(const QString &formatter) noexcept
@@ -135,4 +150,96 @@ QByteArray ResponseBodyListModel::getFullBodyArray() const noexcept
 bool ResponseBodyListModel::isHasBody() const noexcept
 {
     return !m_originalBody.isEmpty();
+}
+
+QString ResponseBodyListModel::countFindedLinesText() const noexcept
+{
+    if (m_notFounded) return "Rows not found";
+
+    return !m_findedLines.isEmpty() ? "Rows found " + QString::number(m_findedLines.count()) : "";
+}
+
+int ResponseBodyListModel::nextFindedResult() noexcept
+{
+    if (m_findedLines.isEmpty()) return -1;
+
+    beginResetModel();
+
+    m_currentFindedIndex += 1;
+    if (m_currentFindedIndex >= m_findedLines.count()) m_currentFindedIndex = 0;
+
+    auto tuple = m_findedLines.value(m_currentFindedIndex);
+    m_currentFindedLine = std::get<0>(tuple);
+
+    endResetModel();
+
+    return m_currentFindedLine;
+}
+
+int ResponseBodyListModel::previousFindedResult() noexcept
+{
+    if (m_findedLines.isEmpty()) return -1;
+
+    beginResetModel();
+
+    m_currentFindedIndex -= 1;
+    if (m_currentFindedIndex < 0) m_currentFindedIndex = m_findedLines.count() - 1;
+
+    auto tuple = m_findedLines.value(m_currentFindedIndex);
+    m_currentFindedLine = std::get<0>(tuple);
+
+    endResetModel();
+
+    return m_currentFindedLine;
+}
+
+int ResponseBodyListModel::getCurrentFindedLine() noexcept
+{
+    return !m_findedLines.isEmpty() ? m_currentFindedLine : -1;
+}
+
+void ResponseBodyListModel::searchText(const QString &filter) noexcept
+{
+    m_findedLines.clear();
+    m_findedLinesMap.clear();
+    m_notFounded = false;
+    m_currentFindedIndex = 0;
+    m_currentFindedLine = 0;
+
+    beginResetModel();
+
+    if (filter.isEmpty()) {
+        endResetModel();
+        emit countFindedLinesChanged();
+        emit countFindedLinesTextChanged();
+        return;
+    }
+
+    auto iterator = 0;
+    foreach (auto line, m_lines) {
+        auto index = cleanLineFromTags(line).indexOf(filter);
+        if (index > -1) {
+            m_findedLines.append(std::make_tuple(iterator, index));
+            m_findedLinesMap.insert(iterator, m_findedLines.count() - 1);
+        }
+
+        iterator++;
+    }
+
+    if (!m_findedLines.isEmpty()) {
+        m_currentFindedIndex = 0;
+        m_currentFindedLine = std::get<0>(m_findedLines.first());
+
+    } else {
+        m_notFounded = true;
+    }
+
+    endResetModel();
+    emit countFindedLinesChanged();
+    emit countFindedLinesTextChanged();
+}
+
+QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept
+{
+    return line.replace("</font>", "").replace("&lt;", "<").replace("&gt;", "<").replace(m_fontTagStartRegExp, "");
 }

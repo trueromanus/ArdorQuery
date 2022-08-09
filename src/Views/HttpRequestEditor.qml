@@ -21,6 +21,12 @@ Item {
 
     property alias viewModel: listView.model
 
+    signal refreshFocus()
+
+    onRefreshFocus: {
+        listView.forceActiveFocus();
+    }
+
     ListView {
         id: listView
         anchors.fill: parent

@@ -80,6 +80,14 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     exportSection->addShortcut("Ctrl-S or F10", "Copy fields to clipboard");
     exportSection->formatShortcuts();
     m_sections.append(exportSection);
+
+    auto bodySearchSection = new ShortcutSection();
+    bodySearchSection->setTitle("Search in response body");
+    bodySearchSection->setDescription("Search result navigation in response body");
+    bodySearchSection->addShortcut("Ctrl-Alt-Down", "Next founded result");
+    bodySearchSection->addShortcut("Ctrl-Alt-Up", "Previous founded result");
+    bodySearchSection->formatShortcuts();
+    m_sections.append(bodySearchSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const
