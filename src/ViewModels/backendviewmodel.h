@@ -65,7 +65,7 @@ public:
     RequestsCommandPaletteListModel* requestsCommandPaletter() const noexcept { return m_requestsCommandPaletter; }
     bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
 
-    Q_INVOKABLE void addNewRequest(const QString& name);
+    Q_INVOKABLE void addNewRequest();
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
     Q_INVOKABLE void keysReleased(int key) noexcept;
     Q_INVOKABLE void refreshFindedIndex() noexcept;

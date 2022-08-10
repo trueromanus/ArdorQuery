@@ -4,7 +4,7 @@ import QtQuick.Layouts /* 1.15 */
 
 Popup {
     id: root
-    width: 500
+    width: 400
     height: 300
     closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
     modal: true
@@ -62,65 +62,6 @@ Popup {
                             backend.requests.selectItem(currentIndex);
                         }
                     }
-                }
-            }
-
-            Rectangle {
-                anchors.right: parent.right
-                anchors.rightMargin: 9
-                color: "black"
-                width: 1
-                height: parent.height
-            }
-        }
-
-        Item {
-            Layout.preferredWidth: 200
-            Layout.fillHeight: true
-
-            Text {
-                id: titleChangeName
-                anchors.top: parent.top
-                font.pointSize: 11
-                text: "Change name"
-            }
-
-            Item {
-                anchors.top: titleChangeName.bottom
-                width: parent.width
-                height: 50
-
-                RowLayout {
-                    spacing: 0
-                    anchors.fill: parent
-
-                    TextField {
-                        id: changeNameField
-                        Layout.fillWidth: true
-                        text: backend.requests.selectedItem.title
-                    }
-
-                    IconButton {
-                        id: saveButton
-                        Layout.preferredWidth: 29
-                        iconWidth: 20
-                        iconHeight: 20
-                        width: 22
-                        height: 22
-                        icon: storagePaths.icons + "save.svg"
-                        onPressed: {
-                            backend.requests.changeNameForSelectedItem(changeNameField.text);
-                        }
-                    }
-                }
-            }
-
-            TextButton {
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                title: "Add new query"
-                onPressed: {
-                    backend.addNewRequest("New Query");
                 }
             }
         }

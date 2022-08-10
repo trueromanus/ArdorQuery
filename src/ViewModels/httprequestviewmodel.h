@@ -26,6 +26,7 @@ class HttpRequestViewModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int selectedItem READ selectedItem WRITE setSelectedItem NOTIFY selectedItemChanged)
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
 
 public:
     enum class HttpRequestTypes {
@@ -37,7 +38,8 @@ public:
         FormItemType,
         FormFileType,
         HttpProtocolType,
-        BearerType
+        BearerType,
+        TitleType
     };
 
 private:
@@ -45,6 +47,7 @@ private:
     QScopedPointer<QMap<int, int>> m_sortWeight { new QMap<int, int>() };
     int m_selectedItem { 0 };
     QSharedPointer<TextAdvisorViewModel> m_textAdvisor { nullptr };
+    const QString m_unnamed { "Unnamed" };
 
     enum HttpRequestRoles {
         TypeRole = Qt::UserRole + 1,
@@ -64,6 +67,8 @@ public:
 
     int selectedItem() const noexcept { return m_selectedItem; }
     void setSelectedItem(const int selectedItem) noexcept;
+
+    QString title() const noexcept { return getTitle(); }
 
     void setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept;
 
@@ -85,6 +90,7 @@ public:
     QStringList getFormParameters() const noexcept;
     QStringList getFileParameters() const noexcept;
     QStringList getHeaders() const noexcept;
+    QString getTitle() const noexcept;
     bool isOnlyEmptyFirstItem() const noexcept;
     int countItems() const noexcept;
     void sortingFields(const bool descending) noexcept;
@@ -97,6 +103,7 @@ private:
 signals:
     void selectedItemChanged();
     void textAdvisorChanged();
+    void titleChanged();
 
 };
 

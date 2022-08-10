@@ -18,7 +18,7 @@
 BackendViewModel::BackendViewModel(QObject *parent)
     : QObject{parent}
 {
-    addNewRequest("New Query");
+    addNewRequest();
 
     m_requestsCommandPaletter->setup(m_requests->getList());
 
@@ -26,10 +26,9 @@ BackendViewModel::BackendViewModel(QObject *parent)
     connect(m_requestsCommandPaletter, &RequestsCommandPaletteListModel::itemSelected, this, &BackendViewModel::requestsPaletterItemSelected);
 }
 
-void BackendViewModel::addNewRequest(const QString &name)
+void BackendViewModel::addNewRequest()
 {
     auto model = new HttpRequestModel(this);
-    model->setTitle(name);
 
     auto request = model->requestModel();
     request->setTextAdvisor(m_textAdviser);
@@ -199,6 +198,14 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     if (nativeCode == 328 && control && alt) {
         auto index = result->bodyModel()->previousFindedResult();
         if (index > -1) emit changedFindedIndex(index);
+    }
+
+    // ---------
+    // Queries
+
+    // Ctrl-Insert
+    if (nativeCode == 338 && control) {
+        addNewRequest();
     }
 
     return false;

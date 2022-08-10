@@ -88,6 +88,14 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     bodySearchSection->addShortcut("Ctrl-Alt-Up", "Previous founded result");
     bodySearchSection->formatShortcuts();
     m_sections.append(bodySearchSection);
+
+    auto queriesSection = new ShortcutSection();
+    queriesSection->setTitle("Queries management");
+    queriesSection->setDescription("Creating new query, deleting existing etc");
+    queriesSection->addShortcut("Ctrl-Insert", "Create new query");
+    queriesSection->addShortcut("Ctrl-Tab", "holding Ctrl and further pressing Tab change opening query");
+    queriesSection->formatShortcuts();
+    m_sections.append(queriesSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const

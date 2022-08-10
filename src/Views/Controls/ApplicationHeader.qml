@@ -54,7 +54,7 @@ Item {
                     elide: Text.ElideRight
                     wrapMode: Text.Wrap
                     maximumLineCount: 1
-                    text: isRequests ? backend.requests.selectedItem.title : title
+                    text: isRequests ? backend.requests.selectedItem.requestModel.title : title
                     color: isActived || itemRoot.itemHovered ? "black" : "gray"
                 }
 

@@ -35,7 +35,7 @@ QVariant HttpRequestsListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case RequestTitleRole: {
-            return QVariant(request->title());
+            return QVariant(request->requestModel()->title());
         }
         case ViewModelRole: {
             return QVariant::fromValue(request->requestModel());
@@ -119,10 +119,4 @@ void HttpRequestsListModel::selectItemById(const QUuid &id) noexcept
 
     auto item = *iterator;
     selectItem(m_requests->indexOf(item));
-}
-
-void HttpRequestsListModel::changeNameForSelectedItem(const QString &newName) noexcept
-{
-    selectedItem()->setTitle(newName);
-    emit dataChanged(index(m_selectedIndex,0), index(m_selectedIndex,0));
 }

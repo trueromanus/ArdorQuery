@@ -47,7 +47,7 @@ QVariant RequestsCommandPaletteListModel::data(const QModelIndex &index, int rol
             return QVariant(itemIndex);
         }
         case TitleRole: {
-            return QVariant(request->title());
+            return QVariant(request->requestModel()->title());
         }
         case IsSelectedRole: {
             return QVariant(m_selected == itemIndex);

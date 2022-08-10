@@ -141,6 +141,8 @@ void HttpRequestViewModel::addItem(const int position, const HttpRequestViewMode
 
     endResetModel();
 
+    if (itemType == HttpRequestTypes::TitleType) emit titleChanged();
+
     setSelectedItem(actualPosition);
 }
 
@@ -206,8 +208,15 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(TitlePrefix) && itemType != HttpRequestTypes::TitleType) {
+        item->setType(static_cast<int>(HttpRequestTypes::TitleType));
+        emit titleChanged();
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
+
         needRefresh = true;
     }
 
@@ -215,6 +224,8 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         item->setType(static_cast<int>(HttpRequestTypes::HeaderType));
         needRefresh = true;
     }
+
+    if (itemType == HttpRequestTypes::TitleType) emit titleChanged();
 
     if (needRefresh) emit dataChanged(index(position, 0), index(position, 0));
 }
@@ -383,6 +394,26 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
     return headers;
 }
 
+QString HttpRequestViewModel::getTitle() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::TitleType;
+        }
+    );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text();
+        auto title = text.replace("title ", "", Qt::CaseInsensitive);
+        return title.trimmed().isEmpty() ? m_unnamed : title;
+    }
+
+    return m_unnamed;
+}
+
 bool HttpRequestViewModel::isOnlyEmptyFirstItem() const noexcept
 {
     return m_items->count() == 1 && m_items->value(0)->text().isEmpty();
@@ -460,6 +491,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#A5BECC";
         case HttpRequestTypes::BearerType:
             return "#8879B0";
+        case HttpRequestTypes::TitleType:
+            return "#C8E3D4";
         default:
             return "#CDCDB4";
     }

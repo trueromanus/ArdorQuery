@@ -24,21 +24,16 @@
 class HttpRequestModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(HttpRequestViewModel* requestModel READ requestModel NOTIFY requestModelChanged)
     Q_PROPERTY(HttpRequestResultViewModel* resultModel READ resultModel NOTIFY resultModelChanged)
 
 private:
-    QString m_title { "" };
     QScopedPointer<HttpRequestViewModel> m_requestModel { new HttpRequestViewModel() };
     QScopedPointer<HttpRequestResultViewModel> m_resultModel { new HttpRequestResultViewModel() };
     QUuid m_requestId { QUuid::createUuid() };
 
 public:
     explicit HttpRequestModel(QObject *parent = nullptr);
-
-    QString title() const noexcept { return m_title; }
-    void setTitle(const QString& title) noexcept;
 
     HttpRequestViewModel* requestModel() const noexcept { return m_requestModel.get(); }
 

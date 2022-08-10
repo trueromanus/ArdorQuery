@@ -53,7 +53,6 @@ public:
 
     Q_INVOKABLE void selectItem(const int newIndex) noexcept;
     Q_INVOKABLE void selectItemById(const QUuid& id) noexcept;
-    Q_INVOKABLE void changeNameForSelectedItem(const QString& newName) noexcept;
 
 signals:
     void selectedItemChanged();
