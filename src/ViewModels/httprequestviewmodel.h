@@ -39,7 +39,8 @@ public:
         FormFileType,
         HttpProtocolType,
         BearerType,
-        TitleType
+        TitleType,
+        ParamType
     };
 
 private:
@@ -86,6 +87,7 @@ public:
     QString getMethod() const noexcept;
     QString getProtocol() const noexcept;
     QString getUrl() const noexcept;
+    QString addGetParameters(const QString& url) const noexcept;
     QString getBody() const noexcept;
     QStringList getFormParameters() const noexcept;
     QStringList getFileParameters() const noexcept;

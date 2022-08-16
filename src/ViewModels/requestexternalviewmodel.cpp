@@ -46,6 +46,10 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             type = HttpRequestViewModel::HttpRequestTypes::TitleType;
             isBodyType = false;
         }
+        if (line.startsWith(ParamPrefix)) {
+            type = HttpRequestViewModel::HttpRequestTypes::ParamType;
+            isBodyType = false;
+        }
         if (m_textAdvisor->isContainsHeader(line)) {
             type = HttpRequestViewModel::HttpRequestTypes::HeaderType;
             isBodyType = false;

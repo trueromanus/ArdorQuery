@@ -155,6 +155,7 @@ Item {
                             width: 150
                             selectByMouse: true
                             onEditingFinished: {
+                                //TODO: issue after deactivated window!!!!
                                 viewModel.bodyModel.searchText(text);
                                 backend.refreshFindedIndex();
                             }

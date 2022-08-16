@@ -214,6 +214,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(ParamPrefix) && itemType != HttpRequestTypes::ParamType) {
+        item->setType(static_cast<int>(HttpRequestTypes::ParamType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
 
@@ -334,10 +339,26 @@ QString HttpRequestViewModel::getUrl() const noexcept
     if (iterator != m_items->end()) {
         auto item = *iterator;
         auto text = item->text();
-        return text.replace("url ", "", Qt::CaseInsensitive);
+        return addGetParameters(text.replace("url ", "", Qt::CaseInsensitive));
     }
 
     return "";
+}
+
+QString HttpRequestViewModel::addGetParameters(const QString &url) const noexcept
+{
+    QStringList parameters;
+    foreach (auto item, *m_items) {
+        auto type = static_cast<HttpRequestTypes>(item->type());
+        if (type == HttpRequestTypes::ParamType) {
+            parameters.append(item->text().mid(6));
+        }
+    }
+
+    if (parameters.isEmpty()) return url;
+
+    auto allParameters = parameters.join("&");
+    return url.contains("?") ? url + allParameters : url + "?" + allParameters;
 }
 
 QString HttpRequestViewModel::getBody() const noexcept
@@ -493,6 +514,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#8879B0";
         case HttpRequestTypes::TitleType:
             return "#C8E3D4";
+        case HttpRequestTypes::ParamType:
+            return "#D4D925";
         default:
             return "#CDCDB4";
     }

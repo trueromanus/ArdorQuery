@@ -8,6 +8,7 @@ QString FilePrefix = "file ";
 QString ProtocolPrefix = "protocol ";
 QString BearerPrefix = "bearer ";
 QString TitlePrefix = "title ";
+QString ParamPrefix = "param ";
 
 QString NotificationErrorTopic = "error";
 QString NotificationInfoTopic = "info";
