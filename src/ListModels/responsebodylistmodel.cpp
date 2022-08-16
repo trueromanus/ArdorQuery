@@ -200,6 +200,10 @@ int ResponseBodyListModel::getCurrentFindedLine() noexcept
 
 void ResponseBodyListModel::searchText(const QString &filter) noexcept
 {
+    if (m_previousFilter == filter) return;
+
+    m_previousFilter = filter;
+
     m_findedLines.clear();
     m_findedLinesMap.clear();
     m_notFounded = false;

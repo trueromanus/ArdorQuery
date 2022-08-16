@@ -45,6 +45,7 @@ private:
     int m_currentFindedLine { -1 };
     QRegularExpression m_fontTagStartRegExp { R"a(<font color=\"\#[A-Za-z0-9]{1,6}\">)a" };
     bool m_notFounded { false };
+    QString m_previousFilter { "" };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
