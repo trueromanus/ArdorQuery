@@ -30,7 +30,8 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormItemType), 3);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormFileType), 4);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HttpProtocolType), 5);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 6);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::ParamType), 6);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 7);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 10);
 }
 
@@ -183,7 +184,8 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
-    if (lowerContent.startsWith(BodyPrefix) && itemType != HttpRequestTypes::BodyType) {
+    if ((lowerContent.startsWith(BodyPrefix) || lowerContent.startsWith(JsonPrefix)) &&
+        itemType != HttpRequestTypes::BodyType) {
         item->setType(static_cast<int>(HttpRequestTypes::BodyType));
         needRefresh = true;
     }
@@ -411,6 +413,10 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
         auto type = static_cast<HttpRequestTypes>(item->type());
         if (type == HttpRequestTypes::HeaderType) headers.append(item->text());
         if (type == HttpRequestTypes::BearerType) headers.append(item->text().replace(BearerPrefix, "Authorization Bearer "));
+        if (type == HttpRequestTypes::BodyType && item->text().startsWith(JsonPrefix)) {
+            headers.append("Content-Type application/json");
+            headers.append("Accept application/json");
+        }
     }
     return headers;
 }
