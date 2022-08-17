@@ -184,7 +184,7 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
-    if ((lowerContent.startsWith(BodyPrefix) || lowerContent.startsWith(JsonPrefix)) &&
+    if ((lowerContent.startsWith(BodyPrefix) || lowerContent.startsWith(JsonPrefix) || lowerContent.startsWith(XmlPrefix)) &&
         itemType != HttpRequestTypes::BodyType) {
         item->setType(static_cast<int>(HttpRequestTypes::BodyType));
         needRefresh = true;
@@ -416,6 +416,10 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
         if (type == HttpRequestTypes::BodyType && item->text().startsWith(JsonPrefix)) {
             headers.append("Content-Type application/json");
             headers.append("Accept application/json");
+        }
+        if (type == HttpRequestTypes::BodyType && item->text().startsWith(XmlPrefix)) {
+            headers.append("Content-Type application/xml");
+            headers.append("Accept text/xml, application/xml");
         }
     }
     return headers;

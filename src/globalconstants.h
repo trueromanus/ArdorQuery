@@ -10,6 +10,7 @@ extern QString BearerPrefix;
 extern QString TitlePrefix;
 extern QString ParamPrefix;
 extern QString JsonPrefix;
+extern QString XmlPrefix;
 
 extern QString NotificationErrorTopic;
 extern QString NotificationInfoTopic;

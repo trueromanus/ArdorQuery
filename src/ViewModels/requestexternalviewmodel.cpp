@@ -54,7 +54,7 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             type = HttpRequestViewModel::HttpRequestTypes::HeaderType;
             isBodyType = false;
         }
-        if (line.startsWith(BodyPrefix) || line.startsWith(JsonPrefix)) {
+        if (line.startsWith(BodyPrefix) || line.startsWith(JsonPrefix) || line.startsWith(XmlPrefix)) {
             type = HttpRequestViewModel::HttpRequestTypes::BodyType;
             isBodyType = true;
         }

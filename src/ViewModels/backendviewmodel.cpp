@@ -75,8 +75,8 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // ---------
     // Clipboard
 
-    // Shift-L
-    if (nativeCode == 38 && shift) {
+    // Shift-Alt-L
+    if (nativeCode == 38 && shift && alt) {
         m_requestExternal->replaceFromClipboard();
         return true;
     }

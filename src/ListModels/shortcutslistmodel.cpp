@@ -54,7 +54,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     auto importFieldsSection = new ShortcutSection();
     importFieldsSection->setTitle("Import fields");
     importFieldsSection->setDescription("Import fields from file, clipboard etc");
-    importFieldsSection->addShortcut("Shift-L", "Clear all fields and load fields from clipboard");
+    importFieldsSection->addShortcut("Shift-Alt-L", "Clear all fields and load fields from clipboard");
     importFieldsSection->addShortcut("Ctrl-L or F3", "Add fields from the clipboard below the currently selected field");
     importFieldsSection->formatShortcuts();
     m_sections.append(importFieldsSection);
