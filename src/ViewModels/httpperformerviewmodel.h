@@ -54,7 +54,7 @@ public:
 private:
     QByteArray setupSimpleForm(QStringList&& parameters);
     QHttpMultiPart* setupMultiPartForm(QStringList&& files, QStringList&& parameters);
-    void adjustHeaders(QNetworkRequest& request) noexcept;
+    bool adjustHeaders(QNetworkRequest& request) noexcept;
     void fillHeader(QNetworkRequest& request, const QString& name, const QString& value) noexcept;
     void startTrackRequest(QNetworkReply* reply) noexcept;
 
