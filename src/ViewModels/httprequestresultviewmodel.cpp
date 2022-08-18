@@ -134,8 +134,10 @@ void HttpRequestResultViewModel::reset() noexcept
     m_elapsedTimer = nullptr;
     m_hasResultTime = false;
     m_responseSize = 0;
+    m_responseReadableSize.clear();
     emit responseTimeChanged();
     emit responseSizeChanged();
+    emit responseReadableSizeChanged();
 }
 
 void HttpRequestResultViewModel::trackRequestTime() noexcept

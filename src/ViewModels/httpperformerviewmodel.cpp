@@ -88,13 +88,13 @@ void HttpPerformerViewModel::performRequest()
 
     auto url = m_httpRequest->getUrl();
     if (url.isEmpty()) {
-        //TODO: push error message for user
+        emit pushErrorMessage("Request perform", "URL not specified");
         return;
     }
 
     auto requestUrl = QUrl(url);
     if(!requestUrl.isValid()) {
-        //TODO: push error message for user
+        emit pushErrorMessage("Request perform", "The URL is not in the correct format");
         return;
     }
 
@@ -102,7 +102,8 @@ void HttpPerformerViewModel::performRequest()
 
     QNetworkRequest request(requestUrl);
 
-    adjustHeaders(request);
+    auto headersValid = adjustHeaders(request);
+    if (!headersValid) return;
 
     auto protocol = m_httpRequest->getProtocol();
     // if allowed only HTTP/1.1 version
@@ -213,19 +214,35 @@ QHttpMultiPart* HttpPerformerViewModel::setupMultiPartForm(QStringList&& files, 
     return multiPart;
 }
 
-void HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request) noexcept
+bool HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request) noexcept
 {
+    QSet<QString> m_usedHeaders;
     auto headers = m_httpRequest->getHeaders();
     foreach (auto header, headers) {
         auto spaceIndex = header.indexOf(" ");
         if (spaceIndex == -1) {
+            auto lowerHeader = header.toLower();
+            if (m_usedHeaders.contains(lowerHeader)) {
+                emit pushErrorMessage("Request perform", header + " header specified more then one time");
+                return false;
+            }
+            m_usedHeaders.insert(lowerHeader);
             fillHeader(request, header, "");
             continue;
         }
         auto headerName = header.mid(0, spaceIndex);
+        auto lowerHeaderName = headerName.toLower();
+        if (m_usedHeaders.contains(lowerHeaderName)) {
+            emit pushErrorMessage("Request perform", headerName + " header specified more then one time");
+            return false;
+        }
+        m_usedHeaders.insert(lowerHeaderName);
+
         auto headerValue = header.mid(spaceIndex + 1);
         fillHeader(request, headerName, headerValue);
     }
+
+    return true;
 }
 
 void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString &name, const QString &value) noexcept
