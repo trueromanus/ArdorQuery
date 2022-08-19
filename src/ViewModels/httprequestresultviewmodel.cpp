@@ -183,7 +183,7 @@ void HttpRequestResultViewModel::copyHeadersToClipboard()
     if (m_headers.isEmpty()) return;
 
     QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(m_headers.join("\n"));
+    clipboard->setText(m_headers.join("\n").replace("<font color='#8812a1'>", "").replace("</font>", ""));
 }
 
 void HttpRequestResultViewModel::copyBodyToClipboard()

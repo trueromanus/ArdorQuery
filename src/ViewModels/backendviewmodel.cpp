@@ -114,7 +114,7 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Miscellanious
 
     // Ctrl-H or F1
-    if ((nativeCode == 35 && control) || nativeCode == 59) {
+    if ((nativeCode == 35 && control && !shift && !alt) || nativeCode == 59) {
         setHelpVisible(!m_helpVisible);
         return true;
     }
@@ -204,8 +204,23 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Queries
 
     // Ctrl-Insert
-    if (nativeCode == 338 && control) {
+    if ((nativeCode == 338 || key == Qt::Key_Insert) && control) {
         addNewRequest();
+    }
+
+    // --------
+    // Copying results
+
+    // Shift-Alt-B
+    if ((nativeCode == 48 || key == Qt::Key_B) && shift && alt) {
+        result->copyBodyToClipboard();
+        return true;
+    }
+
+    // Shift-Alt-H
+    if ((nativeCode == 35 || key == Qt::Key_H) && shift && alt) {
+        result->copyHeadersToClipboard();
+        return true;
     }
 
     return false;
