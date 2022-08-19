@@ -96,6 +96,14 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     queriesSection->addShortcut("Ctrl-Tab", "holding Ctrl and further pressing Tab change opening query");
     queriesSection->formatShortcuts();
     m_sections.append(queriesSection);
+
+    auto coptResultSection = new ShortcutSection();
+    coptResultSection->setTitle("Copying results");
+    coptResultSection->setDescription("Copying parts of a result and so on");
+    coptResultSection->addShortcut("Shift-Alt-B", "Copy result body to clipboard");
+    coptResultSection->addShortcut("Shift-Alt-H", "Copy result headers to clipboard");
+    coptResultSection->formatShortcuts();
+    m_sections.append(coptResultSection);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const
