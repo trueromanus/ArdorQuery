@@ -411,7 +411,15 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
     QStringList headers;
     foreach (auto item, *m_items) {
         auto type = static_cast<HttpRequestTypes>(item->type());
-        if (type == HttpRequestTypes::HeaderType) headers.append(item->text());
+        if (type == HttpRequestTypes::HeaderType) {
+            auto text = item->text();
+            auto loweredText = text.toLower();
+            if (loweredText.startsWith(HeaderPrefix)) {
+                headers.append(text.mid(HeaderPrefix.length()));
+            } else {
+                headers.append(text);
+            }
+        }
         if (type == HttpRequestTypes::BearerType) headers.append(item->text().replace(BearerPrefix, "Authorization Bearer "));
         if (type == HttpRequestTypes::BodyType && item->text().startsWith(JsonPrefix)) {
             headers.append("Content-Type application/json");

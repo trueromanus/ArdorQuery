@@ -26,6 +26,8 @@ QString TitlePrefix = "title ";
 QString ParamPrefix = "param ";
 QString JsonPrefix = "json ";
 QString XmlPrefix = "xmla ";
+QString HeaderPrefix = "header ";
+QString CustomHeaderPrefix = "x-";
 
 QString NotificationErrorTopic = "error";
 QString NotificationInfoTopic = "info";

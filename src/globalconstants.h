@@ -26,6 +26,8 @@ extern QString TitlePrefix;
 extern QString ParamPrefix;
 extern QString JsonPrefix;
 extern QString XmlPrefix;
+extern QString HeaderPrefix;
+extern QString CustomHeaderPrefix;
 
 extern QString NotificationErrorTopic;
 extern QString NotificationInfoTopic;

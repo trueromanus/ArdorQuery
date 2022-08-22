@@ -37,6 +37,7 @@ SOURCES += \
 CONFIG(debug, debug|release) {
 SOURCES += \
         Tests/jsonformatterunittests.cpp \
+        Tests/textadvisorviewmodelunittests.cpp \
         Tests/htmlformatterunittests.cpp
 }
 
@@ -76,5 +77,6 @@ HEADERS += \
 CONFIG(debug, debug|release) {
 HEADERS += \
     Tests/jsonformatterunittests.h \
+    Tests/textadvisorviewmodelunittests.h \
     Tests/htmlformatterunittests.h
 }

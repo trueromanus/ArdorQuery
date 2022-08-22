@@ -285,6 +285,9 @@ void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString 
     if (m_rawHeaders->contains(lowerName)) {
         auto rawHeader = m_rawHeaders->value(lowerName);
         request.setRawHeader(rawHeader.toUtf8(), value.toUtf8());
+    } else {
+        //custom header stays as it is
+        request.setRawHeader(name.toUtf8(), value.toUtf8());
     }
 }
 

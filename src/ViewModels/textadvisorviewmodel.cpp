@@ -14,6 +14,7 @@
 */
 
 #include "textadvisorviewmodel.h"
+#include "../globalconstants.h"
 
 TextAdvisorViewModel::TextAdvisorViewModel(QObject *parent)
     : QObject{parent}
@@ -24,16 +25,22 @@ TextAdvisorViewModel::TextAdvisorViewModel(QObject *parent)
 bool TextAdvisorViewModel::isContainsHeader(const QString &text) const noexcept
 {
     auto firstTwoCharacter = text.mid(0, 2).toLower();
+    auto lowerText = text.toLower();
     if (m_singleCompletings->contains(firstTwoCharacter)) {
         auto value = m_singleCompletings->value(firstTwoCharacter);
-        if (text.startsWith(value)) return true;
+        auto lowerValue = value.toLower();
+        if (lowerValue.startsWith(lowerText)) return true;
     }
     if (m_multipleCompletings->contains(firstTwoCharacter)) {
         auto completings = m_multipleCompletings->value(firstTwoCharacter);
         foreach (auto completing, completings) {
-            if (text.startsWith(completing)) return true;
+            auto lowerValue = completing.toLower();
+            if (lowerValue.startsWith(lowerText)) return true;
         }
     }
+
+    if (firstTwoCharacter == CustomHeaderPrefix) return true;
+    if (lowerText.startsWith(HeaderPrefix)) return true;
 
     return false;
 }
