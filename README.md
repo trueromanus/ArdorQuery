@@ -23,4 +23,4 @@ Application is fully native, your don't need to install additional stuff.
 * macOS (coming soon)
 
 ## Requirements
-* Qt >= 6.2.1
+* Qt >= 6.2.3
