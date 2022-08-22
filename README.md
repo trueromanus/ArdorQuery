@@ -14,7 +14,7 @@ Application is fully native, your don't need to install additional stuff.
 * Sending any body (aliases for JSON and XML)
 * Highlight responses for popular formats - JSON, XML, HTML
 * Showing responses as images - JPEG, PNG, GIF, WEBP, SVG
-* Adding additional `queries` and switching between it
+* Adding additional queries and switching between it
 * Search text in body
 
 ## Supported platforms
