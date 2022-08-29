@@ -65,6 +65,10 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             type = HttpRequestViewModel::HttpRequestTypes::ParamType;
             isBodyType = false;
         }
+        if (line.startsWith(PastryPrefix)) {
+            type = HttpRequestViewModel::HttpRequestTypes::PastryType;
+            isBodyType = false;
+        }
         if (m_textAdvisor->isContainsHeader(line)) {
             type = HttpRequestViewModel::HttpRequestTypes::HeaderType;
             isBodyType = false;

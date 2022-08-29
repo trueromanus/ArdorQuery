@@ -31,7 +31,8 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormFileType), 4);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HttpProtocolType), 5);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::ParamType), 6);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 7);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::PastryType), 7);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 8);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 10);
 }
 
@@ -218,6 +219,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
 
     if (lowerContent.startsWith(ParamPrefix) && itemType != HttpRequestTypes::ParamType) {
         item->setType(static_cast<int>(HttpRequestTypes::ParamType));
+        needRefresh = true;
+    }
+
+    if (lowerContent.startsWith(PastryPrefix) && itemType != HttpRequestTypes::PastryType) {
+        item->setType(static_cast<int>(HttpRequestTypes::PastryType));
         needRefresh = true;
     }
 
@@ -409,6 +415,7 @@ QStringList HttpRequestViewModel::getFileParameters() const noexcept
 QStringList HttpRequestViewModel::getHeaders() const noexcept
 {
     QStringList headers;
+    QStringList cookieValues;
     foreach (auto item, *m_items) {
         auto type = static_cast<HttpRequestTypes>(item->type());
         if (type == HttpRequestTypes::HeaderType) {
@@ -429,7 +436,12 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
             headers.append("Content-Type application/xml");
             headers.append("Accept text/xml, application/xml");
         }
+        if (type == HttpRequestTypes::PastryType) {
+            auto text = item->text();
+            if (text.contains("=")) cookieValues.append(item->text().replace(PastryPrefix, ""));
+        }
     }
+    if (!cookieValues.isEmpty()) headers.append("Cookie " + cookieValues.join("; "));
     return headers;
 }
 
@@ -534,6 +546,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#C8E3D4";
         case HttpRequestTypes::ParamType:
             return "#D4D925";
+        case HttpRequestTypes::PastryType:
+            return "#E0D8B0";
         default:
             return "#CDCDB4";
     }

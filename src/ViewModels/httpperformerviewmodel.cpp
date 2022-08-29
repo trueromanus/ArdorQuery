@@ -261,10 +261,6 @@ void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString 
         request.setHeader(QNetworkRequest::KnownHeaders::ContentLengthHeader, QVariant(value));
         return;
     }
-    if (lowerName == "cookie") {
-        request.setHeader(QNetworkRequest::KnownHeaders::CookieHeader, QVariant(value));
-        return;
-    }
     if (lowerName == "if-match") {
         request.setHeader(QNetworkRequest::KnownHeaders::IfMatchHeader, QVariant(value));
         return;

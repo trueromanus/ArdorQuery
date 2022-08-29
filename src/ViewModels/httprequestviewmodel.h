@@ -40,7 +40,8 @@ public:
         HttpProtocolType,
         BearerType,
         TitleType,
-        ParamType
+        ParamType,
+        PastryType
     };
 
 private:
