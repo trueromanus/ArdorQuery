@@ -19,8 +19,8 @@ Application is fully native, your don't need to install additional stuff.
 
 ## Supported platforms
 * Windows 10+
-* Linux (coming soon)
-* macOS (coming soon)
+* Linux (binary release coming soon)
+* macOS (binary release coming soon)
 
 ## Requirements
 * Qt >= 6.2.3
