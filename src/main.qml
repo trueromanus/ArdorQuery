@@ -1,6 +1,7 @@
-import QtQuick /* 2.15 */
-import QtQuick.Controls /* 2.15 */
-import ArdorQuery.Backend /* 1.0 */
+import QtQuick
+import QtQuick.Controls
+import ArdorQuery.Backend
+import QtQuick.Dialogs
 import "Views/Controls"
 import "Views/Windows"
 import "Views"
@@ -86,6 +87,12 @@ ApplicationWindow {
             requestPerformer.httpRequestResult: backend.requests.selectedItem.resultModel
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel
             requestExternal.textAdvisor: backend.textAdviser
+            onNeedOpenFile: {
+                openDialog.open();
+            }
+            onNeedSaveFile: {
+                saveDialog.open();
+            }
         }
 
         Connections {
@@ -105,6 +112,25 @@ ApplicationWindow {
         Item {
             id: storagePaths
             property string icons: Qt.resolvedUrl("../Views/Icons/")
+            property string images: Qt.resolvedUrl("../Views/Images/")
+        }
+    }
+
+    FileDialog {
+        id: openDialog
+        fileMode: FileDialog.OpenFile
+        nameFilters: ["Text files (*.txt)", "Any files (*.*)"]
+        onAccepted: {
+            backend.openedFile(openDialog.selectedFile);
+        }
+    }
+
+    FileDialog {
+        id: saveDialog
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["Text files (*.txt)", "Any files (*.*)"]
+        onAccepted: {
+            backend.savedFile(saveDialog.selectedFile);
         }
     }
 

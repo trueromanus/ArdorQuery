@@ -31,6 +31,17 @@ Item {
                 anchors.rightMargin: 4
                 anchors.bottomMargin: 4
 
+                Image {
+                    anchors.top: panelsContainer.top
+                    anchors.topMargin: 40
+                    anchors.left: panelsContainer.left
+                    anchors.right: panelsContainer.right
+                    height: headersDivider.y - 40
+                    fillMode: Image.Tile
+                    source: storagePaths.images + "backgroundpattern.png"
+                    opacity: .2
+                }
+
                 Column {
                     id: panelsContainer
                     BorderedHeader {
@@ -71,6 +82,7 @@ Item {
                     }
 
                     HorizontalDivider {
+                        id: headersDivider
                         width: responsePanel.width
                     }
 
@@ -102,6 +114,13 @@ Item {
                         id: headersContainer
                         height: 180
                         width: responsePanel.width
+
+                        Image {
+                            anchors.fill: parent
+                            fillMode: Image.Tile
+                            source: storagePaths.images + "backgroundpattern.png"
+                            opacity: .2
+                        }
 
                         ListView {
                             clip: true
@@ -264,6 +283,13 @@ Item {
                     anchors.top: panelsContainer.bottom
                     width: responsePanel.width
                     height: fieldContainer.height - panelsContainer.height - 4
+
+                    Image {
+                        anchors.fill: parent
+                        fillMode: Image.Tile
+                        source: storagePaths.images + "backgroundpattern.png"
+                        opacity: .2
+                    }
 
                     Loader {
                         id: listComponentLoader

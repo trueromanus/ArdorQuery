@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE void replaceFromClipboard();
 
     void copyToClipboard();
+    void removeFirstItemIfNeeded();
 
 private:
     QString getTextFromClipboard() const noexcept;

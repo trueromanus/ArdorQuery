@@ -30,11 +30,13 @@ bool TextAdvisorViewModel::isContainsHeader(const QString &text) const noexcept
         auto value = m_singleCompletings->value(firstTwoCharacter);
         auto lowerValue = value.toLower();
         if (lowerValue.startsWith(lowerText)) return true;
+        if (lowerText.startsWith(lowerValue)) return true;
     }
     if (m_multipleCompletings->contains(firstTwoCharacter)) {
         auto completings = m_multipleCompletings->value(firstTwoCharacter);
         foreach (auto completing, completings) {
             auto lowerValue = completing.toLower();
+            if (lowerText.startsWith(lowerValue)) return true;
             if (lowerValue.startsWith(lowerText)) return true;
         }
     }

@@ -13,6 +13,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QFile>
 #include "backendviewmodel.h"
 
 BackendViewModel::BackendViewModel(QObject *parent)
@@ -223,6 +224,18 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    // Alt-=
+    if (key == Qt::Key_Equal && alt) {
+        emit needOpenFile();
+        return true;
+    }
+
+    // Ctrl-=
+    if (key == Qt::Key_Equal && control) {
+        emit needSaveFile();
+        return true;
+    }
+
     return false;
 }
 
@@ -242,12 +255,48 @@ void BackendViewModel::refreshFindedIndex() noexcept
     if (findedLine > -1) emit changedFindedIndex(findedLine);
 }
 
+void BackendViewModel::openedFile(const QString &filePath) noexcept
+{
+    auto fileName = removeProtocol(filePath);
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        errorNotification("Open file error", file.errorString());
+        return;
+    }
+    auto content = file.readAll();
+    file.close();
+
+    m_requests->selectedItem()->requestModel()->clearFields();
+    m_requestExternal->parseFromString(content);
+    m_requestExternal->removeFirstItemIfNeeded();
+}
+
+void BackendViewModel::savedFile(const QString &filePath) noexcept
+{
+    auto fileName = removeProtocol(filePath);
+    auto fields = m_requests->selectedItem()->requestModel()->getAllFields();
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        errorNotification("Open file error", file.errorString());
+        return;
+    }
+
+    file.write(fields.toUtf8());
+    file.close();
+}
+
 void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
 {
     if (m_helpVisible == helpVisible) return;
 
     m_helpVisible = helpVisible;
     emit helpVisibleChanged();
+}
+
+QString BackendViewModel::removeProtocol(const QString& filePath) noexcept
+{
+    auto path = filePath;
+    return path.replace("file:///", "").replace("file://", "");
 }
 
 void BackendViewModel::errorNotification(const QString &title, const QString &message)

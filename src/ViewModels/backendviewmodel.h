@@ -69,9 +69,14 @@ public:
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
     Q_INVOKABLE void keysReleased(int key) noexcept;
     Q_INVOKABLE void refreshFindedIndex() noexcept;
+    Q_INVOKABLE void openedFile(const QString& filePath) noexcept;
+    Q_INVOKABLE void savedFile(const QString& filePath) noexcept;
 
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(const bool helpVisible) noexcept;
+
+private:
+    QString removeProtocol(const QString& filePath) noexcept;
 
 signals:
     void requestPerformerChanged();
@@ -85,6 +90,8 @@ signals:
     void requestsCommandPaletterChanged();
     void openedCommandPaletteChanged();
     void changedFindedIndex(int findedLine);
+    void needOpenFile();
+    void needSaveFile();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

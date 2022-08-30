@@ -145,6 +145,11 @@ void RequestExternalViewModel::copyToClipboard()
     clipboard->setText(fields, QClipboard::Clipboard);
 }
 
+void RequestExternalViewModel::removeFirstItemIfNeeded()
+{
+     if (m_httpRequest->countItems() > 1) m_httpRequest->removeFirstItem();
+}
+
 QString RequestExternalViewModel::getTextFromClipboard() const noexcept
 {
     auto clipboard = QGuiApplication::clipboard();

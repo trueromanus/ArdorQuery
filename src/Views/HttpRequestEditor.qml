@@ -27,6 +27,13 @@ Item {
         listView.forceActiveFocus();
     }
 
+    Image {
+        anchors.fill: parent
+        fillMode: Image.Tile
+        source: storagePaths.images + "backgroundpattern.png"
+        opacity: .4
+    }
+
     ListView {
         id: listView
         anchors.fill: parent
