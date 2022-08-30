@@ -56,6 +56,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     importFieldsSection->setDescription("Import fields from file, clipboard etc");
     importFieldsSection->addShortcut("Shift-Alt-L", "Clear all fields and load fields from clipboard");
     importFieldsSection->addShortcut("Ctrl-L or F3", "Add fields from the clipboard below the currently selected field");
+    importFieldsSection->addShortcut("Alt-=", "Import fields from file");
     importFieldsSection->formatShortcuts();
     m_sections.append(importFieldsSection);
 
@@ -78,6 +79,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     exportSection->setTitle("Export fields");
     exportSection->setDescription("Export fields to clipboard, file etc");
     exportSection->addShortcut("Ctrl-S or F10", "Copy fields to clipboard");
+    exportSection->addShortcut("Ctrl-=", "Save fields to file");
     exportSection->formatShortcuts();
     m_sections.append(exportSection);
 
