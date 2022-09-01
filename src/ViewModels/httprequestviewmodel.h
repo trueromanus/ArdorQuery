@@ -47,7 +47,7 @@ public:
 private:
     QScopedPointer<QList<HttpRequestItem*>> m_items { new QList<HttpRequestItem*>() };
     QScopedPointer<QMap<int, int>> m_sortWeight { new QMap<int, int>() };
-    int m_selectedItem { 0 };
+    int m_selectedItem { -1 };
     QSharedPointer<TextAdvisorViewModel> m_textAdvisor { nullptr };
     const QString m_unnamed { "Unnamed" };
 

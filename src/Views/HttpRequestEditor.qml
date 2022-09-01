@@ -51,7 +51,11 @@ Item {
             required property int currentIndex
 
             onIsNeedFocusedChanged: {
-                textArea.focus = isNeedFocused;
+                if (isNeedFocused) {
+                    textArea.forceActiveFocus();
+                } else {
+                    textArea.focus = false;
+                }
             }
 
             TextArea {
@@ -92,5 +96,9 @@ Item {
         ScrollBar.vertical: ScrollBar {
             active: true
         }
+    }
+
+    Component.onCompleted: {
+        viewModel.selectedItem = 0; //WORKAROUND: fix loosing focus after start application
     }
 }
