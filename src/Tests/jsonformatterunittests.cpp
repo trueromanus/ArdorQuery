@@ -51,6 +51,30 @@ void JsonFormatterUnitTests::objectOnlyMoreProperties()
     QCOMPARE(result, expectedResult);
 }
 
+void JsonFormatterUnitTests::objectOnlyMorePropertiesWithNewLines()
+{
+    JsonFormatter formatter;
+    auto result = formatter.format("{\"first\": 35,\n \"second\": 89,\n \"third\": 45}");
+    auto expectedResult = QString(R"a(<font color="black">{</font>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"first"</font>:&nbsp;<font color="#cc7700">35</font>,
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"second"</font>:&nbsp;<font color="#cc7700">89</font>,
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"third"</font>:&nbsp;<font color="#cc7700">45</font>
+<font color="black">}</font>)a");
+    QCOMPARE(result, expectedResult);
+}
+
+void JsonFormatterUnitTests::objectOnlyMorePropertiesWithTabulators()
+{
+    JsonFormatter formatter;
+    auto result = formatter.format("{\"first\": 35,\t \"second\": 89,\t \"third\": 45}");
+    auto expectedResult = QString(R"a(<font color="black">{</font>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"first"</font>:&nbsp;<font color="#cc7700">35</font>,
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"second"</font>:&nbsp;<font color="#cc7700">89</font>,
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"third"</font>:&nbsp;<font color="#cc7700">45</font>
+<font color="black">}</font>)a");
+    QCOMPARE(result, expectedResult);
+}
+
 void JsonFormatterUnitTests::arrayOnly()
 {
     JsonFormatter formatter;

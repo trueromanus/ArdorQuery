@@ -29,6 +29,8 @@ private slots:
     void stringOnly();
     void objectOnly();
     void objectOnlyMoreProperties();
+    void objectOnlyMorePropertiesWithNewLines();
+    void objectOnlyMorePropertiesWithTabulators();
     void arrayOnly();
     void arrayInObject();
     void objectWithNegativeDigit();

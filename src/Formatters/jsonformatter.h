@@ -31,6 +31,8 @@ private:
     const QString m_reverse { "r" };
     const QString m_newline { "n" };
     const QString m_unicode { "u" };
+    const QString m_tabulator { "\t" };
+    const QString m_newlineDivider { "\n" };
     const QString m_jsonTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
     const QString m_propertyStringStart { "<font color=\"#750f8a\">\"" };
     const QString m_plainStringStart { "<font color=\"#800000\">\"" };

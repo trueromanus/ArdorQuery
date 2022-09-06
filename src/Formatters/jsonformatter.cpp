@@ -110,7 +110,7 @@ QString JsonFormatter::format(const QString &data)
             continue;
         }
 
-        if (m_space == latinCharacter && !stringStarted) continue;
+        if ((m_space == latinCharacter || m_tabulator == latinCharacter || m_newlineDivider == latinCharacter) && !stringStarted) continue;
 
         if (!stringStarted && !digitStarted && m_startDigits.contains(latinCharacter)) {
             result.append("<font color=\"#cc7700\">");
