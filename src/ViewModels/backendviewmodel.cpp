@@ -46,13 +46,13 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Perform requests
 
     // Ctrl-Z or F5
-    if (((nativeCode == 44 || key == Qt::Key_Z) && control) || nativeCode == 63) {
+    if (((nativeCode == 44 || key == Qt::Key_Z) && control) || (nativeCode == 63 || key == Qt::Key_F5)) {
         m_requestPerformer->performRequest();
         return true;
     }
 
     // Ctrl-B or F4
-    if ((nativeCode == 48 && control) || nativeCode == 62) {
+    if (((nativeCode == 48 || key == Qt::Key_B) && control) || (nativeCode == 62 || key == Qt::Key_F4)) {
         m_requestPerformer->cancelRequest();
         return true;
     }
@@ -61,15 +61,8 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Export
 
     // Ctrl-S or F10
-    if ((nativeCode == 31 && control) || nativeCode == 68) {
+    if (((nativeCode == 31 || key == Qt::Key_S) && control) || (nativeCode == 68 || key == Qt::Key_F10)) {
         m_requestExternal->copyToClipboard();
-        return true;
-    }
-
-    // Alt-S
-    if ((nativeCode == 31 && alt)) {
-        //TODO: export to file
-        //request->exportToFile();
         return true;
     }
 
@@ -77,13 +70,13 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Clipboard
 
     // Shift-Alt-L
-    if (nativeCode == 38 && shift && alt) {
+    if ((nativeCode == 38 || key == Qt::Key_L) && shift && alt) {
         m_requestExternal->replaceFromClipboard();
         return true;
     }
 
     // Ctrl-L or F3
-    if ((nativeCode == 38 && control) || nativeCode == 61) {
+    if (((nativeCode == 38 || key == Qt::Key_L) && control) || (nativeCode == 61 || key == Qt::Key_F3)) {
         m_requestExternal->appendFromClipboard();
         return true;
     }
@@ -92,7 +85,7 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Change selection
 
     // PgUp/Numpad PgUp or Ctrl-PgUp/Ctrl-Numpad PgUp
-    if (nativeCode == 329 || nativeCode == 73) {
+    if (nativeCode == 329 || nativeCode == 73 || key == Qt::Key_PageUp) {
         if (control) {
             request->selectFirstField();
         } else {
@@ -102,7 +95,7 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     }
 
     // PgDown/Numpad PgDown or Ctrl-PgDown/Ctrl-Numpad PgDown
-    if (nativeCode == 337 || nativeCode == 81) {
+    if (nativeCode == 337 || nativeCode == 81 || key == Qt::Key_PageDown) {
         if (control) {
             request->selectLastField();
         } else {
@@ -115,7 +108,7 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Miscellanious
 
     // Ctrl-H or F1
-    if ((nativeCode == 35 && control && !shift && !alt) || nativeCode == 59) {
+    if (((nativeCode == 35 || key == Qt::Key_H) && control && !shift && !alt) || (nativeCode == 59 || key == Qt::Key_F1)) {
         setHelpVisible(!m_helpVisible);
         return true;
     }
@@ -124,13 +117,13 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Fields
 
     // Ctrl-R
-    if (nativeCode == 19 && control) {
+    if ((nativeCode == 19 || key == Qt::Key_R) && control) {
         request->clearFields();
         return true;
     }
 
     // Alt-Shift-R
-    if (nativeCode == 19 && alt && shift) {
+    if ((nativeCode == 19 || key == Qt::Key_R) && alt && shift) {
         request->clearSelectedField();
         return true;
     }
@@ -153,14 +146,15 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+
     // Ctrl-{
-    if ((nativeCode == 26) && control) {
+    if ((nativeCode == 26 || key == Qt::Key_BracketLeft) && control) {
         request->sortingFields(false);
         return true;
     }
 
     // Ctrl-}
-    if ((nativeCode == 27) && control) {
+    if ((nativeCode == 27 || key == Qt::Key_BracketRight) && control) {
         request->sortingFields(true);
         return true;
     }
@@ -190,13 +184,13 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Body search
 
     // Ctrl-Alt-Down
-    if (nativeCode == 336 && control && alt) {
+    if ((nativeCode == 336 || key == Qt::Key_Down) && control && alt) {
         auto index = result->bodyModel()->nextFindedResult();
         if (index > -1) emit changedFindedIndex(index);
     }
 
     // Ctrl-Alt-Up
-    if (nativeCode == 328 && control && alt) {
+    if ((nativeCode == 328 || key == Qt::Key_Up) && control && alt) {
         auto index = result->bodyModel()->previousFindedResult();
         if (index > -1) emit changedFindedIndex(index);
     }
