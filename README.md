@@ -17,10 +17,6 @@ Application is fully native, your don't need to install additional stuff.
 * Adding additional queries and switching between it
 * Search text in body
 
-QString BearerPrefix = "bearer ";
-QString JsonPrefix = "json ";
-QString XmlPrefix = "xmla ";
-
 ## Fields commands
 * `url X` - where X is valid url. This is the URL that will be requested.
 * `met X` - where X can be - GET, POST, PUT, DELETE. This command defines the request method.
