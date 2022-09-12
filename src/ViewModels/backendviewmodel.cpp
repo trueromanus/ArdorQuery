@@ -108,10 +108,18 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // Miscellanious
 
     // Ctrl-H or F1
+#ifdef Q_OS_WIN
     if (((nativeCode == 35 || key == Qt::Key_H) && control && !shift && !alt) || (nativeCode == 59 || key == Qt::Key_F1)) {
         setHelpVisible(!m_helpVisible);
         return true;
     }
+#elif
+    if ((key == Qt::Key_H && control) || key == Qt::Key_F1) {
+        setHelpVisible(!m_helpVisible);
+        return true;
+    }
+
+#endif
 
     // ---------
     // Fields
