@@ -113,7 +113,7 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         setHelpVisible(!m_helpVisible);
         return true;
     }
-#elif
+#else
     if ((key == Qt::Key_H && control) || key == Qt::Key_F1) {
         setHelpVisible(!m_helpVisible);
         return true;
