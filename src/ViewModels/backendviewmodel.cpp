@@ -148,13 +148,13 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
 
 
     // Ctrl-{
-    if ((nativeCode == 26 || key == Qt::Key_BraceLeft) && control) {
+    if ((nativeCode == 26 || key == Qt::Key_BracketLeft) && control) {
         request->sortingFields(false);
         return true;
     }
 
     // Ctrl-}
-    if ((nativeCode == 27 || key == Qt::Key_BraceRight) && control) {
+    if ((nativeCode == 27 || key == Qt::Key_BracketRight) && control) {
         request->sortingFields(true);
         return true;
     }
