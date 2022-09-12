@@ -54,7 +54,7 @@ Application is fully native, your don't need to install additional stuff.
 
 ## Supported platforms
 * Windows 10+
-* Linux (binary release coming soon)
+* Linux
 * macOS (binary release coming soon)
 
 ## Requirements
