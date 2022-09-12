@@ -183,16 +183,18 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // ---------
     // Body search
 
-    // Ctrl-Alt-Down
-    if ((nativeCode == 336 || key == Qt::Key_Down) && control && alt) {
+    // Ctrl-Alt-Down or Shift-Alt-Down
+    if ((nativeCode == 336 || key == Qt::Key_Down) && (control || shift) && alt) {
         auto index = result->bodyModel()->nextFindedResult();
         if (index > -1) emit changedFindedIndex(index);
+        return true;
     }
 
-    // Ctrl-Alt-Up
-    if ((nativeCode == 328 || key == Qt::Key_Up) && control && alt) {
+    // Ctrl-Alt-Up or Shift-Alt-Up
+    if ((nativeCode == 328 || key == Qt::Key_Up) && (control || shift) && alt) {
         auto index = result->bodyModel()->previousFindedResult();
         if (index > -1) emit changedFindedIndex(index);
+        return true;
     }
 
     // ---------
