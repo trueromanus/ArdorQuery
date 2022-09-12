@@ -1,0 +1,12 @@
+Package: ardorquery
+Version: 0.0.5
+Installed-Size: 2272
+Maintainer: TrueRomanus <x6doj2tubzrf@mail.ru>
+Section: video
+Source: https://github.com/trueromanus/ArdorQuery
+Homepage: https://github.com/trueromanus/ArdorQuery
+Architecture: amd64
+Priority: standard
+Depends: qt6-base-dev, libqt6websockets6-dev, libqt6svg6-dev, qt6-declarative-dev, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-templates, qml6-module-qtquick-window, qml6-module-qtquick-layouts, qml6-module-qtqml-workerscript, qml-qt6, libqt6quick6, libqt6quickcontrols2-6
+Description: Desktop application for testing HTTP(s) endpoints from Web and RESTful APIs
+
