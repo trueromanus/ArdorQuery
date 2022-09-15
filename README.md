@@ -17,6 +17,7 @@ Application is fully native, your don't need to install additional stuff.
 * Showing responses as images - JPEG, PNG, GIF, WEBP, SVG
 * Adding additional queries and switching between it
 * Search text in body
+* Image generation for attaching to the messager, bug tracker etc
 
 ## Fields commands
 * `url X` - where X is valid url. This is the URL that will be requested.
