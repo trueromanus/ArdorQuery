@@ -50,3 +50,14 @@ void TextAdvisorViewModelUnitTests::failCustomHeader()
     QCOMPARE(lowerCustomHeader, false);
     QCOMPARE(differentCustomHeader, false);
 }
+
+void TextAdvisorViewModelUnitTests::authorizationHeader()
+{
+    auto viewModel = new TextAdvisorViewModel(this);
+    auto lowerCustomHeader = viewModel->isContainsHeader("authorization ");
+    auto upperCustomHeader = viewModel->isContainsHeader("AUTHORIZATION ");
+    auto differentCustomHeader = viewModel->isContainsHeader("AuThOrIzAtIon ");
+    QCOMPARE(upperCustomHeader, true);
+    QCOMPARE(lowerCustomHeader, true);
+    QCOMPARE(differentCustomHeader, true);
+}

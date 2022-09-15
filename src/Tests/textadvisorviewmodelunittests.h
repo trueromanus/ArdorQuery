@@ -15,6 +15,7 @@ private slots:
     void falseCustomXHeader();
     void customHeader();
     void failCustomHeader();
+    void authorizationHeader();
 
 };
 

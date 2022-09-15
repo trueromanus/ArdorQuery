@@ -54,3 +54,5 @@ compile_commands.json
 releasebuild
 deploy/output
 deploy/*.zip
+
+.vs
