@@ -1,8 +1,9 @@
 # ArdorQuery
 A tool for testing HTTP(S) endpoints from websites or RESTful APIs.  
 The main goal is to make an application with minimal user interface and keyboard oriented.  
-Application is fully native, your don't need to install additional stuff.
-
+Application is fully native, your don't need to install additional stuff.  
+  
+![Screenshoot](https://github.com/trueromanus/ArdorQuery/raw/main/src/screenshoot.png)
 ## Features
 * Making insecure and secure HTTP(s) requests
 * Small set of human-readable field commands
@@ -54,7 +55,7 @@ Application is fully native, your don't need to install additional stuff.
 
 ## Supported platforms
 * Windows 10+
-* Linux (binary release coming soon)
+* Linux
 * macOS (binary release coming soon)
 
 ## Requirements
