@@ -98,6 +98,7 @@ public:
     int countItems() const noexcept;
     void sortingFields(const bool descending) noexcept;
     QString getAllFields() const noexcept;
+    QStringList getAllFieldsAsList() const noexcept;
 
 private:
     QString getTypeColor(int type) const;

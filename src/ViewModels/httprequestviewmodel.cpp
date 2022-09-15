@@ -519,6 +519,15 @@ QString HttpRequestViewModel::getAllFields() const noexcept
     return lines.join("\n");
 }
 
+QStringList HttpRequestViewModel::getAllFieldsAsList() const noexcept
+{
+    QStringList result;
+    foreach (auto item, *m_items) {
+         result.append(item->text());
+    }
+    return result;
+}
+
 QString HttpRequestViewModel::getTypeColor(int type) const
 {
     auto requestType = static_cast<HttpRequestTypes>(type);

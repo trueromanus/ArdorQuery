@@ -240,6 +240,12 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    // Ctrl-8
+    if (key == Qt::Key_8 && control) {
+        emit needGenerateImage();
+        return true;
+    }
+
     return false;
 }
 
@@ -287,6 +293,15 @@ void BackendViewModel::savedFile(const QString &filePath) noexcept
 
     file.write(fields.toUtf8());
     file.close();
+}
+
+void BackendViewModel::generateImage(const QString &filePath) noexcept
+{
+    auto request = m_requests->selectedItem()->requestModel();
+    auto result = m_requests->selectedItem()->resultModel();
+
+    auto fields = request->getAllFieldsAsList();
+    result->generateImage(fields, removeProtocol(filePath));
 }
 
 void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept

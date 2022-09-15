@@ -71,6 +71,7 @@ public:
     Q_INVOKABLE void refreshFindedIndex() noexcept;
     Q_INVOKABLE void openedFile(const QString& filePath) noexcept;
     Q_INVOKABLE void savedFile(const QString& filePath) noexcept;
+    Q_INVOKABLE void generateImage(const QString& filePath) noexcept;
 
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(const bool helpVisible) noexcept;
@@ -92,6 +93,7 @@ signals:
     void changedFindedIndex(int findedLine);
     void needOpenFile();
     void needSaveFile();
+    void needGenerateImage();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

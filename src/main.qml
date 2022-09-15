@@ -93,6 +93,9 @@ ApplicationWindow {
             onNeedSaveFile: {
                 saveDialog.open();
             }
+            onNeedGenerateImage: {
+                saveImageDialog.open();
+            }
         }
 
         Connections {
@@ -131,6 +134,15 @@ ApplicationWindow {
         nameFilters: ["Text files (*.txt)", "Any files (*.*)"]
         onAccepted: {
             backend.savedFile(saveDialog.selectedFile);
+        }
+    }
+
+    FileDialog {
+        id: saveImageDialog
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["Image files (*.png)"]
+        onAccepted: {
+            backend.generateImage(saveImageDialog.selectedFile);
         }
     }
 

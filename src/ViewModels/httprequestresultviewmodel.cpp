@@ -15,6 +15,7 @@
 
 #include <QClipboard>
 #include <QGuiApplication>
+#include <QPainter>
 #include "httprequestresultviewmodel.h"
 
 HttpRequestResultViewModel::HttpRequestResultViewModel(QObject *parent)
@@ -178,6 +179,37 @@ void HttpRequestResultViewModel::setOutputFormat(const QString &outputFormat) no
     emit outputFormatChanged();
 }
 
+void HttpRequestResultViewModel::generateImage(const QStringList& fields, const QString& path) noexcept
+{
+    auto headers = getHeaderLines();
+    int countOfLines = 6 + headers.count() + fields.count();
+    int lineHeight = 20;
+    int currentLine = 0;
+    QImage image(800, countOfLines * lineHeight, QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&image);
+    painter.fillRect(image.rect(), Qt::white);
+
+    paintText(painter, image, currentLine, lineHeight, "Query", true);
+
+    foreach (auto field, fields) {
+        paintText(painter, image, currentLine, lineHeight, field, false);
+    }
+
+    paintText(painter, image, currentLine, lineHeight, "Response data", true);
+    paintText(painter, image, currentLine, lineHeight, "Status: " + displayStatusCode() + networkError(), false);
+    paintText(painter, image, currentLine, lineHeight, "Response time: " + responseTime(), false);
+    paintText(painter, image, currentLine, lineHeight, "Response size: " + responseReadableSize() + " " + responseSize(), false);
+
+    paintText(painter, image, currentLine, lineHeight, "Headers", true);
+
+    foreach (auto header, headers) {
+        paintText(painter, image, currentLine, lineHeight, header, false);
+    }
+
+    auto saveResult = image.save(path);
+    if (!saveResult) emit errorSavingGeneratedFile();
+}
+
 void HttpRequestResultViewModel::copyHeadersToClipboard()
 {
     if (m_headers.isEmpty()) return;
@@ -253,3 +285,57 @@ QString HttpRequestResultViewModel::getFormatFromContentType() const noexcept
 
     return "";
 }
+
+void HttpRequestResultViewModel::setBoldTextToPainter(QPainter &painter) noexcept
+{
+    auto font = painter.font();
+    font.setBold(true);
+    painter.setFont(font);
+}
+
+void HttpRequestResultViewModel::setNormalTextToPainter(QPainter &painter) noexcept
+{
+    auto font = painter.font();
+    font.setBold(false);
+    painter.setFont(font);
+}
+
+void HttpRequestResultViewModel::paintText(QPainter &painter, const QImage &image, int &currentLine, int &lineHeight, const QString &text, bool bold) noexcept
+{
+    if (bold && !painter.font().bold()) setBoldTextToPainter(painter);
+    if (!bold && painter.font().bold()) setNormalTextToPainter(painter);
+
+    painter.drawText(3, currentLine * lineHeight, image.rect().width() - 3, lineHeight, Qt::AlignVCenter, text);
+    currentLine++;
+}
+
+QStringList HttpRequestResultViewModel::getHeaderLines()
+{
+    const uint64_t lineCount = 110;
+    QStringList lines;
+    foreach (auto header, m_headers) {
+        auto clearedHeader = QString(header)
+            .replace("<font color='#8812a1'>", "")
+            .replace("</font>", "")
+            .replace("\n", "")
+            .replace("\r", "");
+        if (clearedHeader.count() > lineCount) {
+            int position = 0;
+            QString content;
+            bool isFull = false;
+            do {
+                content.clear();
+                auto content = clearedHeader.mid(position, lineCount);
+                if (content.isEmpty()) break;
+                lines.append(content);
+                position += lineCount;
+                isFull = content.count() == lineCount;
+            } while (isFull);
+        } else {
+            lines.append(clearedHeader);
+        }
+    }
+
+    return lines;
+}
+

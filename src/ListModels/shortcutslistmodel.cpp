@@ -104,6 +104,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     coptResultSection->setDescription("Copying parts of a result and so on");
     coptResultSection->addShortcut("Shift-Alt-B", "Copy result body to clipboard");
     coptResultSection->addShortcut("Shift-Alt-H", "Copy result headers to clipboard");
+    coptResultSection->addShortcut("Ctrl-8", "Generate image contains query fields, response summary and headers");
     coptResultSection->formatShortcuts();
     m_sections.append(coptResultSection);
 }

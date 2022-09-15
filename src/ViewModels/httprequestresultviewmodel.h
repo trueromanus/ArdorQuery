@@ -100,6 +100,8 @@ public:
 
     QString actualFormat() const noexcept { return m_actualFormat; }
 
+    void generateImage(const QStringList& fields, const QString& path) noexcept;
+
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
     Q_INVOKABLE void reformatBody();
@@ -107,6 +109,10 @@ public:
 private:
     QString getReadableSize(uint64_t size) const noexcept;
     QString getFormatFromContentType() const noexcept;
+    void setBoldTextToPainter(QPainter& painter) noexcept;
+    void setNormalTextToPainter(QPainter& painter) noexcept;
+    void paintText(QPainter& painter, const QImage& image, int& currentLine, int& lineHeight, const QString& text, bool bold) noexcept;
+    QStringList getHeaderLines();
 
 signals:
     void statusCodeChanged();
@@ -123,6 +129,7 @@ signals:
     void isFormattingChanged();
     void showImageChanged();
     void actualFormatChanged();
+    void errorSavingGeneratedFile();
 
 };
 
