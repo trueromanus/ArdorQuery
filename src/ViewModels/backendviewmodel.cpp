@@ -246,6 +246,7 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    // Alt-8
     if (key == Qt::Key_8 && alt) {
         generateImageToClipboard();
         return true;
