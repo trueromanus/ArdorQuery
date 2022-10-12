@@ -179,7 +179,7 @@ void HttpRequestResultViewModel::setOutputFormat(const QString &outputFormat) no
     emit outputFormatChanged();
 }
 
-void HttpRequestResultViewModel::generateImage(const QStringList& fields, const QString& path) noexcept
+void HttpRequestResultViewModel::generateImage(const QStringList& fields, const QString& path, bool saveToClipboard) noexcept
 {
     auto headers = getHeaderLines();
     int countOfLines = 6 + headers.count() + fields.count();
@@ -206,8 +206,13 @@ void HttpRequestResultViewModel::generateImage(const QStringList& fields, const 
         paintText(painter, image, currentLine, lineHeight, header, false);
     }
 
-    auto saveResult = image.save(path);
-    if (!saveResult) emit errorSavingGeneratedFile();
+    if (saveToClipboard) {
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setImage(image);
+    } else {
+        auto saveResult = image.save(path);
+        if (!saveResult) emit errorSavingGeneratedFile();
+    }
 }
 
 void HttpRequestResultViewModel::copyHeadersToClipboard()

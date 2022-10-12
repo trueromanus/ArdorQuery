@@ -59,3 +59,14 @@ void HtmlFormatterUnitTests::attributeWithUrl()
 )");
     QCOMPARE(result, expectedResult);
 }
+
+void HtmlFormatterUnitTests::commentTag()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.format("<test><!-- comment --></test>");
+    auto expectedResult = QString(R"(<font color="#8812a1">&lt;test&gt;</font>
+<font color="#008000">&lt;!-- comment --&gt;</font>
+<font color="#8812a1">&lt;/test&gt;</font>
+)");
+    QCOMPARE(result, expectedResult);
+}

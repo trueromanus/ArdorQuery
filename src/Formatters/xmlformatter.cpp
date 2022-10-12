@@ -73,9 +73,16 @@ void XmlFormatter::formatTagWithOffset(QString &tag)
     auto closedTag = tag[1] == m_closedTag;
     auto selfClosedTag = tag[tag.length() - 2] == m_closedTag;
     auto header = tag[1] == m_question;
+    auto comment = tag.startsWith(m_comment);
 
     if (header) {
         m_result.append("<font color=\"gray\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
+        return;
+    }
+
+    if (comment) {
+        setOffset();
+        m_result.append("<font color=\"#008000\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
         return;
     }
 

@@ -33,6 +33,7 @@ class XmlFormatter : public OutputFormatter
     QString m_newline { "\n" };
     QString m_caretBack { "\r" };
     QString m_tabulator { "\t" };
+    QString m_comment { "<!--" };
     int m_stackSize { -1 };
     QString m_result { "" };
 

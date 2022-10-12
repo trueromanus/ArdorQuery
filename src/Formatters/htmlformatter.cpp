@@ -98,9 +98,16 @@ void HtmlFormatter::formatTagWithOffset(QString &tag)
     auto closedTag = tag[1] == m_closedTag;
     auto selfClosedTag = isSelfClosedTag(tag);
     auto header = tag.startsWith(m_doctype) || tag.startsWith(m_upperDoctype);
+    auto comment = tag.startsWith(m_comment);
 
     if (header) {
         m_result.append("<font color=\"lightgray\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
+        return;
+    }
+
+    if (comment) {
+        setOffset();
+        m_result.append("<font color=\"#008000\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
         return;
     }
 

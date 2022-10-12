@@ -100,7 +100,7 @@ public:
 
     QString actualFormat() const noexcept { return m_actualFormat; }
 
-    void generateImage(const QStringList& fields, const QString& path) noexcept;
+    void generateImage(const QStringList& fields, const QString& path, bool saveToClipboard) noexcept;
 
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();

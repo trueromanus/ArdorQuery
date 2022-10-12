@@ -30,6 +30,7 @@ private slots:
     void htmlUpperHeader();
     void emptyFullTag();
     void attributeWithUrl();
+    void commentTag();
 };
 
 #endif // HTMLFORMATTERUNITTESTS_H

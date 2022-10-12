@@ -246,6 +246,11 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    if (key == Qt::Key_8 && alt) {
+        generateImageToClipboard();
+        return true;
+    }
+
     return false;
 }
 
@@ -301,7 +306,16 @@ void BackendViewModel::generateImage(const QString &filePath) noexcept
     auto result = m_requests->selectedItem()->resultModel();
 
     auto fields = request->getAllFieldsAsList();
-    result->generateImage(fields, removeProtocol(filePath));
+    result->generateImage(fields, removeProtocol(filePath), false);
+}
+
+void BackendViewModel::generateImageToClipboard() noexcept
+{
+    auto request = m_requests->selectedItem()->requestModel();
+    auto result = m_requests->selectedItem()->resultModel();
+
+    auto fields = request->getAllFieldsAsList();
+    result->generateImage(fields, "", true);
 }
 
 void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
