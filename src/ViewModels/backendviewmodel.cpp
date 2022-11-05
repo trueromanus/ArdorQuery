@@ -67,7 +67,7 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     }
 
     // ---------
-    // Clipboard
+    // Import
 
     // Shift-Alt-L
     if ((nativeCode == 38 || key == Qt::Key_L) && shift && alt) {
@@ -79,6 +79,11 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     if (((nativeCode == 38 || key == Qt::Key_L) && control) || (nativeCode == 61 || key == Qt::Key_F3)) {
         m_requestExternal->appendFromClipboard();
         return true;
+    }
+
+    // F6
+    if (key == Qt::Key_F6) {
+        emit needOpenApiExportWindow();
     }
 
     // ---------

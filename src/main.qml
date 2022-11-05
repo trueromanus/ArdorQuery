@@ -67,6 +67,10 @@ ApplicationWindow {
         }
     }
 
+    OpenApiExportWindow {
+        id: openApiExportWindow
+    }
+
     Component {
         id: imageWindowComponent
 
@@ -95,6 +99,9 @@ ApplicationWindow {
             }
             onNeedGenerateImage: {
                 saveImageDialog.open();
+            }
+            onNeedOpenApiExportWindow: {
+                openApiExportWindow.show();
             }
         }
 

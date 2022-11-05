@@ -95,6 +95,7 @@ signals:
     void needOpenFile();
     void needSaveFile();
     void needGenerateImage();
+    void needOpenApiExportWindow();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);
