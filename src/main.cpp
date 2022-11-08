@@ -23,6 +23,8 @@
 #include "ViewModels/requestexternalviewmodel.h"
 #include "ListModels/shortcutslistmodel.h"
 #include "QuickControls/backendimage.h"
+#include "ListModels/openapiaddresseslistmodel.h"
+#include "ViewModels/openapiexporterviewmodel.h"
 #ifdef QT_DEBUG
 #include <QtTest/QtTest>
 #include "Tests/jsonformatterunittests.h"
@@ -80,6 +82,8 @@ void registerQmlTypes() {
     qmlRegisterType<RequestExternalViewModel>("ArdorQuery.Backend", 1, 0, "RequestExternalViewModel");
     qmlRegisterType<ShortcutsListModel>("ArdorQuery.Backend", 1, 0, "ShortcutsListModel");
     qmlRegisterType<BackendImage>("ArdorQuery.Backend", 1, 0, "BackendImage");
+    qmlRegisterType<OpenApiExporterViewModel>("ArdorQuery.Backend", 1, 0, "OpenApiExporterViewModel");
+    qmlRegisterType<OpenApiAddressesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiAddressesListModel");
 }
 #ifdef QT_DEBUG
 void runTest(int argc, char *argv[]) {

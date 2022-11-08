@@ -25,6 +25,7 @@
 #include "../ListModels/notificationlistmodel.h"
 #include "../ListModels/outputformatslistmodel.h"
 #include "../ListModels/requestscommandpalettelistmodel.h"
+#include "../ViewModels/openapiexporterviewmodel.h"
 
 class BackendViewModel : public QObject
 {
@@ -39,6 +40,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(OutputFormatsListModel* outputFormats READ outputFormats NOTIFY outputFormatsChanged)
     Q_PROPERTY(RequestsCommandPaletteListModel* requestsCommandPaletter READ requestsCommandPaletter NOTIFY requestsCommandPaletterChanged)
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette NOTIFY openedCommandPaletteChanged)
+    Q_PROPERTY(OpenApiExporterViewModel* openApiExporter READ openApiExporter NOTIFY openApiExporterChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -51,6 +53,7 @@ private:
     bool m_helpVisible { false };
     RequestsCommandPaletteListModel* m_requestsCommandPaletter { new RequestsCommandPaletteListModel(this) };
     bool m_openedCommandPalette { false };
+    OpenApiExporterViewModel* m_openApiExporter { new OpenApiExporterViewModel(this) };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
@@ -64,6 +67,7 @@ public:
     OutputFormatsListModel* outputFormats() const noexcept { return m_outputFormats; }
     RequestsCommandPaletteListModel* requestsCommandPaletter() const noexcept { return m_requestsCommandPaletter; }
     bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
+    OpenApiExporterViewModel* openApiExporter() const noexcept { return m_openApiExporter; }
 
     Q_INVOKABLE void addNewRequest();
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
@@ -96,6 +100,7 @@ signals:
     void needSaveFile();
     void needGenerateImage();
     void needOpenApiExportWindow();
+    void openApiExporterChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

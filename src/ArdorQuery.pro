@@ -17,6 +17,7 @@ SOURCES += \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
         ListModels/notificationlistmodel.cpp \
+        ListModels/openapiaddresseslistmodel.cpp \
         ListModels/outputformatslistmodel.cpp \
         ListModels/requestscommandpalettelistmodel.cpp \
         ListModels/responsebodylistmodel.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
         ViewModels/httpperformerviewmodel.cpp \
         ViewModels/httprequestresultviewmodel.cpp \
         ViewModels/httprequestviewmodel.cpp \
+        ViewModels/openapiexporterviewmodel.cpp \
         ViewModels/requestexternalviewmodel.cpp \
         ViewModels/textadvisorviewmodel.cpp \
         globalconstants.cpp \
@@ -56,6 +58,7 @@ HEADERS += \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
     ListModels/notificationlistmodel.h \
+    ListModels/openapiaddresseslistmodel.h \
     ListModels/outputformatslistmodel.h \
     ListModels/requestscommandpalettelistmodel.h \
     ListModels/responsebodylistmodel.h \
@@ -68,6 +71,7 @@ HEADERS += \
     ViewModels/httpperformerviewmodel.h \
     ViewModels/httprequestresultviewmodel.h \
     ViewModels/httprequestviewmodel.h \
+    ViewModels/openapiexporterviewmodel.h \
     ViewModels/requestexternalviewmodel.h \
     ViewModels/textadvisorviewmodel.h \
     globalconstants.h \
