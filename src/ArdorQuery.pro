@@ -24,6 +24,7 @@ SOURCES += \
         ListModels/shortcutslistmodel.cpp \
         Models/httprequestitem.cpp \
         Models/httprequestmodel.cpp \
+        Models/openapiroutemodel.cpp \
         Models/shortcutsection.cpp \
         QuickControls/backendimage.cpp \
         ViewModels/backendviewmodel.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
     ListModels/shortcutslistmodel.h \
     Models/httprequestitem.h \
     Models/httprequestmodel.h \
+    Models/openapiroutemodel.h \
     Models/shortcutsection.h \
     QuickControls/backendimage.h \
     ViewModels/backendviewmodel.h \

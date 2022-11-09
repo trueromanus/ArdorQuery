@@ -3,6 +3,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "openapiexporterviewmodel.h"
+#include "../Models/openapiroutemodel.h"
 
 OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
     : QObject{parent}
@@ -34,9 +35,37 @@ void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexc
         return;
     }
 
-    if (rootObject.contains("paths")) {
+    if (!rootObject.contains("paths")) {
         //TODO: show error openapi parameter not defined
         return;
+    }
+
+    parseRoutes(rootObject.value("paths").toObject());
+}
+
+void OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
+{
+    auto routePaths = routeObject.keys();
+
+    foreach (auto routePath, routePaths) {
+        auto route = routeObject.value(routePath);
+
+        auto methodsObject = route.toObject();
+        foreach (auto method, methodsObject.keys()) {
+            OpenApiRouteModel model;
+            model.setPath(routePath);
+            model.setMethod(method);
+
+            auto methodObject = methodsObject.value(method).toObject();
+            if (methodObject.contains("summary")) model.setSummary(methodObject.value("summary").toString());
+
+            if (methodObject.contains("parameters")) {
+                //TODO: read parameters
+            }
+            if (methodObject.contains("requestBody")) {
+                //TODO: body scheme
+            }
+        }
     }
 }
 

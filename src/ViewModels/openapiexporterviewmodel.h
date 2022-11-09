@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QJsonObject>
 #include "../ListModels/openapiaddresseslistmodel.h"
 
 class OpenApiExporterViewModel : public QObject
@@ -32,6 +33,7 @@ public:
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;
+    void parseRoutes(QJsonObject routeObject) noexcept;
 
 private slots:
     void requestFinished(QNetworkReply *reply);
