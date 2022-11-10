@@ -13,23 +13,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "openapiroutemodel.h"
+#include "openapiparametermodel.h"
 
-OpenApiRouteModel::OpenApiRouteModel()
+OpenApiParameterModel::OpenApiParameterModel()
 {
 
-}
-
-void OpenApiRouteModel::addParameter(const OpenApiParameterModel *model) noexcept
-{
-    m_parameters.append(const_cast<OpenApiParameterModel*>(model));
-}
-
-void OpenApiRouteModel::clearParameters() noexcept
-{
-    foreach (auto parameter, m_parameters) {
-        delete parameter;
-    }
-
-    m_parameters.clear();
 }

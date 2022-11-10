@@ -13,23 +13,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "openapiroutemodel.h"
+#ifndef OPENAPIRESPONSEMODEL_H
+#define OPENAPIRESPONSEMODEL_H
 
-OpenApiRouteModel::OpenApiRouteModel()
+#include <QString>
+
+class OpenApiResponseModel
 {
+private:
+    int m_statusCode { 0 };
+    QString m_description { "" };
 
-}
+public:
+    OpenApiResponseModel();
 
-void OpenApiRouteModel::addParameter(const OpenApiParameterModel *model) noexcept
-{
-    m_parameters.append(const_cast<OpenApiParameterModel*>(model));
-}
+    int statusCode() const noexcept { return m_statusCode; }
+    QString description() const noexcept { return m_description; }
 
-void OpenApiRouteModel::clearParameters() noexcept
-{
-    foreach (auto parameter, m_parameters) {
-        delete parameter;
-    }
+    void setStatusCode(int statusCode) noexcept { m_statusCode = statusCode; }
+    void setDescription(const QString& description) noexcept { m_description = description; }
 
-    m_parameters.clear();
-}
+};
+
+#endif // OPENAPIRESPONSEMODEL_H
