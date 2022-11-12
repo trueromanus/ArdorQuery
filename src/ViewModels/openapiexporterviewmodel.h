@@ -23,6 +23,7 @@
 #include "../ListModels/openapiaddresseslistmodel.h"
 #include "../Models/openapiroutemodel.h"
 #include "../Models/openapiparametermodel.h"
+#include "../ListModels/openapirouteslistmodel.h"
 
 class OpenApiExporterViewModel : public QObject
 {
@@ -31,10 +32,12 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(QString url READ url NOTIFY urlChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
     Q_PROPERTY(bool alreadyLoaded READ alreadyLoaded NOTIFY alreadyLoadedChanged)
+    Q_PROPERTY(OpenApiRoutesListModel* routeList READ routeList NOTIFY routeListChanged)
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
     QMap<QString, QList<OpenApiRouteModel*>> m_routes { QMap<QString, QList<OpenApiRouteModel*>>() };
+    OpenApiRoutesListModel* m_routeList { new OpenApiRoutesListModel(this) };
     QString m_url { "" };
     QNetworkAccessManager* m_networkManager { new QNetworkAccessManager(this) };
     bool m_loading { false };
@@ -55,6 +58,8 @@ public:
 
     OpenApiAddressesListModel* addresses() const noexcept { return m_addresses; }
 
+    OpenApiRoutesListModel* routeList() const noexcept { return m_routeList; }
+
     QString url() const noexcept { return m_url; }
 
     bool loading() const noexcept { return m_loading; }
@@ -62,7 +67,6 @@ public:
     bool alreadyLoaded() const noexcept { return m_routes.contains(m_url); }
 
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
-    Q_INVOKABLE bool checkIsLoading(const QString& url) const noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
 
 private:
@@ -79,6 +83,7 @@ signals:
     void urlChanged();
     void loadingChanged();
     void alreadyLoadedChanged();
+    void routeListChanged();
 
 };
 

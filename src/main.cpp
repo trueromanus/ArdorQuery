@@ -84,6 +84,7 @@ void registerQmlTypes() {
     qmlRegisterType<BackendImage>("ArdorQuery.Backend", 1, 0, "BackendImage");
     qmlRegisterType<OpenApiExporterViewModel>("ArdorQuery.Backend", 1, 0, "OpenApiExporterViewModel");
     qmlRegisterType<OpenApiAddressesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiAddressesListModel");
+    qmlRegisterType<OpenApiRoutesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiRoutesListModel");
 }
 #ifdef QT_DEBUG
 void runTest(int argc, char *argv[]) {

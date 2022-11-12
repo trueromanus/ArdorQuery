@@ -30,6 +30,8 @@ void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
     if (m_loading) return;
     if (m_routes.contains(m_url)) removeLoadedRoutes(m_url);
 
+    //TODO: save to addresses
+
     QNetworkRequest request(m_url);
 
     m_networkManager->get(request);
@@ -38,16 +40,10 @@ void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
     emit loadingChanged();
 }
 
-bool OpenApiExporterViewModel::checkIsLoading(const QString &url) const noexcept
-{
-    return m_routes.contains(m_url);
-}
-
 void OpenApiExporterViewModel::setUrl(const QString &url) noexcept
 {
     //TODO: validating url
     m_url = url;
-    //TODO: save to addresses
     emit urlChanged();
     emit alreadyLoadedChanged();
 }
@@ -156,4 +152,6 @@ void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
     m_loading = false;
     emit loadingChanged();
     emit alreadyLoadedChanged();
+
+    m_routeList->setupRoutes(m_routes[m_url]);
 }

@@ -18,6 +18,7 @@ SOURCES += \
         ListModels/maintabslistmodel.cpp \
         ListModels/notificationlistmodel.cpp \
         ListModels/openapiaddresseslistmodel.cpp \
+        ListModels/openapirouteslistmodel.cpp \
         ListModels/outputformatslistmodel.cpp \
         ListModels/requestscommandpalettelistmodel.cpp \
         ListModels/responsebodylistmodel.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
     ListModels/maintabslistmodel.h \
     ListModels/notificationlistmodel.h \
     ListModels/openapiaddresseslistmodel.h \
+    ListModels/openapirouteslistmodel.h \
     ListModels/outputformatslistmodel.h \
     ListModels/requestscommandpalettelistmodel.h \
     ListModels/responsebodylistmodel.h \
