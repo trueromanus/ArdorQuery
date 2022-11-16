@@ -29,6 +29,7 @@ class OpenApiRoutesListModel : public QAbstractListModel
 
 private:
     QList<OpenApiRouteModel*> m_filteredRoutes { QList<OpenApiRouteModel*>() };
+    QList<int> m_filteredIds { QList<int>() };
     QList<OpenApiRouteModel*> m_allRoutes { QList<OpenApiRouteModel*>() };
     enum OpenApiRoutesRoles {
         IdentfierRole = Qt::UserRole + 1,
@@ -56,6 +57,8 @@ public:
     void setOrderField(const QString& orderField) noexcept;
 
     void refresh();
+
+    OpenApiRouteModel* getRouteByIndex(int index) const noexcept;
 
 private:
     QString getMethodColor(const OpenApiRouteModel* route) const noexcept;

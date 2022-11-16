@@ -131,7 +131,7 @@ void HttpRequestViewModel::addItem(const int position, const HttpRequestViewMode
 
     auto item = new HttpRequestItem();
     if (itemType != HttpRequestTypes::UnknownType) item->setType(static_cast<int>(itemType));
-    if (!initialValue.isEmpty()) item->setText(initialValue);
+    if (!initialValue.isEmpty()) item->setText(getItemPrefix(itemType) + initialValue);
 
     if (actualPosition == -1) {
         m_items->append(item);
@@ -559,5 +559,35 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#E0D8B0";
         default:
             return "#CDCDB4";
+    }
+}
+
+QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType) const noexcept
+{
+    switch (itemType) {
+        case HttpRequestTypes::UrlType:
+            return UrlPrefix;
+        case HttpRequestTypes::MethodType:
+            return MethodPrefix;
+        case HttpRequestTypes::HeaderType:
+            return HeaderPrefix;
+        case HttpRequestTypes::BodyType:
+            return BodyPrefix;
+        case HttpRequestTypes::FormItemType:
+            return FormPrefix;
+        case HttpRequestTypes::FormFileType:
+            return FilePrefix;
+        case HttpRequestTypes::HttpProtocolType:
+            return ProtocolPrefix;
+        case HttpRequestTypes::BearerType:
+            return BearerPrefix;
+        case HttpRequestTypes::TitleType:
+            return TitlePrefix;
+        case HttpRequestTypes::ParamType:
+            return ParamPrefix;
+        case HttpRequestTypes::PastryType:
+            return PastryPrefix;
+        default:
+            return "";
     }
 }

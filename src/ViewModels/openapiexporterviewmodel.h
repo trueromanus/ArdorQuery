@@ -33,6 +33,7 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
     Q_PROPERTY(bool alreadyLoaded READ alreadyLoaded NOTIFY alreadyLoadedChanged)
     Q_PROPERTY(OpenApiRoutesListModel* routeList READ routeList NOTIFY routeListChanged)
+    Q_PROPERTY(QString baseUrl READ baseUrl WRITE setBaseUrl NOTIFY baseUrlChanged)
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
@@ -40,6 +41,7 @@ private:
     OpenApiRoutesListModel* m_routeList { new OpenApiRoutesListModel(this) };
     QString m_url { "" };
     QNetworkAccessManager* m_networkManager { new QNetworkAccessManager(this) };
+    QString m_baseUrl { "" };
     bool m_loading { false };
     const QString IntegerType { "integer" };
     const QString DoubleType { "number" };
@@ -66,6 +68,11 @@ public:
 
     bool alreadyLoaded() const noexcept { return m_routes.contains(m_url); }
 
+    QString baseUrl () const noexcept { return m_baseUrl; }
+    void setBaseUrl(const QString& baseUrl) noexcept;
+
+    OpenApiRouteModel* getRouteFromOpenApiByIndex(int index) const noexcept;
+
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
 
@@ -84,6 +91,7 @@ signals:
     void loadingChanged();
     void alreadyLoadedChanged();
     void routeListChanged();
+    void baseUrlChanged();
 
 };
 

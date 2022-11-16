@@ -33,3 +33,8 @@ void OpenApiRouteModel::clearParameters() noexcept
 
     m_parameters.clear();
 }
+
+const QList<OpenApiParameterModel *> &OpenApiRouteModel::parameters() const
+{
+    return m_parameters;
+}

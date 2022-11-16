@@ -80,13 +80,15 @@ QHash<int, QByteArray> HttpRequestsListModel::roleNames() const
     };
 }
 
-void HttpRequestsListModel::addItem(const HttpRequestModel* model) noexcept
+int HttpRequestsListModel::addItem(const HttpRequestModel* model) noexcept
 {
     beginResetModel();
 
     m_requests->append(const_cast<HttpRequestModel*>(model));
 
     endResetModel();
+
+    return m_requests->count() - 1;
 }
 
 QSharedPointer<QList<HttpRequestModel *> > HttpRequestsListModel::getList() const noexcept

@@ -47,7 +47,7 @@ public:
 
     HttpRequestModel* selectedItem() const noexcept { return m_requests->at(m_selectedIndex); }
 
-    void addItem(const HttpRequestModel* model) noexcept;
+    int addItem(const HttpRequestModel* model) noexcept;
 
     QSharedPointer<QList<HttpRequestModel*>> getList() const noexcept;
 

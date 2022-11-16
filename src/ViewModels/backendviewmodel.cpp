@@ -324,6 +324,48 @@ void BackendViewModel::generateImageToClipboard() noexcept
     result->generateImage(fields, "", true);
 }
 
+void BackendViewModel::importFromOpenApi(int index) noexcept
+{
+    auto route = m_openApiExporter->getRouteFromOpenApiByIndex(index);
+    if (route == nullptr) return;
+
+    auto model = new HttpRequestModel(this);
+
+    auto request = model->requestModel();
+    request->setTextAdvisor(m_textAdviser);
+
+    auto summary = route->summary();
+    if (!summary.isEmpty()) request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::TitleType, route->summary());
+
+    auto baseUrl = m_openApiExporter->baseUrl();
+    auto routePath = route->path();
+    if (!baseUrl.isEmpty()) routePath = baseUrl + route->path();
+    request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::UrlType, routePath);
+
+    request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::MethodType, route->method().toUpper());
+
+    auto parameters = route->parameters();
+    foreach (auto parameter, parameters) {
+        if (parameter->isCookie()) {
+            request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::PastryType, parameter->name() + "=");
+        }
+        if (parameter->isHeader()) {
+            request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::HeaderType, parameter->name() + " ");
+        }
+        if (parameter->isQuery()) {
+            request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::ParamType, parameter->name() + "=");
+        }
+        if (parameter->isPath()) {
+            //TODO: need add new field type for route replacing
+        }
+    }
+
+    request->removeFirstItem();
+
+    auto createdIndex = m_requests->addItem(model);
+    m_requests->selectItem(createdIndex);
+}
+
 void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
 {
     if (m_helpVisible == helpVisible) return;

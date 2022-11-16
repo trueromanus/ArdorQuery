@@ -77,6 +77,7 @@ public:
     Q_INVOKABLE void savedFile(const QString& filePath) noexcept;
     Q_INVOKABLE void generateImage(const QString& filePath) noexcept;
     Q_INVOKABLE void generateImageToClipboard() noexcept;
+    Q_INVOKABLE void importFromOpenApi(int index) noexcept;
 
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(const bool helpVisible) noexcept;

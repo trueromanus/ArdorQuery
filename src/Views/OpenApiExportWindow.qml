@@ -5,14 +5,19 @@ import QtQuick.Layouts
 ApplicationWindow {
     id: root
     width: 700
-    height: 300
+    height: 500
     minimumWidth: 700
-    minimumHeight: 300
+    minimumHeight: 400
     maximumWidth: 800
     maximumHeight: 600
     modality: Qt.WindowModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "Export from OpenAPI"
+    background: Rectangle {
+        anchors.fill: parent
+        color: "#f2f2f2"
+    }
+
 
     RowLayout {
         id: addressLine
@@ -38,9 +43,32 @@ ApplicationWindow {
         }
     }
 
+    RowLayout {
+        id: baseUrlLine
+        width: parent.width
+        height: 40
+        anchors.top: addressLine.bottom
+        spacing: 2
+
+        Text {
+            Layout.preferredWidth: 100
+            Layout.fillHeight: true
+            text: "Base url"
+        }
+
+        TextField {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            text: backend.openApiExporter.baseUrl
+            onTextChanged: {
+                backend.openApiExporter.baseUrl = text;
+            }
+        }
+    }
+
     ListView {
         id: routesListView
-        anchors.top: addressLine.bottom
+        anchors.top: baseUrlLine.bottom
         anchors.bottom: parent.bottom
         width: parent.width
         spacing: 2
@@ -54,7 +82,7 @@ ApplicationWindow {
                 anchors.fill: parent
                 anchors.leftMargin: 2
                 anchors.rightMargin: 2
-                color: "transparent"
+                color: "white"
                 border.color: methodColor
                 border.width: 1
                 radius: 8
@@ -78,6 +106,14 @@ ApplicationWindow {
                     font.pointSize: 10
                     font.bold: true
                     text: method
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: {
+                        backend.importFromOpenApi(identifier);
+                        root.close();
+                    }
                 }
             }
 

@@ -103,6 +103,7 @@ public:
 private:
     QString getTypeColor(int type) const;
     QString getTextFromClipboard() const noexcept;
+    QString getItemPrefix(const HttpRequestViewModel::HttpRequestTypes itemType) const noexcept;
 
 signals:
     void selectedItemChanged();

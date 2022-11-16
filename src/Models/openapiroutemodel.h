@@ -42,6 +42,8 @@ public:
     void addParameter(const OpenApiParameterModel* model) noexcept;
     void clearParameters() noexcept;
 
+    const QList<OpenApiParameterModel*>& parameters() const;
+
 };
 
 #endif // OPENAPIROUTEMODEL_H

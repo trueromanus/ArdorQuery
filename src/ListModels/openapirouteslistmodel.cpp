@@ -110,6 +110,7 @@ void OpenApiRoutesListModel::refresh()
     beginResetModel();
 
     m_filteredRoutes.clear();
+    m_filteredIds.clear();
 
     if (m_filter.isEmpty() && m_orderField.isEmpty()) {
         m_filteredRoutes.append(m_allRoutes);
@@ -118,17 +119,31 @@ void OpenApiRoutesListModel::refresh()
     }
 
     if (!m_filter.isEmpty()) {
+        auto iterator = 0;
         foreach (auto route, m_allRoutes) {
             auto isRoute = route->path().toLower().contains(m_filter.toLower());
             auto isMethod = route->method().toLower().contains(m_filter.toLower());
             auto isDescription = route->summary().toLower().contains(m_filter.toLower());
 
-            if (isRoute || isMethod || isDescription) m_filteredRoutes.append(route);
+            if (isRoute || isMethod || isDescription) {
+                m_filteredRoutes.append(route);
+                m_filteredIds.append(iterator);
+            }
         }
     }
 
     endResetModel();
 
+}
+
+OpenApiRouteModel *OpenApiRoutesListModel::getRouteByIndex(int index) const noexcept
+{
+    if (m_filteredRoutes.count() == m_filteredIds.count()) {
+        if (m_filteredRoutes.count() >= index) return nullptr;
+        return m_allRoutes.value(m_filteredIds.value(index));
+    } else {
+        return m_allRoutes.value(index);
+    }
 }
 
 QString OpenApiRoutesListModel::getMethodColor(const OpenApiRouteModel *route) const noexcept

@@ -25,6 +25,19 @@ OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &OpenApiExporterViewModel::requestFinished);
 }
 
+void OpenApiExporterViewModel::setBaseUrl(const QString &baseUrl) noexcept
+{
+    if (m_baseUrl == baseUrl) return;
+
+    m_baseUrl = baseUrl;
+    emit baseUrlChanged();
+}
+
+OpenApiRouteModel *OpenApiExporterViewModel::getRouteFromOpenApiByIndex(int index) const noexcept
+{
+    return m_routeList->getRouteByIndex(index);
+}
+
 void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
 {
     if (m_loading) return;
