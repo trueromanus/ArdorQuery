@@ -25,9 +25,15 @@ class ShortcutsListModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY(bool isFiltered READ isFiltered NOTIFY isFilteredChanged)
+    Q_PROPERTY(QString mode READ mode WRITE setMode NOTIFY modeChanged)
+    Q_PROPERTY(QString mainMode READ mainMode NOTIFY mainModeChanged)
+    Q_PROPERTY(QString openApiMode READ openApiMode NOTIFY openApiModeChanged)
 
 private:
+    const QString m_mainMode { "main" };
+    const QString m_openApiMode { "openapi" };
     QString m_filter { "" };
+    QString m_mode { "" };
     QList<ShortcutSection*> m_sections { QList<ShortcutSection*>() };
     QList<ShortcutSection*> m_filteredSections { QList<ShortcutSection*>() };
     enum ShortCutRoles {
@@ -43,8 +49,14 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+    QString mainMode() const noexcept { return m_mainMode; }
+    QString openApiMode() const noexcept { return m_openApiMode; }
+
     QString filter() const noexcept { return m_filter; }
     void setFilter(const QString& filter) noexcept;
+
+    QString mode() const noexcept { return m_mode; }
+    void setMode(const QString& mode) noexcept;
 
     bool isFiltered() const noexcept { return m_filter.isEmpty(); }
 
@@ -53,6 +65,9 @@ public:
 signals:
     void filterChanged();
     void isFilteredChanged();
+    void modeChanged();
+    void mainModeChanged();
+    void openApiModeChanged();
 
 };
 

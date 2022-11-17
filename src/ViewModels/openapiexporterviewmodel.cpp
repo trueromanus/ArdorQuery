@@ -61,6 +61,26 @@ void OpenApiExporterViewModel::setUrl(const QString &url) noexcept
     emit alreadyLoadedChanged();
 }
 
+bool OpenApiExporterViewModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept
+{
+    // F5 or Ctrl-Z
+    if (((nativeCode == 44 || key == Qt::Key_Z) && control) || (nativeCode == 63 || key == Qt::Key_F5)) {
+        loadOpenApiScheme();
+        return true;
+    }
+
+    return false;
+}
+
+void OpenApiExporterViewModel::keysReleased(int key) noexcept
+{
+    /*if (key == Qt::Key_Control && m_openedCommandPalette) {
+        m_openedCommandPalette = false;
+        m_requestsCommandPaletter->selectItem();
+        emit openedCommandPaletteChanged();
+    }*/
+}
+
 void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexcept
 {
     auto document = QJsonDocument::fromJson(json.toUtf8());

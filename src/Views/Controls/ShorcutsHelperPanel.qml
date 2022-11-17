@@ -4,10 +4,13 @@ import QtQuick.Controls /* 2.15 */
 import ArdorQuery.Backend /* 1.0 */
 
 Rectangle {
+    id: root
     width: 280
     height: parent.height
     anchors.right: parent.right
-    visible: backend.helpVisible
+    visible: false
+
+    property alias mode: listModel.mode
 
     ShortcutsListModel {
         id: listModel
@@ -32,8 +35,9 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
 
-            TextField {
+            CommonTextField {
                 anchors.margins: 4
+                activeFocusOnTab: false
                 anchors.fill: parent
                 text: listModel.filter
                 onTextChanged: {
@@ -94,5 +98,9 @@ Rectangle {
                 active: true
             }
         }
+    }
+
+    onVisibleChanged: {
+        if (!root.visible) root.nextItemInFocusChain().forceActiveFocus();
     }
 }

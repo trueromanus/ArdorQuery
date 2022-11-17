@@ -54,6 +54,7 @@ private:
     RequestsCommandPaletteListModel* m_requestsCommandPaletter { new RequestsCommandPaletteListModel(this) };
     bool m_openedCommandPalette { false };
     OpenApiExporterViewModel* m_openApiExporter { new OpenApiExporterViewModel(this) };
+    bool m_openApiHelpVisible { false };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
@@ -82,6 +83,8 @@ public:
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(const bool helpVisible) noexcept;
 
+    bool openApiHelpVisible() const noexcept { return m_openApiHelpVisible; }
+
 private:
     QString removeProtocol(const QString& filePath) noexcept;
 
@@ -102,6 +105,7 @@ signals:
     void needGenerateImage();
     void needOpenApiExportWindow();
     void openApiExporterChanged();
+    void openApiHelpVisibleChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

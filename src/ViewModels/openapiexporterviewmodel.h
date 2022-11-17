@@ -75,6 +75,8 @@ public:
 
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
+    Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
+    Q_INVOKABLE void keysReleased(int key) noexcept;
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;

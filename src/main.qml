@@ -35,6 +35,9 @@ ApplicationWindow {
 
     ShorcutsHelperPanel {
         id: shortcutPanel
+        Component.onCompleted: {
+            shortcutPanel.mode = "main";
+        }
     }
 
     CommandPalette {

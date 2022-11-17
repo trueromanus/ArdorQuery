@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "Controls"
 
 ApplicationWindow {
     id: root
@@ -17,7 +18,32 @@ ApplicationWindow {
         anchors.fill: parent
         color: "#f2f2f2"
     }
+    header: Item {
+        id: headerContainer
+        height: 30
+        width: root.width
 
+        Rectangle {
+            opacity: .2
+            color: "#f2f2f2"
+            anchors.fill: parent
+        }
+
+        IconButton {
+            id: helpButton
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            icon: storagePaths.icons + "question.svg"
+            width: 30
+            height: parent.height
+            iconWidth: 20
+            iconHeight: 20
+            tooltipMessage: "Show keyboard shortcut description"
+            onPressed: {
+                openApiShortcutPanel.visible = !openApiShortcutPanel.visible;
+            }
+        }
+    }
 
     RowLayout {
         id: addressLine
@@ -25,20 +51,45 @@ ApplicationWindow {
         height: 40
         spacing: 2
 
-        TextField {
-            Layout.fillWidth: true
-            text: backend.openApiExporter.url
-            onTextChanged: {
-                backend.openApiExporter.setUrl(text);
+        Item {
+            Layout.preferredWidth: 100
+            Layout.fillHeight: true
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+                font.pixelSize: 14
+                text: "Scheme URL"
             }
         }
 
-        Button {
-            Layout.preferredWidth: 180
-            text: backend.openApiExporter.alreadyLoaded ? "Reload scheme" : "Load scheme"
-            enabled: backend.openApiExporter.url.length > 0
-            onPressed: {
-                backend.openApiExporter.loadOpenApiScheme();
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            CommonTextField {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.left: parent.left
+                text: backend.openApiExporter.url
+                onTextChanged: {
+                    backend.openApiExporter.setUrl(text);
+                }
+                Keys.onPressed: (event) => {
+                    const needAccepted = backend.openApiExporter.keysHandler(
+                        event.key,
+                        event.nativeScanCode,
+                        (event.modifiers & Qt.ControlModifier),
+                        (event.modifiers & Qt.ShiftModifier),
+                        (event.modifiers & Qt.AltModifier)
+                    );
+                    if (needAccepted) event.accepted = true;
+                }
+                Keys.onReleased: (event) => {
+                    backend.openApiExporter.keysReleased(event.key);
+                }
             }
         }
     }
@@ -50,18 +101,46 @@ ApplicationWindow {
         anchors.top: addressLine.bottom
         spacing: 2
 
-        Text {
+        Item {
             Layout.preferredWidth: 100
             Layout.fillHeight: true
-            text: "Base url"
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+                font.pixelSize: 14
+                text: "Base URL"
+            }
         }
 
-        TextField {
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            text: backend.openApiExporter.baseUrl
-            onTextChanged: {
-                backend.openApiExporter.baseUrl = text;
+
+            CommonTextField {
+                id: baseUrlTextField
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.left: parent.left
+                text: backend.openApiExporter.baseUrl
+                onTextChanged: {
+                    backend.openApiExporter.baseUrl = text;
+                }
+                Keys.onPressed: (event) => {
+                    const needAccepted = backend.openApiExporter.keysHandler(
+                        event.key,
+                        event.nativeScanCode,
+                        (event.modifiers & Qt.ControlModifier),
+                        (event.modifiers & Qt.ShiftModifier),
+                        (event.modifiers & Qt.AltModifier)
+                    );
+                    if (needAccepted) event.accepted = true;
+                }
+                Keys.onReleased: (event) => {
+                    backend.openApiExporter.keysReleased(event.key);
+                }
             }
         }
     }
@@ -134,9 +213,42 @@ ApplicationWindow {
         }
     }
 
-    Text {
-        anchors.centerIn: parent
+    Item {
+        id: spinnerContainer
+        anchors.fill: parent
         visible: backend.openApiExporter.loading
-        text: "Loading..."
+
+        Rectangle {
+            anchors.fill: parent
+            color: "lightgray"
+            opacity: .5
+        }
+
+        Image {
+            id: image
+            anchors.centerIn: parent
+            source: storagePaths.icons + "spinner.svg"
+            width: 40
+            height: 40
+            mipmap: true
+            RotationAnimation on rotation {
+                loops: Animation.Infinite
+                from: 0
+                to: 360
+                running: spinnerContainer.visible
+                duration: 1500
+            }
+        }
+
+        MouseArea {
+            enabled: spinnerContainer.visible
+            propagateComposedEvents: false
+            anchors.fill: parent
+        }
+    }
+
+    ShorcutsHelperPanel {
+        id: openApiShortcutPanel
+        mode: "openapi"
     }
 }

@@ -27,17 +27,20 @@ private:
     QString m_description { "" };
     QList<std::tuple<QString, QString>> m_shortcuts { QList<std::tuple<QString, QString>>() };
     QString m_formattedShortcuts { "" };
+    QString m_mode { "" };
 
 public:
     QString title() const noexcept { return m_title; }
     QString description() const noexcept { return m_description; }
     QList<std::tuple<QString, QString>> shortcuts() const noexcept { return m_shortcuts; }
     QString formattedShortcuts() const noexcept { return m_formattedShortcuts; }
+    QString mode() const noexcept { return m_mode; }
 
     void setTitle(const QString& title) noexcept;
     void setDescription(const QString& description) noexcept;
     void addShortcut(const QString& key, const QString& description) noexcept;
     bool inFilter(const QString& filter) const noexcept;
+    void setMode(const QString& mode) noexcept;
 
     void formatShortcuts();
 

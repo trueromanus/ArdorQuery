@@ -30,6 +30,8 @@ void ShortcutSection::setDescription(const QString& description) noexcept
 void ShortcutSection::addShortcut(const QString &key, const QString &description) noexcept
 {
     m_shortcuts.append(std::make_tuple(key, description));
+
+    formatShortcuts();
 }
 
 bool ShortcutSection::inFilter(const QString &filter) const noexcept
@@ -48,6 +50,11 @@ bool ShortcutSection::inFilter(const QString &filter) const noexcept
         }
     );
     return !(iterator == m_shortcuts.cend());
+}
+
+void ShortcutSection::setMode(const QString &mode) noexcept
+{
+    m_mode = mode;
 }
 
 void ShortcutSection::formatShortcuts()
