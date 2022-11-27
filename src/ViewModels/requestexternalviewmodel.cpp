@@ -69,6 +69,10 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             type = HttpRequestViewModel::HttpRequestTypes::PastryType;
             isBodyType = false;
         }
+        if (line.startsWith(RoutePrefix)) {
+            type = HttpRequestViewModel::HttpRequestTypes::RouteType;
+            isBodyType = false;
+        }
         if (m_textAdvisor->isContainsHeader(line)) {
             type = HttpRequestViewModel::HttpRequestTypes::HeaderType;
             isBodyType = false;

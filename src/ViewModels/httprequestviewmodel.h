@@ -41,7 +41,8 @@ public:
         BearerType,
         TitleType,
         ParamType,
-        PastryType
+        PastryType,
+        RouteType
     };
 
 private:

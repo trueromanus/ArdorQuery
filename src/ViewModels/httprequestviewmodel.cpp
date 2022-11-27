@@ -15,6 +15,7 @@
 
 #include <QClipboard>
 #include <QGuiApplication>
+#include <QMap>
 #include "httprequestviewmodel.h"
 #include "../globalconstants.h"
 
@@ -32,7 +33,8 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HttpProtocolType), 5);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::ParamType), 6);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::PastryType), 7);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 8);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::RouteType), 8);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 9);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 10);
 }
 
@@ -227,6 +229,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(RoutePrefix) && itemType != HttpRequestTypes::RouteType) {
+        item->setType(static_cast<int>(HttpRequestTypes::RouteType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
 
@@ -356,17 +363,37 @@ QString HttpRequestViewModel::getUrl() const noexcept
 QString HttpRequestViewModel::addGetParameters(const QString &url) const noexcept
 {
     QStringList parameters;
+    QMap<QString, QString> routes;
     foreach (auto item, *m_items) {
         auto type = static_cast<HttpRequestTypes>(item->type());
         if (type == HttpRequestTypes::ParamType) {
             parameters.append(item->text().mid(6));
         }
+        if (type == HttpRequestTypes::RouteType) {
+            auto itemData = item->text().split(" ", Qt::SkipEmptyParts);
+            if (itemData.count() < 2) continue;
+
+            auto routeData = itemData.last().split("=");
+            routes.insert(routeData.first(), routeData.last());
+        }
     }
 
-    if (parameters.isEmpty()) return url;
+    if (parameters.isEmpty() && routes.isEmpty()) return url;
 
-    auto allParameters = parameters.join("&");
-    return url.contains("?") ? url + allParameters : url + "?" + allParameters;
+    auto parametersUrl = QString(url);
+
+    if (!parameters.isEmpty()) {
+        auto allParameters = parameters.join("&");
+        parametersUrl = url.contains("?") ? url + allParameters : url + "?" + allParameters;
+    }
+
+    if (!routes.isEmpty()) {
+        foreach (auto route, routes.keys()) {
+            parametersUrl = parametersUrl.replace("{" + route + "}", routes.value(route));
+        }
+    }
+
+    return parametersUrl;
 }
 
 QString HttpRequestViewModel::getBody() const noexcept
@@ -557,6 +584,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#D4D925";
         case HttpRequestTypes::PastryType:
             return "#E0D8B0";
+        case HttpRequestTypes::RouteType:
+            return "#975C8D";
         default:
             return "#CDCDB4";
     }
@@ -587,6 +616,8 @@ QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType) con
             return ParamPrefix;
         case HttpRequestTypes::PastryType:
             return PastryPrefix;
+        case HttpRequestTypes::RouteType:
+            return RoutePrefix;
         default:
             return "";
     }
