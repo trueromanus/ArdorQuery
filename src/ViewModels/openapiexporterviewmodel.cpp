@@ -33,6 +33,14 @@ void OpenApiExporterViewModel::setBaseUrl(const QString &baseUrl) noexcept
     emit baseUrlChanged();
 }
 
+void OpenApiExporterViewModel::setHelpVisible(bool helpVisible) noexcept
+{
+    if (m_helpVisible == helpVisible) return;
+
+    m_helpVisible = helpVisible;
+    emit helpVisibleChanged();
+}
+
 OpenApiRouteModel *OpenApiExporterViewModel::getRouteFromOpenApiByIndex(int index) const noexcept
 {
     return m_routeList->getRouteByIndex(index);
@@ -63,17 +71,38 @@ void OpenApiExporterViewModel::setUrl(const QString &url) noexcept
 
 bool OpenApiExporterViewModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept
 {
+    if (shift || alt) {
+
+    }
+
     // F5 or Ctrl-Z
     if (((nativeCode == 44 || key == Qt::Key_Z) && control) || (nativeCode == 63 || key == Qt::Key_F5)) {
         loadOpenApiScheme();
         return true;
     }
 
+    // Ctrl-H or F1
+#ifdef Q_OS_WIN
+    if (((nativeCode == 35 || key == Qt::Key_H) && control && !shift && !alt) || (nativeCode == 59 || key == Qt::Key_F1)) {
+        setHelpVisible(!m_helpVisible);
+        return true;
+    }
+#else
+    if ((key == Qt::Key_H && control) || key == Qt::Key_F1) {
+        setHelpVisible(!m_helpVisible);
+        return true;
+    }
+
+#endif
+
     return false;
 }
 
 void OpenApiExporterViewModel::keysReleased(int key) noexcept
 {
+    if (key > 0) {
+
+    }
     /*if (key == Qt::Key_Control && m_openedCommandPalette) {
         m_openedCommandPalette = false;
         m_requestsCommandPaletter->selectItem();

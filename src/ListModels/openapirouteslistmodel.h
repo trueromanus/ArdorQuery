@@ -26,6 +26,7 @@ class OpenApiRoutesListModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY(QString orderField READ orderField WRITE setOrderField NOTIFY orderFieldChanged)
+    Q_PROPERTY(bool hasItems READ hasItems NOTIFY hasItemsChanged)
 
 private:
     QList<OpenApiRouteModel*> m_filteredRoutes { QList<OpenApiRouteModel*>() };
@@ -56,6 +57,8 @@ public:
     QString orderField() const noexcept { return m_orderField; }
     void setOrderField(const QString& orderField) noexcept;
 
+    bool hasItems() const noexcept { return !m_filteredRoutes.isEmpty(); }
+
     void refresh();
 
     OpenApiRouteModel* getRouteByIndex(int index) const noexcept;
@@ -66,6 +69,7 @@ private:
 signals:
     void filterChanged();
     void orderFieldChanged();
+    void hasItemsChanged();
 
 };
 

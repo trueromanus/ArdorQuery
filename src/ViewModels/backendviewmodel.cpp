@@ -356,7 +356,7 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
             request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::ParamType, parameter->name() + "=");
         }
         if (parameter->isPath()) {
-            //TODO: need add new field type for route replacing
+            request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::RouteType, parameter->name() + "=");
         }
     }
 

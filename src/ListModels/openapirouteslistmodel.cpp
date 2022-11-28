@@ -95,6 +95,8 @@ void OpenApiRoutesListModel::setFilter(const QString &filter) noexcept
 
     m_filter = filter;
     emit filterChanged();
+
+    refresh();
 }
 
 void OpenApiRoutesListModel::setOrderField(const QString &orderField) noexcept
@@ -121,11 +123,17 @@ void OpenApiRoutesListModel::refresh()
     if (!m_filter.isEmpty()) {
         auto iterator = 0;
         foreach (auto route, m_allRoutes) {
-            auto isRoute = route->path().toLower().contains(m_filter.toLower());
-            auto isMethod = route->method().toLower().contains(m_filter.toLower());
-            auto isDescription = route->summary().toLower().contains(m_filter.toLower());
+            auto words = m_filter.toLower().split(" ", Qt::SkipEmptyParts);
+            auto needAdd = true;
 
-            if (isRoute || isMethod || isDescription) {
+            foreach (auto word, words) {
+                auto isRoute = route->path().toLower().contains(word);
+                auto isMethod = route->method().toLower().contains(word);
+                auto isDescription = route->summary().toLower().contains(word);
+                if (!isRoute && !isMethod && !isDescription) needAdd = false;
+            }
+
+            if (needAdd) {
                 m_filteredRoutes.append(route);
                 m_filteredIds.append(iterator);
             }
@@ -134,6 +142,7 @@ void OpenApiRoutesListModel::refresh()
 
     endResetModel();
 
+    emit hasItemsChanged();
 }
 
 OpenApiRouteModel *OpenApiRoutesListModel::getRouteByIndex(int index) const noexcept

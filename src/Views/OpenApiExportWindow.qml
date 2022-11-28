@@ -73,6 +73,7 @@ ApplicationWindow {
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 anchors.left: parent.left
+                focus: true
                 text: backend.openApiExporter.url
                 onTextChanged: {
                     backend.openApiExporter.setUrl(text);
@@ -145,9 +146,61 @@ ApplicationWindow {
         }
     }
 
+    RowLayout {
+        id: filterLine
+        width: parent.width
+        height: 40
+        anchors.top: baseUrlLine.bottom
+        spacing: 2
+
+        Item {
+            Layout.preferredWidth: 100
+            Layout.fillHeight: true
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+                font.pixelSize: 14
+                text: "Filter"
+            }
+        }
+
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            CommonTextField {
+                id: filterTextField
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.left: parent.left
+                enabled: backend.openApiExporter.routeList
+                text: backend.openApiExporter.routeList.filter
+                onTextChanged: {
+                    backend.openApiExporter.routeList.filter = text;
+                }
+                Keys.onPressed: (event) => {
+                    const needAccepted = backend.openApiExporter.keysHandler(
+                        event.key,
+                        event.nativeScanCode,
+                        (event.modifiers & Qt.ControlModifier),
+                        (event.modifiers & Qt.ShiftModifier),
+                        (event.modifiers & Qt.AltModifier)
+                    );
+                    if (needAccepted) event.accepted = true;
+                }
+                Keys.onReleased: (event) => {
+                    backend.openApiExporter.keysReleased(event.key);
+                }
+            }
+        }
+    }
+
     ListView {
         id: routesListView
-        anchors.top: baseUrlLine.bottom
+        anchors.top: filterLine.bottom
         anchors.bottom: parent.bottom
         width: parent.width
         spacing: 2
@@ -200,7 +253,10 @@ ApplicationWindow {
                 anchors.left: methodText.right
                 anchors.leftMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
-                text: route
+                width: parent.width - methodText.width - 30
+                height: parent.height
+                text: route + " <b>" + description + "</b>"
+                verticalAlignment: Text.AlignVCenter
                 maximumLineCount: 1
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
@@ -250,5 +306,6 @@ ApplicationWindow {
     ShorcutsHelperPanel {
         id: openApiShortcutPanel
         mode: "openapi"
+        visible: backend.openApiExporter.helpVisible
     }
 }
