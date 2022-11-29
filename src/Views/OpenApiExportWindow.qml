@@ -6,11 +6,11 @@ import "Controls"
 ApplicationWindow {
     id: root
     width: 700
-    height: 500
+    height: 600
     minimumWidth: 700
     minimumHeight: 400
     maximumWidth: 800
-    maximumHeight: 600
+    maximumHeight: 800
     modality: Qt.WindowModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "Export from OpenAPI"
@@ -198,9 +198,60 @@ ApplicationWindow {
         }
     }
 
+    RowLayout {
+        id: titleLine
+        width: parent.width
+        height: 40
+        anchors.top: filterLine.bottom
+        spacing: 2
+
+        Item {
+            Layout.preferredWidth: 100
+            Layout.fillHeight: true
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+                font.pixelSize: 14
+                text: "Title"
+            }
+        }
+
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            CommonTextField {
+                id: titleTextField
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.left: parent.left
+                text: backend.openApiExporter.title
+                onTextChanged: {
+                    backend.openApiExporter.title = text;
+                }
+                Keys.onPressed: (event) => {
+                    const needAccepted = backend.openApiExporter.keysHandler(
+                        event.key,
+                        event.nativeScanCode,
+                        (event.modifiers & Qt.ControlModifier),
+                        (event.modifiers & Qt.ShiftModifier),
+                        (event.modifiers & Qt.AltModifier)
+                    );
+                    if (needAccepted) event.accepted = true;
+                }
+                Keys.onReleased: (event) => {
+                    backend.openApiExporter.keysReleased(event.key);
+                }
+            }
+        }
+    }
+
     ListView {
         id: routesListView
-        anchors.top: filterLine.bottom
+        anchors.top: titleLine.bottom
         anchors.bottom: parent.bottom
         width: parent.width
         spacing: 2
@@ -301,6 +352,13 @@ ApplicationWindow {
             propagateComposedEvents: false
             anchors.fill: parent
         }
+    }
+
+    AddressesPalette {
+        id: addressesPalette
+        anchors.centerIn: parent
+        visible: backend.openApiExporter.openedCommandPalette
+        enabled: backend.openApiExporter.openedCommandPalette
     }
 
     ShorcutsHelperPanel {

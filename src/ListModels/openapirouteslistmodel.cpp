@@ -23,6 +23,7 @@ OpenApiRoutesListModel::OpenApiRoutesListModel(QObject *parent)
 
 void OpenApiRoutesListModel::setupRoutes(const QList<OpenApiRouteModel *> &routes)
 {
+    m_allRoutes.clear();
     m_allRoutes.append(routes);
 
     refresh();

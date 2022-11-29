@@ -25,7 +25,7 @@ int OpenApiAddressesListModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
 
-    return m_usedAddresses.size();
+    return m_usedAddresses->size();
 }
 
 QVariant OpenApiAddressesListModel::data(const QModelIndex &index, int role) const
@@ -33,16 +33,26 @@ QVariant OpenApiAddressesListModel::data(const QModelIndex &index, int role) con
     if (!index.isValid()) return QVariant();
 
     auto currentIndex = index.row();
+    auto item = m_usedAddresses->value(currentIndex);
 
     switch (role) {
         case IdentfierRole: {
             return QVariant(currentIndex);
         }
         case TitleRole: {
-            return QVariant(m_usedAddresses.value(currentIndex));
+            return QVariant(item->title());
         }
         case IsSelectedRole: {
-            return currentIndex == m_selectedIndex;
+            return QVariant();
+        }
+        case RouteRole: {
+            return QVariant(item->address());
+        }
+        case BaseUrlRole: {
+            return QVariant(item->baseUrl());
+        }
+        case FilterRole: {
+            return QVariant(item->filter());
         }
     }
 
@@ -63,23 +73,43 @@ QHash<int, QByteArray> OpenApiAddressesListModel::roleNames() const
         {
             IsSelectedRole,
             "isSelected"
+        },
+        {
+            RouteRole,
+            "route"
+        },
+        {
+            BaseUrlRole,
+            "baseUrl"
+        },
+        {
+            FilterRole,
+            "filter"
         }
     };
 
 }
 
-void OpenApiAddressesListModel::addAddress(const QString &address) noexcept
+void OpenApiAddressesListModel::addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept
 {
-    if (!m_usedAddresses.contains(address)) {
-        m_usedAddresses.append(address);
-    }
+    auto model = new OpenApiAddressModel();
+    model->setAddress(route);
+    model->setTitle(title);
+    model->setBaseUrl(baseUrl);
+    model->setFilter(filter);
+    m_usedAddresses->append(model);
 
-    selectItem(m_usedAddresses.indexOf(address));
+    emit addressesChanged();
+}
+
+QSharedPointer<QList<OpenApiAddressModel*>> OpenApiAddressesListModel::getAddresses() noexcept
+{
+    return m_usedAddresses;
 }
 
 void OpenApiAddressesListModel::selectItem(int index) noexcept
 {
-    if (index >= m_usedAddresses.count()) return;
+    if (index >= m_usedAddresses->count()) return;
 
     beginResetModel();
 
@@ -90,13 +120,13 @@ void OpenApiAddressesListModel::selectItem(int index) noexcept
 
 void OpenApiAddressesListModel::deleteItem(int index) noexcept
 {
-    if (index >= m_usedAddresses.count()) return;
+    if (index >= m_usedAddresses->count()) return;
 
     beginResetModel();
 
     if (m_selectedIndex == index) m_selectedIndex = 0;
 
-    m_usedAddresses.removeAt(index);
+    m_usedAddresses->removeAt(index);
 
     endResetModel();
 }

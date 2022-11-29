@@ -14,6 +14,7 @@ SOURCES += \
         Formatters/jsonformatter.cpp \
         Formatters/outputformatter.cpp \
         Formatters/xmlformatter.cpp \
+        ListModels/addressespalettelistmodel.cpp \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
         ListModels/notificationlistmodel.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
         ListModels/shortcutslistmodel.cpp \
         Models/httprequestitem.cpp \
         Models/httprequestmodel.cpp \
+        Models/openapiaddressmodel.cpp \
         Models/openapiparametermodel.cpp \
         Models/openapiresponsemodel.cpp \
         Models/openapiroutemodel.cpp \
@@ -59,6 +61,7 @@ HEADERS += \
     Formatters/jsonformatter.h \
     Formatters/outputformatter.h \
     Formatters/xmlformatter.h \
+    ListModels/addressespalettelistmodel.h \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
     ListModels/notificationlistmodel.h \
@@ -70,6 +73,7 @@ HEADERS += \
     ListModels/shortcutslistmodel.h \
     Models/httprequestitem.h \
     Models/httprequestmodel.h \
+    Models/openapiaddressmodel.h \
     Models/openapiparametermodel.h \
     Models/openapiresponsemodel.h \
     Models/openapiroutemodel.h \

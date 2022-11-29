@@ -13,44 +13,48 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef OPENAPIADDRESSESLISTMODEL_H
-#define OPENAPIADDRESSESLISTMODEL_H
+#ifndef ADDRESSESPALETTELISTMODEL_H
+#define ADDRESSESPALETTELISTMODEL_H
 
 #include <QAbstractListModel>
+#include <QUuid>
+#include <QList>
+#include <QMap>
 #include "../Models/openapiaddressmodel.h"
 
-class OpenApiAddressesListModel : public QAbstractListModel
+class AddressesPaletteListModel : public QAbstractListModel
 {
     Q_OBJECT
 
 private:
-    QSharedPointer<QList<OpenApiAddressModel*>> m_usedAddresses { new QList<OpenApiAddressModel*>() };
-    int m_selectedIndex { -1 };
-    enum OutputFormatRoles {
-        IdentfierRole = Qt::UserRole + 1,
+    QSharedPointer<QList<OpenApiAddressModel*>> m_addresses;
+    QMap<QUuid, OpenApiAddressModel*> m_addressesMap { QMap<QUuid, OpenApiAddressModel*>() };
+    QList<QUuid> m_history { QList<QUuid>() };
+    int m_selected { 0 };
+    enum AddressPaletterRoles {
+        IdentifierRole = Qt::UserRole + 1,
         TitleRole,
-        IsSelectedRole,
-        RouteRole,
-        BaseUrlRole,
-        FilterRole
+        IsSelectedRole
     };
 
 public:
-    explicit OpenApiAddressesListModel(QObject *parent = nullptr);
+    explicit AddressesPaletteListModel(QObject *parent = nullptr);
+
+    void setup(QSharedPointer<QList<OpenApiAddressModel*>> addresses);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept;
-    QSharedPointer<QList<OpenApiAddressModel*>> getAddresses() noexcept;
-
-    Q_INVOKABLE void selectItem(int index) noexcept;
-    Q_INVOKABLE void deleteItem(int index) noexcept;
+    void selectItem();
+    void selectNext();
+    void refresh(bool needRecreateHistory = false);
+    void recreateHistory();
+    OpenApiAddressModel* getSelectedAddressById(const QUuid& id);
 
 signals:
-    void addressesChanged();
+    void itemSelected(const QUuid& id);
 
 };
 
-#endif // OPENAPIADDRESSESLISTMODEL_H
+#endif // ADDRESSESPALETTELISTMODEL_H

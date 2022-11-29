@@ -115,6 +115,14 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     getOpenApiSchemeSection->setDescription("Load or reaload OpenAPI scheme from remote server");
     getOpenApiSchemeSection->addShortcut("Ctrl-Z or F5", "Load scheme");
     m_sections.append(getOpenApiSchemeSection);
+
+    auto addressesManagement = new ShortcutSection();
+    addressesManagement->setMode(m_openApiMode);
+    addressesManagement->setTitle("Addresses management");
+    addressesManagement->setDescription("Create an address and select it later");
+    addressesManagement->addShortcut("Ctrl-Insert", "Create a new address from the currently filled fields");
+    addressesManagement->addShortcut("Ctrl-Tab", "holding Ctrl and further pressing Tab change opening query");
+    m_sections.append(addressesManagement);
 }
 
 int ShortcutsListModel::rowCount(const QModelIndex &parent) const

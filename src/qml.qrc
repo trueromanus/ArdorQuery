@@ -37,5 +37,6 @@
         <file>Views/Images/backgroundpattern.png</file>
         <file>Views/OpenApiExportWindow.qml</file>
         <file>Views/Controls/CommonTextField.qml</file>
+        <file>Views/Controls/AddressesPalette.qml</file>
     </qresource>
 </RCC>

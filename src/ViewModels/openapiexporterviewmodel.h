@@ -24,6 +24,7 @@
 #include "../Models/openapiroutemodel.h"
 #include "../Models/openapiparametermodel.h"
 #include "../ListModels/openapirouteslistmodel.h"
+#include "../ListModels/addressespalettelistmodel.h"
 
 class OpenApiExporterViewModel : public QObject
 {
@@ -35,16 +36,22 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(OpenApiRoutesListModel* routeList READ routeList NOTIFY routeListChanged)
     Q_PROPERTY(QString baseUrl READ baseUrl WRITE setBaseUrl NOTIFY baseUrlChanged)
     Q_PROPERTY(bool helpVisible READ helpVisible WRITE setHelpVisible NOTIFY helpVisibleChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette WRITE setOpenedCommandPalette NOTIFY openedCommandPaletteChanged)
+    Q_PROPERTY(AddressesPaletteListModel* addressPalette READ addressPalette NOTIFY addressPaletteChanged)
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
     QMap<QString, QList<OpenApiRouteModel*>> m_routes { QMap<QString, QList<OpenApiRouteModel*>>() };
     OpenApiRoutesListModel* m_routeList { new OpenApiRoutesListModel(this) };
+    AddressesPaletteListModel* m_addressPalette { new AddressesPaletteListModel(this) };
     QString m_url { "" };
     QNetworkAccessManager* m_networkManager { new QNetworkAccessManager(this) };
     QString m_baseUrl { "" };
+    QString m_title { "" };
     bool m_loading { false };
     bool m_helpVisible { false };
+    bool m_openedCommandPalette { false };
     const QString IntegerType { "integer" };
     const QString DoubleType { "number" };
     const QString StringType { "string" };
@@ -64,6 +71,8 @@ public:
 
     OpenApiRoutesListModel* routeList() const noexcept { return m_routeList; }
 
+    AddressesPaletteListModel* addressPalette() const noexcept { return m_addressPalette; }
+
     QString url() const noexcept { return m_url; }
 
     bool loading() const noexcept { return m_loading; }
@@ -76,12 +85,19 @@ public:
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(bool helpVisible) noexcept;
 
+    QString title () const noexcept { return m_title; }
+    void setTitle(const QString& title) noexcept;
+
+    bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
+    void setOpenedCommandPalette(bool openedCommandPalette) noexcept;
+
     OpenApiRouteModel* getRouteFromOpenApiByIndex(int index) const noexcept;
 
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
     Q_INVOKABLE void keysReleased(int key) noexcept;
+    Q_INVOKABLE void addCurrentToAddresses() noexcept;
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;
@@ -91,6 +107,8 @@ private:
 
 private slots:
     void requestFinished(QNetworkReply *reply);
+    void addressListChanged();
+    void addressItemSelected(const QUuid& id);
 
 signals:
     void addressesChanged();
@@ -100,6 +118,9 @@ signals:
     void routeListChanged();
     void baseUrlChanged();
     void helpVisibleChanged();
+    void titleChanged();
+    void openedCommandPaletteChanged();
+    void addressPaletteChanged();
 
 };
 
