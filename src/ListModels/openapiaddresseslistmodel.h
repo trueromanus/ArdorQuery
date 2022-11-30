@@ -22,6 +22,7 @@
 class OpenApiAddressesListModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(bool hasItems READ hasItems NOTIFY hasItemsChanged)
 
 private:
     QSharedPointer<QList<OpenApiAddressModel*>> m_usedAddresses { new QList<OpenApiAddressModel*>() };
@@ -45,11 +46,14 @@ public:
     void addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept;
     QSharedPointer<QList<OpenApiAddressModel*>> getAddresses() noexcept;
 
+    bool hasItems() const noexcept { return !m_usedAddresses->isEmpty(); }
+
     Q_INVOKABLE void selectItem(int index) noexcept;
     Q_INVOKABLE void deleteItem(int index) noexcept;
 
 signals:
     void addressesChanged();
+    void hasItemsChanged();
 
 };
 

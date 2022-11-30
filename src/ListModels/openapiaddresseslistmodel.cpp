@@ -80,7 +80,7 @@ QHash<int, QByteArray> OpenApiAddressesListModel::roleNames() const
         },
         {
             BaseUrlRole,
-            "baseUrl"
+            "baseRoute"
         },
         {
             FilterRole,
@@ -92,6 +92,8 @@ QHash<int, QByteArray> OpenApiAddressesListModel::roleNames() const
 
 void OpenApiAddressesListModel::addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept
 {
+    beginResetModel();
+
     auto model = new OpenApiAddressModel();
     model->setAddress(route);
     model->setTitle(title);
@@ -99,7 +101,10 @@ void OpenApiAddressesListModel::addAddress(const QString& title, const QString& 
     model->setFilter(filter);
     m_usedAddresses->append(model);
 
+    endResetModel();
+
     emit addressesChanged();
+    emit hasItemsChanged();
 }
 
 QSharedPointer<QList<OpenApiAddressModel*>> OpenApiAddressesListModel::getAddresses() noexcept
@@ -129,4 +134,6 @@ void OpenApiAddressesListModel::deleteItem(int index) noexcept
     m_usedAddresses->removeAt(index);
 
     endResetModel();
+
+    emit hasItemsChanged();
 }

@@ -24,6 +24,9 @@ OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
 {
     m_addressPalette->setup(m_addresses->getAddresses());
 
+    m_tabs.append(Exporter);
+    m_tabs.append(SavedOptions);
+
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &OpenApiExporterViewModel::requestFinished);
     connect(m_addresses, &OpenApiAddressesListModel::addressesChanged, this, &OpenApiExporterViewModel::addressListChanged);
     connect(m_addressPalette, &AddressesPaletteListModel::itemSelected, this, &OpenApiExporterViewModel::addressItemSelected);
@@ -64,6 +67,16 @@ void OpenApiExporterViewModel::setOpenedCommandPalette(bool openedCommandPalette
 OpenApiRouteModel *OpenApiExporterViewModel::getRouteFromOpenApiByIndex(int index) const noexcept
 {
     return m_routeList->getRouteByIndex(index);
+}
+
+void OpenApiExporterViewModel::setSelectedTab(const QString &selectedTab) noexcept
+{
+    if (m_selectedTab == selectedTab) return;
+
+    m_selectedTab = selectedTab;
+    emit selectedTabChanged();
+    emit exporterPageChanged();
+    emit savedOptionsPageChanged();
 }
 
 void OpenApiExporterViewModel::loadOpenApiScheme() noexcept

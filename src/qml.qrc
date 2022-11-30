@@ -38,5 +38,6 @@
         <file>Views/OpenApiExportWindow.qml</file>
         <file>Views/Controls/CommonTextField.qml</file>
         <file>Views/Controls/AddressesPalette.qml</file>
+        <file>Views/Controls/OpenApiWindowHeader.qml</file>
     </qresource>
 </RCC>

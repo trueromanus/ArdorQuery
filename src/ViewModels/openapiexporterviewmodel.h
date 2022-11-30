@@ -39,6 +39,10 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette WRITE setOpenedCommandPalette NOTIFY openedCommandPaletteChanged)
     Q_PROPERTY(AddressesPaletteListModel* addressPalette READ addressPalette NOTIFY addressPaletteChanged)
+    Q_PROPERTY(QStringList tabs READ tabs NOTIFY tabsChanged)
+    Q_PROPERTY(QString selectedTab READ selectedTab WRITE setSelectedTab NOTIFY selectedTabChanged)
+    Q_PROPERTY(bool exporterPage READ exporterPage NOTIFY exporterPageChanged)
+    Q_PROPERTY(bool savedOptionsPage READ savedOptionsPage NOTIFY savedOptionsPageChanged)
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
@@ -51,6 +55,7 @@ private:
     QString m_title { "" };
     bool m_loading { false };
     bool m_helpVisible { false };
+    QStringList m_tabs { QStringList() };
     bool m_openedCommandPalette { false };
     const QString IntegerType { "integer" };
     const QString DoubleType { "number" };
@@ -63,6 +68,9 @@ private:
     const QString HeaderIn { "header" };
     const QString PathIn { "path" };
     const QString CookieIn { "cookie" };
+    const QString Exporter { "Exporter" };
+    const QString SavedOptions { "Saved options" };
+    QString m_selectedTab { Exporter };
 
 public:
     explicit OpenApiExporterViewModel(QObject *parent = nullptr);
@@ -93,6 +101,14 @@ public:
 
     OpenApiRouteModel* getRouteFromOpenApiByIndex(int index) const noexcept;
 
+    QStringList tabs() const noexcept { return m_tabs; }
+
+    QString selectedTab() const noexcept { return m_selectedTab; }
+    void setSelectedTab(const QString& selectedTab) noexcept;
+
+    bool exporterPage() const noexcept { return m_selectedTab == Exporter; }
+    bool savedOptionsPage() const noexcept { return m_selectedTab == SavedOptions; }
+
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
@@ -121,6 +137,10 @@ signals:
     void titleChanged();
     void openedCommandPaletteChanged();
     void addressPaletteChanged();
+    void tabsChanged();
+    void selectedTabChanged();
+    void exporterPageChanged();
+    void savedOptionsPageChanged();
 
 };
 

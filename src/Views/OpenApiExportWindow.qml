@@ -16,17 +16,17 @@ ApplicationWindow {
     title: "Export from OpenAPI"
     background: Rectangle {
         anchors.fill: parent
-        color: "#f2f2f2"
+        color: "white"
     }
     header: Item {
         id: headerContainer
         height: 30
         width: root.width
 
-        Rectangle {
-            opacity: .2
-            color: "#f2f2f2"
-            anchors.fill: parent
+        OpenApiWindowHeader {
+            id: windowHeader
+            anchors.left: parent.left
+            anchors.top: parent.top
         }
 
         IconButton {
@@ -45,312 +45,408 @@ ApplicationWindow {
         }
     }
 
-    RowLayout {
-        id: addressLine
-        width: parent.width
-        height: 40
-        spacing: 2
+    Item {
+        anchors.fill: parent
+        visible: backend.openApiExporter.exporterPage
 
-        Item {
-            Layout.preferredWidth: 100
-            Layout.fillHeight: true
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 8
-                font.pixelSize: 14
-                text: "Scheme URL"
-            }
+        Rectangle {
+            anchors.fill: parent
+            color: "#f2f2f2"
         }
 
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            CommonTextField {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                anchors.left: parent.left
-                focus: true
-                text: backend.openApiExporter.url
-                onTextChanged: {
-                    backend.openApiExporter.setUrl(text);
-                }
-                Keys.onPressed: (event) => {
-                    const needAccepted = backend.openApiExporter.keysHandler(
-                        event.key,
-                        event.nativeScanCode,
-                        (event.modifiers & Qt.ControlModifier),
-                        (event.modifiers & Qt.ShiftModifier),
-                        (event.modifiers & Qt.AltModifier)
-                    );
-                    if (needAccepted) event.accepted = true;
-                }
-                Keys.onReleased: (event) => {
-                    backend.openApiExporter.keysReleased(event.key);
-                }
-            }
-        }
-    }
-
-    RowLayout {
-        id: baseUrlLine
-        width: parent.width
-        height: 40
-        anchors.top: addressLine.bottom
-        spacing: 2
-
-        Item {
-            Layout.preferredWidth: 100
-            Layout.fillHeight: true
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 8
-                font.pixelSize: 14
-                text: "Base URL"
-            }
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            CommonTextField {
-                id: baseUrlTextField
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                anchors.left: parent.left
-                text: backend.openApiExporter.baseUrl
-                onTextChanged: {
-                    backend.openApiExporter.baseUrl = text;
-                }
-                Keys.onPressed: (event) => {
-                    const needAccepted = backend.openApiExporter.keysHandler(
-                        event.key,
-                        event.nativeScanCode,
-                        (event.modifiers & Qt.ControlModifier),
-                        (event.modifiers & Qt.ShiftModifier),
-                        (event.modifiers & Qt.AltModifier)
-                    );
-                    if (needAccepted) event.accepted = true;
-                }
-                Keys.onReleased: (event) => {
-                    backend.openApiExporter.keysReleased(event.key);
-                }
-            }
-        }
-    }
-
-    RowLayout {
-        id: filterLine
-        width: parent.width
-        height: 40
-        anchors.top: baseUrlLine.bottom
-        spacing: 2
-
-        Item {
-            Layout.preferredWidth: 100
-            Layout.fillHeight: true
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 8
-                font.pixelSize: 14
-                text: "Filter"
-            }
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            CommonTextField {
-                id: filterTextField
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                anchors.left: parent.left
-                enabled: backend.openApiExporter.routeList
-                text: backend.openApiExporter.routeList.filter
-                onTextChanged: {
-                    backend.openApiExporter.routeList.filter = text;
-                }
-                Keys.onPressed: (event) => {
-                    const needAccepted = backend.openApiExporter.keysHandler(
-                        event.key,
-                        event.nativeScanCode,
-                        (event.modifiers & Qt.ControlModifier),
-                        (event.modifiers & Qt.ShiftModifier),
-                        (event.modifiers & Qt.AltModifier)
-                    );
-                    if (needAccepted) event.accepted = true;
-                }
-                Keys.onReleased: (event) => {
-                    backend.openApiExporter.keysReleased(event.key);
-                }
-            }
-        }
-    }
-
-    RowLayout {
-        id: titleLine
-        width: parent.width
-        height: 40
-        anchors.top: filterLine.bottom
-        spacing: 2
-
-        Item {
-            Layout.preferredWidth: 100
-            Layout.fillHeight: true
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 8
-                font.pixelSize: 14
-                text: "Title"
-            }
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            CommonTextField {
-                id: titleTextField
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                anchors.left: parent.left
-                text: backend.openApiExporter.title
-                onTextChanged: {
-                    backend.openApiExporter.title = text;
-                }
-                Keys.onPressed: (event) => {
-                    const needAccepted = backend.openApiExporter.keysHandler(
-                        event.key,
-                        event.nativeScanCode,
-                        (event.modifiers & Qt.ControlModifier),
-                        (event.modifiers & Qt.ShiftModifier),
-                        (event.modifiers & Qt.AltModifier)
-                    );
-                    if (needAccepted) event.accepted = true;
-                }
-                Keys.onReleased: (event) => {
-                    backend.openApiExporter.keysReleased(event.key);
-                }
-            }
-        }
-    }
-
-    ListView {
-        id: routesListView
-        anchors.top: titleLine.bottom
-        anchors.bottom: parent.bottom
-        width: parent.width
-        spacing: 2
-        clip: true
-        model: backend.openApiExporter.routeList
-        delegate: Item {
-            width: routesListView.width
+        RowLayout {
+            id: addressLine
+            width: parent.width
             height: 40
+            spacing: 2
 
-            Rectangle {
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                anchors.rightMargin: 2
-                color: "white"
-                border.color: methodColor
-                border.width: 1
-                radius: 8
-            }
-
-            Rectangle {
-                id: methodText
-                anchors.left: parent.left
-                anchors.leftMargin: 6
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                anchors.top: parent.top
-                anchors.topMargin: 5
-                width: 70
-                radius: 8
-                color: methodColor
+            Item {
+                Layout.preferredWidth: 100
+                Layout.fillHeight: true
 
                 Text {
-                    anchors.centerIn: parent
-                    color: "white"
-                    font.pointSize: 10
-                    font.bold: true
-                    text: method
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    font.pixelSize: 14
+                    text: "Scheme URL"
                 }
+            }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: {
-                        backend.importFromOpenApi(identifier);
-                        root.close();
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                CommonTextField {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    focus: true
+                    text: backend.openApiExporter.url
+                    onTextChanged: {
+                        backend.openApiExporter.setUrl(text);
+                    }
+                    Keys.onPressed: (event) => {
+                        const needAccepted = backend.openApiExporter.keysHandler(
+                            event.key,
+                            event.nativeScanCode,
+                            (event.modifiers & Qt.ControlModifier),
+                            (event.modifiers & Qt.ShiftModifier),
+                            (event.modifiers & Qt.AltModifier)
+                        );
+                        if (needAccepted) event.accepted = true;
+                    }
+                    Keys.onReleased: (event) => {
+                        backend.openApiExporter.keysReleased(event.key);
                     }
                 }
             }
+        }
 
-            Text {
-                anchors.left: methodText.right
-                anchors.leftMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width - methodText.width - 30
-                height: parent.height
-                text: route + " <b>" + description + "</b>"
-                verticalAlignment: Text.AlignVCenter
-                maximumLineCount: 1
-                elide: Text.ElideRight
-                wrapMode: Text.NoWrap
-                font.pointSize: 10
+        RowLayout {
+            id: baseUrlLine
+            width: parent.width
+            height: 40
+            anchors.top: addressLine.bottom
+            spacing: 2
+
+            Item {
+                Layout.preferredWidth: 100
+                Layout.fillHeight: true
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    font.pixelSize: 14
+                    text: "Base URL"
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                CommonTextField {
+                    id: baseUrlTextField
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    text: backend.openApiExporter.baseUrl
+                    onTextChanged: {
+                        backend.openApiExporter.baseUrl = text;
+                    }
+                    Keys.onPressed: (event) => {
+                        const needAccepted = backend.openApiExporter.keysHandler(
+                            event.key,
+                            event.nativeScanCode,
+                            (event.modifiers & Qt.ControlModifier),
+                            (event.modifiers & Qt.ShiftModifier),
+                            (event.modifiers & Qt.AltModifier)
+                        );
+                        if (needAccepted) event.accepted = true;
+                    }
+                    Keys.onReleased: (event) => {
+                        backend.openApiExporter.keysReleased(event.key);
+                    }
+                }
             }
         }
-        ScrollBar.vertical: ScrollBar {
-            active: true
-            visible: true
+
+        RowLayout {
+            id: filterLine
+            width: parent.width
+            height: 40
+            anchors.top: baseUrlLine.bottom
+            spacing: 2
+
+            Item {
+                Layout.preferredWidth: 100
+                Layout.fillHeight: true
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    font.pixelSize: 14
+                    text: "Filter"
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                CommonTextField {
+                    id: filterTextField
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    enabled: backend.openApiExporter.routeList
+                    text: backend.openApiExporter.routeList.filter
+                    onTextChanged: {
+                        backend.openApiExporter.routeList.filter = text;
+                    }
+                    Keys.onPressed: (event) => {
+                        const needAccepted = backend.openApiExporter.keysHandler(
+                            event.key,
+                            event.nativeScanCode,
+                            (event.modifiers & Qt.ControlModifier),
+                            (event.modifiers & Qt.ShiftModifier),
+                            (event.modifiers & Qt.AltModifier)
+                        );
+                        if (needAccepted) event.accepted = true;
+                    }
+                    Keys.onReleased: (event) => {
+                        backend.openApiExporter.keysReleased(event.key);
+                    }
+                }
+            }
+        }
+
+        RowLayout {
+            id: titleLine
+            width: parent.width
+            height: 40
+            anchors.top: filterLine.bottom
+            spacing: 2
+
+            Item {
+                Layout.preferredWidth: 100
+                Layout.fillHeight: true
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    font.pixelSize: 14
+                    text: "Title"
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                CommonTextField {
+                    id: titleTextField
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    text: backend.openApiExporter.title
+                    onTextChanged: {
+                        backend.openApiExporter.title = text;
+                    }
+                    Keys.onPressed: (event) => {
+                        const needAccepted = backend.openApiExporter.keysHandler(
+                            event.key,
+                            event.nativeScanCode,
+                            (event.modifiers & Qt.ControlModifier),
+                            (event.modifiers & Qt.ShiftModifier),
+                            (event.modifiers & Qt.AltModifier)
+                        );
+                        if (needAccepted) event.accepted = true;
+                    }
+                    Keys.onReleased: (event) => {
+                        backend.openApiExporter.keysReleased(event.key);
+                    }
+                }
+            }
+        }
+
+        ListView {
+            id: routesListView
+            anchors.top: titleLine.bottom
+            anchors.bottom: parent.bottom
+            width: parent.width
+            spacing: 2
+            clip: true
+            model: backend.openApiExporter.routeList
+            delegate: Item {
+                width: routesListView.width
+                height: 40
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    anchors.rightMargin: 2
+                    color: "white"
+                    border.color: methodColor
+                    border.width: 1
+                    radius: 8
+                }
+
+                Rectangle {
+                    id: methodText
+                    anchors.left: parent.left
+                    anchors.leftMargin: 6
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 5
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+                    width: 70
+                    radius: 8
+                    color: methodColor
+
+                    Text {
+                        anchors.centerIn: parent
+                        color: "white"
+                        font.pointSize: 10
+                        font.bold: true
+                        text: method
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onPressed: {
+                            backend.importFromOpenApi(identifier);
+                            root.close();
+                        }
+                    }
+                }
+
+                Text {
+                    anchors.left: methodText.right
+                    anchors.leftMargin: 8
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - methodText.width - 30
+                    height: parent.height
+                    text: route + " <b>" + description + "</b>"
+                    verticalAlignment: Text.AlignVCenter
+                    maximumLineCount: 1
+                    elide: Text.ElideRight
+                    wrapMode: Text.NoWrap
+                    font.pointSize: 10
+                }
+            }
+            ScrollBar.vertical: ScrollBar {
+                active: true
+                visible: true
+            }
+        }
+
+        Item {
+            id: spinnerContainer
+            anchors.fill: parent
+            visible: backend.openApiExporter.loading
+
+            Rectangle {
+                anchors.fill: parent
+                color: "lightgray"
+                opacity: .5
+            }
+
+            Image {
+                id: image
+                anchors.centerIn: parent
+                source: storagePaths.icons + "spinner.svg"
+                width: 40
+                height: 40
+                mipmap: true
+                RotationAnimation on rotation {
+                    loops: Animation.Infinite
+                    from: 0
+                    to: 360
+                    running: spinnerContainer.visible
+                    duration: 1500
+                }
+            }
+
+            MouseArea {
+                enabled: spinnerContainer.visible
+                propagateComposedEvents: false
+                anchors.fill: parent
+            }
         }
     }
 
     Item {
-        id: spinnerContainer
         anchors.fill: parent
-        visible: backend.openApiExporter.loading
+        visible: backend.openApiExporter.savedOptionsPage
 
         Rectangle {
             anchors.fill: parent
-            color: "lightgray"
-            opacity: .5
+            color: "#f2f2f2"
         }
 
-        Image {
-            id: image
-            anchors.centerIn: parent
-            source: storagePaths.icons + "spinner.svg"
-            width: 40
-            height: 40
-            mipmap: true
-            RotationAnimation on rotation {
-                loops: Animation.Infinite
-                from: 0
-                to: 360
-                running: spinnerContainer.visible
-                duration: 1500
+        ListView {
+            id: optionsListView
+            anchors.fill: parent
+            model: backend.openApiExporter.addresses
+            delegate: Item {
+                width: optionsListView.width
+                height: 60
+
+                Rectangle {
+                    color: "#CDCDB4"
+                    radius: 4
+                    anchors.fill: parent
+                    anchors.margins: 2
+                }
+
+                Text {
+                    id: titleText
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    anchors.top: parent.top
+                    anchors.topMargin: 6
+                    width: parent.width - 10
+                    height: 15
+                    text: title
+                    font.pointSize: 10.5
+                    maximumLineCount: 1
+                    wrapMode: Text.NoWrap
+                    elide: Text.ElideRight
+                }
+                Text {
+                    id: routeText
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    anchors.top: titleText.bottom
+                    width: parent.width - 10
+                    height: 15
+                    text: route
+                    font.pointSize: 9
+                    maximumLineCount: 1
+                    wrapMode: Text.NoWrap
+                    elide: Text.ElideRight
+                }
+                Text {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    anchors.top: routeText.bottom
+                    width: parent.width - 10
+                    height: 15
+                    text: baseRoute
+                    font.pointSize: 9
+                    maximumLineCount: 1
+                    wrapMode: Text.NoWrap
+                    elide: Text.ElideRight
+                }
             }
         }
 
-        MouseArea {
-            enabled: spinnerContainer.visible
-            propagateComposedEvents: false
+        Item {
+            visible: !backend.openApiExporter.addresses.hasItems
             anchors.fill: parent
+
+            Image {
+                id: emptyBoxImage
+                anchors.centerIn: parent
+                width: 60
+                height: 60
+                source: storagePaths.icons + "emptybox.svg"
+            }
+            Text {
+                anchors.top: emptyBoxImage.bottom
+                anchors.horizontalCenter: emptyBoxImage.horizontalCenter
+                font.pointSize: 10
+                text: "You don't have any saved options yet"
+            }
         }
     }
 
