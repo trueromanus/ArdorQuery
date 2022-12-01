@@ -299,14 +299,6 @@ ApplicationWindow {
                         font.bold: true
                         text: method
                     }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onPressed: {
-                            backend.importFromOpenApi(identifier);
-                            root.close();
-                        }
-                    }
                 }
 
                 Text {
@@ -321,6 +313,14 @@ ApplicationWindow {
                     elide: Text.ElideRight
                     wrapMode: Text.NoWrap
                     font.pointSize: 10
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: {
+                        backend.importFromOpenApi(identifier);
+                        root.close();
+                    }
                 }
             }
             ScrollBar.vertical: ScrollBar {
