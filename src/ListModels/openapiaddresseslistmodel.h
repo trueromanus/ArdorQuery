@@ -27,6 +27,11 @@ class OpenApiAddressesListModel : public QAbstractListModel
 private:
     QSharedPointer<QList<OpenApiAddressModel*>> m_usedAddresses { new QList<OpenApiAddressModel*>() };
     int m_selectedIndex { -1 };
+    QString m_savedOptionsFile { "saveoptions" };
+    const QString m_addressField { "address" };
+    const QString m_baseUrlField { "baseUrl" };
+    const QString m_filterField { "filter" };
+    const QString m_titleField { "title" };
     enum OutputFormatRoles {
         IdentfierRole = Qt::UserRole + 1,
         TitleRole,
@@ -50,6 +55,11 @@ public:
 
     Q_INVOKABLE void selectItem(int index) noexcept;
     Q_INVOKABLE void deleteItem(int index) noexcept;
+    Q_INVOKABLE void saveSavedOptions() noexcept;
+
+private:
+    void readCache();
+    void writeCache();
 
 signals:
     void addressesChanged();

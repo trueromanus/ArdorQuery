@@ -39,3 +39,5 @@ extern QString OutputFormatJson;
 extern QString OutputFormatHtml;
 extern QString OutputFormatXml;
 extern QString OutputFormatImage;
+
+extern bool IsPortable;

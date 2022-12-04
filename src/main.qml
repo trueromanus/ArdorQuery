@@ -106,6 +106,9 @@ ApplicationWindow {
             onNeedOpenApiExportWindow: {
                 openApiExportWindow.show();
             }
+            Component.onDestruction: {
+                backend.openApiExporter.addresses.saveSavedOptions();
+            }
         }
 
         Connections {

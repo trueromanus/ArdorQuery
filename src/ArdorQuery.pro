@@ -40,6 +40,7 @@ SOURCES += \
         ViewModels/requestexternalviewmodel.cpp \
         ViewModels/textadvisorviewmodel.cpp \
         globalconstants.cpp \
+        globalhelpers.cpp \
         main.cpp
 # Adding tests for debug
 CONFIG(debug, debug|release) {
@@ -87,7 +88,8 @@ HEADERS += \
     ViewModels/requestexternalviewmodel.h \
     ViewModels/textadvisorviewmodel.h \
     globalconstants.h \
-    globalenums.h
+    globalenums.h \
+    globalhelpers.h
 
 # Adding tests for debug
 CONFIG(debug, debug|release) {

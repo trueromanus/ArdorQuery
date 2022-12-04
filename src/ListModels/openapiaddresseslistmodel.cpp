@@ -13,12 +13,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "openapiaddresseslistmodel.h"
+#include "../globalhelpers.h"
 
 OpenApiAddressesListModel::OpenApiAddressesListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-
+   m_savedOptionsFile = getCachePath(m_savedOptionsFile);
+   createIfNotExistsFile(m_savedOptionsFile, "[]");
+   readCache();
 }
 
 int OpenApiAddressesListModel::rowCount(const QModelIndex &parent) const
@@ -136,4 +142,59 @@ void OpenApiAddressesListModel::deleteItem(int index) noexcept
     endResetModel();
 
     emit hasItemsChanged();
+}
+
+void OpenApiAddressesListModel::saveSavedOptions() noexcept
+{
+    writeCache();
+}
+
+void OpenApiAddressesListModel::readCache()
+{
+    auto file = QFile(m_savedOptionsFile);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
+
+    auto content = file.readAll();
+
+    file.close();
+
+    auto document = QJsonDocument::fromJson(content);
+    auto items = document.array();
+    foreach (auto item, items) {
+        if (!item.isObject()) continue;
+
+        auto addressObject = item.toObject();
+        if (!addressObject.contains(m_addressField)) continue;
+
+        auto model = new OpenApiAddressModel();
+        model->setAddress(addressObject[m_addressField].toString());
+        if (addressObject.contains(m_baseUrlField)) model->setBaseUrl(addressObject[m_baseUrlField].toString());
+        if (addressObject.contains(m_filterField)) model->setFilter(addressObject[m_filterField].toString());
+        if (addressObject.contains(m_titleField)) model->setTitle(addressObject[m_titleField].toString());
+
+        m_usedAddresses->append(model);
+    }
+}
+
+void OpenApiAddressesListModel::writeCache()
+{
+    QJsonArray items;
+    foreach (auto usedAddress, *m_usedAddresses) {
+        QJsonObject jsonObject;
+        jsonObject[m_titleField] = usedAddress->title();
+        jsonObject[m_addressField] = usedAddress->address();
+        jsonObject[m_filterField] = usedAddress->filter();
+        jsonObject[m_baseUrlField] = usedAddress->baseUrl();
+
+        items.append(jsonObject);
+    }
+
+    QJsonDocument document(items);
+    auto json = document.toJson();
+
+    QFile file(m_savedOptionsFile);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+
+    file.write(json);
+    file.close();
 }

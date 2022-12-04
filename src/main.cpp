@@ -34,7 +34,10 @@
 
 
 void registerQmlTypes();
+void adjustmentLocalStorage();
+#ifdef QT_DEBUG
 void runTest(int argc, char *argv[]);
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -56,6 +59,12 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Universal");
 
     registerQmlTypes();
+
+    QCoreApplication::setOrganizationDomain("emptyflowapps.com");
+    QCoreApplication::setOrganizationName("EmptyFlow");
+    QCoreApplication::setApplicationName("ArdorQuery");
+
+    adjustmentLocalStorage();
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
@@ -86,6 +95,17 @@ void registerQmlTypes() {
     qmlRegisterType<OpenApiAddressesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiAddressesListModel");
     qmlRegisterType<OpenApiRoutesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiRoutesListModel");
 }
+
+void adjustmentLocalStorage() {
+    if (IsPortable) {
+        auto cachePath = QDir::currentPath();
+        qDebug() << "Portable Cache location: " << cachePath;
+    } else {
+        QDir().mkpath(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+        qDebug() << "Cache location: " << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    }
+}
+
 #ifdef QT_DEBUG
 void runTest(int argc, char *argv[]) {
     QTest::qExec(new JsonFormatterUnitTests, argc - 1, argv);
