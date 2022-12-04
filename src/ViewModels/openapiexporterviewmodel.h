@@ -114,6 +114,7 @@ public:
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
     Q_INVOKABLE void keysReleased(int key) noexcept;
     Q_INVOKABLE void addCurrentToAddresses() noexcept;
+    Q_INVOKABLE void togglePages() noexcept;
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;

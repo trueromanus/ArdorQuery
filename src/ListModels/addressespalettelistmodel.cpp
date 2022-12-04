@@ -94,6 +94,21 @@ void AddressesPaletteListModel::selectNext()
     refresh();
 }
 
+void AddressesPaletteListModel::selectItemByAddressIndex(int index)
+{
+    auto address = m_addresses->value(index);
+    QMapIterator mapIterator(m_addressesMap);
+    QUuid key;
+    while (mapIterator.hasNext()) {
+        mapIterator.next();
+
+        if (mapIterator.value() == address) key = mapIterator.key();
+    }
+    m_selected = m_history.indexOf(key);
+
+    selectItem();
+}
+
 void AddressesPaletteListModel::refresh(bool needRecreateHistory)
 {
     beginResetModel();

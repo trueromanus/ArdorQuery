@@ -117,26 +117,24 @@ void OpenApiRoutesListModel::refresh()
 
     if (m_filter.isEmpty() && m_orderField.isEmpty()) {
         m_filteredRoutes.append(m_allRoutes);
-        endResetModel();
-        return;
-    }
+    } else {
+        if (!m_filter.isEmpty()) {
+            auto iterator = 0;
+            foreach (auto route, m_allRoutes) {
+                auto words = m_filter.toLower().split(" ", Qt::SkipEmptyParts);
+                auto needAdd = true;
 
-    if (!m_filter.isEmpty()) {
-        auto iterator = 0;
-        foreach (auto route, m_allRoutes) {
-            auto words = m_filter.toLower().split(" ", Qt::SkipEmptyParts);
-            auto needAdd = true;
+                foreach (auto word, words) {
+                    auto isRoute = route->path().toLower().contains(word);
+                    auto isMethod = route->method().toLower().contains(word);
+                    auto isDescription = route->summary().toLower().contains(word);
+                    if (!isRoute && !isMethod && !isDescription) needAdd = false;
+                }
 
-            foreach (auto word, words) {
-                auto isRoute = route->path().toLower().contains(word);
-                auto isMethod = route->method().toLower().contains(word);
-                auto isDescription = route->summary().toLower().contains(word);
-                if (!isRoute && !isMethod && !isDescription) needAdd = false;
-            }
-
-            if (needAdd) {
-                m_filteredRoutes.append(route);
-                m_filteredIds.append(iterator);
+                if (needAdd) {
+                    m_filteredRoutes.append(route);
+                    m_filteredIds.append(iterator);
+                }
             }
         }
     }

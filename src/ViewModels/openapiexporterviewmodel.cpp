@@ -164,6 +164,15 @@ void OpenApiExporterViewModel::addCurrentToAddresses() noexcept
     m_addresses->addAddress(m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter());
 }
 
+void OpenApiExporterViewModel::togglePages() noexcept
+{
+    if (m_selectedTab == Exporter) {
+        setSelectedTab(SavedOptions);
+    } else {
+        setSelectedTab(Exporter);
+    }
+}
+
 void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexcept
 {
     auto document = QJsonDocument::fromJson(json.toUtf8());

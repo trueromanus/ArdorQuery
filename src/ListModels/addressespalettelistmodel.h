@@ -48,6 +48,7 @@ public:
 
     void selectItem();
     void selectNext();
+    Q_INVOKABLE void selectItemByAddressIndex(int index);
     void refresh(bool needRecreateHistory = false);
     void recreateHistory();
     OpenApiAddressModel* getSelectedAddressById(const QUuid& id);

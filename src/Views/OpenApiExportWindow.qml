@@ -330,6 +330,35 @@ ApplicationWindow {
         }
 
         Item {
+            visible: !backend.openApiExporter.routeList.hasItems
+            width: routesListView.width
+            height: routesListView.height
+            anchors.top: routesListView.top
+
+            Item {
+                anchors.centerIn: parent
+                width: 200
+                height: routesEmptyBoxImage.height + routesEmptyText.height
+
+                Image {
+                    id: routesEmptyBoxImage
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: 60
+                    height: 60
+                    source: storagePaths.icons + "emptybox.svg"
+                }
+                Text {
+                    id: routesEmptyText
+                    anchors.top: routesEmptyBoxImage.bottom
+                    anchors.horizontalCenter: routesEmptyBoxImage.horizontalCenter
+                    font.pointSize: 10
+                    text: "Routes not loaded yet"
+                }
+            }
+        }
+
+        Item {
             id: spinnerContainer
             anchors.fill: parent
             visible: backend.openApiExporter.loading
@@ -384,6 +413,7 @@ ApplicationWindow {
                 Rectangle {
                     color: "#CDCDB4"
                     radius: 4
+                    opacity: .5
                     anchors.fill: parent
                     anchors.margins: 2
                 }
@@ -426,6 +456,31 @@ ApplicationWindow {
                     maximumLineCount: 1
                     wrapMode: Text.NoWrap
                     elide: Text.ElideRight
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: {
+                        if (backend.openApiExporter.loading) return;
+
+                        backend.openApiExporter.addressPalette.selectItemByAddressIndex(identifier);
+                        backend.openApiExporter.togglePages();
+                    }
+                }
+
+                IconButton {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 24
+                    height: 24
+                    icon: storagePaths.icons + "delete.svg"
+                    iconWidth: 20
+                    iconHeight: 20
+                    tooltipMessage: "Delete saved option"
+                    onPressed: {
+                        backend.openApiExporter.addresses.deleteItem(identifier);
+                    }
                 }
             }
         }

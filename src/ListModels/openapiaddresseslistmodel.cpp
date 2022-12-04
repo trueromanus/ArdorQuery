@@ -141,6 +141,7 @@ void OpenApiAddressesListModel::deleteItem(int index) noexcept
 
     endResetModel();
 
+    emit addressesChanged();
     emit hasItemsChanged();
 }
 

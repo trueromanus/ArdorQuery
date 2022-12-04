@@ -25,6 +25,7 @@
 #include "QuickControls/backendimage.h"
 #include "ListModels/openapiaddresseslistmodel.h"
 #include "ViewModels/openapiexporterviewmodel.h"
+#include "ListModels/addressespalettelistmodel.h"
 #ifdef QT_DEBUG
 #include <QtTest/QtTest>
 #include "Tests/jsonformatterunittests.h"
@@ -94,6 +95,7 @@ void registerQmlTypes() {
     qmlRegisterType<OpenApiExporterViewModel>("ArdorQuery.Backend", 1, 0, "OpenApiExporterViewModel");
     qmlRegisterType<OpenApiAddressesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiAddressesListModel");
     qmlRegisterType<OpenApiRoutesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiRoutesListModel");
+    qmlRegisterType<AddressesPaletteListModel>("ArdorQuery.Backend", 1, 0, "AddressesPaletteListModel");
 }
 
 void adjustmentLocalStorage() {
