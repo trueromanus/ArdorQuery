@@ -16,7 +16,6 @@ yes | cp -r source/* tmp
 echo "Folder for package prepared"
 
 sed -i "/Version: 0.0.5/c\Version: $1" tmp/DEBIAN/control
-sed -i "/Version=1.0/c\Version=$1" tmp/usr/share/applications/ArdorQuery.desktop
 
 yes | cp ../../src/ArdorQuery tmp/usr/bin/
 
