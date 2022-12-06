@@ -52,6 +52,7 @@ public:
     void refresh(bool needRecreateHistory = false);
     void recreateHistory();
     OpenApiAddressModel* getSelectedAddressById(const QUuid& id);
+    int getSelectedAddressIndex();
 
 signals:
     void itemSelected(const QUuid& id);

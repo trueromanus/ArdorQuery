@@ -119,6 +119,12 @@ bool OpenApiExporterViewModel::keysHandler(int key, quint32 nativeCode, bool con
         return true;
     }
 
+    // Ctrl-Home
+    if (key == Qt::Key_Home && control) {
+        editInSelectedAddress();
+        return true;
+    }
+
     // Ctrl-Tab
     if (key == Qt::Key_Tab && control) {
         if (!m_openedCommandPalette) {
@@ -171,6 +177,15 @@ void OpenApiExporterViewModel::togglePages() noexcept
     } else {
         setSelectedTab(Exporter);
     }
+}
+
+void OpenApiExporterViewModel::editInSelectedAddress() noexcept
+{
+    if (m_url.isEmpty() && m_baseUrl.isEmpty()) return;
+
+    auto index = m_addressPalette->getSelectedAddressIndex();
+
+    m_addresses->editItem(index, m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter());
 }
 
 void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexcept

@@ -115,6 +115,7 @@ public:
     Q_INVOKABLE void keysReleased(int key) noexcept;
     Q_INVOKABLE void addCurrentToAddresses() noexcept;
     Q_INVOKABLE void togglePages() noexcept;
+    Q_INVOKABLE void editInSelectedAddress() noexcept;
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;

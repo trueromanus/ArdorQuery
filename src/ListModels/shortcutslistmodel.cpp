@@ -119,9 +119,10 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     auto addressesManagement = new ShortcutSection();
     addressesManagement->setMode(m_openApiMode);
     addressesManagement->setTitle("Addresses management");
-    addressesManagement->setDescription("Create an address and select it later");
-    addressesManagement->addShortcut("Ctrl-Insert", "Create a new address from the currently filled fields");
-    addressesManagement->addShortcut("Ctrl-Tab", "holding Ctrl and further pressing Tab change opening query");
+    addressesManagement->setDescription("Create SavedOption and select it later");
+    addressesManagement->addShortcut("Ctrl-Insert", "Create a new SavedOption from the currently filled fields");
+    addressesManagement->addShortcut("Ctrl-Home", "Edit current selected SavedOption");
+    addressesManagement->addShortcut("Ctrl-Tab", "holding Ctrl and further pressing Tab change selected SavedOption");
     m_sections.append(addressesManagement);
 }
 

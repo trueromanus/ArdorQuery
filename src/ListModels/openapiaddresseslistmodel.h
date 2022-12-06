@@ -54,6 +54,7 @@ public:
     bool hasItems() const noexcept { return !m_usedAddresses->isEmpty(); }
 
     Q_INVOKABLE void selectItem(int index) noexcept;
+    Q_INVOKABLE void editItem(int index, const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept;
     Q_INVOKABLE void deleteItem(int index) noexcept;
     Q_INVOKABLE void saveSavedOptions() noexcept;
 

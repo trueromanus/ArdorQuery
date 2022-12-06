@@ -142,3 +142,10 @@ OpenApiAddressModel *AddressesPaletteListModel::getSelectedAddressById(const QUu
 {
     return m_addressesMap.value(id);
 }
+
+int AddressesPaletteListModel::getSelectedAddressIndex()
+{
+    auto id = m_history.value(m_selected);
+    auto address = m_addressesMap.value(id);
+    return m_addresses->indexOf(address);
+}

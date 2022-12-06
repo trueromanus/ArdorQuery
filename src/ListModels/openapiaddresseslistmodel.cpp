@@ -129,6 +129,25 @@ void OpenApiAddressesListModel::selectItem(int index) noexcept
     endResetModel();
 }
 
+void OpenApiAddressesListModel::editItem(int index, const QString &title, const QString &route, const QString &baseUrl, const QString &filter) noexcept
+{
+    if (index >= m_usedAddresses->count()) return;
+
+    auto address = m_usedAddresses->value(index);
+
+    beginResetModel();
+
+    address->setAddress(route);
+    address->setTitle(title);
+    address->setBaseUrl(baseUrl);
+    address->setFilter(filter);
+
+    endResetModel();
+
+    emit addressesChanged();
+    emit hasItemsChanged();
+}
+
 void OpenApiAddressesListModel::deleteItem(int index) noexcept
 {
     if (index >= m_usedAddresses->count()) return;
