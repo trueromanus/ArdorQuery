@@ -16,6 +16,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
+#include <QDir>
+#include <QStandardPaths>
 #include "ViewModels/httprequestviewmodel.h"
 #include "ViewModels/textadvisorviewmodel.h"
 #include "ViewModels/httpperformerviewmodel.h"
