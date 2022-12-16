@@ -23,6 +23,7 @@
 class OpenApiRouteModel
 {
 private:
+    int m_identifier { 0 };
     QString m_path { "" };
     QString m_method { "" };
     QString m_summary { "" };
@@ -34,10 +35,12 @@ public:
     QString path() const noexcept { return m_path; }
     QString method() const noexcept { return m_method; }
     QString summary() const noexcept { return m_summary; }
+    int identifier() const noexcept { return m_identifier; }
 
     void setPath(const QString& path) noexcept { m_path = path; }
     void setMethod(const QString& method) noexcept { m_method = method; }
     void setSummary(const QString& summary) noexcept { m_summary = summary; }
+    void setIdentifier(int identifier) noexcept { m_identifier = identifier; }
 
     void addParameter(const OpenApiParameterModel* model) noexcept;
     void clearParameters() noexcept;

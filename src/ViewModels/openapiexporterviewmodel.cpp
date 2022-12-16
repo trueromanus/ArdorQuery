@@ -214,6 +214,7 @@ void OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
 {
     auto routePaths = routeObject.keys();
     QList<OpenApiRouteModel*> routes;
+    int iterator = 0;
 
     foreach (auto routePath, routePaths) {
         auto route = routeObject.value(routePath);
@@ -223,6 +224,7 @@ void OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
             auto model = new OpenApiRouteModel();
             model->setPath(routePath);
             model->setMethod(method);
+            model->setIdentifier(iterator);
 
             auto methodObject = methodsObject.value(method).toObject();
             if (methodObject.contains("summary")) model->setSummary(methodObject.value("summary").toString());
@@ -233,6 +235,7 @@ void OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
                 //TODO: body scheme
             }
             routes.append(model);
+            iterator++;
         }
     }
 

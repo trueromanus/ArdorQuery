@@ -45,7 +45,7 @@ QVariant OpenApiRoutesListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case IdentfierRole: {
-            return QVariant(currentIndex);
+            return QVariant(item->identifier());
         }
         case MethodRole: {
             return QVariant(item->method().toUpper());
@@ -146,12 +146,17 @@ void OpenApiRoutesListModel::refresh()
 
 OpenApiRouteModel *OpenApiRoutesListModel::getRouteByIndex(int index) const noexcept
 {
-    if (m_filteredRoutes.count() == m_filteredIds.count()) {
-        if (m_filteredRoutes.count() >= index) return nullptr;
-        return m_allRoutes.value(m_filteredIds.value(index));
-    } else {
-        return m_allRoutes.value(index);
-    }
+    auto iterator = std::find_if(
+        m_allRoutes.cbegin(),
+        m_allRoutes.cend(),
+        [index](const OpenApiRouteModel* item) {
+            return item->identifier() == index;
+        }
+    );
+
+    if (iterator == m_allRoutes.cend()) return nullptr;
+
+    return *iterator;
 }
 
 QString OpenApiRoutesListModel::getMethodColor(const OpenApiRouteModel *route) const noexcept
