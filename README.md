@@ -9,7 +9,7 @@ Application is fully native, your don't need to install additional stuff.
 * Small set of human-readable field commands
 * Import/Export field commands to/from clipboard or file
 * Supporting h2 by default (can be lowered to HTTP/1.1 with special field)
-* Sending any HTTP client or custom headers
+* Sending any HTTP headers or custom headers
 * Attaching files from the file system
 * Sending forms
 * Sending any body (aliases for JSON and XML)
