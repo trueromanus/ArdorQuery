@@ -32,6 +32,7 @@ Application is fully native, your don't need to install additional stuff.
 * `X Y` - where X it any header described in HTTP spec. This command adds a standard header to the request.
 * `title X` - where X it any characters. This command specifies the title for the current request, by default it is called "Unnamed".
 * `protocol X` - where X can be - `1.1`. By default, all requests will try to make requests in the h2 protocol, but if you need to force it to do in the HTTP/1.1 protocol, you can add this command.
+* `route X=Y` - where X it name of URL segment and Y of it value. `http://test.com/{segment}` can be adjusted with `route segment=3`. Result will be `http://test.com/3`
 
 ## Alias commands
 ### bearer
