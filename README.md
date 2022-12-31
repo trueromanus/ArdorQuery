@@ -1,5 +1,5 @@
 # ArdorQuery
-A tool for testing HTTP(S) endpoints from websites or RESTful APIs.  
+Cross platform desktop a tool for testing HTTP(S) endpoints from websites or RESTful APIs.  
 The main goal is to make an application with minimal user interface and keyboard oriented.  
 Application is fully native, your don't need to install additional stuff.  
   
