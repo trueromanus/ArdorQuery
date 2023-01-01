@@ -1,5 +1,5 @@
 # ArdorQuery
-A tool for testing HTTP(S) endpoints from websites or RESTful APIs.  
+Cross platform desktop a tool for testing HTTP(S) endpoints from websites or RESTful APIs.  
 The main goal is to make an application with minimal user interface and keyboard oriented.  
 Application is fully native, your don't need to install additional stuff.  
   
@@ -9,7 +9,7 @@ Application is fully native, your don't need to install additional stuff.
 * Small set of human-readable field commands
 * Import/Export field commands to/from clipboard or file
 * Supporting h2 by default (can be lowered to HTTP/1.1 with special field)
-* Sending any HTTP client or custom headers
+* Sending any HTTP headers or custom headers
 * Attaching files from the file system
 * Sending forms
 * Sending any body (aliases for JSON and XML)
@@ -32,6 +32,7 @@ Application is fully native, your don't need to install additional stuff.
 * `X Y` - where X it any header described in HTTP spec. This command adds a standard header to the request.
 * `title X` - where X it any characters. This command specifies the title for the current request, by default it is called "Unnamed".
 * `protocol X` - where X can be - `1.1`. By default, all requests will try to make requests in the h2 protocol, but if you need to force it to do in the HTTP/1.1 protocol, you can add this command.
+* `route X=Y` - where X it name of URL segment and Y of it value. `http://test.com/{segment}` can be adjusted with `route segment=3`. Result will be `http://test.com/3`
 
 ## Alias commands
 ### bearer
