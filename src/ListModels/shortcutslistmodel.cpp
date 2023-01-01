@@ -114,6 +114,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     getOpenApiSchemeSection->setTitle("Getting Open API Schema");
     getOpenApiSchemeSection->setDescription("Load or reaload OpenAPI scheme from remote server");
     getOpenApiSchemeSection->addShortcut("Ctrl-Z or F5", "Load scheme");
+    getOpenApiSchemeSection->addShortcut("Ctrl-B or F4", "Cancel load scheme");
     m_sections.append(getOpenApiSchemeSection);
 
     auto addressesManagement = new ShortcutSection();

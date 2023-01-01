@@ -51,6 +51,7 @@ private:
     AddressesPaletteListModel* m_addressPalette { new AddressesPaletteListModel(this) };
     QString m_url { "" };
     QNetworkAccessManager* m_networkManager { new QNetworkAccessManager(this) };
+    QNetworkReply* m_currentReply { nullptr };
     QString m_baseUrl { "" };
     QString m_title { "" };
     bool m_loading { false };
@@ -109,6 +110,7 @@ public:
     bool exporterPage() const noexcept { return m_selectedTab == Exporter; }
     bool savedOptionsPage() const noexcept { return m_selectedTab == SavedOptions; }
 
+    void cancelCurrentRequest() noexcept;
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;

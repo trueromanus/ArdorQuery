@@ -79,6 +79,18 @@ void OpenApiExporterViewModel::setSelectedTab(const QString &selectedTab) noexce
     emit savedOptionsPageChanged();
 }
 
+void OpenApiExporterViewModel::cancelCurrentRequest() noexcept
+{
+    if (!m_loading) return;
+    if (m_currentReply == nullptr) return;
+
+    m_currentReply->abort();
+    m_currentReply = nullptr;
+
+    m_loading = false;
+    emit loadingChanged();
+}
+
 void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
 {
     if (m_loading) return;
@@ -86,7 +98,7 @@ void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
 
     QNetworkRequest request(m_url);
 
-    m_networkManager->get(request);
+    m_currentReply = m_networkManager->get(request);
 
     m_loading = true;
     emit loadingChanged();
@@ -110,6 +122,12 @@ bool OpenApiExporterViewModel::keysHandler(int key, quint32 nativeCode, bool con
     // F5 or Ctrl-Z
     if (((nativeCode == 44 || key == Qt::Key_Z) && control) || (nativeCode == 63 || key == Qt::Key_F5)) {
         loadOpenApiScheme();
+        return true;
+    }
+
+    // Ctrl-B or F4
+    if (((nativeCode == 48 || key == Qt::Key_B) && control) || (nativeCode == 62 || key == Qt::Key_F4)) {
+        cancelCurrentRequest();
         return true;
     }
 
@@ -293,6 +311,7 @@ void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
     parseJsonSpecification(scheme);
 
     m_loading = false;
+    m_currentReply = nullptr;
     emit loadingChanged();
     emit alreadyLoadedChanged();
 
