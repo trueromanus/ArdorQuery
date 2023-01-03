@@ -329,6 +329,9 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
     auto route = m_openApiExporter->getRouteFromOpenApiByIndex(index);
     if (route == nullptr) return;
 
+    auto routeOptions = m_openApiExporter->getRoutesOptions();
+    if (routeOptions == nullptr) return;
+
     auto model = new HttpRequestModel(this);
 
     auto request = model->requestModel();
@@ -360,6 +363,20 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
         }
     }
 
+    //TODO: check security in route
+    //if (!route->security.isEmpty()) {
+    //} else {
+
+    auto authMethod = m_openApiExporter->authMethod();
+    if (authMethod.isEmpty() && routeOptions->onlyOneSecurity()) {
+        auto firstSecurity = routeOptions->getFirstSecurity();
+        foreach (auto securityKey, firstSecurity) fillAuthorizationSecurity(securityKey, request, *routeOptions);
+    }
+    if (!authMethod.isEmpty()) {
+        auto authKeys = authMethod.split(",", Qt::SkipEmptyParts);
+        foreach (auto authKey, authKeys) fillAuthorizationSecurity(authKey.trimmed(), request, *routeOptions);
+    }
+
     request->removeFirstItem();
 
     auto createdIndex = m_requests->addItem(model);
@@ -378,6 +395,23 @@ QString BackendViewModel::removeProtocol(const QString& filePath) noexcept
 {
     auto path = filePath;
     return path.replace("file:///", "").replace("file://", "");
+}
+
+void BackendViewModel::fillAuthorizationSecurity(const QString &key, HttpRequestViewModel* request, const OpenApiRoutesOptions &options)
+{
+    auto scheme = options.getScheme(key);
+    if (scheme == nullptr) return;
+
+    auto type = scheme->type().toLower();
+    if (type == "http" && !scheme->httpScheme().isEmpty()) {
+        request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::HeaderType, "Authorization " + scheme->httpScheme() + " ");
+    }
+    if (type == "apikey") {
+        auto in = scheme->in().toLower();
+        if (in == "query") request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::ParamType, scheme->name() + "=");
+        if (in == "cookie") request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::PastryType, scheme->name() + "=");
+        if (in == "header") request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::HeaderType, scheme->name() + " ");
+    }
 }
 
 void BackendViewModel::errorNotification(const QString &title, const QString &message)

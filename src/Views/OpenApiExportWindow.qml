@@ -258,9 +258,60 @@ ApplicationWindow {
             }
         }
 
+        RowLayout {
+            id: authLine
+            width: parent.width
+            height: 40
+            anchors.top: titleLine.bottom
+            spacing: 2
+
+            Item {
+                Layout.preferredWidth: 100
+                Layout.fillHeight: true
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    font.pixelSize: 14
+                    text: "Securities"
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                CommonTextField {
+                    id: authTextField
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    text: backend.openApiExporter.authMethod
+                    onTextChanged: {
+                        backend.openApiExporter.authMethod = text;
+                    }
+                    Keys.onPressed: (event) => {
+                        const needAccepted = backend.openApiExporter.keysHandler(
+                            event.key,
+                            event.nativeScanCode,
+                            (event.modifiers & Qt.ControlModifier),
+                            (event.modifiers & Qt.ShiftModifier),
+                            (event.modifiers & Qt.AltModifier)
+                        );
+                        if (needAccepted) event.accepted = true;
+                    }
+                    Keys.onReleased: (event) => {
+                        backend.openApiExporter.keysReleased(event.key);
+                    }
+                }
+            }
+        }
+
         ListView {
             id: routesListView
-            anchors.top: titleLine.bottom
+            anchors.top: authLine.bottom
             anchors.bottom: parent.bottom
             width: parent.width
             spacing: 2

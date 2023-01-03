@@ -133,7 +133,7 @@ void HttpRequestViewModel::addItem(const int position, const HttpRequestViewMode
 
     auto item = new HttpRequestItem();
     if (itemType != HttpRequestTypes::UnknownType) item->setType(static_cast<int>(itemType));
-    if (!initialValue.isEmpty()) item->setText(getItemPrefix(itemType) + initialValue);
+    if (!initialValue.isEmpty()) item->setText(getItemPrefix(itemType, initialValue) + initialValue);
 
     if (actualPosition == -1) {
         m_items->append(item);
@@ -591,7 +591,7 @@ QString HttpRequestViewModel::getTypeColor(int type) const
     }
 }
 
-QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType) const noexcept
+QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType, const QString& initialValue) const noexcept
 {
     switch (itemType) {
         case HttpRequestTypes::UrlType:
@@ -599,6 +599,8 @@ QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType) con
         case HttpRequestTypes::MethodType:
             return MethodPrefix;
         case HttpRequestTypes::HeaderType:
+            if (m_textAdvisor->isContainsHeader(initialValue)) return "";
+            if (initialValue.startsWith("X-")) return "";
             return HeaderPrefix;
         case HttpRequestTypes::BodyType:
             return BodyPrefix;

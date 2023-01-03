@@ -70,10 +70,6 @@ ApplicationWindow {
         }
     }
 
-    OpenApiExportWindow {
-        id: openApiExportWindow
-    }
-
     Component {
         id: imageWindowComponent
 
@@ -86,6 +82,27 @@ ApplicationWindow {
         }
     }
 
+    Loader {
+        id: openApiExportWindow
+
+        property bool showWindow
+
+        sourceComponent: showWindow ? openApiWindowComponent : null
+
+        onLoaded: {
+            openApiExportWindow.item.show();
+        }
+    }
+
+    Component {
+        id: openApiWindowComponent
+
+        OpenApiExportWindow {
+            onClosing: {
+                openApiExportWindow.showWindow = false;
+            }
+        }
+    }
 
     Item {
         BackendViewModel {
@@ -104,7 +121,7 @@ ApplicationWindow {
                 saveImageDialog.open();
             }
             onNeedOpenApiExportWindow: {
-                openApiExportWindow.show();
+                openApiExportWindow.showWindow = true;
             }
             Component.onDestruction: {
                 backend.openApiExporter.addresses.saveSavedOptions();

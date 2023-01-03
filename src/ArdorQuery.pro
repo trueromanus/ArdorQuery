@@ -30,6 +30,8 @@ SOURCES += \
         Models/openapiparametermodel.cpp \
         Models/openapiresponsemodel.cpp \
         Models/openapiroutemodel.cpp \
+        Models/openapiroutesauthorizationmodel.cpp \
+        Models/openapiroutesoptions.cpp \
         Models/shortcutsection.cpp \
         QuickControls/backendimage.cpp \
         ViewModels/backendviewmodel.cpp \
@@ -78,6 +80,8 @@ HEADERS += \
     Models/openapiparametermodel.h \
     Models/openapiresponsemodel.h \
     Models/openapiroutemodel.h \
+    Models/openapiroutesauthorizationmodel.h \
+    Models/openapiroutesoptions.h \
     Models/shortcutsection.h \
     QuickControls/backendimage.h \
     ViewModels/backendviewmodel.h \

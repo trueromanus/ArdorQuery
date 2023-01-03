@@ -25,6 +25,7 @@
 #include "../Models/openapiparametermodel.h"
 #include "../ListModels/openapirouteslistmodel.h"
 #include "../ListModels/addressespalettelistmodel.h"
+#include "../Models/openapiroutesoptions.h"
 
 class OpenApiExporterViewModel : public QObject
 {
@@ -37,6 +38,7 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(QString baseUrl READ baseUrl WRITE setBaseUrl NOTIFY baseUrlChanged)
     Q_PROPERTY(bool helpVisible READ helpVisible WRITE setHelpVisible NOTIFY helpVisibleChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QString authMethod READ authMethod WRITE setAuthMethod NOTIFY authMethodChanged)
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette WRITE setOpenedCommandPalette NOTIFY openedCommandPaletteChanged)
     Q_PROPERTY(AddressesPaletteListModel* addressPalette READ addressPalette NOTIFY addressPaletteChanged)
     Q_PROPERTY(QStringList tabs READ tabs NOTIFY tabsChanged)
@@ -46,7 +48,7 @@ class OpenApiExporterViewModel : public QObject
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
-    QMap<QString, QList<OpenApiRouteModel*>> m_routes { QMap<QString, QList<OpenApiRouteModel*>>() };
+    QMap<QString, std::tuple<OpenApiRoutesOptions*,QList<OpenApiRouteModel*>>> m_routes { QMap<QString, std::tuple<OpenApiRoutesOptions*,QList<OpenApiRouteModel*>>>() };
     OpenApiRoutesListModel* m_routeList { new OpenApiRoutesListModel(this) };
     AddressesPaletteListModel* m_addressPalette { new AddressesPaletteListModel(this) };
     QString m_url { "" };
@@ -54,6 +56,7 @@ private:
     QNetworkReply* m_currentReply { nullptr };
     QString m_baseUrl { "" };
     QString m_title { "" };
+    QString m_authMethod  { "" };
     bool m_loading { false };
     bool m_helpVisible { false };
     QStringList m_tabs { QStringList() };
@@ -97,10 +100,14 @@ public:
     QString title () const noexcept { return m_title; }
     void setTitle(const QString& title) noexcept;
 
+    QString authMethod() const noexcept { return m_authMethod; }
+    void setAuthMethod(const QString& authMethod) noexcept;
+
     bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
     void setOpenedCommandPalette(bool openedCommandPalette) noexcept;
 
     OpenApiRouteModel* getRouteFromOpenApiByIndex(int index) const noexcept;
+    OpenApiRoutesOptions* getRoutesOptions();
 
     QStringList tabs() const noexcept { return m_tabs; }
 
@@ -121,7 +128,9 @@ public:
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;
-    void parseRoutes(QJsonObject routeObject) noexcept;
+    void parseSecuritySchemas(OpenApiRoutesOptions* options, const QJsonObject& schemas) noexcept;
+    void parseSecurity(OpenApiRoutesOptions* options, const QJsonArray& securities) noexcept;
+    QList<OpenApiRouteModel*> parseRoutes(QJsonObject routeObject) noexcept;
     void parseParameters(OpenApiRouteModel* routeModel, const QJsonArray& parametersArray) noexcept;
     void removeLoadedRoutes(const QString& url);
 
@@ -145,6 +154,7 @@ signals:
     void selectedTabChanged();
     void exporterPageChanged();
     void savedOptionsPageChanged();
+    void authMethodChanged();
 
 };
 

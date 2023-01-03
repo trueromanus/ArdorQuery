@@ -13,33 +13,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "openapiroutemodel.h"
+#include "openapiroutesauthorizationmodel.h"
 
-OpenApiRouteModel::OpenApiRouteModel()
+
+OpenApiRoutesAuthorizationModel::OpenApiRoutesAuthorizationModel()
 {
 
-}
-
-void OpenApiRouteModel::addParameter(const OpenApiParameterModel *model) noexcept
-{
-    m_parameters.append(const_cast<OpenApiParameterModel*>(model));
-}
-
-void OpenApiRouteModel::clearParameters() noexcept
-{
-    setPath("");
-    setSummary("");
-    setMethod("");
-    foreach (auto parameter, m_parameters) {
-        parameter->setName("");
-        parameter->setIn("");
-        delete parameter;
-    }
-
-    m_parameters.clear();
-}
-
-const QList<OpenApiParameterModel *> &OpenApiRouteModel::parameters() const
-{
-    return m_parameters;
 }

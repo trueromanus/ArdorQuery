@@ -56,6 +56,14 @@ void OpenApiExporterViewModel::setTitle(const QString &title) noexcept
     emit titleChanged();
 }
 
+void OpenApiExporterViewModel::setAuthMethod(const QString &authMethod) noexcept
+{
+    if (m_authMethod == authMethod) return;
+
+    m_authMethod = authMethod;
+    emit authMethodChanged();
+}
+
 void OpenApiExporterViewModel::setOpenedCommandPalette(bool openedCommandPalette) noexcept
 {
     if (m_openedCommandPalette == openedCommandPalette) return;
@@ -67,6 +75,13 @@ void OpenApiExporterViewModel::setOpenedCommandPalette(bool openedCommandPalette
 OpenApiRouteModel *OpenApiExporterViewModel::getRouteFromOpenApiByIndex(int index) const noexcept
 {
     return m_routeList->getRouteByIndex(index);
+}
+
+OpenApiRoutesOptions *OpenApiExporterViewModel::getRoutesOptions()
+{
+    if (!m_routes.contains(m_url)) return nullptr;
+    auto routeData = m_routes[m_url];
+    return std::get<0>(routeData);
 }
 
 void OpenApiExporterViewModel::setSelectedTab(const QString &selectedTab) noexcept
@@ -185,7 +200,7 @@ void OpenApiExporterViewModel::addCurrentToAddresses() noexcept
 {
     if (m_url.isEmpty() && m_baseUrl.isEmpty()) return;
 
-    m_addresses->addAddress(m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter());
+    m_addresses->addAddress(m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter(), m_authMethod);
 }
 
 void OpenApiExporterViewModel::togglePages() noexcept
@@ -203,7 +218,7 @@ void OpenApiExporterViewModel::editInSelectedAddress() noexcept
 
     auto index = m_addressPalette->getSelectedAddressIndex();
 
-    m_addresses->editItem(index, m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter());
+    m_addresses->editItem(index, m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter(), m_authMethod);
 }
 
 void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexcept
@@ -225,10 +240,61 @@ void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexc
         return;
     }
 
-    parseRoutes(rootObject.value("paths").toObject());
+    auto routes = parseRoutes(rootObject.value("paths").toObject());
+
+    auto options = new OpenApiRoutesOptions();
+
+    if (rootObject.contains("components")) {
+        auto componentsObject = rootObject.value("components").toObject();
+        if (componentsObject.contains("securitySchemes")) {
+            auto securitySchemas = componentsObject.value("securitySchemes").toObject();
+            parseSecuritySchemas(options, securitySchemas);
+        }
+    }
+
+    if (rootObject.contains("security")) {
+        parseSecurity(options, rootObject.value("security").toArray());
+    }
+
+    m_routes.insert(m_url, std::make_tuple(options, routes));
 }
 
-void OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
+void OpenApiExporterViewModel::parseSecuritySchemas(OpenApiRoutesOptions *options, const QJsonObject &schemas) noexcept
+{
+    foreach (auto key, schemas.keys()) {
+        auto schemaObject = schemas.value(key).toObject();
+        options->addAuthorizationScheme(
+            schemaObject.contains("type") ? schemaObject.value("type").toString() : "",
+            schemaObject.contains("in") ? schemaObject.value("in").toString() : "",
+            schemaObject.contains("name") ? schemaObject.value("name").toString() : "",
+            schemaObject.contains("scheme") ? schemaObject.value("scheme").toString() : "",
+            schemaObject.contains("openIdConnectUrl") ? schemaObject.value("openIdConnectUrl").toString() : "",
+            key
+        );
+    }
+}
+
+void OpenApiExporterViewModel::parseSecurity(OpenApiRoutesOptions *options, const QJsonArray &securities) noexcept
+{
+    auto iterator = 0;
+    foreach (auto security, securities) {
+        options->addSecurityMap();
+        auto itemObject = security.toObject();
+        foreach (auto key, itemObject.keys()) {
+            auto scopes = itemObject.value(key).toArray();
+            if (scopes.count() == 0) { // case where `'key': []`
+                options->addSecurity(iterator, key, "");
+            } else { // case where `'key': ['write:pets', 'read:pets']`
+                foreach (auto scope, scopes) {
+                    options->addSecurity(iterator, key, scope.toString());
+                }
+            }
+        }
+        iterator++;
+    }
+}
+
+QList<OpenApiRouteModel*> OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
 {
     auto routePaths = routeObject.keys();
     QList<OpenApiRouteModel*> routes;
@@ -257,7 +323,7 @@ void OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
         }
     }
 
-    m_routes.insert(m_url, routes);
+    return routes;
 }
 
 void OpenApiExporterViewModel::parseParameters(OpenApiRouteModel* routeModel, const QJsonArray& parametersArray) noexcept
@@ -287,13 +353,20 @@ void OpenApiExporterViewModel::parseParameters(OpenApiRouteModel* routeModel, co
 
 void OpenApiExporterViewModel::removeLoadedRoutes(const QString &url)
 {
-    auto routesList = m_routes.value(url);
+    auto routeData = m_routes.value(url);
+    auto options = std::get<0>(routeData);
+    auto routesList = std::get<1>(routeData);
     foreach (auto route, routesList) {
         route->clearParameters();
         delete route;
     }
 
     routesList.clear();
+
+    options->clearAuthorizationSchemes();
+    options->clearSecurities();
+
+    delete options;
 
     m_routes.remove(m_url);
 }
@@ -315,7 +388,7 @@ void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
     emit loadingChanged();
     emit alreadyLoadedChanged();
 
-    m_routeList->setupRoutes(m_routes[m_url]);
+    m_routeList->setupRoutes(std::get<1>(m_routes[m_url]));
 }
 
 void OpenApiExporterViewModel::addressListChanged()
@@ -330,9 +403,10 @@ void OpenApiExporterViewModel::addressItemSelected(const QUuid &id)
     emit urlChanged();
     setBaseUrl(selectedItem->baseUrl());
     setTitle(selectedItem->title());
+    setAuthMethod(selectedItem->securities());
     m_routeList->setFilter(selectedItem->filter());
     if (m_routes.contains(m_url)) {
-        m_routeList->setupRoutes(m_routes[m_url]);
+        m_routeList->setupRoutes(std::get<1>(m_routes[m_url]));
         m_routeList->refresh();
     } else {
         loadOpenApiScheme();

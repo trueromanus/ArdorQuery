@@ -32,6 +32,7 @@ private:
     const QString m_baseUrlField { "baseUrl" };
     const QString m_filterField { "filter" };
     const QString m_titleField { "title" };
+    const QString m_securitiesField { "securities" };
     enum OutputFormatRoles {
         IdentfierRole = Qt::UserRole + 1,
         TitleRole,
@@ -48,13 +49,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept;
+    void addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter, const QString& securities) noexcept;
     QSharedPointer<QList<OpenApiAddressModel*>> getAddresses() noexcept;
 
     bool hasItems() const noexcept { return !m_usedAddresses->isEmpty(); }
 
     Q_INVOKABLE void selectItem(int index) noexcept;
-    Q_INVOKABLE void editItem(int index, const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept;
+    Q_INVOKABLE void editItem(int index, const QString& title, const QString& route, const QString& baseUrl, const QString& filter, const QString& securities) noexcept;
     Q_INVOKABLE void deleteItem(int index) noexcept;
     Q_INVOKABLE void saveSavedOptions() noexcept;
 

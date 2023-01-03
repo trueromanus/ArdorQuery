@@ -28,6 +28,8 @@ private:
     QString m_method { "" };
     QString m_summary { "" };
     QList<OpenApiParameterModel*> m_parameters { QList<OpenApiParameterModel*>() };
+    //TODO: make securities if route override global
+    //QList<QMultiMap<QString, QString>> m_securities { QList<QMultiMap<QString, QString>>() };
 
 public:
     OpenApiRouteModel();

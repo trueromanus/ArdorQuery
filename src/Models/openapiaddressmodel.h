@@ -12,6 +12,7 @@ private:
     QString m_address { "" };
     QString m_baseUrl { "" };
     QString m_filter { "" };
+    QString m_securities { "" };
 
 public:
     OpenApiAddressModel();
@@ -21,11 +22,13 @@ public:
     QString address() const noexcept { return m_address; }
     QString baseUrl() const noexcept { return m_baseUrl; }
     QString filter() const noexcept { return m_filter; }
+    QString securities() const noexcept { return m_securities; }
 
     void setTitle(const QString& title) noexcept { m_title = title; }
     void setAddress(const QString& address) noexcept { m_address = address; }
     void setBaseUrl(const QString& baseUrl) noexcept { m_baseUrl = baseUrl; }
     void setFilter(const QString& filter) noexcept { m_filter = filter; }
+    void setSecurities(const QString& securities) noexcept { m_securities = securities; }
 };
 
 #endif // OPENAPIADDRESSMODEL_H

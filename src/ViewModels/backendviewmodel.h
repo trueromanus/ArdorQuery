@@ -87,6 +87,7 @@ public:
 
 private:
     QString removeProtocol(const QString& filePath) noexcept;
+    void fillAuthorizationSecurity(const QString& key, HttpRequestViewModel* request, const OpenApiRoutesOptions& options);
 
 signals:
     void requestPerformerChanged();

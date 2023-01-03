@@ -96,7 +96,7 @@ QHash<int, QByteArray> OpenApiAddressesListModel::roleNames() const
 
 }
 
-void OpenApiAddressesListModel::addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter) noexcept
+void OpenApiAddressesListModel::addAddress(const QString& title, const QString& route, const QString& baseUrl, const QString& filter, const QString& securities) noexcept
 {
     beginResetModel();
 
@@ -105,6 +105,7 @@ void OpenApiAddressesListModel::addAddress(const QString& title, const QString& 
     model->setTitle(title);
     model->setBaseUrl(baseUrl);
     model->setFilter(filter);
+    model->setSecurities(securities);
     m_usedAddresses->append(model);
 
     endResetModel();
@@ -129,7 +130,7 @@ void OpenApiAddressesListModel::selectItem(int index) noexcept
     endResetModel();
 }
 
-void OpenApiAddressesListModel::editItem(int index, const QString &title, const QString &route, const QString &baseUrl, const QString &filter) noexcept
+void OpenApiAddressesListModel::editItem(int index, const QString &title, const QString &route, const QString &baseUrl, const QString &filter, const QString& securities) noexcept
 {
     if (index >= m_usedAddresses->count()) return;
 
@@ -141,6 +142,7 @@ void OpenApiAddressesListModel::editItem(int index, const QString &title, const 
     address->setTitle(title);
     address->setBaseUrl(baseUrl);
     address->setFilter(filter);
+    address->setSecurities(securities);
 
     endResetModel();
 
@@ -191,6 +193,7 @@ void OpenApiAddressesListModel::readCache()
         if (addressObject.contains(m_baseUrlField)) model->setBaseUrl(addressObject[m_baseUrlField].toString());
         if (addressObject.contains(m_filterField)) model->setFilter(addressObject[m_filterField].toString());
         if (addressObject.contains(m_titleField)) model->setTitle(addressObject[m_titleField].toString());
+        if (addressObject.contains(m_securitiesField)) model->setSecurities(addressObject[m_securitiesField].toString());
 
         m_usedAddresses->append(model);
     }
@@ -205,6 +208,7 @@ void OpenApiAddressesListModel::writeCache()
         jsonObject[m_addressField] = usedAddress->address();
         jsonObject[m_filterField] = usedAddress->filter();
         jsonObject[m_baseUrlField] = usedAddress->baseUrl();
+        jsonObject[m_securitiesField] = usedAddress->securities();
 
         items.append(jsonObject);
     }
