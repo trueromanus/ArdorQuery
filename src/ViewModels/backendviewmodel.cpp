@@ -363,18 +363,20 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
         }
     }
 
-    //TODO: check security in route
-    //if (!route->security.isEmpty()) {
-    //} else {
-
     auto authMethod = m_openApiExporter->authMethod();
-    if (authMethod.isEmpty() && routeOptions->onlyOneSecurity()) {
-        auto firstSecurity = routeOptions->getFirstSecurity();
-        foreach (auto securityKey, firstSecurity) fillAuthorizationSecurity(securityKey, request, *routeOptions);
-    }
-    if (!authMethod.isEmpty()) {
-        auto authKeys = authMethod.split(",", Qt::SkipEmptyParts);
-        foreach (auto authKey, authKeys) fillAuthorizationSecurity(authKey.trimmed(), request, *routeOptions);
+
+    if (route->hasSecurity()) {
+        QStringList routeSecurityKeys = authMethod.isEmpty() ? route->getFirstKeys() : route->getKeys(authMethod.split(",", Qt::SkipEmptyParts));
+        foreach (auto routeSecurityKey, routeSecurityKeys) fillAuthorizationSecurity(routeSecurityKey.trimmed(), request, *routeOptions);
+    } else {
+        if (authMethod.isEmpty() && routeOptions->onlyOneSecurity()) {
+            auto firstSecurity = routeOptions->getFirstSecurity();
+            foreach (auto securityKey, firstSecurity) fillAuthorizationSecurity(securityKey, request, *routeOptions);
+        }
+        if (!authMethod.isEmpty()) {
+            auto authKeys = authMethod.split(",", Qt::SkipEmptyParts);
+            foreach (auto authKey, authKeys) fillAuthorizationSecurity(authKey.trimmed(), request, *routeOptions);
+        }
     }
 
     request->removeFirstItem();

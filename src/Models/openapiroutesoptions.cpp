@@ -25,6 +25,12 @@ OpenApiRoutesOptions::OpenApiRoutesOptions()
 void OpenApiRoutesOptions::clearAuthorizationSchemes() noexcept
 {
     foreach (auto scheme, m_authorizationSchemes) {
+        scheme->setDisplayName("");
+        scheme->setName("");
+        scheme->setHttpScheme("");
+        scheme->setIn("");
+        scheme->setOpenIdConnectUrl("");
+        scheme->setType("");
         delete scheme;
     }
 

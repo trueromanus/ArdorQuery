@@ -318,6 +318,26 @@ QList<OpenApiRouteModel*> OpenApiExporterViewModel::parseRoutes(QJsonObject rout
             if (methodObject.contains("requestBody")) {
                 //TODO: body scheme
             }
+
+            if (methodObject.contains("security")) {
+                auto securityArray = methodObject.value("security").toArray();
+                auto iterator = 0;
+                foreach (auto security, securityArray) {
+                    model->addSecurityMap();
+                    auto itemObject = security.toObject();
+                    foreach (auto key, itemObject.keys()) {
+                        auto scopes = itemObject.value(key).toArray();
+                        if (scopes.count() == 0) { // case where `'key': []`
+                            model->addSecurity(iterator, key, "");
+                        } else { // case where `'key': ['write:pets', 'read:pets']`
+                            foreach (auto scope, scopes) {
+                                model->addSecurity(iterator, key, scope.toString());
+                            }
+                        }
+                    }
+                    iterator++;
+                }
+            }
             routes.append(model);
             iterator++;
         }
@@ -357,7 +377,7 @@ void OpenApiExporterViewModel::removeLoadedRoutes(const QString &url)
     auto options = std::get<0>(routeData);
     auto routesList = std::get<1>(routeData);
     foreach (auto route, routesList) {
-        route->clearParameters();
+        route->clear();
         delete route;
     }
 

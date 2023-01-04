@@ -18,6 +18,7 @@
 
 #include <QString>
 #include <QList>
+#include <QMultiMap>
 #include "openapiparametermodel.h"
 
 class OpenApiRouteModel
@@ -28,8 +29,7 @@ private:
     QString m_method { "" };
     QString m_summary { "" };
     QList<OpenApiParameterModel*> m_parameters { QList<OpenApiParameterModel*>() };
-    //TODO: make securities if route override global
-    //QList<QMultiMap<QString, QString>> m_securities { QList<QMultiMap<QString, QString>>() };
+    QList<QMultiMap<QString, QString>> m_securities { QList<QMultiMap<QString, QString>>() };
 
 public:
     OpenApiRouteModel();
@@ -45,7 +45,14 @@ public:
     void setIdentifier(int identifier) noexcept { m_identifier = identifier; }
 
     void addParameter(const OpenApiParameterModel* model) noexcept;
-    void clearParameters() noexcept;
+
+    void clear() noexcept;
+
+    void addSecurityMap() noexcept;
+    void addSecurity(int index, const QString& key, const QString scope);
+    bool hasSecurity() const noexcept { return !m_securities.isEmpty(); }
+    QStringList getFirstKeys() const noexcept;
+    QStringList getKeys(QStringList keys) const noexcept;
 
     const QList<OpenApiParameterModel*>& parameters() const;
 

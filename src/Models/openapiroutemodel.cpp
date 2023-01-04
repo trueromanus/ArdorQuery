@@ -25,18 +25,55 @@ void OpenApiRouteModel::addParameter(const OpenApiParameterModel *model) noexcep
     m_parameters.append(const_cast<OpenApiParameterModel*>(model));
 }
 
-void OpenApiRouteModel::clearParameters() noexcept
+void OpenApiRouteModel::clear() noexcept
 {
     setPath("");
     setSummary("");
     setMethod("");
+
     foreach (auto parameter, m_parameters) {
         parameter->setName("");
         parameter->setIn("");
         delete parameter;
     }
-
     m_parameters.clear();
+
+    foreach (auto map, m_securities) {
+        map.clear();
+    }
+    m_securities.clear();
+}
+
+void OpenApiRouteModel::addSecurityMap() noexcept
+{
+    QMultiMap<QString, QString> map;
+    m_securities.append(map);
+}
+
+void OpenApiRouteModel::addSecurity(int index, const QString &key, const QString scope)
+{
+    m_securities[index].insert(key, scope);
+}
+
+QStringList OpenApiRouteModel::getFirstKeys() const noexcept
+{
+    QStringList result;
+    if (m_securities.isEmpty()) return result;
+
+    return m_securities.first().keys();
+}
+
+QStringList OpenApiRouteModel::getKeys(QStringList keys) const noexcept
+{
+    QStringList result;
+    if (m_securities.isEmpty()) return result;
+
+    foreach (auto security, m_securities) {
+        foreach (auto securityKey, security.keys()) {
+            if (keys.contains(securityKey)) result.append(securityKey);
+        }
+    }
+    return result;
 }
 
 const QList<OpenApiParameterModel *> &OpenApiRouteModel::parameters() const
