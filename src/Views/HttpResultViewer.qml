@@ -60,8 +60,29 @@ Item {
 
                     ResultText {
                         id: statusCodeText
-                        width: responsePanel.width
-                        title: "<b>Status:</b> " + viewModel.displayStatusCode + viewModel.networkError
+                        width: responsePanel.width - 10
+                        title: "<b>Status:</b> " + viewModel.displayStatusCode + " " + viewModel.networkError
+                        textContent.wrapMode: Text.NoWrap
+                        textContent.elide: Text.ElideRight
+                        textContent.maximumLineCount: 1
+                        textContent.width: statusCodeText.width
+                        textContent.height: statusCodeText.height
+                        ToolTip.delay: 1000
+                        ToolTip.text: viewModel.networkError
+                        ToolTip.visible: itemHovered && viewModel.networkError
+
+                        property bool itemHovered: false
+
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onEntered: {
+                                parent.itemHovered = true;
+                            }
+                            onExited: {
+                                parent.itemHovered = false;
+                            }
+                        }
                     }
 
                     ResultText {

@@ -309,12 +309,11 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     result->untrackRequestTime();
     m_runningRequests->remove(id);
 
+    result->setNetworkError("");
+
     if (reply->error() != QNetworkReply::NoError) {
         result->setNetworkError(reply->errorString());
-        return;
     }
-
-    result->setNetworkError("");
 
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (status_code.isValid()) result->setStatusCode(status_code.toInt());
