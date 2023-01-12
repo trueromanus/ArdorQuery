@@ -234,6 +234,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(OptionsPrefix) && itemType != HttpRequestTypes::OptionsType) {
+        item->setType(static_cast<int>(HttpRequestTypes::OptionsType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
 
@@ -472,6 +477,18 @@ QStringList HttpRequestViewModel::getHeaders() const noexcept
     return headers;
 }
 
+QStringList HttpRequestViewModel::getOptions() const noexcept
+{
+    QStringList options;
+    foreach (auto item, *m_items) {
+        auto type = static_cast<HttpRequestTypes>(item->type());
+        if (type == HttpRequestTypes::OptionsType) {
+            options.append(item->text().replace(OptionsPrefix, "").split(",", Qt::SkipEmptyParts));
+        }
+    }
+    return options;
+}
+
 QString HttpRequestViewModel::getTitle() const noexcept
 {
     auto iterator = std::find_if(
@@ -586,6 +603,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#E0D8B0";
         case HttpRequestTypes::RouteType:
             return "#975C8D";
+        case HttpRequestTypes::OptionsType:
+            return "#FFC3A1";
         default:
             return "#CDCDB4";
     }
@@ -593,34 +612,53 @@ QString HttpRequestViewModel::getTypeColor(int type) const
 
 QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType, const QString& initialValue) const noexcept
 {
+    QString prefix = "";
     switch (itemType) {
         case HttpRequestTypes::UrlType:
-            return UrlPrefix;
+            prefix = UrlPrefix;
+            break;
         case HttpRequestTypes::MethodType:
-            return MethodPrefix;
+            prefix = MethodPrefix;
+            break;
         case HttpRequestTypes::HeaderType:
-            if (m_textAdvisor->isContainsHeader(initialValue)) return "";
-            if (initialValue.startsWith("X-")) return "";
-            return HeaderPrefix;
+            if (initialValue.startsWith("X-") || m_textAdvisor->isContainsHeader(initialValue)) {
+                prefix = "";
+            } else {
+                prefix = HeaderPrefix;
+            }
+            break;
         case HttpRequestTypes::BodyType:
-            return BodyPrefix;
+            prefix = BodyPrefix;
+            break;
         case HttpRequestTypes::FormItemType:
-            return FormPrefix;
+            prefix = FormPrefix;
+            break;
         case HttpRequestTypes::FormFileType:
-            return FilePrefix;
+            prefix = FilePrefix;
+            break;
         case HttpRequestTypes::HttpProtocolType:
-            return ProtocolPrefix;
+            prefix = ProtocolPrefix;
+            break;
         case HttpRequestTypes::BearerType:
-            return BearerPrefix;
+            prefix = BearerPrefix;
+            break;
         case HttpRequestTypes::TitleType:
-            return TitlePrefix;
+            prefix = TitlePrefix;
+            break;
         case HttpRequestTypes::ParamType:
-            return ParamPrefix;
+            prefix = ParamPrefix;
+            break;
         case HttpRequestTypes::PastryType:
-            return PastryPrefix;
+            prefix = PastryPrefix;
+            break;
         case HttpRequestTypes::RouteType:
-            return RoutePrefix;
-        default:
-            return "";
+            prefix = RoutePrefix;
+            break;
+        case HttpRequestTypes::OptionsType:
+            prefix = OptionsPrefix;
+            break;
+        default: prefix = "";
     }
+
+    return initialValue.startsWith(prefix) ? "" : prefix;
 }

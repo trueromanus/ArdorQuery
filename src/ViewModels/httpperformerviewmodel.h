@@ -57,6 +57,7 @@ private:
     bool adjustHeaders(QNetworkRequest& request) noexcept;
     void fillHeader(QNetworkRequest& request, const QString& name, const QString& value) noexcept;
     void startTrackRequest(QNetworkReply* reply) noexcept;
+    void adjustOptions(QStringList options, QNetworkRequest& request);
 
 private slots:
     void requestFinished(QNetworkReply *reply);

@@ -35,6 +35,7 @@ ApplicationWindow {
 
     ShorcutsHelperPanel {
         id: shortcutPanel
+        visible: backend.helpVisible
         Component.onCompleted: {
             shortcutPanel.mode = "main";
         }

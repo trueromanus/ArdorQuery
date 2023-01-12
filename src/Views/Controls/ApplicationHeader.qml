@@ -118,7 +118,7 @@ Item {
         iconHeight: 20
         tooltipMessage: "Show keyboard shortcut description"
         onPressed: {
-            shortcutPanel.visible = !shortcutPanel.visible;
+            backend.helpVisible = !backend.helpVisible;
         }
     }
 

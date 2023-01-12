@@ -42,7 +42,8 @@ public:
         TitleType,
         ParamType,
         PastryType,
-        RouteType
+        RouteType,
+        OptionsType,
     };
 
 private:
@@ -94,6 +95,7 @@ public:
     QStringList getFormParameters() const noexcept;
     QStringList getFileParameters() const noexcept;
     QStringList getHeaders() const noexcept;
+    QStringList getOptions() const noexcept;
     QString getTitle() const noexcept;
     bool isOnlyEmptyFirstItem() const noexcept;
     int countItems() const noexcept;

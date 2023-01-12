@@ -18,6 +18,7 @@
 #include <QFile>
 #include <QMimeDatabase>
 #include <QFileInfo>
+#include <QNetworkRequest>
 #include "httpperformerviewmodel.h"
 #include "../globalconstants.h"
 
@@ -101,6 +102,10 @@ void HttpPerformerViewModel::performRequest()
     m_httpRequestResult->reset();
 
     QNetworkRequest request(requestUrl);
+
+    auto options = m_httpRequest->getOptions();
+
+    adjustOptions(options, request);
 
     auto headersValid = adjustHeaders(request);
     if (!headersValid) return;
@@ -298,6 +303,29 @@ void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply) noexcept
     reply->setProperty("id", uuid);
 
     m_runningRequests->insert(uuid, m_httpRequestResult);
+}
+
+void HttpPerformerViewModel::adjustOptions(QStringList options, QNetworkRequest &request)
+{
+    foreach (auto option, options) {
+        auto loweredOption = option.trimmed().toLower();
+        if (loweredOption == "noautoredirect") {
+            request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
+        }
+        if (loweredOption == "autoredirect") {
+            request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
+        }
+        if (loweredOption == "weaksslcheck") {
+            QSslConfiguration sslConfiguration(QSslConfiguration::defaultConfiguration());
+            sslConfiguration.setPeerVerifyMode(QSslSocket::QueryPeer);
+            request.setSslConfiguration(sslConfiguration);
+        }
+        if (loweredOption == "noweaksslcheck") {
+            QSslConfiguration sslConfiguration(QSslConfiguration::defaultConfiguration());
+            sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyPeer);
+            request.setSslConfiguration(sslConfiguration);
+        }
+    }
 }
 
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
