@@ -85,7 +85,6 @@ Item {
                     iconHeight: 18
                     icon: storagePaths.icons + backend.requests.selectedItem.resultModel.displayStatus + ".svg"
                     onPressed: {
-                        backend.requestPerformer.performRequest();
                     }
                 }
 

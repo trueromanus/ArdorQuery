@@ -96,6 +96,11 @@ QSharedPointer<QList<HttpRequestModel *> > HttpRequestsListModel::getList() cons
     return m_requests;
 }
 
+HttpRequestModel *HttpRequestsListModel::getSelectedRequest() const noexcept
+{
+    return m_requests->value(m_selectedIndex);
+}
+
 void HttpRequestsListModel::selectItem(const int newIndex) noexcept
 {
     if (newIndex < 0) return;

@@ -21,43 +21,40 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMap>
+#include <QList>
 #include <QHttpMultiPart>
 #include "httprequestviewmodel.h"
 #include "httprequestresultviewmodel.h"
+#include "../Models/httprequestmodel.h"
 
 class HttpPerformerViewModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(HttpRequestViewModel* httpRequest READ httpRequest WRITE setHttpRequest NOTIFY httpRequestChanged)
-    Q_PROPERTY(HttpRequestResultViewModel* httpRequestResult READ httpRequestResult WRITE setHttpRequestResult NOTIFY httpRequestResultChanged)
-
 private:
-    HttpRequestViewModel* m_httpRequest;
-    HttpRequestResultViewModel* m_httpRequestResult;
     QScopedPointer<QNetworkAccessManager> m_networkManager { new QNetworkAccessManager() };
     QScopedPointer<QMap<QString, QString>> m_rawHeaders { new QMap<QString, QString>() };
     QScopedPointer<QMap<QString, HttpRequestResultViewModel*>> m_runningRequests { new QMap<QString, HttpRequestResultViewModel*>() };
+    QSharedPointer<QList<HttpRequestModel*>> m_requests { nullptr };
 
 public:
     explicit HttpPerformerViewModel(QObject *parent = nullptr);
 
-    HttpRequestViewModel* httpRequest() const noexcept { return m_httpRequest; }
-    void setHttpRequest(const HttpRequestViewModel* viewModel) noexcept;
-
-    HttpRequestResultViewModel* httpRequestResult() const noexcept { return m_httpRequestResult; }
-    void setHttpRequestResult(const HttpRequestResultViewModel* httpRequestResult) noexcept;
+    void setup(QSharedPointer<QList<HttpRequestModel*>> requests);
 
     void cancelRequest();
 
-    Q_INVOKABLE void performRequest();
+    void performOneRequest(HttpRequestModel * request);
+
+    void performAllRequest();
 
 private:
     QByteArray setupSimpleForm(QStringList&& parameters);
     QHttpMultiPart* setupMultiPartForm(QStringList&& files, QStringList&& parameters);
-    bool adjustHeaders(QNetworkRequest& request) noexcept;
+    bool adjustHeaders(QNetworkRequest& request, const HttpRequestViewModel* model) noexcept;
     void fillHeader(QNetworkRequest& request, const QString& name, const QString& value) noexcept;
-    void startTrackRequest(QNetworkReply* reply) noexcept;
+    void startTrackRequest(QNetworkReply* reply, const QUuid& id, HttpRequestResultViewModel* resultModel) noexcept;
     void adjustOptions(QStringList options, QNetworkRequest& request);
+    void performSingleRequest(HttpRequestModel* modelRequest);
 
 private slots:
     void requestFinished(QNetworkReply *reply);

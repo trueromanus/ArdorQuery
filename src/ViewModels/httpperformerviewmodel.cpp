@@ -61,20 +61,9 @@ HttpPerformerViewModel::HttpPerformerViewModel(QObject *parent)
     m_rawHeaders->insert("warning", "Warning");
 }
 
-void HttpPerformerViewModel::setHttpRequest(const HttpRequestViewModel *viewModel) noexcept
+void HttpPerformerViewModel::setup(QSharedPointer<QList<HttpRequestModel *> > requests)
 {
-    if (m_httpRequest == viewModel) return;
-
-    m_httpRequest = const_cast<HttpRequestViewModel*>(viewModel);
-    emit httpRequestChanged();
-}
-
-void HttpPerformerViewModel::setHttpRequestResult(const HttpRequestResultViewModel *httpRequestResult) noexcept
-{
-    if (m_httpRequestResult == httpRequestResult) return;
-
-    m_httpRequestResult = const_cast<HttpRequestResultViewModel*>(httpRequestResult);
-    emit httpRequestResultChanged();
+    m_requests = requests;
 }
 
 void HttpPerformerViewModel::cancelRequest()
@@ -82,12 +71,9 @@ void HttpPerformerViewModel::cancelRequest()
     //TODO: cancel request
 }
 
-void HttpPerformerViewModel::performRequest()
+void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 {
-    if (m_httpRequest == nullptr) return;
-    if (m_httpRequestResult == nullptr) return;
-
-    auto url = m_httpRequest->getUrl();
+    auto url = request->requestModel()->getUrl();
     if (url.isEmpty()) {
         emit pushErrorMessage("Request perform", "URL not specified");
         return;
@@ -99,57 +85,13 @@ void HttpPerformerViewModel::performRequest()
         return;
     }
 
-    m_httpRequestResult->reset();
+    performSingleRequest(request);
+}
 
-    QNetworkRequest request(requestUrl);
-
-    auto options = m_httpRequest->getOptions();
-
-    adjustOptions(options, request);
-
-    auto headersValid = adjustHeaders(request);
-    if (!headersValid) return;
-
-    auto protocol = m_httpRequest->getProtocol();
-    // if allowed only HTTP/1.1 version
-    if (protocol == "1.1") request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
-
-    auto method = m_httpRequest->getMethod().toLower();
-    if (method == "get") {
-        auto getReply = m_networkManager->get(request);
-        startTrackRequest(getReply);
-        return;
-    }
-    if (method == "delete") {
-        auto deleteReply = m_networkManager->deleteResource(request);
-        startTrackRequest(deleteReply);
-        return;
-    }
-
-    auto body = m_httpRequest->getBody();
-    auto forms = m_httpRequest->getFormParameters();
-    auto files = m_httpRequest->getFileParameters();
-
-    auto isBodyAndFormEmpty = body.isEmpty() && forms.isEmpty() && files.empty();
-    auto isSimpleForm = !forms.isEmpty() && files.isEmpty();
-    auto isComplexForm = !files.isEmpty();
-    auto isBodyFilled = !body.isEmpty();
-
-    if (method == "post") {
-        QNetworkReply* postReply = nullptr;
-        if (isBodyAndFormEmpty) postReply = m_networkManager->post(request, "");
-        if (isBodyFilled) postReply = m_networkManager->post(request, body.toUtf8());
-        if (!isBodyFilled && isSimpleForm) postReply = m_networkManager->post(request, setupSimpleForm(std::move(forms)));
-        if (!isBodyFilled && isComplexForm) postReply = m_networkManager->post(request, setupMultiPartForm(std::move(files), std::move(forms)));
-        if (postReply != nullptr) startTrackRequest(postReply);
-    }
-    if (method == "put") {
-        QNetworkReply* putReply = nullptr;
-        if (isBodyAndFormEmpty) putReply = m_networkManager->put(request, "");
-        if (isBodyFilled) putReply = m_networkManager->put(request, body.toUtf8());
-        if (!isBodyFilled && isSimpleForm) putReply = m_networkManager->put(request, setupSimpleForm(std::move(forms)));
-        if (!isBodyFilled && isComplexForm) putReply = m_networkManager->put(request, setupMultiPartForm(std::move(files), std::move(forms)));
-        if (putReply != nullptr) startTrackRequest(putReply);
+void HttpPerformerViewModel::performAllRequest()
+{
+    foreach (auto request, *m_requests) {
+        performSingleRequest(request);
     }
 }
 
@@ -219,10 +161,10 @@ QHttpMultiPart* HttpPerformerViewModel::setupMultiPartForm(QStringList&& files, 
     return multiPart;
 }
 
-bool HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request) noexcept
+bool HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request, const HttpRequestViewModel* model) noexcept
 {
     QSet<QString> m_usedHeaders;
-    auto headers = m_httpRequest->getHeaders();
+    auto headers = model->getHeaders();
     foreach (auto header, headers) {
         auto spaceIndex = header.indexOf(" ");
         if (spaceIndex == -1) {
@@ -292,17 +234,15 @@ void HttpPerformerViewModel::fillHeader(QNetworkRequest &request, const QString 
     }
 }
 
-void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply) noexcept
+void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply, const QUuid& id, HttpRequestResultViewModel* resultModel) noexcept
 {
-    if (m_httpRequestResult->isRunning()) return; // already runned
+    if (resultModel->isRunning()) return; // already runned
 
-    m_httpRequestResult->trackRequestTime();
+    resultModel->trackRequestTime();
 
-    auto uuid = QUuid::createUuid().toString();
+    reply->setProperty("id", id.toString());
 
-    reply->setProperty("id", uuid);
-
-    m_runningRequests->insert(uuid, m_httpRequestResult);
+    m_runningRequests->insert(id.toString(), resultModel);
 }
 
 void HttpPerformerViewModel::adjustOptions(QStringList options, QNetworkRequest &request)
@@ -328,12 +268,88 @@ void HttpPerformerViewModel::adjustOptions(QStringList options, QNetworkRequest 
     }
 }
 
+void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest)
+{
+    auto id = modelRequest->requestId();
+
+    //if request already performing don't need make something
+    if (m_runningRequests->contains(id.toString())) return;
+
+    auto resultModel = modelRequest->resultModel();
+    auto requestModel = modelRequest->requestModel();
+    resultModel->reset();
+
+    auto url = requestModel->getUrl();
+    auto requestUrl = QUrl(url);
+
+    QNetworkRequest request(requestUrl);
+
+    auto options = requestModel->getOptions();
+
+    adjustOptions(options, request);
+
+    auto headersValid = adjustHeaders(request, requestModel);
+    if (!headersValid) return;
+
+    auto protocol = requestModel->getProtocol();
+    // if allowed only HTTP/1.1 version
+    if (protocol == "1.1") request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
+
+    auto method = requestModel->getMethod().toLower();
+    if (method == "get") {
+        auto getReply = m_networkManager->get(request);
+        startTrackRequest(getReply, id, resultModel);
+        return;
+    }
+    if (method == "delete") {
+        auto deleteReply = m_networkManager->deleteResource(request);
+        startTrackRequest(deleteReply, id, resultModel);
+        return;
+    }
+
+    auto body = requestModel->getBody();
+    auto forms = requestModel->getFormParameters();
+    auto files = requestModel->getFileParameters();
+
+    auto isBodyAndFormEmpty = body.isEmpty() && forms.isEmpty() && files.empty();
+    auto isSimpleForm = !forms.isEmpty() && files.isEmpty();
+    auto isComplexForm = !files.isEmpty();
+    auto isBodyFilled = !body.isEmpty();
+
+    if (method == "post") {
+        QNetworkReply* postReply = nullptr;
+        if (isBodyAndFormEmpty) postReply = m_networkManager->post(request, "");
+        if (isBodyFilled) postReply = m_networkManager->post(request, body.toUtf8());
+        if (!isBodyFilled && isSimpleForm) postReply = m_networkManager->post(request, setupSimpleForm(std::move(forms)));
+        if (!isBodyFilled && isComplexForm) postReply = m_networkManager->post(request, setupMultiPartForm(std::move(files), std::move(forms)));
+        if (postReply != nullptr) startTrackRequest(postReply, id, resultModel);
+    }
+    if (method == "put") {
+        QNetworkReply* putReply = nullptr;
+        if (isBodyAndFormEmpty) putReply = m_networkManager->put(request, "");
+        if (isBodyFilled) putReply = m_networkManager->put(request, body.toUtf8());
+        if (!isBodyFilled && isSimpleForm) putReply = m_networkManager->put(request, setupSimpleForm(std::move(forms)));
+        if (!isBodyFilled && isComplexForm) putReply = m_networkManager->put(request, setupMultiPartForm(std::move(files), std::move(forms)));
+        if (putReply != nullptr) startTrackRequest(putReply, id, resultModel);
+    }
+    if (method == "patch") {
+        QNetworkReply* putReply = nullptr;
+        if (isBodyAndFormEmpty) putReply = m_networkManager->sendCustomRequest(request, "PATCH", "");
+        if (isBodyFilled) putReply = m_networkManager->sendCustomRequest(request, "PATCH", body.toUtf8());
+        if (!isBodyFilled && isSimpleForm) putReply = m_networkManager->sendCustomRequest(request, "PATCH", setupSimpleForm(std::move(forms)));
+        if (!isBodyFilled && isComplexForm) putReply = m_networkManager->sendCustomRequest(request, "PATCH", setupMultiPartForm(std::move(files), std::move(forms)));
+        if (putReply != nullptr) startTrackRequest(putReply, id, resultModel);
+    }
+}
+
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 {
     auto id = reply->property("id").toString();
     if (!m_runningRequests->contains(id)) return;
 
     auto result = m_runningRequests->value(id);
+    if (result == nullptr) return;
+
     result->untrackRequestTime();
     m_runningRequests->remove(id);
 

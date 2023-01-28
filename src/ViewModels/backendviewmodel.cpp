@@ -22,6 +22,7 @@ BackendViewModel::BackendViewModel(QObject *parent)
     addNewRequest();
 
     m_requestsCommandPaletter->setup(m_requests->getList());
+    m_requestPerformer->setup(m_requests->getList());
 
     connect(m_requestPerformer, &HttpPerformerViewModel::pushErrorMessage, this, &BackendViewModel::errorNotification);
     connect(m_requestsCommandPaletter, &RequestsCommandPaletteListModel::itemSelected, this, &BackendViewModel::requestsPaletterItemSelected);
@@ -45,9 +46,16 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
     // ---------
     // Perform requests
 
+    // Ctrl-M
+    if ((nativeCode == 50 || key == Qt::Key_M) && control) {
+        m_requestPerformer->performAllRequest();
+        return true;
+    }
+
     // Ctrl-Z or F5
     if (((nativeCode == 44 || key == Qt::Key_Z) && control) || (nativeCode == 63 || key == Qt::Key_F5)) {
-        m_requestPerformer->performRequest();
+        auto request = m_requests->getSelectedRequest();
+        m_requestPerformer->performOneRequest(request);
         return true;
     }
 
