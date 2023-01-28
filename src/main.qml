@@ -21,6 +21,9 @@ ApplicationWindow {
     header: ApplicationHeader {
     }
 
+    footer: ApplicationFooter {
+    }
+
     HttpRequestEditor {
         id: requestEditor
         visible: backend.tabs.currentTab === 'Request'

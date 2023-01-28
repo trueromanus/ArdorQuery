@@ -85,14 +85,22 @@ void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
         return;
     }
 
+    addToCounter(1);
+
     performSingleRequest(request);
+
+    emit countRequestsChanged();
 }
 
 void HttpPerformerViewModel::performAllRequest()
 {
+    addToCounter(m_requests->count());
+
     foreach (auto request, *m_requests) {
         performSingleRequest(request);
     }
+
+    emit countRequestsChanged();
 }
 
 QByteArray HttpPerformerViewModel::setupSimpleForm(QStringList&& parameters)
@@ -342,6 +350,26 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     }
 }
 
+void HttpPerformerViewModel::addToCounter(int number) noexcept
+{
+    if (m_countRequests == m_countFinishedRequests) {
+        m_countRequests = 0;
+        m_countFinishedRequests = 0;
+    }
+
+    m_countRequests += number;
+
+    emit countRequestsChanged();
+    emit countFinishedRequestsChanged();
+}
+
+void HttpPerformerViewModel::reduceFromCounter() noexcept
+{
+    m_countFinishedRequests += 1;
+
+    emit countFinishedRequestsChanged();
+}
+
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 {
     auto id = reply->property("id").toString();
@@ -352,6 +380,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 
     result->untrackRequestTime();
     m_runningRequests->remove(id);
+    reduceFromCounter();
 
     result->setNetworkError("");
 

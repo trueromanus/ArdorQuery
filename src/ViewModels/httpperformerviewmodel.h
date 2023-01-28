@@ -30,11 +30,16 @@
 class HttpPerformerViewModel : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int countRequests READ countRequests NOTIFY countRequestsChanged)
+    Q_PROPERTY(int countFinishedRequests READ countFinishedRequests NOTIFY countFinishedRequestsChanged)
+
 private:
     QScopedPointer<QNetworkAccessManager> m_networkManager { new QNetworkAccessManager() };
     QScopedPointer<QMap<QString, QString>> m_rawHeaders { new QMap<QString, QString>() };
     QScopedPointer<QMap<QString, HttpRequestResultViewModel*>> m_runningRequests { new QMap<QString, HttpRequestResultViewModel*>() };
     QSharedPointer<QList<HttpRequestModel*>> m_requests { nullptr };
+    int m_countRequests { 0 };
+    int m_countFinishedRequests { 0 };
 
 public:
     explicit HttpPerformerViewModel(QObject *parent = nullptr);
@@ -47,6 +52,9 @@ public:
 
     void performAllRequest();
 
+    int countRequests() const noexcept { return m_countRequests; }
+    int countFinishedRequests() const noexcept { return m_countFinishedRequests; }
+
 private:
     QByteArray setupSimpleForm(QStringList&& parameters);
     QHttpMultiPart* setupMultiPartForm(QStringList&& files, QStringList&& parameters);
@@ -55,6 +63,8 @@ private:
     void startTrackRequest(QNetworkReply* reply, const QUuid& id, HttpRequestResultViewModel* resultModel) noexcept;
     void adjustOptions(QStringList options, QNetworkRequest& request);
     void performSingleRequest(HttpRequestModel* modelRequest);
+    void addToCounter(int number) noexcept;
+    void reduceFromCounter() noexcept;
 
 private slots:
     void requestFinished(QNetworkReply *reply);
@@ -63,6 +73,8 @@ signals:
     void httpRequestChanged();
     void httpRequestResultChanged();
     void pushErrorMessage(const QString &title, const QString &message);
+    void countRequestsChanged();
+    void countFinishedRequestsChanged();
 
 };
 
