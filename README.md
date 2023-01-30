@@ -20,7 +20,7 @@ Application is fully native, your don't need to install additional stuff.
 * Image generation for attaching to the messager, bug tracker etc
 * Export from OpenAPI v3 (supported only JSON)
 
-## Fields commands
+## Field types
 * `url X` - where X is valid url. This is the URL that will be requested.
 * `met X` - where X can be - GET, POST, PUT, DELETE. This command defines the request method.
 * `form X=Y` - where X it name of form parameter and Y it value. This command adds a value to the form in the body.
