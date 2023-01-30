@@ -6,7 +6,7 @@ Application is fully native, your don't need to install additional stuff.
 ![Screenshoot](https://github.com/trueromanus/ArdorQuery/raw/main/src/screenshoot.png)
 ## Features
 * Making insecure and secure HTTP(s) requests
-* Small set of human-readable field commands
+* Small set of human-readable fields types
 * Import/Export field commands to/from clipboard or file
 * Supporting h2 by default (can be lowered to HTTP/1.1 with special field)
 * Sending any HTTP headers or custom headers
