@@ -93,7 +93,7 @@ ApplicationWindow {
         anchors.top: qtInfo.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 12
-        text: "Copyright (c) 2022 Roman Vladimirov"
+        text: "Copyright (c) 2022-2023 Roman Vladimirov"
         font.pointSize: 10
     }
 }
