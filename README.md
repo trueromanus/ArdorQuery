@@ -7,6 +7,7 @@ Application is fully native, your don't need to install additional stuff.
 ## Features
 * Making insecure and secure HTTP(s) requests
 * Small set of human-readable fields types
+* Parts of request filled in separate text blocks with word wrap. The entire request is visible and readable.
 * Import/Export field commands to/from clipboard or file
 * Supporting h2 by default (can be lowered to HTTP/1.1 with special field)
 * Sending any HTTP headers or custom headers
