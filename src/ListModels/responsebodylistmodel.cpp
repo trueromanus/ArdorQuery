@@ -198,6 +198,14 @@ int ResponseBodyListModel::getCurrentFindedLine() noexcept
     return !m_findedLines.isEmpty() ? m_currentFindedLine : -1;
 }
 
+void ResponseBodyListModel::clear() noexcept
+{
+    m_findedLines.clear();
+    m_findedLinesMap.clear();
+    m_lines.clear();
+    m_originalBody.clear();
+}
+
 void ResponseBodyListModel::searchText(const QString &filter) noexcept
 {
     if (m_previousFilter == filter) return;

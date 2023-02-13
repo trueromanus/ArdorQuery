@@ -74,6 +74,7 @@ public:
     int nextFindedResult() noexcept;
     int previousFindedResult() noexcept;
     int getCurrentFindedLine() noexcept;
+    void clear() noexcept;
 
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
 

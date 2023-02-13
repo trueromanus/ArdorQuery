@@ -98,6 +98,7 @@ ShortcutsListModel::ShortcutsListModel(QObject *parent)
     queriesSection->setDescription("Creating new query, deleting existing etc");
     queriesSection->addShortcut("Ctrl-Insert", "Create new query");
     queriesSection->addShortcut("Ctrl-Tab", "holding Ctrl and further pressing Tab change opening query");
+    queriesSection->addShortcut("Ctrl-Delete", "Delete selected query");
     m_sections.append(queriesSection);
 
     auto coptResultSection = new ShortcutSection();

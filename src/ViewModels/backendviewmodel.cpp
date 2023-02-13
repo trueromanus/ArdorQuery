@@ -226,6 +226,11 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         addNewRequest();
     }
 
+    // Ctrl-Delete
+    if ((nativeCode == 339 || key == Qt::Key_Delete) && control) {
+        deleteCurrentRequest();
+    }
+
     // --------
     // Copying results
 
@@ -391,6 +396,13 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
 
     auto createdIndex = m_requests->addItem(model);
     m_requests->selectItem(createdIndex);
+}
+
+void BackendViewModel::deleteCurrentRequest() noexcept
+{
+    if (m_requests->singleRequest()) addNewRequest();
+
+    m_requests->deleteSelectedItem();
 }
 
 void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept

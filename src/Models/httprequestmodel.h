@@ -41,6 +41,8 @@ public:
 
     QUuid requestId() const noexcept { return m_requestId; }
 
+    void clear() noexcept;
+
 signals:
     void titleChanged();
     void requestModelChanged();

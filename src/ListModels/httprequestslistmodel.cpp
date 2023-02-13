@@ -91,6 +91,30 @@ int HttpRequestsListModel::addItem(const HttpRequestModel* model) noexcept
     return m_requests->count() - 1;
 }
 
+bool HttpRequestsListModel::singleRequest() const noexcept
+{
+    return m_requests->count() == 1;
+}
+
+void HttpRequestsListModel::deleteSelectedItem() noexcept
+{
+    auto selectedIndex = m_selectedIndex;
+    m_selectedIndex -= 1;
+    if (m_selectedIndex < 0) m_selectedIndex = 0;
+
+    beginResetModel();
+
+    auto request = m_requests->at(selectedIndex);
+
+    request->clear();
+
+    m_requests->removeAt(selectedIndex);
+
+    endResetModel();
+
+    selectItem(m_selectedIndex);
+}
+
 QSharedPointer<QList<HttpRequestModel *> > HttpRequestsListModel::getList() const noexcept
 {
     return m_requests;

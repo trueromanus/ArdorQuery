@@ -20,3 +20,9 @@ HttpRequestModel::HttpRequestModel(QObject *parent)
 {
 
 }
+
+void HttpRequestModel::clear() noexcept
+{
+    m_requestModel->clearFields();
+    m_resultModel->bodyModel()->clear();
+}

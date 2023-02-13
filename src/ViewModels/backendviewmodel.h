@@ -80,6 +80,8 @@ public:
     Q_INVOKABLE void generateImageToClipboard() noexcept;
     Q_INVOKABLE void importFromOpenApi(int index) noexcept;
 
+    void deleteCurrentRequest() noexcept;
+
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(const bool helpVisible) noexcept;
 
