@@ -330,29 +330,35 @@ Item {
                             flickableDirection: Flickable.HorizontalAndVerticalFlick
                             boundsBehavior: ListView.StopAtBounds
                             model: viewModel.bodyModel
-                            delegate: Item {
-                                width: listStrings.width
-                                height: line.height
-
-                                Rectangle {
-                                    color: "black"
-                                    opacity: .05
-                                    anchors.fill: parent
-                                    visible: isFindIndex
-                                }
-                                Text {
-                                    id: line
-                                    leftPadding: 4
-                                    rightPadding: 10
-                                    textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
-                                    text: currentLine
-                                    width: bodyContainer.width
-                                    wrapMode: Text.Wrap
-                                    font.pointSize: 9
-                                }
-                            }
+                            delegate: bodyLineComponent
                             ScrollBar.vertical: ScrollBar {
                                 active: true
+                            }
+
+                            Component {
+                                id: bodyLineComponent
+
+                                Item {
+                                    width: listStrings.width
+                                    height: line.height
+
+                                    Rectangle {
+                                        color: "black"
+                                        opacity: .05
+                                        anchors.fill: parent
+                                        visible: isFindIndex
+                                    }
+                                    Text {
+                                        id: line
+                                        leftPadding: 4
+                                        rightPadding: 10
+                                        textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
+                                        text: currentLine
+                                        width: bodyContainer.width
+                                        wrapMode: Text.Wrap
+                                        font.pointSize: 9
+                                    }
+                                }
                             }
                         }
                     }
