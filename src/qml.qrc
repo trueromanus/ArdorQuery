@@ -40,5 +40,6 @@
         <file>Views/Controls/AddressesPalette.qml</file>
         <file>Views/Controls/OpenApiWindowHeader.qml</file>
         <file>Views/Controls/ApplicationFooter.qml</file>
+        <file>Views/Controls/BodyTypesPopup.qml</file>
     </qresource>
 </RCC>

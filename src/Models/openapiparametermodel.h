@@ -30,6 +30,7 @@ public:
 
     QString name() const noexcept { return m_name; }
     bool required() const noexcept { return m_required; }
+    QString in() const noexcept { return m_in; }
     bool isQuery() const noexcept { return m_in == "query"; }
     bool isPath() const noexcept { return m_in == "path"; }
     bool isHeader() const noexcept { return m_in == "header"; }

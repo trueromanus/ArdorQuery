@@ -17,6 +17,7 @@
 #define OPENAPIEXPORTERVIEWMODEL_H
 
 #include <QObject>
+#include <QFutureWatcher>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QJsonObject>
@@ -45,6 +46,9 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(QString selectedTab READ selectedTab WRITE setSelectedTab NOTIFY selectedTabChanged)
     Q_PROPERTY(bool exporterPage READ exporterPage NOTIFY exporterPageChanged)
     Q_PROPERTY(bool savedOptionsPage READ savedOptionsPage NOTIFY savedOptionsPageChanged)
+    Q_PROPERTY(int prepareIdentifier READ prepareIdentifier WRITE setPrepareIdentifier NOTIFY prepareIdentifierChanged)
+    Q_PROPERTY(QString prepareBodyType READ prepareBodyType WRITE setPrepareBodyType NOTIFY prepareBodyTypeChanged)
+    Q_PROPERTY(QStringList bodyTypes READ bodyTypes NOTIFY bodyTypesChanged)
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
@@ -60,7 +64,10 @@ private:
     bool m_loading { false };
     bool m_helpVisible { false };
     QStringList m_tabs { QStringList() };
+    QFutureWatcher<void>* m_schemeWatcher { new QFutureWatcher<void>(this) };
     bool m_openedCommandPalette { false };
+    int m_prepareIndetifier { -1 };
+    QString m_prepareBodyType { "" };
     const QString IntegerType { "integer" };
     const QString DoubleType { "number" };
     const QString StringType { "string" };
@@ -75,6 +82,7 @@ private:
     const QString Exporter { "Exporter" };
     const QString SavedOptions { "Saved options" };
     QString m_selectedTab { Exporter };
+    QStringList m_bodyTypes { QStringList() };
 
 public:
     explicit OpenApiExporterViewModel(QObject *parent = nullptr);
@@ -117,6 +125,14 @@ public:
     bool exporterPage() const noexcept { return m_selectedTab == Exporter; }
     bool savedOptionsPage() const noexcept { return m_selectedTab == SavedOptions; }
 
+    int prepareIdentifier() const noexcept { return m_prepareIndetifier; }
+    void setPrepareIdentifier(int prepareIdentifier) noexcept;
+
+    QString prepareBodyType() const noexcept { return m_prepareBodyType; }
+    void setPrepareBodyType(const QString& prepareBodyType) noexcept;
+
+    QStringList bodyTypes() const noexcept { return m_bodyTypes; }
+
     void cancelCurrentRequest() noexcept;
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
@@ -125,17 +141,25 @@ public:
     Q_INVOKABLE void addCurrentToAddresses() noexcept;
     Q_INVOKABLE void togglePages() noexcept;
     Q_INVOKABLE void editInSelectedAddress() noexcept;
+    Q_INVOKABLE bool isHasFewBodies(int identifier) noexcept;
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;
     void parseSecuritySchemas(OpenApiRoutesOptions* options, const QJsonObject& schemas) noexcept;
     void parseSecurity(OpenApiRoutesOptions* options, const QJsonArray& securities) noexcept;
-    QList<OpenApiRouteModel*> parseRoutes(QJsonObject routeObject) noexcept;
+    QList<OpenApiRouteModel*> parseRoutes(QJsonObject routeObject, QJsonObject rootObject) noexcept;
+    QString parseJsonBodyModel(const QJsonObject& schemaModel, const QJsonObject& rootObject);
+    QJsonValue parseBodyModelLevel(const QJsonObject& schemaModel, const QJsonObject& rootObject, QSet<QString> usedModels);
+    QJsonObject getModelByReference(const QString& reference, const QJsonObject& rootObject);
     void parseParameters(OpenApiRouteModel* routeModel, const QJsonArray& parametersArray) noexcept;
     void removeLoadedRoutes(const QString& url);
+    void loadRoutes(const QString& addressId);
+    QList<OpenApiRouteModel*> readCache(const QString& cacheFile);
+    void writeCache(const QString& cacheFile, const QList<OpenApiRouteModel*>& routes);
 
 private slots:
     void requestFinished(QNetworkReply *reply);
+    void parsingFinished();
     void addressListChanged();
     void addressItemSelected(const QUuid& id);
 
@@ -155,6 +179,9 @@ signals:
     void exporterPageChanged();
     void savedOptionsPageChanged();
     void authMethodChanged();
+    void prepareIdentifierChanged();
+    void bodyTypesChanged();
+    void prepareBodyTypeChanged();
 
 };
 

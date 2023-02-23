@@ -19,6 +19,7 @@
 #include <QString>
 #include <QList>
 #include <QMultiMap>
+#include <QJsonObject>
 #include "openapiparametermodel.h"
 
 class OpenApiRouteModel
@@ -28,8 +29,12 @@ private:
     QString m_path { "" };
     QString m_method { "" };
     QString m_summary { "" };
+    QMap<QString, QString> m_bodyTypes { QMap<QString, QString>() };
     QList<OpenApiParameterModel*> m_parameters { QList<OpenApiParameterModel*>() };
     QList<QMultiMap<QString, QString>> m_securities { QList<QMultiMap<QString, QString>>() };
+    const QString m_bodiesField { "bodies" };
+    const QString m_parametersField { "parameters" };
+    const QString m_securitiesField { "securities" };
 
 public:
     OpenApiRouteModel();
@@ -45,6 +50,9 @@ public:
     void setIdentifier(int identifier) noexcept { m_identifier = identifier; }
 
     void addParameter(const OpenApiParameterModel* model) noexcept;
+    void addBodyType(const QString& type, const QString& body) noexcept;
+    QStringList bodyTypes() const noexcept { return m_bodyTypes.keys(); }
+    QString bodyByType(const QString& bodyType) const noexcept { return m_bodyTypes.contains(bodyType) ? m_bodyTypes.value(bodyType) : ""; };
 
     void clear() noexcept;
 
@@ -53,6 +61,10 @@ public:
     bool hasSecurity() const noexcept { return !m_securities.isEmpty(); }
     QStringList getFirstKeys() const noexcept;
     QStringList getKeys(QStringList keys) const noexcept;
+    bool isHasMoreThenOneBody() const noexcept { return m_bodyTypes.count() > 1; }
+
+    QJsonObject toJsonObject() const noexcept;
+    void fromJsonObject(const QJsonObject& object) noexcept;
 
     const QList<OpenApiParameterModel*>& parameters() const;
 

@@ -1,4 +1,4 @@
-QT += quick network websockets quickcontrols2
+QT += quick network websockets quickcontrols2 concurrent
 
 CONFIG(debug, debug|release) {
     QT += testlib

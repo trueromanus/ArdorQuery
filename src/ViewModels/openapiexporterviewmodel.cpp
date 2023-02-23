@@ -17,7 +17,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QtConcurrent>
 #include "openapiexporterviewmodel.h"
+#include "../globalhelpers.h"
 
 OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
     : QObject{parent}
@@ -30,6 +32,7 @@ OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &OpenApiExporterViewModel::requestFinished);
     connect(m_addresses, &OpenApiAddressesListModel::addressesChanged, this, &OpenApiExporterViewModel::addressListChanged);
     connect(m_addressPalette, &AddressesPaletteListModel::itemSelected, this, &OpenApiExporterViewModel::addressItemSelected);
+    connect(m_schemeWatcher, &QFutureWatcher<int>::finished, this, &OpenApiExporterViewModel::parsingFinished);
 }
 
 void OpenApiExporterViewModel::setBaseUrl(const QString &baseUrl) noexcept
@@ -92,6 +95,22 @@ void OpenApiExporterViewModel::setSelectedTab(const QString &selectedTab) noexce
     emit selectedTabChanged();
     emit exporterPageChanged();
     emit savedOptionsPageChanged();
+}
+
+void OpenApiExporterViewModel::setPrepareIdentifier(int prepareIdentifier) noexcept
+{
+    if (m_prepareIndetifier == prepareIdentifier) return;
+
+    m_prepareIndetifier = prepareIdentifier;
+    emit prepareIdentifierChanged();
+}
+
+void OpenApiExporterViewModel::setPrepareBodyType(const QString &prepareBodyType) noexcept
+{
+    if (m_prepareBodyType == prepareBodyType) return;
+
+    m_prepareBodyType = prepareBodyType;
+    emit prepareBodyTypeChanged();
 }
 
 void OpenApiExporterViewModel::cancelCurrentRequest() noexcept
@@ -221,6 +240,16 @@ void OpenApiExporterViewModel::editInSelectedAddress() noexcept
     m_addresses->editItem(index, m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter(), m_authMethod);
 }
 
+bool OpenApiExporterViewModel::isHasFewBodies(int identifier) noexcept
+{
+    auto route = m_routeList->getRouteByIndex(identifier);
+
+    m_bodyTypes = route->bodyTypes();
+    emit bodyTypesChanged();
+
+    return route->isHasMoreThenOneBody();
+}
+
 void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexcept
 {
     auto document = QJsonDocument::fromJson(json.toUtf8());
@@ -240,7 +269,7 @@ void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexc
         return;
     }
 
-    auto routes = parseRoutes(rootObject.value("paths").toObject());
+    auto routes = parseRoutes(rootObject.value("paths").toObject(), rootObject);
 
     auto options = new OpenApiRoutesOptions();
 
@@ -294,11 +323,12 @@ void OpenApiExporterViewModel::parseSecurity(OpenApiRoutesOptions *options, cons
     }
 }
 
-QList<OpenApiRouteModel*> OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject) noexcept
+QList<OpenApiRouteModel*> OpenApiExporterViewModel::parseRoutes(QJsonObject routeObject, QJsonObject rootObject) noexcept
 {
     auto routePaths = routeObject.keys();
     QList<OpenApiRouteModel*> routes;
     int iterator = 0;
+    QMap<QString, QString> completedTypes;
 
     foreach (auto routePath, routePaths) {
         auto route = routeObject.value(routePath);
@@ -316,7 +346,36 @@ QList<OpenApiRouteModel*> OpenApiExporterViewModel::parseRoutes(QJsonObject rout
             if (methodObject.contains("parameters")) parseParameters(model, methodObject.value("parameters").toArray());
 
             if (methodObject.contains("requestBody")) {
-                //TODO: body scheme
+                auto requestBodyObject = methodObject.value("requestBody").toObject();
+                if (requestBodyObject.contains("content")) {
+                    auto mimeTypeObject = requestBodyObject.value("content").toObject();
+                    foreach (auto mimeType, mimeTypeObject.keys()) {
+                        auto mimeTypeContentObject = mimeTypeObject.value(mimeType).toObject();
+                        if (mimeTypeContentObject.contains("schema")) {
+                            auto schema = mimeTypeContentObject.value("schema").toObject();
+                            auto isJson = mimeType.contains("json");
+                            auto isXml = mimeType.contains("xml");
+
+                            if (schema.contains("$ref")) {
+                                auto reference = schema.value("$ref").toString() + (isJson ? ".json" : ".xml");
+                                if (completedTypes.contains(reference)) {
+                                    model->addBodyType(mimeType, completedTypes.value(reference));
+                                    continue;
+                                }
+                            }
+
+                            if (isJson) {
+                                auto bodyModel = parseJsonBodyModel(schema, rootObject);
+                                model->addBodyType(mimeType, bodyModel);
+                                if (schema.contains("$ref")) completedTypes.insert(schema.value("$ref").toString() + ".json", bodyModel);
+                                continue;
+                            }
+                            if (isXml) {
+                                //TODO: implement xml generation
+                            }
+                        }
+                    }
+                }
             }
 
             if (methodObject.contains("security")) {
@@ -344,6 +403,94 @@ QList<OpenApiRouteModel*> OpenApiExporterViewModel::parseRoutes(QJsonObject rout
     }
 
     return routes;
+}
+
+QString OpenApiExporterViewModel::parseJsonBodyModel(const QJsonObject &schemaModel, const QJsonObject &rootObject)
+{
+    QSet<QString> usedModels;
+    auto value = parseBodyModelLevel(schemaModel, rootObject, usedModels);
+
+    QJsonDocument document;
+
+    if (value.isObject()) {
+        document = QJsonDocument(value.toObject());
+    }
+
+    if (value.isArray()) {
+        document = QJsonDocument(value.toArray());
+    }
+
+    if (value.isBool() || value.isDouble() || value.isString() || value.isNull() || value.isUndefined()) {
+        document = QJsonDocument::fromVariant(value.toVariant());
+    }
+
+    return document.toJson();
+}
+
+QJsonValue OpenApiExporterViewModel::parseBodyModelLevel(const QJsonObject &schemaModel, const QJsonObject &rootObject, QSet<QString> usedModels)
+{
+    QJsonObject actualSchemaObject;
+    QString reference;
+    if (schemaModel.contains("$ref")) {
+        reference = schemaModel.value("$ref").toString();
+        if (usedModels.contains(reference)) return QJsonValue("");
+        actualSchemaObject = getModelByReference(reference, rootObject);
+        usedModels.insert(reference);
+    }
+
+    if (schemaModel.contains("type")) actualSchemaObject = schemaModel;
+
+    auto type = actualSchemaObject.value("type");
+    if (type == "object") {
+        QJsonObject object;
+        if (actualSchemaObject.contains("properties")) {
+            auto properties = actualSchemaObject.value("properties").toObject();
+            foreach (auto propertyKey, properties.keys()) {
+                object[propertyKey] = parseBodyModelLevel(properties[propertyKey].toObject(), rootObject, usedModels);
+            }
+        } else if (actualSchemaObject.contains("additionalProperties")) {
+            auto additionalPropertiesObject = actualSchemaObject.value("additionalProperties").toObject();
+            object["additionalProp"] = parseBodyModelLevel(additionalPropertiesObject, rootObject, usedModels);
+        }
+        return object;
+    }
+    if (type == "array") {
+        QJsonArray array;
+        if (schemaModel.contains("items")) {
+            auto itemObject = parseBodyModelLevel(schemaModel.value("items").toObject(), rootObject, usedModels);
+            array.append(itemObject);
+        }
+        return array;
+    }
+    if (type == "string") return QJsonValue("");
+    if (type == "integer") return QJsonValue(0);
+    if (type == "number") return QJsonValue(0.0f);
+    if (type == "boolean") return QJsonValue(false);
+
+    return QJsonValue();
+}
+
+QJsonObject OpenApiExporterViewModel::getModelByReference(const QString &reference, const QJsonObject &rootObject)
+{
+    if (reference == nullptr) return QJsonObject();
+    if (reference.isEmpty()) return QJsonObject();
+    if (!reference.startsWith("#/")) return QJsonObject();
+
+    auto path = QString(reference);
+    auto items = path.replace("#", "").split("/", Qt::SkipEmptyParts);
+
+    auto currentObject = rootObject;
+    auto countTakes = 0;
+
+    foreach (auto item, items) {
+        if (currentObject.contains(item)) {
+            currentObject = currentObject.value(item).toObject();
+            countTakes++;
+        }
+    }
+
+    if (countTakes != items.count()) return QJsonObject();
+    return currentObject;
 }
 
 void OpenApiExporterViewModel::parseParameters(OpenApiRouteModel* routeModel, const QJsonArray& parametersArray) noexcept
@@ -391,6 +538,56 @@ void OpenApiExporterViewModel::removeLoadedRoutes(const QString &url)
     m_routes.remove(m_url);
 }
 
+void OpenApiExporterViewModel::loadRoutes(const QString &addressId)
+{
+    auto cachePath = getCachePath(addressId);
+    if (QFile::exists(cachePath)) {
+        //createIfNotExistsFile(cachePath, "[]");
+
+    }
+}
+
+QList<OpenApiRouteModel*> OpenApiExporterViewModel::readCache(const QString& cacheFile)
+{
+    QList<OpenApiRouteModel*> result;
+
+    auto file = QFile(getCachePath(cacheFile));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return result;
+
+    auto content = file.readAll();
+
+    file.close();
+
+    auto document = QJsonDocument::fromJson(content);
+    auto items = document.array();
+    foreach (auto item, items) {
+        if (!item.isObject()) continue;
+
+        auto model = new OpenApiRouteModel();
+        model->fromJsonObject(item.toObject());
+
+        result.append(model);
+    }
+
+    return result;
+}
+
+void OpenApiExporterViewModel::writeCache(const QString& cacheFile, const QList<OpenApiRouteModel*>& routes)
+{
+    QJsonArray array;
+
+    foreach (auto route, routes) {
+        array.append(route->toJsonObject());
+    }
+
+    QFile file(getCachePath(cacheFile));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+
+    QJsonDocument document(array);
+    file.write(document.toJson());
+    file.close();
+}
+
 void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
 {
     if (reply->error() != QNetworkReply::NoError) {
@@ -401,8 +598,13 @@ void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
     //TODO: Support YAML
 
     auto scheme = reply->readAll();
-    parseJsonSpecification(scheme);
 
+    auto future = QtConcurrent::run(&OpenApiExporterViewModel::parseJsonSpecification, this, scheme);
+    m_schemeWatcher->setFuture(future);
+}
+
+void OpenApiExporterViewModel::parsingFinished()
+{
     m_loading = false;
     m_currentReply = nullptr;
     emit loadingChanged();

@@ -29,6 +29,7 @@ public:
     void setBaseUrl(const QString& baseUrl) noexcept { m_baseUrl = baseUrl; }
     void setFilter(const QString& filter) noexcept { m_filter = filter; }
     void setSecurities(const QString& securities) noexcept { m_securities = securities; }
+    void setAddressId(const QString& id) noexcept { m_addressId = QUuid(id); }
 };
 
 #endif // OPENAPIADDRESSMODEL_H

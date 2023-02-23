@@ -13,7 +13,7 @@ ApplicationWindow {
     maximumHeight: 800
     modality: Qt.WindowModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
-    title: "Export from OpenAPI"
+    title: "Import from OpenAPI"
     background: Rectangle {
         anchors.fill: parent
         color: "white"
@@ -369,8 +369,14 @@ ApplicationWindow {
                 MouseArea {
                     anchors.fill: parent
                     onPressed: {
-                        backend.importFromOpenApi(identifier);
-                        root.close();
+                        if (backend.openApiExporter.isHasFewBodies(identifier)) {
+                            backend.openApiExporter.prepareIdentifier = identifier;
+                            bodyTypesPopup.open();
+
+                        } else {
+                            backend.importFromOpenApi(identifier);
+                            root.close();
+                        }
                     }
                 }
             }
@@ -567,5 +573,9 @@ ApplicationWindow {
         id: openApiShortcutPanel
         mode: "openapi"
         visible: backend.openApiExporter.helpVisible
+    }
+
+    BodyTypesPopup {
+        id: bodyTypesPopup
     }
 }

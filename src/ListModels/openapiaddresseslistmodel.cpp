@@ -194,6 +194,7 @@ void OpenApiAddressesListModel::readCache()
         if (addressObject.contains(m_filterField)) model->setFilter(addressObject[m_filterField].toString());
         if (addressObject.contains(m_titleField)) model->setTitle(addressObject[m_titleField].toString());
         if (addressObject.contains(m_securitiesField)) model->setSecurities(addressObject[m_securitiesField].toString());
+        if (addressObject.contains(m_addressIdField)) model->setAddressId(addressObject[m_addressIdField].toString());
 
         m_usedAddresses->append(model);
     }
@@ -209,6 +210,7 @@ void OpenApiAddressesListModel::writeCache()
         jsonObject[m_filterField] = usedAddress->filter();
         jsonObject[m_baseUrlField] = usedAddress->baseUrl();
         jsonObject[m_securitiesField] = usedAddress->securities();
+        jsonObject[m_addressIdField]= usedAddress->addressId().toString();
 
         items.append(jsonObject);
     }

@@ -1,10 +1,11 @@
-import QtQuick /* 2.15 */
-import QtQuick.Controls /* 2.15 */
-import QtQuick.Layouts /* 1.15 */
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 Popup {
     id: root
-    width: 400
+    anchors.centerIn: parent
+    width: 480
     height: 300
     closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
     modal: true
@@ -18,22 +19,22 @@ Popup {
             Layout.fillHeight: true
 
             Text {
-                id: titleRequests
+                id: titleText
                 anchors.top: parent.top
                 font.pointSize: 11
-                text: "Queries"
+                text: "Select body"
             }
 
             ListView {
                 id: requestsListView
-                anchors.top: titleRequests.bottom
-                anchors.topMargin: 9
+                anchors.top: titleText.bottom
+                anchors.topMargin: 10
                 anchors.right: parent.right
-                anchors.rightMargin: 20
+                anchors.rightMargin: 4
                 anchors.left: parent.left
                 anchors.bottomMargin: 4
                 anchors.bottom: parent.bottom
-                model: backend.requests
+                model: backend.openApiExporter.bodyTypes
                 clip: true
                 delegate: Item {
                     width: requestsListView.width
@@ -41,8 +42,12 @@ Popup {
 
                     Rectangle {
                         anchors.fill: parent
-                        border.width: 1
-                        border.color: isSelected ? "blue" : "transparent"
+                        color: "white"
+                        opacity: .4
+                        anchors.leftMargin: 2
+                        anchors.rightMargin: 2
+                        anchors.topMargin: 2
+                        anchors.bottomMargin: 2
                     }
 
                     Text {
@@ -51,7 +56,7 @@ Popup {
                         anchors.leftMargin: 4
                         anchors.right: parent.right
                         anchors.rightMargin: 4
-                        text: title
+                        text: modelData
                         elide: Text.ElideRight
                         maximumLineCount: 2
                         wrapMode: Text.Wrap
@@ -60,7 +65,9 @@ Popup {
                     MouseArea {
                         anchors.fill: parent
                         onPressed: {
-                            backend.requests.selectItem(currentIndex);
+                            backend.openApiExporter.prepareBodyType = modelData;
+                            backend.importFromOpenApi(backend.openApiExporter.prepareIdentifier);
+                            openApiExportWindow.item.close();
                         }
                     }
                 }

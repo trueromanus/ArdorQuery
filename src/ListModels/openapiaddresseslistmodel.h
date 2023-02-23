@@ -33,6 +33,7 @@ private:
     const QString m_filterField { "filter" };
     const QString m_titleField { "title" };
     const QString m_securitiesField { "securities" };
+    const QString m_addressIdField { "addressId" };
     enum OutputFormatRoles {
         IdentfierRole = Qt::UserRole + 1,
         TitleRole,
