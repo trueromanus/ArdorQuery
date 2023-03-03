@@ -16,7 +16,7 @@
 #include "globalconstants.h"
 
 QString UrlPrefix = "url ";
-QString MethodPrefix = "met ";
+QString MethodPrefix = "method ";
 QString FormPrefix = "form ";
 QString BodyPrefix = "body ";
 QString FilePrefix = "file ";
