@@ -73,6 +73,8 @@ void HttpPerformerViewModel::cancelRequest()
 
 void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 {
+    if (m_runningRequests->contains(request->requestId().toString())) return;
+
     auto url = request->requestModel()->getUrl();
     if (url.isEmpty()) {
         emit pushErrorMessage("Request perform", "URL not specified");
