@@ -22,7 +22,7 @@ jobs:
     - name: copy executable
       run: cp src/ArdorQuery scripts/deb/source/usr/bin
     - name: build deb
-      run: dpkg-deb -d scripts/deb/source ardorquery_amd64.deb
+      run: dpkg-deb -b scripts/deb/source ardorquery_amd64.deb
     - uses: actions/upload-artifact@v3
       with:
         path: ardorquery_amd64.deb
