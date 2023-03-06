@@ -20,7 +20,7 @@ jobs:
     - name: run make
       run: make -C src
     - name: copy executable
-      run: cp src/ArdorQuery scripts/deb/source/usr/bin/ArdorQuery
+      run: mkdir -p scripts/deb/source/usr/bin/ && cp src/ArdorQuery scripts/deb/source/usr/bin/ArdorQuery
     - name: build deb
       run: dpkg-deb -b scripts/deb/source ardorquery_amd64.deb
     - uses: actions/upload-artifact@v3
