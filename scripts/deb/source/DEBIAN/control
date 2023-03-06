@@ -1,8 +1,8 @@
 Package: ardorquery
-Version: 0.0.5
+Version: 0.0.7
 Installed-Size: 2272
 Maintainer: TrueRomanus <x6doj2tubzrf@mail.ru>
-Section: video
+Section: utils
 Source: https://github.com/trueromanus/ArdorQuery
 Homepage: https://github.com/trueromanus/ArdorQuery
 Architecture: amd64
