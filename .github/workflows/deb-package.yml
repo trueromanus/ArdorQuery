@@ -1,0 +1,29 @@
+name: PackageDeb
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: apt-update
+      run: sudo apt-get update -qq
+    - name: apt get qt
+      run: sudo apt-get install -y --no-install-recommends qt6-base-dev libqt6websockets6-dev libqt6svg6-dev qt6-declarative-dev qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-dialogs qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-layouts qml6-module-qtqml-workerscript qml-qt6 libqt6quick6 libqt6quickcontrols2-6 libqt6opengl6-dev
+    - name: run qmake
+      run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
+    - name: run make
+      run: make -C src
+    - name: copy executable
+      run: mkdir -p scripts/deb/source/usr/bin/ && cp src/ArdorQuery scripts/deb/source/usr/bin/ArdorQuery
+    - name: build deb
+      run: dpkg-deb -b scripts/deb/source ardorquery_amd64.deb
+    - uses: actions/upload-artifact@v3
+      with:
+        path: ardorquery_amd64.deb
+      
