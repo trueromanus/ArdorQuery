@@ -105,6 +105,14 @@ void HttpPerformerViewModel::performAllRequest()
     emit countRequestsChanged();
 }
 
+void HttpPerformerViewModel::setGlobalVariable(const GlobalVariablesListModel *globalVariable) noexcept
+{
+    if (m_globalVariable == globalVariable) return;
+
+    m_globalVariable = const_cast<GlobalVariablesListModel*>( globalVariable );
+    emit globalVariableChanged();
+}
+
 QByteArray HttpPerformerViewModel::setupSimpleForm(QStringList&& parameters)
 {
     QUrlQuery postData;

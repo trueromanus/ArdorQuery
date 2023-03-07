@@ -148,6 +148,7 @@ Item {
                             anchors.fill: parent
                             model: viewModel.headers
                             boundsBehavior: ListView.StopAtBounds
+                            flickDeceleration: 5000
                             delegate: TextArea {
                                 readOnly: true
                                 leftPadding: 4
@@ -358,6 +359,13 @@ Item {
                                         wrapMode: Text.Wrap
                                         font.pointSize: 9
                                     }
+                                }
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onPressed: {
+                                    console.log(mouseX, mouseY, listStrings.contentX, listStrings.contentY);
                                 }
                             }
                         }

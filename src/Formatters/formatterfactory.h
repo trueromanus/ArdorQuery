@@ -23,8 +23,8 @@
 class FormatterFactory
 {
 private:
-    QScopedPointer<QMap<QString, OutputFormatter*>> m_instanceCache { new QMap<QString, OutputFormatter*>() };
-    QScopedPointer<OutputFormatter> m_nullableFormatter { new OutputFormatter() };
+    QMap<QString, OutputFormatter*> m_instanceCache { QMap<QString, OutputFormatter*>() };
+    OutputFormatter* m_nullableFormatter { new OutputFormatter() };
 
 public:
     FormatterFactory();

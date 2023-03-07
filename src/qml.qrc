@@ -41,5 +41,6 @@
         <file>Views/Controls/OpenApiWindowHeader.qml</file>
         <file>Views/Controls/ApplicationFooter.qml</file>
         <file>Views/Controls/BodyTypesPopup.qml</file>
+        <file>Views/GlobalVariablesWindow.qml</file>
     </qresource>
 </RCC>

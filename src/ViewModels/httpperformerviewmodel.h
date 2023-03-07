@@ -26,12 +26,14 @@
 #include "httprequestviewmodel.h"
 #include "httprequestresultviewmodel.h"
 #include "../Models/httprequestmodel.h"
+#include "../ListModels/globalvariableslistmodel.h"
 
 class HttpPerformerViewModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int countRequests READ countRequests NOTIFY countRequestsChanged)
     Q_PROPERTY(int countFinishedRequests READ countFinishedRequests NOTIFY countFinishedRequestsChanged)
+    Q_PROPERTY(GlobalVariablesListModel* globalVariable READ globalVariable WRITE setGlobalVariable NOTIFY globalVariableChanged)
 
 private:
     QScopedPointer<QNetworkAccessManager> m_networkManager { new QNetworkAccessManager() };
@@ -40,6 +42,7 @@ private:
     QSharedPointer<QList<HttpRequestModel*>> m_requests { nullptr };
     int m_countRequests { 0 };
     int m_countFinishedRequests { 0 };
+    GlobalVariablesListModel* m_globalVariable { nullptr };
 
 public:
     explicit HttpPerformerViewModel(QObject *parent = nullptr);
@@ -53,7 +56,11 @@ public:
     void performAllRequest();
 
     int countRequests() const noexcept { return m_countRequests; }
+
     int countFinishedRequests() const noexcept { return m_countFinishedRequests; }
+
+    GlobalVariablesListModel* globalVariable() const noexcept { return m_globalVariable; }
+    void setGlobalVariable(const GlobalVariablesListModel* globalVariable) noexcept;
 
 private:
     QByteArray setupSimpleForm(QStringList&& parameters);
@@ -75,6 +82,7 @@ signals:
     void pushErrorMessage(const QString &title, const QString &message);
     void countRequestsChanged();
     void countFinishedRequestsChanged();
+    void globalVariableChanged();
 
 };
 

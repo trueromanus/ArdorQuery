@@ -41,6 +41,12 @@ QVariant GlobalVariablesListModel::data(const QModelIndex &index, int role) cons
         case IdentifierRole: {
             return QVariant(identifier);
         }
+        case IsActiveRole:{
+            return QVariant(identifier == m_selected);
+        }
+        case IsOddRole: {
+            return QVariant(identifier % 2 == 1);
+        }
     }
 
     return QVariant();
@@ -56,8 +62,65 @@ QHash<int, QByteArray> GlobalVariablesListModel::roleNames() const
         {
             IdentifierRole,
             "identifier"
+        },
+        {
+            IsActiveRole,
+            "isActive"
+        },
+        {
+            IsOddRole,
+            "isOdd"
         }
     };
+}
+
+void GlobalVariablesListModel::replaceGlobalVariables(QString &value)
+{
+    QString result;
+    foreach (auto variable, m_variables) {
+        auto fullVariable = "{{" + variable + "}}";
+        result = value.replace(fullVariable, m_variables.value(variable));
+    }
+}
+
+void GlobalVariablesListModel::setSelected(int selected) noexcept
+{
+    if (selected == m_selected) return;
+
+    auto oldIndex = m_selected;
+
+    m_selected = selected;
+    emit selectedChanged();
+    emit dataChanged(index(oldIndex), index(oldIndex));
+    emit dataChanged(index(m_selected), index(m_selected));
+}
+
+void GlobalVariablesListModel::addLine()
+{
+    beginResetModel();
+
+    m_lines.append("");
+
+    endResetModel();
+}
+
+bool GlobalVariablesListModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept
+{
+    Q_UNUSED(nativeCode);
+    Q_UNUSED(shift);
+    Q_UNUSED(alt);
+
+    // Ctrl-Insert
+    if (key == Qt::Key_Insert && control) {
+        addLine();
+    }
+
+    return false;
+}
+
+void GlobalVariablesListModel::keysReleased(int key) noexcept
+{
+    Q_UNUSED(key);
 }
 
 void GlobalVariablesListModel::fillLines()
@@ -80,12 +143,18 @@ void GlobalVariablesListModel::clearLines()
 
 }
 
-void GlobalVariablesListModel::addLine()
+void GlobalVariablesListModel::setLine(int identifier, const QString &value)
 {
-    m_lines.append("");
+    if (identifier >= m_lines.count()) return;
+
+    m_lines[identifier] = value;
 }
 
 void GlobalVariablesListModel::removeLine(int index)
 {
+    beginResetModel();
+
     m_lines.removeAt(index);
+
+    endResetModel();
 }

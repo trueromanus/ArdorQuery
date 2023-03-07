@@ -23,15 +23,19 @@
 class GlobalVariablesListModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int selected READ selected WRITE setSelected NOTIFY selectedChanged)
 
 private:
     enum GlobaVariablesRoles {
         LineRole = Qt::UserRole + 1,
-        IdentifierRole
+        IdentifierRole,
+        IsActiveRole,
+        IsOddRole,
     };
 
     QMap<QString, QString> m_variables { QMap<QString, QString>() };
     QStringList m_lines { QStringList() };
+    int m_selected { 0 };
 
 public:
     explicit GlobalVariablesListModel(QObject *parent = nullptr);
@@ -40,12 +44,22 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+    void replaceGlobalVariables(QString& value);
+
+    int selected() const noexcept { return m_selected; }
+    void setSelected(int selected) noexcept;
+
+    void addLine();
+
+    Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
+    Q_INVOKABLE void keysReleased(int key) noexcept;
     Q_INVOKABLE void fillLines();
     Q_INVOKABLE void clearLines();
-    Q_INVOKABLE void addLine();
+    Q_INVOKABLE void setLine(int identifier, const QString& value);
     Q_INVOKABLE void removeLine(int index);
 
 signals:
+    void selectedChanged();
 
 };
 

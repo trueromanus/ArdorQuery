@@ -26,6 +26,7 @@
 #include "../ListModels/outputformatslistmodel.h"
 #include "../ListModels/requestscommandpalettelistmodel.h"
 #include "../ViewModels/openapiexporterviewmodel.h"
+#include "../ListModels/globalvariableslistmodel.h"
 
 class BackendViewModel : public QObject
 {
@@ -41,6 +42,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(RequestsCommandPaletteListModel* requestsCommandPaletter READ requestsCommandPaletter NOTIFY requestsCommandPaletterChanged)
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette NOTIFY openedCommandPaletteChanged)
     Q_PROPERTY(OpenApiExporterViewModel* openApiExporter READ openApiExporter NOTIFY openApiExporterChanged)
+    Q_PROPERTY(GlobalVariablesListModel* globalVariables READ globalVariables NOTIFY globalVariablesChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -54,6 +56,7 @@ private:
     RequestsCommandPaletteListModel* m_requestsCommandPaletter { new RequestsCommandPaletteListModel(this) };
     bool m_openedCommandPalette { false };
     OpenApiExporterViewModel* m_openApiExporter { new OpenApiExporterViewModel(this) };
+    GlobalVariablesListModel* m_globalVariables { new GlobalVariablesListModel(this) };
     bool m_openApiHelpVisible { false };
 
 public:
@@ -69,6 +72,7 @@ public:
     RequestsCommandPaletteListModel* requestsCommandPaletter() const noexcept { return m_requestsCommandPaletter; }
     bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
     OpenApiExporterViewModel* openApiExporter() const noexcept { return m_openApiExporter; }
+    GlobalVariablesListModel* globalVariables() const noexcept { return m_globalVariables; }
 
     Q_INVOKABLE void addNewRequest();
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
@@ -109,6 +113,8 @@ signals:
     void needOpenApiExportWindow();
     void openApiExporterChanged();
     void openApiHelpVisibleChanged();
+    void globalVariablesChanged();
+    void needGlobalVariablesWindow();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

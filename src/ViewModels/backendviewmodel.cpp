@@ -89,8 +89,13 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         return true;
     }
 
+    // Ctrl-F6
+    if (key == Qt::Key_F6 && control) {
+        emit needGlobalVariablesWindow();
+    }
+
     // F6
-    if (key == Qt::Key_F6) {
+    if (key == Qt::Key_F6 && !control) {
         emit needOpenApiExportWindow();
     }
 

@@ -24,6 +24,24 @@ ApplicationWindow {
     footer: ApplicationFooter {
     }
 
+    Item {
+        id: keysItem
+        Keys.onPressed: (event) => {
+            const needAccepted = backend.keysHandler(
+                event.key,
+                event.nativeScanCode,
+                (event.modifiers & Qt.ControlModifier),
+                (event.modifiers & Qt.ShiftModifier),
+                (event.modifiers & Qt.AltModifier)
+            );
+            if (needAccepted) event.accepted = true;
+        }
+        Keys.onReleased: (event) => {
+            backend.keysReleased(event.key);
+        }
+    }
+
+
     HttpRequestEditor {
         id: requestEditor
         visible: backend.tabs.currentTab === 'Request'
@@ -39,6 +57,7 @@ ApplicationWindow {
     ShorcutsHelperPanel {
         id: shortcutPanel
         visible: backend.helpVisible
+        keysItem: keysItem
         Component.onCompleted: {
             shortcutPanel.mode = "main";
         }
@@ -108,11 +127,34 @@ ApplicationWindow {
         }
     }
 
+    Loader {
+        id: globalVariablesWindow
+
+        property bool showWindow
+
+        sourceComponent: showWindow ? globalVariablesWindowComponent : null
+
+        onLoaded: {
+            globalVariablesWindow.item.show();
+        }
+    }
+
+    Component {
+        id: globalVariablesWindowComponent
+
+        GlobalVariablesWindow {
+            onClosing: {
+                globalVariablesWindow.showWindow = false;
+            }
+        }
+    }
+
     Item {
         BackendViewModel {
             id: backend
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel
             requestExternal.textAdvisor: backend.textAdviser
+            requestPerformer.globalVariable: backend.globalVariables
             onNeedOpenFile: {
                 openDialog.open();
             }
@@ -124,6 +166,9 @@ ApplicationWindow {
             }
             onNeedOpenApiExportWindow: {
                 openApiExportWindow.showWindow = true;
+            }
+            onNeedGlobalVariablesWindow: {
+                globalVariablesWindow.showWindow = true;
             }
             Component.onDestruction: {
                 backend.openApiExporter.addresses.saveSavedOptions();

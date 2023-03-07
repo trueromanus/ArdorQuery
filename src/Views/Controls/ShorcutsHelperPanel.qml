@@ -11,6 +11,7 @@ Rectangle {
     visible: false
 
     property alias mode: listModel.mode
+    property Item keysItem
 
     ShortcutsListModel {
         id: listModel
@@ -43,6 +44,7 @@ Rectangle {
                 onTextChanged: {
                     listModel.filter = text;
                 }
+                Keys.forwardTo: [keysItem]
             }
         }
 

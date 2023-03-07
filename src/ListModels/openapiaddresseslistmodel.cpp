@@ -182,7 +182,7 @@ void OpenApiAddressesListModel::readCache()
 
     auto document = QJsonDocument::fromJson(content);
     auto items = document.array();
-    foreach (auto item, items) {
+    for (const auto &item : items){
         if (!item.isObject()) continue;
 
         auto addressObject = item.toObject();

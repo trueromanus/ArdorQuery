@@ -46,6 +46,25 @@ ApplicationWindow {
     }
 
     Item {
+        id: windowKeys
+
+        Keys.onPressed: (event) => {
+            const needAccepted = backend.openApiExporter.keysHandler(
+                event.key,
+                event.nativeScanCode,
+                (event.modifiers & Qt.ControlModifier),
+                (event.modifiers & Qt.ShiftModifier),
+                (event.modifiers & Qt.AltModifier)
+            );
+            if (needAccepted) event.accepted = true;
+        }
+        Keys.onReleased: (event) => {
+            backend.openApiExporter.keysReleased(event.key);
+        }
+    }
+
+
+    Item {
         anchors.fill: parent
         visible: backend.openApiExporter.exporterPage
 
@@ -573,6 +592,7 @@ ApplicationWindow {
         id: openApiShortcutPanel
         mode: "openapi"
         visible: backend.openApiExporter.helpVisible
+        keysItem: windowKeys
     }
 
     BodyTypesPopup {
