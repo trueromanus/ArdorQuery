@@ -33,6 +33,7 @@ private:
         IsOddRole,
     };
 
+    QString m_savedGlobalVariablesFile { "globalvariables" };
     QMap<QString, QString> m_variables { QMap<QString, QString>() };
     QStringList m_lines { QStringList() };
     int m_selected { 0 };
@@ -57,6 +58,11 @@ public:
     Q_INVOKABLE void clearLines();
     Q_INVOKABLE void setLine(int identifier, const QString& value);
     Q_INVOKABLE void removeLine(int index);
+    Q_INVOKABLE void parseLines();
+
+private:
+    void readCache();
+    void writeCache();
 
 signals:
     void selectedChanged();

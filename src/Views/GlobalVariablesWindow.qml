@@ -5,10 +5,10 @@ import "Controls"
 
 ApplicationWindow {
     id: root
-    width: 630
-    height: 560
-    minimumWidth: 700
-    minimumHeight: 400
+    width: 600
+    height: 500
+    minimumWidth: 500
+    minimumHeight: 300
     maximumWidth: 800
     maximumHeight: 800
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
@@ -37,6 +37,13 @@ ApplicationWindow {
         }
     }
 
+    Text {
+        text: "To add a new global variable press Ctrl-Enter<br />To save changes press Ctrl-S"
+        anchors.centerIn: parent
+        font.pointSize: 11
+        horizontalAlignment: Text.AlignHCenter
+        color: "gray"
+    }
 
     ListView {
         id: listView

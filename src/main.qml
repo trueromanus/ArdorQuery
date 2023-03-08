@@ -136,6 +136,7 @@ ApplicationWindow {
 
         onLoaded: {
             globalVariablesWindow.item.show();
+            backend.globalVariables.fillLines();
         }
     }
 
@@ -145,6 +146,7 @@ ApplicationWindow {
         GlobalVariablesWindow {
             onClosing: {
                 globalVariablesWindow.showWindow = false;
+                backend.globalVariables.clearLines();
             }
         }
     }

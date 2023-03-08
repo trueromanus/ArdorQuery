@@ -13,12 +13,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "globalvariableslistmodel.h"
+#include "../globalhelpers.h"
 
 GlobalVariablesListModel::GlobalVariablesListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-
+    m_savedGlobalVariablesFile = getCachePath(m_savedGlobalVariablesFile);
+    createIfNotExistsFile(m_savedGlobalVariablesFile, "[]");
+    readCache();
 }
 
 int GlobalVariablesListModel::rowCount(const QModelIndex &parent) const
@@ -99,7 +105,13 @@ void GlobalVariablesListModel::addLine()
 {
     beginResetModel();
 
-    m_lines.append("");
+    if (m_lines.isEmpty()) {
+        m_lines.append("");
+    } else {
+        auto selected = m_selected + 1;
+        m_lines.insert(selected, "");
+        setSelected(selected);
+    }
 
     endResetModel();
 }
@@ -110,10 +122,42 @@ bool GlobalVariablesListModel::keysHandler(int key, quint32 nativeCode, bool con
     Q_UNUSED(shift);
     Q_UNUSED(alt);
 
-    // Ctrl-Insert
-    if (key == Qt::Key_Insert && control) {
+    // Ctrl-Enter
+    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && control) {
         addLine();
+        return true;
     }
+
+    // Ctrl-S
+    if ((nativeCode == 31 || key == Qt::Key_S) && control) {
+        parseLines();
+        return true;
+    }
+
+    // PgUp
+    if (key == Qt::Key_PageUp && !control) {
+        if (m_selected > 0) setSelected(m_selected - 1);
+        return true;
+    }
+
+    // PgDown
+    if (key == Qt::Key_PageDown && !control) {
+        if (m_selected < m_lines.count() - 1) setSelected(m_selected + 1);
+        return true;
+    }
+
+    // Ctrl-PgUp
+    if (key == Qt::Key_PageUp && control) {
+        setSelected(0);
+        return true;
+    }
+
+    // Ctrl-PgDown
+    if (key == Qt::Key_PageDown && control) {
+        if (!m_lines.isEmpty()) setSelected(m_lines.count() - 1);
+        return true;
+    }
+
 
     return false;
 }
@@ -125,9 +169,14 @@ void GlobalVariablesListModel::keysReleased(int key) noexcept
 
 void GlobalVariablesListModel::fillLines()
 {
+    beginResetModel();
+
+    m_lines.clear();
     foreach (auto key, m_variables.keys()) {
         m_lines.append(key + " " + m_variables[key]);
     }
+
+    endResetModel();
 }
 
 void GlobalVariablesListModel::clearLines()
@@ -157,4 +206,67 @@ void GlobalVariablesListModel::removeLine(int index)
     m_lines.removeAt(index);
 
     endResetModel();
+}
+
+void GlobalVariablesListModel::parseLines()
+{
+    m_variables.clear();
+
+    foreach (auto line, m_lines) {
+        if (line.isEmpty()) continue;
+
+        if (line.contains(" ")) {
+            auto parts = line.split(" ");
+            m_variables.insert(parts[0], parts[1]);
+        } else {
+            m_variables.insert(line, "");
+        }
+    }
+
+    writeCache();
+}
+
+void GlobalVariablesListModel::readCache()
+{
+    auto file = QFile(m_savedGlobalVariablesFile);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
+
+    auto content = file.readAll();
+
+    file.close();
+
+    auto document = QJsonDocument::fromJson(content);
+    auto items = document.array();
+    for (const auto &item : items){
+        if (!item.isObject()) continue;
+
+        auto variableObject = item.toObject();
+        if (!variableObject.contains("name")) continue;
+
+        auto name = variableObject.value("name").toString();
+        auto value = variableObject.contains("value") ? variableObject.value("value").toString() : "";
+        m_variables.insert(name, value);
+    }
+}
+
+void GlobalVariablesListModel::writeCache()
+{
+    QJsonArray items;
+    foreach (auto key, m_variables.keys()) {
+        auto value = m_variables.value(key);
+        QJsonObject jsonObject;
+        jsonObject["name"] = key;
+        if (!value.isEmpty()) jsonObject["value"] = value;
+
+        items.append(jsonObject);
+    }
+
+    QJsonDocument document(items);
+    auto json = document.toJson();
+
+    QFile file(m_savedGlobalVariablesFile);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+
+    file.write(json);
+    file.close();
 }
