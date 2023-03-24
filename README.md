@@ -20,6 +20,7 @@ Application is fully native, your don't need to install additional stuff.
 * Search text in body
 * Image generation for attaching to the messager, bug tracker etc
 * Export from OpenAPI v3 (supported only JSON)
+* Running multiple queries
 
 ## Field types
 * `url X` - where X is valid url. This is the URL that will be requested.
