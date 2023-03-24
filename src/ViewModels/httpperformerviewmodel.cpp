@@ -75,18 +75,6 @@ void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 {
     if (m_runningRequests->contains(request->requestId().toString())) return;
 
-    auto url = request->requestModel()->getUrl();
-    if (url.isEmpty()) {
-        emit pushErrorMessage("Request perform", "URL not specified");
-        return;
-    }
-
-    auto requestUrl = QUrl(url);
-    if(!requestUrl.isValid()) {
-        emit pushErrorMessage("Request perform", "The URL is not in the correct format");
-        return;
-    }
-
     addToCounter(1);
 
     performSingleRequest(request);
@@ -298,6 +286,7 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     resultModel->reset();
 
     auto url = requestModel->getUrl();
+    url = m_globalVariable->replaceGlobalVariables(url);
     auto requestUrl = QUrl(url);
 
     QNetworkRequest request(requestUrl);

@@ -34,6 +34,7 @@
 #include "Tests/jsonformatterunittests.h"
 #include "Tests/htmlformatterunittests.h"
 #include "Tests/textadvisorviewmodelunittests.h"
+#include "Tests/globalvariablesunittest.h"
 #endif
 
 
@@ -116,5 +117,6 @@ void runTest(int argc, char *argv[]) {
     QTest::qExec(new JsonFormatterUnitTests, argc - 1, argv);
     QTest::qExec(new HtmlFormatterUnitTests, argc - 1, argv);
     QTest::qExec(new TextAdvisorViewModelUnitTests, argc - 1, argv);
+    QTest::qExec(new GlobalVariablesUnitTest, argc - 1, argv);
 }
 #endif

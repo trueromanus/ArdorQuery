@@ -50,6 +50,7 @@ CONFIG(debug, debug|release) {
 SOURCES += \
         Tests/jsonformatterunittests.cpp \
         Tests/textadvisorviewmodelunittests.cpp \
+        Tests/globalvariablesunittest.cpp \
         Tests/htmlformatterunittests.cpp
 }
 
@@ -102,5 +103,6 @@ CONFIG(debug, debug|release) {
 HEADERS += \
     Tests/jsonformatterunittests.h \
     Tests/textadvisorviewmodelunittests.h \
+    Tests/globalvariablesunittest.h \
     Tests/htmlformatterunittests.h
 }

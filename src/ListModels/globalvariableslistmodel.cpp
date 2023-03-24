@@ -80,13 +80,18 @@ QHash<int, QByteArray> GlobalVariablesListModel::roleNames() const
     };
 }
 
-void GlobalVariablesListModel::replaceGlobalVariables(QString &value)
+QString GlobalVariablesListModel::replaceGlobalVariables(const QString &value)
 {
-    QString result;
-    foreach (auto variable, m_variables) {
+    if (m_variables.isEmpty()) return value;
+
+    QString result = value;
+    foreach (auto variable, m_variables.keys()) {
         auto fullVariable = "{{" + variable + "}}";
-        result = value.replace(fullVariable, m_variables.value(variable));
+        auto value = m_variables.value(variable);
+        result = result.replace(fullVariable, value);
     }
+
+    return result;
 }
 
 void GlobalVariablesListModel::setSelected(int selected) noexcept
@@ -114,6 +119,11 @@ void GlobalVariablesListModel::addLine()
     }
 
     endResetModel();
+}
+
+void GlobalVariablesListModel::addVariable(const QString &name, const QString &value)
+{
+    m_variables.insert(name, value);
 }
 
 bool GlobalVariablesListModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept

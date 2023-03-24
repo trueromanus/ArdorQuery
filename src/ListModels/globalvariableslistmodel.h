@@ -45,12 +45,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void replaceGlobalVariables(QString& value);
+    QString replaceGlobalVariables(const QString& value);
 
     int selected() const noexcept { return m_selected; }
     void setSelected(int selected) noexcept;
 
     void addLine();
+    void addVariable(const QString& name, const QString& value);
 
     Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
     Q_INVOKABLE void keysReleased(int key) noexcept;
