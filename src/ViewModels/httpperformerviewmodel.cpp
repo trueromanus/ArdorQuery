@@ -171,7 +171,8 @@ bool HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request, const HttpR
 {
     QSet<QString> m_usedHeaders;
     auto headers = model->getHeaders();
-    foreach (auto header, headers) {
+    foreach (auto rawHeader, headers) {
+        auto header = m_globalVariable->replaceGlobalVariables(rawHeader);
         auto spaceIndex = header.indexOf(" ");
         if (spaceIndex == -1) {
             auto lowerHeader = header.toLower();
@@ -292,17 +293,17 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     QNetworkRequest request(requestUrl);
 
     auto options = requestModel->getOptions();
-
     adjustOptions(options, request);
 
     auto headersValid = adjustHeaders(request, requestModel);
     if (!headersValid) return;
 
     auto protocol = requestModel->getProtocol();
-    // if allowed only HTTP/1.1 version
+    protocol = m_globalVariable->replaceGlobalVariables(protocol);
     if (protocol == "1.1") request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
 
-    auto method = requestModel->getMethod().toLower();
+    auto method = requestModel->getMethod();
+    method = m_globalVariable->replaceGlobalVariables(method).toLower();
     if (method == "get") {
         auto getReply = m_networkManager->get(request);
         startTrackRequest(getReply, id, resultModel);
@@ -316,7 +317,15 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
 
     auto body = requestModel->getBody();
     auto forms = requestModel->getFormParameters();
+    for (auto i = 0; i < forms.count(); i++) {
+        auto item = forms[i];
+        forms[i] = m_globalVariable->replaceGlobalVariables(item);
+    }
     auto files = requestModel->getFileParameters();
+    for (auto i = 0; i < files.count(); i++) {
+        auto fileItem = files[i];
+        files[i] = m_globalVariable->replaceGlobalVariables(fileItem);
+    }
 
     auto isBodyAndFormEmpty = body.isEmpty() && forms.isEmpty() && files.empty();
     auto isSimpleForm = !forms.isEmpty() && files.isEmpty();
