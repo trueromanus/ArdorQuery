@@ -69,7 +69,7 @@ private:
     void fillHeader(QNetworkRequest& request, const QString& name, const QString& value) noexcept;
     void startTrackRequest(QNetworkReply* reply, const QUuid& id, HttpRequestResultViewModel* resultModel) noexcept;
     void adjustOptions(QStringList options, QNetworkRequest& request);
-    void performSingleRequest(HttpRequestModel* modelRequest);
+    bool performSingleRequest(HttpRequestModel* modelRequest);
     void addToCounter(int number) noexcept;
     void reduceFromCounter() noexcept;
 

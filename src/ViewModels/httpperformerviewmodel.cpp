@@ -75,11 +75,10 @@ void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 {
     if (m_runningRequests->contains(request->requestId().toString())) return;
 
-    addToCounter(1);
-
-    performSingleRequest(request);
-
-    emit countRequestsChanged();
+    if (performSingleRequest(request)) {
+        addToCounter(1);
+        emit countRequestsChanged();
+    }
 }
 
 void HttpPerformerViewModel::performAllRequest()
@@ -275,12 +274,12 @@ void HttpPerformerViewModel::adjustOptions(QStringList options, QNetworkRequest 
     }
 }
 
-void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest)
+bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest)
 {
     auto id = modelRequest->requestId();
 
     //if request already performing don't need make something
-    if (m_runningRequests->contains(id.toString())) return;
+    if (m_runningRequests->contains(id.toString())) return false;
 
     auto resultModel = modelRequest->resultModel();
     auto requestModel = modelRequest->requestModel();
@@ -296,7 +295,7 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     adjustOptions(options, request);
 
     auto headersValid = adjustHeaders(request, requestModel);
-    if (!headersValid) return;
+    if (!headersValid) return false;
 
     auto protocol = requestModel->getProtocol();
     protocol = m_globalVariable->replaceGlobalVariables(protocol);
@@ -307,12 +306,12 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     if (method == "get") {
         auto getReply = m_networkManager->get(request);
         startTrackRequest(getReply, id, resultModel);
-        return;
+        return true;
     }
     if (method == "delete") {
         auto deleteReply = m_networkManager->deleteResource(request);
         startTrackRequest(deleteReply, id, resultModel);
-        return;
+        return true;
     }
 
     auto body = requestModel->getBody();
@@ -338,7 +337,10 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
         if (isBodyFilled) postReply = m_networkManager->post(request, body.toUtf8());
         if (!isBodyFilled && isSimpleForm) postReply = m_networkManager->post(request, setupSimpleForm(std::move(forms)));
         if (!isBodyFilled && isComplexForm) postReply = m_networkManager->post(request, setupMultiPartForm(std::move(files), std::move(forms)));
-        if (postReply != nullptr) startTrackRequest(postReply, id, resultModel);
+        if (postReply != nullptr) {
+            startTrackRequest(postReply, id, resultModel);
+            return true;
+        }
     }
     if (method == "put") {
         QNetworkReply* putReply = nullptr;
@@ -346,7 +348,10 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
         if (isBodyFilled) putReply = m_networkManager->put(request, body.toUtf8());
         if (!isBodyFilled && isSimpleForm) putReply = m_networkManager->put(request, setupSimpleForm(std::move(forms)));
         if (!isBodyFilled && isComplexForm) putReply = m_networkManager->put(request, setupMultiPartForm(std::move(files), std::move(forms)));
-        if (putReply != nullptr) startTrackRequest(putReply, id, resultModel);
+        if (putReply != nullptr) {
+            startTrackRequest(putReply, id, resultModel);
+            return true;
+        }
     }
     if (method == "patch") {
         QNetworkReply* putReply = nullptr;
@@ -354,8 +359,13 @@ void HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
         if (isBodyFilled) putReply = m_networkManager->sendCustomRequest(request, "PATCH", body.toUtf8());
         if (!isBodyFilled && isSimpleForm) putReply = m_networkManager->sendCustomRequest(request, "PATCH", setupSimpleForm(std::move(forms)));
         if (!isBodyFilled && isComplexForm) putReply = m_networkManager->sendCustomRequest(request, "PATCH", setupMultiPartForm(std::move(files), std::move(forms)));
-        if (putReply != nullptr) startTrackRequest(putReply, id, resultModel);
+        if (putReply != nullptr) {
+            startTrackRequest(putReply, id, resultModel);
+            return true;
+        }
     }
+
+    return false;
 }
 
 void HttpPerformerViewModel::addToCounter(int number) noexcept
