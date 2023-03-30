@@ -83,10 +83,8 @@ void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 
 void HttpPerformerViewModel::performAllRequest()
 {
-    addToCounter(m_requests->count());
-
     foreach (auto request, *m_requests) {
-        performSingleRequest(request);
+        if (performSingleRequest(request)) addToCounter(1);
     }
 
     emit countRequestsChanged();
