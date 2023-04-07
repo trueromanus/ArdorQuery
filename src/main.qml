@@ -157,6 +157,9 @@ ApplicationWindow {
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel
             requestExternal.textAdvisor: backend.textAdviser
             requestPerformer.globalVariable: backend.globalVariables
+            globalVariables.onCloseWindowRequired: {
+                globalVariablesWindow.item.close();
+            }
             onNeedOpenFile: {
                 openDialog.open();
             }

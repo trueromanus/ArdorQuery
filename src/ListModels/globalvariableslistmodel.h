@@ -67,6 +67,7 @@ private:
 
 signals:
     void selectedChanged();
+    void closeWindowRequired();
 
 };
 

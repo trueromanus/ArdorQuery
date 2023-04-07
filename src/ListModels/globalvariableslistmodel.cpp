@@ -132,6 +132,12 @@ bool GlobalVariablesListModel::keysHandler(int key, quint32 nativeCode, bool con
     Q_UNUSED(shift);
     Q_UNUSED(alt);
 
+    // Esc
+    if (key == Qt::Key_Escape) {
+        emit closeWindowRequired();
+        return true;
+    }
+
     // Ctrl-Enter
     if ((key == Qt::Key_Enter || key == Qt::Key_Return) && control) {
         addLine();
