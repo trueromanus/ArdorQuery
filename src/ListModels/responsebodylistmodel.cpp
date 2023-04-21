@@ -251,6 +251,11 @@ void ResponseBodyListModel::searchText(const QString &filter) noexcept
     emit countFindedLinesTextChanged();
 }
 
+void ResponseBodyListModel::selectLine(int index) noexcept
+{
+    auto line = m_lines.at(index);
+}
+
 QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept
 {
     return line.replace("</font>", "").replace("&lt;", "<").replace("&gt;", "<").replace(m_fontTagStartRegExp, "");

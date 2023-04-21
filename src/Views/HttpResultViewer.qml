@@ -323,49 +323,83 @@ Item {
                     Component {
                         id: listComponent
 
-                        ListView {
-                            id: listStrings
-                            clip: true
+                        Item {
                             anchors.fill: parent
-                            flickDeceleration: 5000
-                            flickableDirection: Flickable.HorizontalAndVerticalFlick
-                            boundsBehavior: ListView.StopAtBounds
-                            model: viewModel.bodyModel
-                            delegate: bodyLineComponent
-                            ScrollBar.vertical: ScrollBar {
-                                active: true
-                            }
 
-                            Component {
-                                id: bodyLineComponent
+                            ListView {
+                                id: listStrings
+                                clip: true
+                                anchors.fill: parent
+                                flickDeceleration: 5000
+                                flickableDirection: Flickable.HorizontalAndVerticalFlick
+                                boundsBehavior: ListView.StopAtBounds
+                                model: viewModel.bodyModel
+                                delegate: bodyLineComponent
+                                ScrollBar.vertical: ScrollBar {
+                                    active: true
+                                }
 
-                                Item {
-                                    width: listStrings.width
-                                    height: line.height
+                                Component {
+                                    id: bodyLineComponent
 
                                     Rectangle {
-                                        color: "black"
-                                        opacity: .05
-                                        anchors.fill: parent
-                                        visible: isFindIndex
-                                    }
-                                    Text {
-                                        id: line
-                                        leftPadding: 4
-                                        rightPadding: 10
-                                        textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
-                                        text: currentLine
-                                        width: bodyContainer.width
-                                        wrapMode: Text.Wrap
-                                        font.pointSize: 9
+                                        id: lineContainer
+                                        width: listStrings.width
+                                        height: line.height
+
+                                        signal selectLine()
+                                        onSelectLine: {
+                                            console.log(currentIndex);
+                                        }
+
+                                        Rectangle {
+                                            color: "black"
+                                            opacity: .05
+                                            anchors.fill: parent
+                                            visible: isFindIndex
+                                        }
+                                        Text {
+                                            id: line
+                                            leftPadding: 4
+                                            rightPadding: 10
+                                            textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
+                                            text: currentLine
+                                            width: bodyContainer.width
+                                            wrapMode: Text.Wrap
+                                            font.pointSize: 9
+                                        }
                                     }
                                 }
                             }
 
                             MouseArea {
-                                anchors.fill: parent
-                                onPressed: {
-                                    console.log(mouseX, mouseY, listStrings.contentX, listStrings.contentY);
+                                anchors.bottom: parent.bottom
+                                anchors.left: parent.left
+                                height: parent.height
+                                width: parent.width - 14
+                                propagateComposedEvents: false
+                                scrollGestureEnabled: false
+                                onPressed: function (mouse) {
+                                    const point = root.mapFromItem(listStrings, 0, 0);
+                                    globalMouseViewModel.moveTracking = true;
+                                    globalMouseViewModel.leftEdge =  listStrings.x;
+                                    globalMouseViewModel.topEdge = point.y;
+                                    mouse.accepted = true;
+                                }
+                                onReleased: {
+                                    globalMouseViewModel.moveTracking = false;
+                                }
+                            }
+
+                            Connections {
+                                id: connection
+                                target: globalMouseViewModel
+                                function onMouseMoved(x, y) {
+                                    const point = listStrings.mapFromItem(root, x, y);
+                                    const child = listStrings.contentItem.childAt(point.x, point.y - 38 + listStrings.contentY);
+                                    if (!child) return;
+
+                                    child.selectLine();
                                 }
                             }
                         }

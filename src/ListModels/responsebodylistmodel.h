@@ -77,6 +77,7 @@ public:
     void clear() noexcept;
 
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
+    Q_INVOKABLE void selectLine(int index) noexcept;
 
 private:
     QString& cleanLineFromTags(QString& line) noexcept;

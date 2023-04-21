@@ -152,6 +152,10 @@ ApplicationWindow {
     }
 
     Item {
+        GlobalMouseViewModel {
+            id: globalMouseViewModel
+        }
+
         BackendViewModel {
             id: backend
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel

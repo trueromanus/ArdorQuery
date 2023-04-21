@@ -36,6 +36,7 @@ SOURCES += \
         Models/shortcutsection.cpp \
         QuickControls/backendimage.cpp \
         ViewModels/backendviewmodel.cpp \
+        ViewModels/globalmouseviewmodel.cpp \
         ViewModels/httpperformerviewmodel.cpp \
         ViewModels/httprequestresultviewmodel.cpp \
         ViewModels/httprequestviewmodel.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     Models/shortcutsection.h \
     QuickControls/backendimage.h \
     ViewModels/backendviewmodel.h \
+    ViewModels/globalmouseviewmodel.h \
     ViewModels/httpperformerviewmodel.h \
     ViewModels/httprequestresultviewmodel.h \
     ViewModels/httprequestviewmodel.h \
