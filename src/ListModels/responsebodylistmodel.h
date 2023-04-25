@@ -33,6 +33,8 @@ class ResponseBodyListModel : public QAbstractListModel
     Q_PROPERTY(int bodyImageHeight READ bodyImageHeight NOTIFY bodyImageHeightChanged)
     Q_PROPERTY(int countFindedLines READ countFindedLines NOTIFY countFindedLinesChanged)
     Q_PROPERTY(QString countFindedLinesText READ countFindedLinesText NOTIFY countFindedLinesTextChanged)
+    Q_PROPERTY(int startSelectLine READ startSelectLine NOTIFY startSelectLineChanged)
+    Q_PROPERTY(int endSelectLine READ endSelectLine NOTIFY endSelectLineChanged)
 
 private:
     QStringList m_lines { QStringList() };
@@ -46,6 +48,8 @@ private:
     QRegularExpression m_fontTagStartRegExp { R"a(<font color=\"\#[A-Za-z0-9]{1,6}\">)a" };
     bool m_notFounded { false };
     QString m_previousFilter { "" };
+    int m_startSelectLine { -1 };
+    int m_endSelectLine { -1 };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
@@ -76,6 +80,9 @@ public:
     int getCurrentFindedLine() noexcept;
     void clear() noexcept;
 
+    int startSelectLine() const noexcept { return m_startSelectLine; }
+    int endSelectLine() const noexcept { return m_endSelectLine; }
+
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
     Q_INVOKABLE void selectLine(int index) noexcept;
 
@@ -89,6 +96,8 @@ signals:
     void bodyImageHeightChanged();
     void countFindedLinesChanged();
     void countFindedLinesTextChanged();
+    void startSelectLineChanged();
+    void endSelectLineChanged();
 
 };
 

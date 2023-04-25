@@ -253,7 +253,17 @@ void ResponseBodyListModel::searchText(const QString &filter) noexcept
 
 void ResponseBodyListModel::selectLine(int index) noexcept
 {
-    auto line = m_lines.at(index);
+    if (m_startSelectLine == -1 && m_endSelectLine == -1) {
+        m_startSelectLine = index;
+        emit startSelectLineChanged();
+        return;
+    }
+
+    if (index == m_startSelectLine) return;
+    if (index == m_endSelectLine) return;
+
+    m_endSelectLine = index;
+    emit endSelectLineChanged();
 }
 
 QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept

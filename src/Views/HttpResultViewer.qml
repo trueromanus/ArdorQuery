@@ -349,7 +349,7 @@ Item {
 
                                         signal selectLine()
                                         onSelectLine: {
-                                            console.log(currentIndex);
+                                            viewModel.bodyModel.selectLine(currentIndex);
                                         }
 
                                         Rectangle {
