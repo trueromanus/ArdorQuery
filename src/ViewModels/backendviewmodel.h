@@ -17,6 +17,8 @@
 #define BACKENDVIEWMODEL_H
 
 #include <QObject>
+#include <QFont>
+#include <QFontMetrics>
 #include "../ViewModels/httpperformerviewmodel.h"
 #include "../ViewModels/textadvisorviewmodel.h"
 #include "../ListModels/httprequestslistmodel.h"
@@ -43,6 +45,8 @@ class BackendViewModel : public QObject
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette NOTIFY openedCommandPaletteChanged)
     Q_PROPERTY(OpenApiExporterViewModel* openApiExporter READ openApiExporter NOTIFY openApiExporterChanged)
     Q_PROPERTY(GlobalVariablesListModel* globalVariables READ globalVariables NOTIFY globalVariablesChanged)
+    Q_PROPERTY(QString fontFamily READ fontFamily NOTIFY fontFamilyChanged)
+    Q_PROPERTY(int fontPointSize READ fontPointSize NOTIFY fontPointSizeChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -58,6 +62,11 @@ private:
     OpenApiExporterViewModel* m_openApiExporter { new OpenApiExporterViewModel(this) };
     GlobalVariablesListModel* m_globalVariables { new GlobalVariablesListModel(this) };
     bool m_openApiHelpVisible { false };
+    QString m_fontFamily { "" };
+    int m_fontPointSize { 9 };
+    QFont m_font;
+    QFontMetrics m_fontMetrics { QFontMetrics(QFont()) };
+    QMap<QChar,int> m_characterWidths { QMap<QChar,int>() };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
@@ -83,6 +92,8 @@ public:
     Q_INVOKABLE void generateImage(const QString& filePath) noexcept;
     Q_INVOKABLE void generateImageToClipboard() noexcept;
     Q_INVOKABLE void importFromOpenApi(int index) noexcept;
+    Q_INVOKABLE void setFontFamily(const QString& family) noexcept;
+    Q_INVOKABLE int getPositionInText(const QString& line, int positionX, int width, bool formatted) noexcept;
 
     void deleteCurrentRequest() noexcept;
 
@@ -90,6 +101,9 @@ public:
     void setHelpVisible(const bool helpVisible) noexcept;
 
     bool openApiHelpVisible() const noexcept { return m_openApiHelpVisible; }
+
+    QString fontFamily() const noexcept { return m_fontFamily; }
+    int fontPointSize() const noexcept { return m_fontPointSize; }
 
 private:
     QString removeProtocol(const QString& filePath) noexcept;
@@ -115,6 +129,8 @@ signals:
     void openApiHelpVisibleChanged();
     void globalVariablesChanged();
     void needGlobalVariablesWindow();
+    void fontFamilyChanged();
+    void fontPointSizeChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

@@ -21,6 +21,8 @@
 #include <QImage>
 #include <QMap>
 #include <QList>
+#include <QFont>
+#include <QFontMetrics>
 #include <QRegularExpression>
 #include "../Formatters/formatterfactory.h"
 #include "../globalconstants.h"
@@ -50,6 +52,10 @@ private:
     QString m_previousFilter { "" };
     int m_startSelectLine { -1 };
     int m_endSelectLine { -1 };
+    int m_startSelectPosition { -1 };
+    int m_endSelectPosition { -1 };
+    QFont m_font { QFont() };
+    QFontMetrics m_fontMetrics { QFontMetrics(m_font) };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
@@ -84,7 +90,7 @@ public:
     int endSelectLine() const noexcept { return m_endSelectLine; }
 
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
-    Q_INVOKABLE void selectLine(int index) noexcept;
+    Q_INVOKABLE void selectLine(int index, int positionX) noexcept;
 
 private:
     QString& cleanLineFromTags(QString& line) noexcept;

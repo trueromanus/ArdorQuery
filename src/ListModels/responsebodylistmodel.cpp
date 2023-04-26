@@ -20,7 +20,6 @@
 ResponseBodyListModel::ResponseBodyListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-
 }
 
 int ResponseBodyListModel::rowCount(const QModelIndex &parent) const
@@ -251,15 +250,16 @@ void ResponseBodyListModel::searchText(const QString &filter) noexcept
     emit countFindedLinesTextChanged();
 }
 
-void ResponseBodyListModel::selectLine(int index) noexcept
+void ResponseBodyListModel::selectLine(int index, int positionX) noexcept
 {
     if (m_startSelectLine == -1 && m_endSelectLine == -1) {
         m_startSelectLine = index;
+        m_startSelectPosition = positionX;
         emit startSelectLineChanged();
         return;
     }
 
-    if (index == m_startSelectLine) return;
+    if (index == m_startSelectLine && m_startSelectPosition == positionX) return;
     if (index == m_endSelectLine) return;
 
     m_endSelectLine = index;

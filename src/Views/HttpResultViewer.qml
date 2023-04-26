@@ -348,8 +348,8 @@ Item {
                                         height: line.height
 
                                         signal selectLine()
-                                        onSelectLine: {
-                                            viewModel.bodyModel.selectLine(currentIndex);
+                                        onSelectLine: function (width, height, positionX){
+                                            viewModel.bodyModel.selectLine(currentIndex, width, height, positionX);
                                         }
 
                                         Rectangle {
@@ -366,7 +366,8 @@ Item {
                                             text: currentLine
                                             width: bodyContainer.width
                                             wrapMode: Text.Wrap
-                                            font.pointSize: 9
+                                            font.pointSize: backend.fontPointSize
+                                            font.family: backend.fontFamily
                                         }
                                     }
                                 }
@@ -399,7 +400,7 @@ Item {
                                     const child = listStrings.contentItem.childAt(point.x, point.y - 38 + listStrings.contentY);
                                     if (!child) return;
 
-                                    child.selectLine();
+                                    child.selectLine(child.width, child.height, point.x);
                                 }
                             }
                         }

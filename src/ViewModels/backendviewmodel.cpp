@@ -409,6 +409,53 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
     m_requests->selectItem(createdIndex);
 }
 
+void BackendViewModel::setFontFamily(const QString &family) noexcept
+{
+    m_fontFamily = family;
+    m_font = QFont(family, m_fontPointSize);
+    m_fontMetrics = QFontMetrics(m_font);
+
+    auto characters = QString("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789");
+
+    foreach (auto character, characters) {
+        m_characterWidths[character] = m_fontMetrics.boundingRect(character).width();
+    }
+
+    emit fontFamilyChanged();
+}
+
+int BackendViewModel::getPositionInText(const QString &line, int positionX, int width, bool formatted) noexcept
+{
+    if (formatted) {
+        auto tagStarted = false;
+        auto characterWidth = 0;
+        auto characterPosition = 0;
+        foreach (auto character, line) {
+            if (character == '<' && !tagStarted) {
+                tagStarted = true;
+                continue;
+            }
+
+            if (tagStarted) {
+                if (character == '>') tagStarted = false;
+                continue;
+            }
+
+            characterWidth += m_characterWidths[character];
+            if (characterWidth <= positionX) return characterPosition;
+            characterPosition++;
+        }
+    } else {
+        auto characterWidth = 0;
+        auto characterPosition = 0;
+        foreach (auto character, line) {
+            characterWidth += m_characterWidths[character];
+            if (characterWidth <= positionX) return characterPosition;
+            characterPosition++;
+        }
+    }
+}
+
 void BackendViewModel::deleteCurrentRequest() noexcept
 {
     if (m_requests->singleRequest()) addNewRequest();

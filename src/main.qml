@@ -24,6 +24,13 @@ ApplicationWindow {
     footer: ApplicationFooter {
     }
 
+    Text {
+        id: emptyText
+        Component.onCompleted: {
+            backend.setFontFamily(emptyText.font.family);
+        }
+    }
+
     Item {
         id: keysItem
         Keys.onPressed: (event) => {
