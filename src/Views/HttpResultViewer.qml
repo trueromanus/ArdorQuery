@@ -346,9 +346,11 @@ Item {
                                         width: listStrings.width
                                         height: line.height
 
-                                        signal selectLine()
-                                        onSelectLine: function (width, height, positionX){
-                                            viewModel.bodyModel.selectLine(currentIndex, width, height, positionX);
+                                        signal selectLine(int width, int height, int positionX, int positionY)
+                                        onSelectLine: function (width, height, positionX, positionY){
+                                            //console.log(positionY);
+                                            //const positions = backend.getPositionInText(currentLine, positionX, width, viewModel.isFormatting);
+                                            //viewModel.bodyModel.selectLine(currentIndex, width, height, positionX);
                                         }
 
                                         Rectangle {
@@ -375,7 +377,7 @@ Item {
                             ScrollBar {
                                 id: vbar
                                 hoverEnabled: true
-                                active: true//hovered || pressed
+                                active: true
                                 orientation: Qt.Vertical
                                 size: listStrings.height / listStrings.contentHeight
                                 anchors.top: parent.top
@@ -407,10 +409,12 @@ Item {
                                 target: globalMouseViewModel
                                 function onMouseMoved(x, y) {
                                     const point = listStrings.mapFromItem(root, x, y);
-                                    const child = listStrings.contentItem.childAt(point.x, point.y - 38 + listStrings.contentY);
+                                    const child = listStrings.contentItem.childAt(point.x, point.y - 34 + listStrings.contentY);
                                     if (!child) return;
 
-                                    child.selectLine(child.width, child.height, point.x);
+                                    const argus = point.y - 34 - child.y;
+                                    console.log(argus);
+                                    child.selectLine(child.width, child.height, point.x, argus);
                                 }
                             }
                         }
