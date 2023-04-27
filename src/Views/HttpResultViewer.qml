@@ -329,15 +329,14 @@ Item {
                             ListView {
                                 id: listStrings
                                 clip: true
-                                anchors.fill: parent
+                                width: parent.width - vbar.width
+                                height: parent.height
                                 flickDeceleration: 5000
                                 flickableDirection: Flickable.HorizontalAndVerticalFlick
                                 boundsBehavior: ListView.StopAtBounds
                                 model: viewModel.bodyModel
                                 delegate: bodyLineComponent
-                                ScrollBar.vertical: ScrollBar {
-                                    active: true
-                                }
+                                ScrollBar.vertical: vbar
 
                                 Component {
                                     id: bodyLineComponent
@@ -364,13 +363,24 @@ Item {
                                             rightPadding: 10
                                             textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
                                             text: currentLine
-                                            width: bodyContainer.width
-                                            wrapMode: Text.Wrap
+                                            width: listStrings.width
+                                            wrapMode: Text.WrapAnywhere
                                             font.pointSize: backend.fontPointSize
                                             font.family: backend.fontFamily
                                         }
                                     }
                                 }
+                            }
+
+                            ScrollBar {
+                                id: vbar
+                                hoverEnabled: true
+                                active: true//hovered || pressed
+                                orientation: Qt.Vertical
+                                size: listStrings.height / listStrings.contentHeight
+                                anchors.top: parent.top
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
                             }
 
                             MouseArea {
