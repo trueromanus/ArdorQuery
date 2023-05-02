@@ -349,7 +349,8 @@ Item {
                                         signal selectLine(int width, int height, int positionX, int positionY)
                                         onSelectLine: function (width, height, positionX, positionY){
                                             //console.log(positionY);
-                                            //const positions = backend.getPositionInText(currentLine, positionX, width, viewModel.isFormatting);
+                                            const positionInLine = backend.getPositionInText(currentLine, positionX, positionY, width, viewModel.isFormatting);
+                                            console.log(positionInLine);
                                             //viewModel.bodyModel.selectLine(currentIndex, width, height, positionX);
                                         }
 
@@ -412,9 +413,8 @@ Item {
                                     const child = listStrings.contentItem.childAt(point.x, point.y - 34 + listStrings.contentY);
                                     if (!child) return;
 
-                                    const argus = point.y - 34 - child.y;
-                                    console.log(argus);
-                                    child.selectLine(child.width, child.height, point.x, argus);
+                                    const positionY = point.y - 34 - child.y;
+                                    child.selectLine(child.width, child.height, point.x, positionY);
                                 }
                             }
                         }

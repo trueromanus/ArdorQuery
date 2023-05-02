@@ -93,7 +93,7 @@ public:
     Q_INVOKABLE void generateImageToClipboard() noexcept;
     Q_INVOKABLE void importFromOpenApi(int index) noexcept;
     Q_INVOKABLE void setFontFamily(const QString& family) noexcept;
-    Q_INVOKABLE int getPositionInText(const QString& line, int positionX, int width, bool formatted) noexcept;
+    Q_INVOKABLE int getPositionInText(const QString& line, int positionX, int positionY, int width, bool formatted) noexcept;
 
     void deleteCurrentRequest() noexcept;
 

@@ -415,22 +415,23 @@ void BackendViewModel::setFontFamily(const QString &family) noexcept
     m_font = QFont(family, m_fontPointSize);
     m_fontMetrics = QFontMetrics(m_font);
 
-    auto characters = QString("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789");
+    auto characters = QString("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 !@#$%^&*()_+-={}[];:\\|/?><'\"");
 
     foreach (auto character, characters) {
-        m_characterWidths[character] = m_fontMetrics.boundingRect(character).width();
+        m_characterWidths[character] = m_fontMetrics.boundingRect(QString(character == ' ' ? '<' : character)).width();
     }
 
     emit fontFamilyChanged();
 }
 
-int BackendViewModel::getPositionInText(const QString &line, int positionX, int width, bool formatted) noexcept
+int BackendViewModel::getPositionInText(const QString &line, int positionX, int positionY, int width, bool formatted) noexcept
 {
     if (formatted) {
+        auto replacedLine = QString(line).replace("&nbsp;", " ").replace("&lt;", "[").replace("&quot;", "\"").replace("&qt;", "]");
         auto tagStarted = false;
-        auto characterWidth = 0;
+        auto characterWidth = 4;
         auto characterPosition = 0;
-        foreach (auto character, line) {
+        foreach (auto character, replacedLine) {
             if (character == '<' && !tagStarted) {
                 tagStarted = true;
                 continue;
@@ -441,8 +442,11 @@ int BackendViewModel::getPositionInText(const QString &line, int positionX, int 
                 continue;
             }
 
+            if (!m_characterWidths.contains(character)) m_characterWidths[character] = m_fontMetrics.boundingRect(QString(character)).width();
+            auto oldCharacterWidth = characterWidth;
             characterWidth += m_characterWidths[character];
-            if (characterWidth <= positionX) return characterPosition;
+
+            if (oldCharacterWidth < positionX && positionX <= characterWidth) return characterPosition;
             characterPosition++;
         }
     } else {
@@ -454,6 +458,8 @@ int BackendViewModel::getPositionInText(const QString &line, int positionX, int 
             characterPosition++;
         }
     }
+
+    return 0;
 }
 
 void BackendViewModel::deleteCurrentRequest() noexcept
