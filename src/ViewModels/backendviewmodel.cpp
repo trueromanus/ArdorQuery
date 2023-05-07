@@ -414,6 +414,7 @@ void BackendViewModel::setFontFamily(const QString &family) noexcept
     m_fontFamily = family;
     m_font = QFont(family, m_fontPointSize);
     m_fontMetrics = QFontMetrics(m_font);
+    m_fontHeight = m_fontMetrics.boundingRect(QString('A')).height();
 
     auto characters = QString("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 !@#$%^&*()_+-={}[];:\\|/?><'\"");
 
@@ -431,7 +432,10 @@ int BackendViewModel::getPositionInText(const QString &line, int positionX, int 
         auto tagStarted = false;
         auto characterWidth = 4;
         auto characterPosition = 0;
+        auto characterLine = 0;
+        auto lineInside = positionY > m_fontHeight ? positionY / m_fontHeight : 0;
         foreach (auto character, replacedLine) {
+            if (characterWidth >= width) characterLine += 1;
             if (character == '<' && !tagStarted) {
                 tagStarted = true;
                 continue;
@@ -442,11 +446,15 @@ int BackendViewModel::getPositionInText(const QString &line, int positionX, int 
                 continue;
             }
 
-            if (!m_characterWidths.contains(character)) m_characterWidths[character] = m_fontMetrics.boundingRect(QString(character)).width();
-            auto oldCharacterWidth = characterWidth;
-            characterWidth += m_characterWidths[character];
+            if (lineInside < characterLine) {
+                if (!m_characterWidths.contains(character)) m_characterWidths[character] = m_fontMetrics.boundingRect(QString(character)).width();
+                auto oldCharacterWidth = characterWidth;
+                characterWidth += m_characterWidths[character];
 
-            if (oldCharacterWidth < positionX && positionX <= characterWidth) return characterPosition;
+                if (oldCharacterWidth < positionX && positionX <= characterWidth) return characterPosition;
+            }
+            if (characterLine > lineInside) break;
+
             characterPosition++;
         }
     } else {

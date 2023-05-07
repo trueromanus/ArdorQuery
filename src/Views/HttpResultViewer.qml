@@ -413,7 +413,7 @@ Item {
                                     const child = listStrings.contentItem.childAt(point.x, point.y - 34 + listStrings.contentY);
                                     if (!child) return;
 
-                                    const positionY = point.y - 34 - child.y;
+                                    const positionY = (point.y + listStrings.contentY) - 34 - child.y;
                                     child.selectLine(child.width, child.height, point.x, positionY);
                                 }
                             }

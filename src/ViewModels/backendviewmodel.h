@@ -66,6 +66,7 @@ private:
     int m_fontPointSize { 9 };
     QFont m_font;
     QFontMetrics m_fontMetrics { QFontMetrics(QFont()) };
+    int m_fontHeight { 0 };
     QMap<QChar,int> m_characterWidths { QMap<QChar,int>() };
 
 public:
