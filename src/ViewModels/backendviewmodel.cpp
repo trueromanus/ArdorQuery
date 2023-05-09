@@ -446,7 +446,7 @@ int BackendViewModel::getPositionInText(const QString &line, int positionX, int 
                 continue;
             }
 
-            if (lineInside < characterLine) {
+            if (lineInside <= characterLine) {
                 if (!m_characterWidths.contains(character)) m_characterWidths[character] = m_fontMetrics.boundingRect(QString(character)).width();
                 auto oldCharacterWidth = characterWidth;
                 characterWidth += m_characterWidths[character];
