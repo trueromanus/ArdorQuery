@@ -24,7 +24,7 @@ Application is fully native, your don't need to install additional stuff.
 
 ## Field types
 * `url X` - where X is valid url. This is the URL that will be requested.
-* `met X` - where X can be - GET, POST, PUT, DELETE. This command defines the request method.
+* `method X` - where X can be - GET, POST, PUT, DELETE. This command defines the request method.
 * `form X=Y` - where X it name of form parameter and Y it value. This command adds a value to the form in the body.
 * `file X=Y` - where X it name of form parameter and Y it path to file in filesystem. This command adds a file to the form in the body.
 * `param X=Y` - where X it name of query parameter and Y it value. This command adds parameter to the URL.
