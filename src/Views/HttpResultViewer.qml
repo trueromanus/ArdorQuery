@@ -348,10 +348,8 @@ Item {
 
                                         signal selectLine(int width, int height, int positionX, int positionY)
                                         onSelectLine: function (width, height, positionX, positionY){
-                                            //console.log(positionY);
                                             const positionInLine = backend.getPositionInText(currentLine, positionX, positionY, width, viewModel.isFormatting);
-                                            console.log(positionInLine);
-                                            //viewModel.bodyModel.selectLine(currentIndex, width, height, positionX);
+                                            viewModel.bodyModel.selectLine(currentIndex, positionInLine);
                                         }
 
                                         Rectangle {
@@ -398,6 +396,7 @@ Item {
                                     globalMouseViewModel.moveTracking = true;
                                     globalMouseViewModel.leftEdge =  listStrings.x;
                                     globalMouseViewModel.topEdge = point.y;
+                                    viewModel.bodyModel.resetSelected();
                                     mouse.accepted = true;
                                 }
                                 onReleased: {

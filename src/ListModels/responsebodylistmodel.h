@@ -37,6 +37,8 @@ class ResponseBodyListModel : public QAbstractListModel
     Q_PROPERTY(QString countFindedLinesText READ countFindedLinesText NOTIFY countFindedLinesTextChanged)
     Q_PROPERTY(int startSelectLine READ startSelectLine NOTIFY startSelectLineChanged)
     Q_PROPERTY(int endSelectLine READ endSelectLine NOTIFY endSelectLineChanged)
+    Q_PROPERTY(int startSelectPosition READ startSelectPosition NOTIFY startSelectPositionChanged)
+    Q_PROPERTY(int endSelectPosition READ endSelectPosition NOTIFY endSelectPositionChanged)
 
 private:
     QStringList m_lines { QStringList() };
@@ -88,9 +90,12 @@ public:
 
     int startSelectLine() const noexcept { return m_startSelectLine; }
     int endSelectLine() const noexcept { return m_endSelectLine; }
+    int startSelectPosition() const noexcept { return m_startSelectPosition; }
+    int endSelectPosition() const noexcept { return m_endSelectPosition; }
 
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
     Q_INVOKABLE void selectLine(int index, int positionX) noexcept;
+    Q_INVOKABLE void resetSelected() noexcept;
 
 private:
     QString& cleanLineFromTags(QString& line) noexcept;
@@ -104,6 +109,8 @@ signals:
     void countFindedLinesTextChanged();
     void startSelectLineChanged();
     void endSelectLineChanged();
+    void startSelectPositionChanged();
+    void endSelectPositionChanged();
 
 };
 

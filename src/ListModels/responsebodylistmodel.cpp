@@ -254,16 +254,36 @@ void ResponseBodyListModel::selectLine(int index, int positionX) noexcept
 {
     if (m_startSelectLine == -1 && m_endSelectLine == -1) {
         m_startSelectLine = index;
+        m_endSelectLine = index;
         m_startSelectPosition = positionX;
+        m_endSelectPosition = positionX;
         emit startSelectLineChanged();
+        emit startSelectPositionChanged();
+        emit endSelectLineChanged();
+        emit endSelectPositionChanged();
         return;
     }
 
-    if (index == m_startSelectLine && m_startSelectPosition == positionX) return;
-    if (index == m_endSelectLine) return;
 
     m_endSelectLine = index;
+    m_endSelectPosition = positionX;
     emit endSelectLineChanged();
+    emit endSelectPositionChanged();
+
+    qDebug() << m_startSelectLine << " "  << m_endSelectLine << " "  << m_startSelectPosition <<  " "  << m_endSelectPosition;
+}
+
+void ResponseBodyListModel::resetSelected() noexcept
+{
+    m_startSelectLine = -1;
+    m_endSelectLine = -1;
+    m_startSelectPosition = -1;
+    m_endSelectPosition = -1;
+
+    emit startSelectLineChanged();
+    emit endSelectLineChanged();
+    emit startSelectPositionChanged();
+    emit endSelectPositionChanged();
 }
 
 QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept
