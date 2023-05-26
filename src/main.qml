@@ -24,6 +24,13 @@ ApplicationWindow {
     footer: ApplicationFooter {
     }
 
+    Text {
+        id: emptyText
+        Component.onCompleted: {
+            backend.setFontFamily(emptyText.font.family);
+        }
+    }
+
     Item {
         id: keysItem
         Keys.onPressed: (event) => {
@@ -152,6 +159,10 @@ ApplicationWindow {
     }
 
     Item {
+        GlobalMouseViewModel {
+            id: globalMouseViewModel
+        }
+
         BackendViewModel {
             id: backend
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel

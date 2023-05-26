@@ -21,6 +21,8 @@
 #include <QImage>
 #include <QMap>
 #include <QList>
+#include <QFont>
+#include <QFontMetrics>
 #include <QRegularExpression>
 #include "../Formatters/formatterfactory.h"
 #include "../globalconstants.h"
@@ -33,6 +35,10 @@ class ResponseBodyListModel : public QAbstractListModel
     Q_PROPERTY(int bodyImageHeight READ bodyImageHeight NOTIFY bodyImageHeightChanged)
     Q_PROPERTY(int countFindedLines READ countFindedLines NOTIFY countFindedLinesChanged)
     Q_PROPERTY(QString countFindedLinesText READ countFindedLinesText NOTIFY countFindedLinesTextChanged)
+    Q_PROPERTY(int startSelectLine READ startSelectLine NOTIFY startSelectLineChanged)
+    Q_PROPERTY(int endSelectLine READ endSelectLine NOTIFY endSelectLineChanged)
+    Q_PROPERTY(int startSelectPosition READ startSelectPosition NOTIFY startSelectPositionChanged)
+    Q_PROPERTY(int endSelectPosition READ endSelectPosition NOTIFY endSelectPositionChanged)
 
 private:
     QStringList m_lines { QStringList() };
@@ -46,6 +52,12 @@ private:
     QRegularExpression m_fontTagStartRegExp { R"a(<font color=\"\#[A-Za-z0-9]{1,6}\">)a" };
     bool m_notFounded { false };
     QString m_previousFilter { "" };
+    int m_startSelectLine { -1 };
+    int m_endSelectLine { -1 };
+    int m_startSelectPosition { -1 };
+    int m_endSelectPosition { -1 };
+    QFont m_font { QFont() };
+    QFontMetrics m_fontMetrics { QFontMetrics(m_font) };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
@@ -76,7 +88,18 @@ public:
     int getCurrentFindedLine() noexcept;
     void clear() noexcept;
 
+    int startSelectLine() const noexcept { return m_startSelectLine; }
+    int endSelectLine() const noexcept { return m_endSelectLine; }
+    int startSelectPosition() const noexcept { return m_startSelectPosition; }
+    int endSelectPosition() const noexcept { return m_endSelectPosition; }
+
+    QString selectAsStartLine(const QString& line) const;
+    QString selectAsEndLine(const QString& line) const;
+    QString selectAsOneLine(const QString& line) const;
+
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
+    Q_INVOKABLE void selectLine(int elementIndex, int positionX) noexcept;
+    Q_INVOKABLE void resetSelected() noexcept;
 
 private:
     QString& cleanLineFromTags(QString& line) noexcept;
@@ -88,6 +111,10 @@ signals:
     void bodyImageHeightChanged();
     void countFindedLinesChanged();
     void countFindedLinesTextChanged();
+    void startSelectLineChanged();
+    void endSelectLineChanged();
+    void startSelectPositionChanged();
+    void endSelectPositionChanged();
 
 };
 

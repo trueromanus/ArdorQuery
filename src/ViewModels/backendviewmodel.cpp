@@ -409,6 +409,67 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
     m_requests->selectItem(createdIndex);
 }
 
+void BackendViewModel::setFontFamily(const QString &family) noexcept
+{
+    m_fontFamily = family;
+    m_font = QFont(family, m_fontPointSize);
+    m_fontMetrics = QFontMetrics(m_font);
+    m_fontHeight = m_fontMetrics.boundingRect(QString('A')).height();
+
+    auto characters = QString("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 !@#$%^&*()_+-={}[];:\\|/?><'\"");
+
+    foreach (auto character, characters) {
+        m_characterWidths[character] = m_fontMetrics.boundingRect(QString(character == ' ' ? '<' : character)).width();
+    }
+
+    emit fontFamilyChanged();
+}
+
+int BackendViewModel::getPositionInText(const QString &line, int positionX, int positionY, int width, bool formatted) noexcept
+{
+    if (formatted) {
+        auto replacedLine = QString(line).replace("&nbsp;", " ").replace("&lt;", "[").replace("&quot;", "\"").replace("&qt;", "]");
+        auto tagStarted = false;
+        auto characterWidth = 4;
+        auto characterPosition = 0;
+        auto characterLine = 0;
+        auto lineInside = positionY > m_fontHeight ? positionY / m_fontHeight : 0;
+        foreach (auto character, replacedLine) {
+            if (characterWidth >= width) characterLine += 1;
+            if (character == '<' && !tagStarted) {
+                tagStarted = true;
+                continue;
+            }
+
+            if (tagStarted) {
+                if (character == '>') tagStarted = false;
+                continue;
+            }
+
+            if (lineInside <= characterLine) {
+                if (!m_characterWidths.contains(character)) m_characterWidths[character] = m_fontMetrics.boundingRect(QString(character)).width();
+                auto oldCharacterWidth = characterWidth;
+                characterWidth += m_characterWidths[character];
+
+                if (oldCharacterWidth < positionX && positionX <= characterWidth) return characterPosition;
+            }
+            if (characterLine > lineInside) break;
+
+            characterPosition++;
+        }
+    } else {
+        auto characterWidth = 0;
+        auto characterPosition = 0;
+        foreach (auto character, line) {
+            characterWidth += m_characterWidths[character];
+            if (characterWidth <= positionX) return characterPosition;
+            characterPosition++;
+        }
+    }
+
+    return 0;
+}
+
 void BackendViewModel::deleteCurrentRequest() noexcept
 {
     if (m_requests->singleRequest()) addNewRequest();

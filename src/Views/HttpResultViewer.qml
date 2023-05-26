@@ -323,49 +323,97 @@ Item {
                     Component {
                         id: listComponent
 
-                        ListView {
-                            id: listStrings
-                            clip: true
+                        Item {
                             anchors.fill: parent
-                            flickDeceleration: 5000
-                            flickableDirection: Flickable.HorizontalAndVerticalFlick
-                            boundsBehavior: ListView.StopAtBounds
-                            model: viewModel.bodyModel
-                            delegate: bodyLineComponent
-                            ScrollBar.vertical: ScrollBar {
-                                active: true
-                            }
 
-                            Component {
-                                id: bodyLineComponent
+                            ListView {
+                                id: listStrings
+                                clip: true
+                                width: parent.width - vbar.width
+                                height: parent.height
+                                flickDeceleration: 5000
+                                flickableDirection: Flickable.HorizontalAndVerticalFlick
+                                boundsBehavior: ListView.StopAtBounds
+                                model: viewModel.bodyModel
+                                delegate: bodyLineComponent
+                                ScrollBar.vertical: vbar
 
-                                Item {
-                                    width: listStrings.width
-                                    height: line.height
+                                Component {
+                                    id: bodyLineComponent
 
                                     Rectangle {
-                                        color: "black"
-                                        opacity: .05
-                                        anchors.fill: parent
-                                        visible: isFindIndex
-                                    }
-                                    Text {
-                                        id: line
-                                        leftPadding: 4
-                                        rightPadding: 10
-                                        textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
-                                        text: currentLine
-                                        width: bodyContainer.width
-                                        wrapMode: Text.Wrap
-                                        font.pointSize: 9
+                                        id: lineContainer
+                                        width: listStrings.width
+                                        height: line.height
+
+                                        signal selectLine(int width, int height, int positionX, int positionY)
+                                        onSelectLine: function (width, height, positionX, positionY){
+                                            const positionInLine = backend.getPositionInText(currentLine, positionX, positionY, width, viewModel.isFormatting);
+                                            viewModel.bodyModel.selectLine(currentIndex, positionInLine);
+                                        }
+
+                                        Rectangle {
+                                            color: "black"
+                                            opacity: .05
+                                            anchors.fill: parent
+                                            visible: isFindIndex
+                                        }
+                                        Text {
+                                            id: line
+                                            leftPadding: 4
+                                            rightPadding: 10
+                                            textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
+                                            text: currentLine
+                                            width: listStrings.width
+                                            wrapMode: Text.WrapAnywhere
+                                            font.pointSize: backend.fontPointSize
+                                            font.family: backend.fontFamily
+                                        }
                                     }
                                 }
                             }
 
+                            ScrollBar {
+                                id: vbar
+                                hoverEnabled: true
+                                active: true
+                                orientation: Qt.Vertical
+                                size: listStrings.height / listStrings.contentHeight
+                                anchors.top: parent.top
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                            }
+
                             MouseArea {
-                                anchors.fill: parent
-                                onPressed: {
-                                    console.log(mouseX, mouseY, listStrings.contentX, listStrings.contentY);
+                                anchors.bottom: parent.bottom
+                                anchors.left: parent.left
+                                height: parent.height
+                                width: parent.width - 14
+                                propagateComposedEvents: false
+                                scrollGestureEnabled: false
+                                onPressed: function (mouse) {
+                                    const point = root.mapFromItem(listStrings, 0, 0);
+                                    globalMouseViewModel.moveTracking = true;
+                                    globalMouseViewModel.leftEdge =  listStrings.x;
+                                    globalMouseViewModel.topEdge = point.y;
+                                    viewModel.bodyModel.resetSelected();
+                                    mouse.accepted = true;
+                                }
+                                onReleased: {
+                                    globalMouseViewModel.moveTracking = false;
+                                }
+                            }
+
+                            Connections {
+                                id: connection
+                                target: globalMouseViewModel
+                                function onMouseMoved(x, y) {
+                                    const point = listStrings.mapFromItem(root, x, y);
+                                    const child = listStrings.contentItem.childAt(point.x, point.y - 34 + listStrings.contentY);
+                                    if (!child) return;
+
+                                    const positionY = (point.y + listStrings.contentY) - 34 - child.y;
+                                    child.selectLine(child.width, child.height, point.x, positionY);
                                 }
                             }
                         }
