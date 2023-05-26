@@ -93,8 +93,12 @@ public:
     int startSelectPosition() const noexcept { return m_startSelectPosition; }
     int endSelectPosition() const noexcept { return m_endSelectPosition; }
 
+    QString selectAsStartLine(const QString& line) const;
+    QString selectAsEndLine(const QString& line) const;
+    QString selectAsOneLine(const QString& line) const;
+
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
-    Q_INVOKABLE void selectLine(int index, int positionX) noexcept;
+    Q_INVOKABLE void selectLine(int elementIndex, int positionX) noexcept;
     Q_INVOKABLE void resetSelected() noexcept;
 
 private:

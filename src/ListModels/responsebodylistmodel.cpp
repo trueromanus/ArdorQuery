@@ -38,6 +38,18 @@ QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case CurrentLineRole: {
+            if (currentIndex == m_startSelectLine && currentIndex != m_endSelectLine) {
+                //TODO: this line is start for more lines
+                auto highlightedLine = selectAsStartLine(line);
+                return QVariant(highlightedLine);
+            }
+            if (currentIndex != m_startSelectLine && currentIndex == m_endSelectLine) {
+                //TODO: this line is end for more lines
+                return QVariant(selectAsEndLine(line));
+            }
+            if (currentIndex == m_startSelectLine && currentIndex == m_endSelectLine) {
+                return QVariant(selectAsOneLine(line));
+            }
             return QVariant(line);
         }
         case IndexRole: {
@@ -205,6 +217,25 @@ void ResponseBodyListModel::clear() noexcept
     m_originalBody.clear();
 }
 
+QString ResponseBodyListModel::selectAsStartLine(const QString &line) const
+{
+    auto start = m_startSelectLine > m_endSelectLine ? 0 : m_startSelectPosition;
+    auto end = m_startSelectLine > m_endSelectLine ? m_startSelectPosition : 0;
+    auto formatted = QString(line);
+
+    return formatted;
+}
+
+QString ResponseBodyListModel::selectAsEndLine(const QString &line) const
+{
+
+}
+
+QString ResponseBodyListModel::selectAsOneLine(const QString &line) const
+{
+
+}
+
 void ResponseBodyListModel::searchText(const QString &filter) noexcept
 {
     if (m_previousFilter == filter) return;
@@ -250,11 +281,11 @@ void ResponseBodyListModel::searchText(const QString &filter) noexcept
     emit countFindedLinesTextChanged();
 }
 
-void ResponseBodyListModel::selectLine(int index, int positionX) noexcept
+void ResponseBodyListModel::selectLine(int elementIndex, int positionX) noexcept
 {
     if (m_startSelectLine == -1 && m_endSelectLine == -1) {
-        m_startSelectLine = index;
-        m_endSelectLine = index;
+        m_startSelectLine = elementIndex;
+        m_endSelectLine = elementIndex;
         m_startSelectPosition = positionX;
         m_endSelectPosition = positionX;
         emit startSelectLineChanged();
@@ -265,16 +296,28 @@ void ResponseBodyListModel::selectLine(int index, int positionX) noexcept
     }
 
 
-    m_endSelectLine = index;
+    m_endSelectLine = elementIndex;
     m_endSelectPosition = positionX;
     emit endSelectLineChanged();
     emit endSelectPositionChanged();
+
+    if (m_startSelectLine != m_endSelectLine || m_startSelectPosition != m_endSelectPosition) {
+        auto startLine = m_startSelectLine;
+        auto endLine = m_endSelectLine;
+        if (m_startSelectLine > m_endSelectLine) {
+            startLine = m_endSelectLine;
+            endLine = m_startSelectLine;
+        }
+        emit dataChanged(index(startLine,0), index(endLine,0));
+    }
 
     qDebug() << m_startSelectLine << " "  << m_endSelectLine << " "  << m_startSelectPosition <<  " "  << m_endSelectPosition;
 }
 
 void ResponseBodyListModel::resetSelected() noexcept
 {
+    beginResetModel();
+
     m_startSelectLine = -1;
     m_endSelectLine = -1;
     m_startSelectPosition = -1;
@@ -284,6 +327,8 @@ void ResponseBodyListModel::resetSelected() noexcept
     emit endSelectLineChanged();
     emit startSelectPositionChanged();
     emit endSelectPositionChanged();
+
+    endResetModel();
 }
 
 QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept
