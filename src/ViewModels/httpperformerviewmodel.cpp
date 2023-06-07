@@ -19,6 +19,9 @@
 #include <QMimeDatabase>
 #include <QFileInfo>
 #include <QNetworkRequest>
+#include <QJSEngine>
+#include "../Models/postscriptresultmodel.h"
+#include "../Models/postscriptresponsemodel.h"
 #include "httpperformerviewmodel.h"
 #include "../globalconstants.h"
 
@@ -299,6 +302,13 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     protocol = m_globalVariable->replaceGlobalVariables(protocol);
     if (protocol == "1.1") request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
 
+    auto postScript = requestModel->getPostScript();
+    if (postScript.isEmpty()) {
+        resultModel->clearPostScript();
+    } else {
+        resultModel->setPostScript(postScript);
+    }
+
     auto method = requestModel->getMethod();
     method = m_globalVariable->replaceGlobalVariables(method).toLower();
     if (method == "get") {
@@ -386,6 +396,28 @@ void HttpPerformerViewModel::reduceFromCounter() noexcept
     emit countFinishedRequestsChanged();
 }
 
+void HttpPerformerViewModel::runPostScript(const QString &script, QObject* properties, HttpRequestResultViewModel* result) noexcept
+{
+    QJSEngine resultEngine;
+
+    QJSValue myScriptQObject = resultEngine.newQObject(properties);
+    resultEngine.globalObject().setProperty("response", myScriptQObject);
+
+    auto resultObject = new PostScriptResultModel();
+    QJSValue interactScriptQObject = resultEngine.newQObject(resultObject);
+    resultEngine.globalObject().setProperty("result", interactScriptQObject);
+
+    auto scriptResult = resultEngine.evaluate(script);
+    if (scriptResult.isError()) {
+        result->setCustomErrorResult(true, "Postscript error at line " + scriptResult.property("lineNumber").toString() + " " + scriptResult.toString());
+        return;
+    }
+
+    auto hasErrors = resultObject->hasErrors();
+    auto errorMessage = resultObject->errorMessage();
+    result->setCustomErrorResult(hasErrors, errorMessage);
+}
+
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 {
     auto id = reply->property("id").toString();
@@ -399,6 +431,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     reduceFromCounter();
 
     result->setNetworkError("");
+    result->setCustomErrorResult(false, "");
 
     if (reply->error() != QNetworkReply::NoError) {
         result->setNetworkError(reply->errorString());
@@ -408,13 +441,27 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     if (status_code.isValid()) result->setStatusCode(status_code.toInt());
 
     QStringList responseHeaders;
+    QStringList rawHeaders;
     auto headers = reply->rawHeaderPairs();
     foreach (auto header, headers) {
         auto name = std::get<0>(header);
         auto value = std::get<1>(header);
         responseHeaders.append("<font color='#8812a1'>" + name + ":</font> " + value);
+        rawHeaders.append(name + " " + value);
     }
     result->setHeaders(responseHeaders);
 
     result->setBody(reply->readAll());
+
+    auto postScript = result->postScript();
+    if (postScript.isEmpty()) return;
+
+    auto response = new PostScriptResponseModel();
+    response->setHeaders(rawHeaders);
+    response->setStatusCode(status_code.toInt());
+    response->setErrorMessage(result->networkError());
+    response->setResponseSize(result->originResponseSize());
+    response->setRoute(reply->url().toString());
+
+    runPostScript(postScript, response, result);
 }

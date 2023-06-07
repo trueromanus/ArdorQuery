@@ -72,6 +72,7 @@ private:
     bool performSingleRequest(HttpRequestModel* modelRequest);
     void addToCounter(int number) noexcept;
     void reduceFromCounter() noexcept;
+    void runPostScript(const QString& script, QObject* properties, HttpRequestResultViewModel* result) noexcept;
 
 private slots:
     void requestFinished(QNetworkReply *reply);

@@ -15,8 +15,6 @@
 
 #include "openapiroutesoptions.h"
 
-#include <QDebug>
-
 OpenApiRoutesOptions::OpenApiRoutesOptions()
 {
 

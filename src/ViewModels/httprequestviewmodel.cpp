@@ -239,6 +239,11 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
         needRefresh = true;
     }
 
+    if (lowerContent.startsWith(PostScriptPrefix) && itemType != HttpRequestTypes::PostScriptType) {
+        item->setType(static_cast<int>(HttpRequestTypes::PostScriptType));
+        needRefresh = true;
+    }
+
     if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
         item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
 
@@ -509,6 +514,25 @@ QString HttpRequestViewModel::getTitle() const noexcept
     return m_unnamed;
 }
 
+QString HttpRequestViewModel::getPostScript() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::PostScriptType;
+        }
+        );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text();
+        return text.replace(PostScriptPrefix, "", Qt::CaseInsensitive);
+    }
+
+    return "";
+}
+
 bool HttpRequestViewModel::isOnlyEmptyFirstItem() const noexcept
 {
     return m_items->count() == 1 && m_items->value(0)->text().isEmpty();
@@ -605,6 +629,8 @@ QString HttpRequestViewModel::getTypeColor(int type) const
             return "#975C8D";
         case HttpRequestTypes::OptionsType:
             return "#FFC3A1";
+        case HttpRequestTypes::PostScriptType:
+            return "#FFC3A1";
         default:
             return "#CDCDB4";
     }
@@ -656,6 +682,9 @@ QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType, con
             break;
         case HttpRequestTypes::OptionsType:
             prefix = OptionsPrefix;
+            break;
+        case HttpRequestTypes::PostScriptType:
+            prefix = PostScriptPrefix;
             break;
         default: prefix = "";
     }

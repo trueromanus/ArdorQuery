@@ -27,7 +27,6 @@
 #include "QuickControls/backendimage.h"
 #include "ListModels/openapiaddresseslistmodel.h"
 #include "ViewModels/openapiexporterviewmodel.h"
-#include "ListModels/addressespalettelistmodel.h"
 #include "ListModels/globalvariableslistmodel.h"
 #include "ListModels/responsebodylistmodel.h"
 #ifdef QT_DEBUG
@@ -37,7 +36,6 @@
 #include "Tests/textadvisorviewmodelunittests.h"
 #include "Tests/globalvariablesunittest.h"
 #endif
-
 
 void registerQmlTypes();
 void adjustmentLocalStorage();
@@ -74,6 +72,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreated,

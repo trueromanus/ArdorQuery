@@ -33,6 +33,8 @@ SOURCES += \
         Models/openapiroutemodel.cpp \
         Models/openapiroutesauthorizationmodel.cpp \
         Models/openapiroutesoptions.cpp \
+        Models/postscriptresponsemodel.cpp \
+        Models/postscriptresultmodel.cpp \
         Models/shortcutsection.cpp \
         QuickControls/backendimage.cpp \
         ViewModels/backendviewmodel.cpp \
@@ -85,6 +87,8 @@ HEADERS += \
     Models/openapiroutemodel.h \
     Models/openapiroutesauthorizationmodel.h \
     Models/openapiroutesoptions.h \
+    Models/postscriptresponsemodel.h \
+    Models/postscriptresultmodel.h \
     Models/shortcutsection.h \
     QuickControls/backendimage.h \
     ViewModels/backendviewmodel.h \

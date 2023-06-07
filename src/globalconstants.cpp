@@ -31,6 +31,7 @@ QString CustomHeaderPrefix = "x-";
 QString PastryPrefix = "pastry ";
 QString RoutePrefix = "route ";
 QString OptionsPrefix = "options ";
+QString PostScriptPrefix = "postscript ";
 
 QString NotificationErrorTopic = "error";
 QString NotificationInfoTopic = "info";
