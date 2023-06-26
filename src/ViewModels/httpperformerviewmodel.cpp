@@ -460,7 +460,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     response->setHeaders(rawHeaders);
     response->setStatusCode(status_code.toInt());
     response->setErrorMessage(result->networkError());
-    response->setResponseSize(result->originResponseSize());
+    response->setBodySize(result->originResponseSize());
     response->setRoute(reply->url().toString());
 
     runPostScript(postScript, response, result);

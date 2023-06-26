@@ -11,14 +11,14 @@ class PostScriptResponseModel : public QObject
     Q_PROPERTY(QStringList headers READ headers WRITE setHeaders NOTIFY headersChanged)
     Q_PROPERTY(int statusCode READ statusCode WRITE setStatusCode NOTIFY statusCodeChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage WRITE setErrorMessage NOTIFY errorMessageChanged)
-    Q_PROPERTY(int responseSize READ responseSize WRITE setResponseSize NOTIFY responseSizeChanged)
+    Q_PROPERTY(int bodySize READ bodySize WRITE setBodySize NOTIFY bodySizeChanged)
     Q_PROPERTY(QString route READ route WRITE setRoute NOTIFY routeChanged)
 
 private:
     QStringList m_headers { QStringList() };
     int m_statusCode { 0 };
     QString m_errorMessage { "" };
-    int m_responseSize { 0 };
+    int m_bodySize { 0 };
     QString m_route { "" };
 
 public:
@@ -27,20 +27,20 @@ public:
     QStringList headers() const noexcept { return m_headers; }
     int statusCode() const noexcept { return m_statusCode; }
     QString errorMessage() const noexcept { return m_errorMessage; }
-    int responseSize() const noexcept { return m_responseSize; }
+    int bodySize() const noexcept { return m_bodySize; }
     QString route() const noexcept { return m_route; }
 
     void setHeaders(QStringList headers) noexcept;
     void setStatusCode(int statusCode) noexcept;
     void setErrorMessage(const QString& errorMessage) noexcept;
-    void setResponseSize(int responseSize) noexcept;
+    void setBodySize(int bodySize) noexcept;
     void setRoute(const QString& route) noexcept;
 
 signals:
     void headersChanged();
     void statusCodeChanged();
     void errorMessageChanged();
-    void responseSizeChanged();
+    void bodySizeChanged();
     void routeChanged();
 
 };

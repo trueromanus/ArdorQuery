@@ -30,12 +30,12 @@ void PostScriptResponseModel::setErrorMessage(const QString &errorMessage) noexc
     emit errorMessageChanged();
 }
 
-void PostScriptResponseModel::setResponseSize(int responseSize) noexcept
+void PostScriptResponseModel::setBodySize(int bodySize) noexcept
 {
-    if (m_responseSize == responseSize) return;
+    if (m_bodySize == bodySize) return;
 
-    m_responseSize = responseSize;
-    emit responseSizeChanged();
+    m_bodySize = bodySize;
+    emit bodySizeChanged();
 }
 
 void PostScriptResponseModel::setRoute(const QString &route) noexcept
