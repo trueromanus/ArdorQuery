@@ -22,6 +22,7 @@ Application is fully native, your don't need to install additional stuff.
 * Export from OpenAPI v3 (supported only JSON)
 * Running multiple queries
 * Post Scripting in Modern JavaScript
+* Control over redirection and SSL checks
 
 ## Field types
 * `url X` - where X is valid url. This is the URL that will be requested.
@@ -37,6 +38,14 @@ Application is fully native, your don't need to install additional stuff.
 * `protocol X` - where X can be - `1.1`. By default, all requests will try to make requests in the h2 protocol, but if you need to force it to do in the HTTP/1.1 protocol, you can add this command.
 * `route X=Y` - where X it name of URL segment and Y of it value. `http://test.com/{segment}` can be adjusted with `route segment=3`. Result will be `http://test.com/3`
 * `postscript X` - where X is the JavaScript source code for validating the HTTP response and generating custom errors. Check out JavaScript docs in section [PostScripting](https://github.com/trueromanus/ArdorQuery/blob/main/README.md#post-scripting).
+* `options X,Y,Z` - where X Y and Z it option name. Supported options in section [Options](https://github.com/trueromanus/ArdorQuery/blob/main/README.md#options)
+
+## Options
+* `noautoredirect` - If the endpoint tries to redirect, this will not happen. In response, you will see information about the redirect.
+* `autoredirect` - If the endpoint tries to redirect, this will happen without any limitation. The only exception is a redirect between **https** to **http** which is not allowed.
+* `autoredirectsameorigin` - If the endpoint tries to redirect, this will happen only if it happened on same host, port and protocol.
+* `weaksslcheck` - The request a certificate from the peer will be happened, but does not require this certificate to be valid.
+* `noweaksslcheck` - No SSL certificate verification. This can be useful if you are testing a web server using a developer/local certificate on local machine.
 
 ## Alias commands
 ### bearer
