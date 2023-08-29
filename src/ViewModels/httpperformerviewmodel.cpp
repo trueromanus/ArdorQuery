@@ -266,7 +266,7 @@ void HttpPerformerViewModel::adjustOptions(QStringList options, QNetworkRequest 
         }
         if (loweredOption == "noweaksslcheck") {
             QSslConfiguration sslConfiguration(QSslConfiguration::defaultConfiguration());
-            sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyPeer);
+            sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
             request.setSslConfiguration(sslConfiguration);
         }
     }
