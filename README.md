@@ -21,10 +21,11 @@ Application is fully native, your don't need to install additional stuff.
 * Image generation for attaching to the messager, bug tracker etc
 * Export from OpenAPI v3 (supported only JSON)
 * Running multiple queries
+* Post Scripting in Modern JavaScript
 
 ## Field types
 * `url X` - where X is valid url. This is the URL that will be requested.
-* `met X` - where X can be - GET, POST, PUT, DELETE. This command defines the request method.
+* `method X` - where X can be - GET, POST, PUT, DELETE. This command defines the request method.
 * `form X=Y` - where X it name of form parameter and Y it value. This command adds a value to the form in the body.
 * `file X=Y` - where X it name of form parameter and Y it path to file in filesystem. This command adds a file to the form in the body.
 * `param X=Y` - where X it name of query parameter and Y it value. This command adds parameter to the URL.
@@ -35,6 +36,7 @@ Application is fully native, your don't need to install additional stuff.
 * `title X` - where X it any characters. This command specifies the title for the current request, by default it is called "Unnamed".
 * `protocol X` - where X can be - `1.1`. By default, all requests will try to make requests in the h2 protocol, but if you need to force it to do in the HTTP/1.1 protocol, you can add this command.
 * `route X=Y` - where X it name of URL segment and Y of it value. `http://test.com/{segment}` can be adjusted with `route segment=3`. Result will be `http://test.com/3`
+* `postscript X` - where X is the JavaScript source code for validating the HTTP response and generating custom errors. Check out JavaScript docs in section [PostScripting](https://github.com/trueromanus/ArdorQuery/blob/main/README.md#post-scripting).
 
 ## Alias commands
 ### bearer
@@ -57,6 +59,33 @@ Application is fully native, your don't need to install additional stuff.
 `Content-Type application/xml`  
 `Accept application/xml`  
 `body <xml></xml>` 
+
+## Post Scripting
+### Global objects
+All scripts have access to global objects `response` and `result`. Object `response` using for get data about result of HTTP request. Object `result` usings for set of result validation HTTP request.
+
+### Response
+`headers` - array contains all response headers with values in format `HeaderName HeaderValue`.
+`statusCode` - number in range 0-600 from HTTP status code.
+`errorMessage` - if the request was in error, this field will contain a description of the error.
+`bodySize` - number from header Content-Length (or the actual size of the response body if not specified).
+`route` - the final URL with which the request was launched.
+### Result
+`hasErrors` (editable) - indicate if some error happened while postsctipr works.
+`errorMessage` (editable) - may contain a description of the user's error, which is displayed next to the status code in the results tab.  
+### Examples
+Check status code it is equal 200 (OK):
+```js
+postscript result.hasErrors = response.statusCode == 200;
+```
+Check if the response has a `server` header:
+```js
+postscript 
+if(!response.headers.find(a => a.indexOf("server"))) {
+  result.hasErrors = true;
+  result.errorMessage = "Header server not specified!!!";
+}
+```  
 
 ## Supported platforms
 * Windows 10+

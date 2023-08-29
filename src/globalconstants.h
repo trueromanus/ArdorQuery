@@ -31,6 +31,7 @@ extern QString CustomHeaderPrefix;
 extern QString PastryPrefix;
 extern QString RoutePrefix;
 extern QString OptionsPrefix;
+extern QString PostScriptPrefix;
 
 extern QString NotificationErrorTopic;
 extern QString NotificationInfoTopic;

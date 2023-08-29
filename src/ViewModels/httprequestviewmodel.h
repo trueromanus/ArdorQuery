@@ -44,6 +44,7 @@ public:
         PastryType,
         RouteType,
         OptionsType,
+        PostScriptType,
     };
 
 private:
@@ -97,6 +98,7 @@ public:
     QStringList getHeaders() const noexcept;
     QStringList getOptions() const noexcept;
     QString getTitle() const noexcept;
+    QString getPostScript() const noexcept;
     bool isOnlyEmptyFirstItem() const noexcept;
     int countItems() const noexcept;
     void sortingFields(const bool descending) noexcept;

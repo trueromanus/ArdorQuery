@@ -124,6 +124,7 @@ void HttpRequestResultViewModel::setNetworkError(const QString &networkError) no
 
     m_networkError = networkError;
     emit networkErrorChanged();
+    emit hasErrorChanged();
 }
 
 void HttpRequestResultViewModel::reset() noexcept
@@ -144,6 +145,7 @@ void HttpRequestResultViewModel::reset() noexcept
 void HttpRequestResultViewModel::trackRequestTime() noexcept
 {
     m_isRunning = true;
+    m_customErrorResult = false;
     m_elapsedTimer = new QElapsedTimer();
     m_elapsedTimer->start();
     emit responseTimeChanged();
@@ -166,6 +168,7 @@ void HttpRequestResultViewModel::untrackRequestTime() noexcept
 QString HttpRequestResultViewModel::displayStatus() const noexcept
 {
     if (m_isRunning) return "pending";
+    if (m_customErrorResult || !m_networkError.isEmpty()) return "cancel";
     if (m_hasResultTime) return "checked";
 
     return "emptybox";
@@ -213,6 +216,25 @@ void HttpRequestResultViewModel::generateImage(const QStringList& fields, const 
         auto saveResult = image.save(path);
         if (!saveResult) emit errorSavingGeneratedFile();
     }
+}
+
+void HttpRequestResultViewModel::setCustomErrorResult(bool hasErrors, const QString& errorMessage)
+{
+    m_customErrorResult = hasErrors;
+    if (!errorMessage.isEmpty()) m_networkError = errorMessage;
+    emit hasErrorChanged();
+    emit networkErrorChanged();
+    emit displayStatusChanged();
+}
+
+void HttpRequestResultViewModel::setPostScript(const QString &script)
+{
+    m_postScript = script;
+}
+
+void HttpRequestResultViewModel::clearPostScript()
+{
+    m_postScript = "";
 }
 
 void HttpRequestResultViewModel::copyHeadersToClipboard()

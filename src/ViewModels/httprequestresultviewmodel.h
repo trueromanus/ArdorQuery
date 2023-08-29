@@ -40,6 +40,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(QString actualFormat READ actualFormat NOTIFY actualFormatChanged)
     Q_PROPERTY(bool isFormatting READ isFormatting NOTIFY isFormattingChanged)
     Q_PROPERTY(bool showImage READ showImage NOTIFY showImageChanged)
+    Q_PROPERTY(bool hasError READ hasError NOTIFY hasErrorChanged)
 
 private:
     int m_statusCode { 0 };
@@ -57,6 +58,8 @@ private:
     bool m_isFormatting { false };
     bool m_showImage { false };
     QString m_actualFormat { "" };
+    bool m_customErrorResult { false };
+    QString m_postScript { "" };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -102,6 +105,16 @@ public:
 
     void generateImage(const QStringList& fields, const QString& path, bool saveToClipboard) noexcept;
 
+    bool hasError() const noexcept { return m_customErrorResult || !m_networkError.isEmpty(); }
+
+    void setCustomErrorResult(bool hasErrors, const QString& errorMessage);
+
+    uint64_t originResponseSize() const noexcept { return m_responseSize; }
+
+    void setPostScript(const QString& script);
+    void clearPostScript();
+    QString postScript() const noexcept { return m_postScript; }
+
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
     Q_INVOKABLE void reformatBody();
@@ -130,6 +143,7 @@ signals:
     void showImageChanged();
     void actualFormatChanged();
     void errorSavingGeneratedFile();
+    void hasErrorChanged();
 
 };
 
