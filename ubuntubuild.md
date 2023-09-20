@@ -1,4 +1,4 @@
-# Instruction for building from source on Ubuntu 22+
+# Instruction for building from source on Ubuntu 22+, Linux Mint 21+, Debian 12+
 
 ## Install required dependencies
 
