@@ -2,6 +2,9 @@
 Cross platform desktop a tool for testing HTTP(S) endpoints from websites or RESTful APIs.  
 The main goal is to make an application with minimal user interface and keyboard oriented.  
 Application is fully native, your don't need to install additional stuff.  
+The HTTP request is broken down into a human-readable set of lines.  
+Each line describes the type at the beginning, for example `url ` means we define the URL for the HTTP request.  
+Each type of line has a different color to help visually identify that content.
   
 ![Screenshoot](https://github.com/trueromanus/ArdorQuery/raw/main/src/screenshoot.png)
 ## Features
@@ -19,7 +22,7 @@ Application is fully native, your don't need to install additional stuff.
 * Adding additional queries and switching between it
 * Search text in body
 * Image generation for attaching to the messager, bug tracker etc
-* Export from OpenAPI v3 (supported only JSON)
+* Import from OpenAPI v3 (supported only JSON body)
 * Running multiple queries
 * Post Scripting in Modern JavaScript
 * Control over redirection and SSL checks
