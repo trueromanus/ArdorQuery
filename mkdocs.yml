@@ -1,0 +1,11 @@
+site_name: ArdorQuery
+site_author: 'Roman Vladimirov'
+docs_dir: docs/
+repo_name: 'trueromanus/ArdorQuery'
+repo_url: 'https://github.com/trueromanus/ArdorQuery'
+nav:
+  - Home: index.md
+  - Getting started: basicshortcuts.md
+  - Fields: commonfields.md
+  - Options: options.md
+  - Post scripting: postscript.md
