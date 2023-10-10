@@ -101,7 +101,7 @@ if(!response.headers.find(a => a.indexOf("server"))) {
 ```
 
 ## Global variables
-You can define a global variable and use it in your queries. To open the `Global Variables` window, press "Ctrl-F6".  
+You can define a global variable and use it in your queries. To open the `Global Variables` window, press `Ctrl-F6`.  
 The format of a global variable is the same as in the `<variable name> <value>` query editor.
 You can press `Ctrl-Enter` to add a new line for create a new global variable.
 At the end of edit session you need to save the global variables by pressing `Ctrl-S`.
