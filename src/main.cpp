@@ -29,6 +29,7 @@
 #include "ViewModels/openapiexporterviewmodel.h"
 #include "ListModels/globalvariableslistmodel.h"
 #include "ListModels/responsebodylistmodel.h"
+#include "ViewModels/globaleventhandlermodel.h"
 #ifdef QT_DEBUG
 #include <QtTest/QtTest>
 #include "Tests/jsonformatterunittests.h"
@@ -101,6 +102,7 @@ void registerQmlTypes() {
     qmlRegisterType<OpenApiRoutesListModel>("ArdorQuery.Backend", 1, 0, "OpenApiRoutesListModel");
     qmlRegisterType<GlobalVariablesListModel>("ArdorQuery.Backend", 1, 0, "GlobalVariablesListModel");
     qmlRegisterType<ResponseBodyListModel>("ArdorQuery.Backend", 1, 0, "ResponseBodyListModel");
+    qmlRegisterType<GlobalEventHandlerModel>("ArdorQuery.Backend", 1, 0, "GlobalEventHandlerModel");
 }
 
 void adjustmentLocalStorage() {
