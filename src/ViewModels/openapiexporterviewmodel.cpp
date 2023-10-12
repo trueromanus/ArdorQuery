@@ -19,6 +19,7 @@
 #include <QJsonArray>
 #include <QtConcurrent>
 #include "openapiexporterviewmodel.h"
+#include "../Models/openapiparametermodel.h"
 #include "../globalhelpers.h"
 
 OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
@@ -122,7 +123,9 @@ void OpenApiExporterViewModel::cancelCurrentRequest() noexcept
     m_currentReply = nullptr;
 
     m_loading = false;
+    m_errorMessage = "";
     emit loadingChanged();
+    emit errorMessageChanged();
 }
 
 void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
@@ -135,7 +138,9 @@ void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
     m_currentReply = m_networkManager->get(request);
 
     m_loading = true;
+    m_errorMessage = "";
     emit loadingChanged();
+    emit errorMessageChanged();
 }
 
 void OpenApiExporterViewModel::setUrl(const QString &url) noexcept
@@ -248,6 +253,12 @@ bool OpenApiExporterViewModel::isHasFewBodies(int identifier) noexcept
     emit bodyTypesChanged();
 
     return route->isHasMoreThenOneBody();
+}
+
+void OpenApiExporterViewModel::clearErrorMessage() noexcept
+{
+    m_errorMessage = "";
+    emit errorMessageChanged();
 }
 
 void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexcept
@@ -591,7 +602,10 @@ void OpenApiExporterViewModel::writeCache(const QString& cacheFile, const QList<
 void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
 {
     if (reply->error() != QNetworkReply::NoError) {
-        //TODO: show error to user reply->errorString());
+        m_loading = false;
+        m_errorMessage = reply->errorString();
+        emit loadingChanged();
+        emit errorMessageChanged();
         return;
     }
 
@@ -607,8 +621,10 @@ void OpenApiExporterViewModel::parsingFinished()
 {
     m_loading = false;
     m_currentReply = nullptr;
+    m_errorMessage = "";
     emit loadingChanged();
     emit alreadyLoadedChanged();
+    emit errorMessageChanged();
 
     m_routeList->setupRoutes(std::get<1>(m_routes[m_url]));
 }

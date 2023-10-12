@@ -23,7 +23,6 @@
 #include <QJsonObject>
 #include "../ListModels/openapiaddresseslistmodel.h"
 #include "../Models/openapiroutemodel.h"
-#include "../Models/openapiparametermodel.h"
 #include "../ListModels/openapirouteslistmodel.h"
 #include "../ListModels/addressespalettelistmodel.h"
 #include "../Models/openapiroutesoptions.h"
@@ -49,6 +48,7 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(int prepareIdentifier READ prepareIdentifier WRITE setPrepareIdentifier NOTIFY prepareIdentifierChanged)
     Q_PROPERTY(QString prepareBodyType READ prepareBodyType WRITE setPrepareBodyType NOTIFY prepareBodyTypeChanged)
     Q_PROPERTY(QStringList bodyTypes READ bodyTypes NOTIFY bodyTypesChanged)
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
@@ -83,6 +83,7 @@ private:
     const QString SavedOptions { "Saved options" };
     QString m_selectedTab { Exporter };
     QStringList m_bodyTypes { QStringList() };
+    QString m_errorMessage { "" };
 
 public:
     explicit OpenApiExporterViewModel(QObject *parent = nullptr);
@@ -133,6 +134,8 @@ public:
 
     QStringList bodyTypes() const noexcept { return m_bodyTypes; }
 
+    QString errorMessage() const noexcept { return m_errorMessage; }
+
     void cancelCurrentRequest() noexcept;
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
@@ -142,6 +145,7 @@ public:
     Q_INVOKABLE void togglePages() noexcept;
     Q_INVOKABLE void editInSelectedAddress() noexcept;
     Q_INVOKABLE bool isHasFewBodies(int identifier) noexcept;
+    Q_INVOKABLE void clearErrorMessage() noexcept;
 
 private:
     void parseJsonSpecification(const QString& json) noexcept;
@@ -182,6 +186,7 @@ signals:
     void prepareIdentifierChanged();
     void bodyTypesChanged();
     void prepareBodyTypeChanged();
+    void errorMessageChanged();
 
 };
 

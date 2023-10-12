@@ -598,4 +598,41 @@ ApplicationWindow {
     BodyTypesPopup {
         id: bodyTypesPopup
     }
+
+    Rectangle {
+        id: notificationContainer
+        visible: backend.openApiExporter.errorMessage.length
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 4
+        anchors.rightMargin: 4
+        width: 250
+        height: 70
+        border.width: 1
+        border.color: "lightgray"
+        radius: 4
+
+        Text {
+            anchors.fill: parent
+            anchors.margins: 4
+            text: backend.openApiExporter.errorMessage
+        }
+
+        IconButton {
+            id: closeButton
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.topMargin: 2
+            anchors.rightMargin: 2
+            icon: storagePaths.icons + "cancel.svg"
+            width: 22
+            height: 22
+            iconWidth: 20
+            iconHeight: 20
+            tooltipMessage: "Close notification"
+            onPressed: {
+                backend.openApiExporter.clearErrorMessage();
+            }
+        }
+    }
 }
