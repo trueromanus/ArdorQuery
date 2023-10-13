@@ -31,6 +31,9 @@ GlobalEventHandlerModel::GlobalEventHandlerModel(QObject *parent)
     m_keyMapping.insert(Qt::Key_F12, m_f12Key);
     m_keyMapping.insert(Qt::Key_Tab, m_tabKey);
     m_keyMapping.insert(Qt::Key_Escape, m_escapeKey);
+
+    m_mouseKeyMapping.insert(Qt::XButton1, m_mouseXButton1);
+    m_mouseKeyMapping.insert(Qt::XButton2, m_mouseXButton2);
 }
 
 bool GlobalEventHandlerModel::eventFilter(QObject *watched, QEvent *event)
@@ -39,15 +42,14 @@ bool GlobalEventHandlerModel::eventFilter(QObject *watched, QEvent *event)
 
     if (!event->spontaneous()) return QObject::eventFilter(watched, event);
 
-    if (t == QEvent::MouseButtonRelease) {
+    if (t == QEvent::MouseButtonRelease || t == QEvent::MouseButtonPress) {
         auto mouseEvent = static_cast<QMouseEvent*>(event);
         auto button = mouseEvent->button();
-        if (button == Qt::XButton1) {
-            emit backButtonPressed();
-        }
-        if (button == Qt::XButton2) {
-            emit forwardButtonPressed();
-        }
+
+        auto keyName = m_mouseKeyMapping.value(button);
+
+        if (t == QEvent::MouseButtonPress && !m_pressedMouseKeys.contains(keyName)) m_pressedMouseKeys.insert(keyName);
+        if (t == QEvent::MouseButtonRelease && m_pressedMouseKeys.contains(keyName)) m_pressedMouseKeys.remove(keyName);
 
         return QObject::eventFilter(watched, event);
     }
@@ -61,7 +63,6 @@ bool GlobalEventHandlerModel::eventFilter(QObject *watched, QEvent *event)
     auto countKeys = m_pressedKeys.count();
 
     if (t == QEvent::KeyPress && !m_pressedKeys.contains(keyName)) m_pressedKeys.insert(keyName);
-
     if (t == QEvent::KeyRelease && m_pressedKeys.contains(keyName)) m_pressedKeys.remove(keyName);
 
     auto isChanged = countKeys != m_pressedKeys.count();

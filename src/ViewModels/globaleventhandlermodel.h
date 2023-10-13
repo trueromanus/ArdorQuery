@@ -29,8 +29,12 @@ private:
     const QString m_control { "control" };
     const QString m_shift { "shift" };
     const QString m_alt { "alt" };
+    const QString m_mouseXButton1 { "xbutton1" };
+    const QString m_mouseXButton2 { "xbutton2" };
     QMap<int, QString> m_keyMapping { QMap<int, QString>() };
+    QMap<int, QString> m_mouseKeyMapping { QMap<int, QString>() };
     QSet<QString> m_pressedKeys { QSet<QString>() };
+    QSet<QString> m_pressedMouseKeys { QSet<QString>() };
 
 public:
     explicit GlobalEventHandlerModel(QObject *parent = nullptr);
@@ -44,6 +48,7 @@ signals:
     void backButtonPressed();
     void forwardButtonPressed();
     void keysChanged(const QString& state);
+    void mouseChanged(const QString& state);
 
 };
 
