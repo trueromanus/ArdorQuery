@@ -32,6 +32,10 @@ GlobalEventHandlerModel::GlobalEventHandlerModel(QObject *parent)
     m_keyMapping.insert(Qt::Key_Tab, m_tabKey);
     m_keyMapping.insert(Qt::Key_Escape, m_escapeKey);
 
+    m_keyMapping.insert(Qt::Key_A, m_aKey);
+    m_keyMapping.insert(Qt::Key_B, m_bKey);
+    m_keyMapping.insert(Qt::Key_C, m_cKey);
+
     m_mouseKeyMapping.insert(Qt::XButton1, m_mouseXButton1);
     m_mouseKeyMapping.insert(Qt::XButton2, m_mouseXButton2);
 }
@@ -48,25 +52,34 @@ bool GlobalEventHandlerModel::eventFilter(QObject *watched, QEvent *event)
 
         auto keyName = m_mouseKeyMapping.value(button);
 
+        auto countKeys = m_pressedMouseKeys.count();
+
         if (t == QEvent::MouseButtonPress && !m_pressedMouseKeys.contains(keyName)) m_pressedMouseKeys.insert(keyName);
         if (t == QEvent::MouseButtonRelease && m_pressedMouseKeys.contains(keyName)) m_pressedMouseKeys.remove(keyName);
+
+        if (m_pressedMouseKeys.count() != countKeys) emit mouseChanged(pressedMouseKeysToString());
 
         return QObject::eventFilter(watched, event);
     }
 
-    auto keyEvent = static_cast<QKeyEvent*>(event);
-    auto button = keyEvent->key();
+    if (t == QEvent::KeyPress || t == QEvent::KeyRelease) {
+        auto keyEvent = static_cast<QKeyEvent*>(event);
+        auto button = keyEvent->key();
+        auto virtualCode = keyEvent->nativeVirtualKey();
 
-    if (!m_keyMapping.contains(button)) return QObject::eventFilter(watched, event);
+        if (virtualCode >= 41 && virtualCode <= 90) button = virtualCode; // fix issue with keyboard layout
 
-    auto keyName = m_keyMapping.value(button);
-    auto countKeys = m_pressedKeys.count();
+        if (!m_keyMapping.contains(button)) return QObject::eventFilter(watched, event);
 
-    if (t == QEvent::KeyPress && !m_pressedKeys.contains(keyName)) m_pressedKeys.insert(keyName);
-    if (t == QEvent::KeyRelease && m_pressedKeys.contains(keyName)) m_pressedKeys.remove(keyName);
+        auto keyName = m_keyMapping.value(button);
+        auto countKeys = m_pressedKeys.count();
 
-    auto isChanged = countKeys != m_pressedKeys.count();
-    if (isChanged) emit keysChanged(pressedKeysToString());
+        if (t == QEvent::KeyPress && !m_pressedKeys.contains(keyName)) m_pressedKeys.insert(keyName);
+        if (t == QEvent::KeyRelease && m_pressedKeys.contains(keyName)) m_pressedKeys.remove(keyName);
+
+        auto isChanged = countKeys != m_pressedKeys.count();
+        if (isChanged) emit keysChanged(pressedKeysToString());
+    }
 
     return QObject::eventFilter(watched, event);
 }
@@ -94,6 +107,19 @@ QString GlobalEventHandlerModel::pressedKeysToString()
 
     if (m_pressedKeys.contains(m_plusKey)) result.append(m_plusKey);
     if (m_pressedKeys.contains(m_minusKey)) result.append(m_minusKey);
+
+    if (m_pressedKeys.contains(m_aKey)) result.append(m_aKey);
+    if (m_pressedKeys.contains(m_bKey)) result.append(m_bKey);
+    if (m_pressedKeys.contains(m_cKey)) result.append(m_cKey);
+
+    return result.join("-");
+}
+
+QString GlobalEventHandlerModel::pressedMouseKeysToString()
+{
+    QStringList result;
+    if (m_pressedMouseKeys.contains(m_mouseXButton1)) result.append(m_mouseXButton1);
+    if (m_pressedMouseKeys.contains(m_mouseXButton2)) result.append(m_mouseXButton2);
 
     return result.join("-");
 }

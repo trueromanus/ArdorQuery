@@ -29,6 +29,9 @@ private:
     const QString m_control { "control" };
     const QString m_shift { "shift" };
     const QString m_alt { "alt" };
+    const QString m_aKey { "a" };
+    const QString m_bKey { "b" };
+    const QString m_cKey { "c" };
     const QString m_mouseXButton1 { "xbutton1" };
     const QString m_mouseXButton2 { "xbutton2" };
     QMap<int, QString> m_keyMapping { QMap<int, QString>() };
@@ -43,6 +46,7 @@ public:
 
 private:
     QString pressedKeysToString();
+    QString pressedMouseKeysToString();
 
 signals:
     void backButtonPressed();
