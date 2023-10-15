@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Describe this issue template's purpose here.
+about: Qny questions about source, development and infrastructure
 title: "[QUESTION] My question"
 labels: question
 assignees: trueromanus
