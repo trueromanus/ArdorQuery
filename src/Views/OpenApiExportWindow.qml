@@ -46,25 +46,6 @@ ApplicationWindow {
     }
 
     Item {
-        id: windowKeys
-
-        Keys.onPressed: (event) => {
-            const needAccepted = backend.openApiExporter.keysHandler(
-                event.key,
-                event.nativeScanCode,
-                (event.modifiers & Qt.ControlModifier),
-                (event.modifiers & Qt.ShiftModifier),
-                (event.modifiers & Qt.AltModifier)
-            );
-            if (needAccepted) event.accepted = true;
-        }
-        Keys.onReleased: (event) => {
-            backend.openApiExporter.keysReleased(event.key);
-        }
-    }
-
-
-    Item {
         anchors.fill: parent
         visible: backend.openApiExporter.exporterPage
 
@@ -106,19 +87,6 @@ ApplicationWindow {
                     onTextChanged: {
                         backend.openApiExporter.setUrl(text);
                     }
-                    Keys.onPressed: (event) => {
-                        const needAccepted = backend.openApiExporter.keysHandler(
-                            event.key,
-                            event.nativeScanCode,
-                            (event.modifiers & Qt.ControlModifier),
-                            (event.modifiers & Qt.ShiftModifier),
-                            (event.modifiers & Qt.AltModifier)
-                        );
-                        if (needAccepted) event.accepted = true;
-                    }
-                    Keys.onReleased: (event) => {
-                        backend.openApiExporter.keysReleased(event.key);
-                    }
                 }
             }
         }
@@ -156,19 +124,6 @@ ApplicationWindow {
                     text: backend.openApiExporter.baseUrl
                     onTextChanged: {
                         backend.openApiExporter.baseUrl = text;
-                    }
-                    Keys.onPressed: (event) => {
-                        const needAccepted = backend.openApiExporter.keysHandler(
-                            event.key,
-                            event.nativeScanCode,
-                            (event.modifiers & Qt.ControlModifier),
-                            (event.modifiers & Qt.ShiftModifier),
-                            (event.modifiers & Qt.AltModifier)
-                        );
-                        if (needAccepted) event.accepted = true;
-                    }
-                    Keys.onReleased: (event) => {
-                        backend.openApiExporter.keysReleased(event.key);
                     }
                 }
             }
@@ -209,19 +164,6 @@ ApplicationWindow {
                     onTextChanged: {
                         backend.openApiExporter.routeList.filter = text;
                     }
-                    Keys.onPressed: (event) => {
-                        const needAccepted = backend.openApiExporter.keysHandler(
-                            event.key,
-                            event.nativeScanCode,
-                            (event.modifiers & Qt.ControlModifier),
-                            (event.modifiers & Qt.ShiftModifier),
-                            (event.modifiers & Qt.AltModifier)
-                        );
-                        if (needAccepted) event.accepted = true;
-                    }
-                    Keys.onReleased: (event) => {
-                        backend.openApiExporter.keysReleased(event.key);
-                    }
                 }
             }
         }
@@ -260,19 +202,6 @@ ApplicationWindow {
                     onTextChanged: {
                         backend.openApiExporter.title = text;
                     }
-                    Keys.onPressed: (event) => {
-                        const needAccepted = backend.openApiExporter.keysHandler(
-                            event.key,
-                            event.nativeScanCode,
-                            (event.modifiers & Qt.ControlModifier),
-                            (event.modifiers & Qt.ShiftModifier),
-                            (event.modifiers & Qt.AltModifier)
-                        );
-                        if (needAccepted) event.accepted = true;
-                    }
-                    Keys.onReleased: (event) => {
-                        backend.openApiExporter.keysReleased(event.key);
-                    }
                 }
             }
         }
@@ -310,19 +239,6 @@ ApplicationWindow {
                     text: backend.openApiExporter.authMethod
                     onTextChanged: {
                         backend.openApiExporter.authMethod = text;
-                    }
-                    Keys.onPressed: (event) => {
-                        const needAccepted = backend.openApiExporter.keysHandler(
-                            event.key,
-                            event.nativeScanCode,
-                            (event.modifiers & Qt.ControlModifier),
-                            (event.modifiers & Qt.ShiftModifier),
-                            (event.modifiers & Qt.AltModifier)
-                        );
-                        if (needAccepted) event.accepted = true;
-                    }
-                    Keys.onReleased: (event) => {
-                        backend.openApiExporter.keysReleased(event.key);
                     }
                 }
             }
@@ -422,6 +338,7 @@ ApplicationWindow {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: 60
                     height: 60
+                    mipmap: true
                     source: storagePaths.icons + "emptybox.svg"
                 }
                 Text {
@@ -592,7 +509,6 @@ ApplicationWindow {
         id: openApiShortcutPanel
         mode: "openapi"
         visible: backend.openApiExporter.helpVisible
-        keysItem: windowKeys
     }
 
     BodyTypesPopup {
@@ -633,6 +549,15 @@ ApplicationWindow {
             onPressed: {
                 backend.openApiExporter.clearErrorMessage();
             }
+        }
+    }
+
+    Connections {
+        target: globalEventHandler
+        function onKeysChanged (state) {
+            if (!root.active) return;
+
+            backend.openApiExporter.shortcutHandler(state);
         }
     }
 }

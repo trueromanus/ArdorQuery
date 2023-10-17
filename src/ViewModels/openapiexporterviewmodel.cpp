@@ -152,38 +152,35 @@ void OpenApiExporterViewModel::setUrl(const QString &url) noexcept
     emit alreadyLoadedChanged();
 }
 
-bool OpenApiExporterViewModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept
+void OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
 {
-    if (shift || alt) {
-
+    if (!shortcut.startsWith("control") && m_openedCommandPalette) {
+        m_openedCommandPalette = false;
+        m_addressPalette->selectItem();
+        emit openedCommandPaletteChanged();
     }
 
-    // F5 or Ctrl-Z
-    if (((nativeCode == 44 || key == Qt::Key_Z) && control) || (nativeCode == 63 || key == Qt::Key_F5)) {
+    if (shortcut == "f5" || shortcut == "control-z") {
         loadOpenApiScheme();
-        return true;
+        return;
     }
 
-    // Ctrl-B or F4
-    if (((nativeCode == 48 || key == Qt::Key_B) && control) || (nativeCode == 62 || key == Qt::Key_F4)) {
+    if (shortcut == "f4" || shortcut == "control-b") {
         cancelCurrentRequest();
-        return true;
+        return;
     }
 
-    // Ctrl-Insert
-    if (key == Qt::Key_Insert && control) {
-        addCurrentToAddresses();
-        return true;
-    }
-
-    // Ctrl-Home
-    if (key == Qt::Key_Home && control) {
+    if (shortcut == "control-home") {
         editInSelectedAddress();
-        return true;
+        return;
     }
 
-    // Ctrl-Tab
-    if (key == Qt::Key_Tab && control) {
+    if (shortcut == "control-insert") {
+        addCurrentToAddresses();
+        return;
+    }
+
+    if (shortcut == "control-tab") {
         if (!m_openedCommandPalette) {
             m_openedCommandPalette = true;
             m_addressPalette->refresh(true);
@@ -191,32 +188,12 @@ bool OpenApiExporterViewModel::keysHandler(int key, quint32 nativeCode, bool con
         } else {
             m_addressPalette->selectNext();
         }
-        return true;
+        return;
     }
 
-    // Ctrl-H or F1
-#ifdef Q_OS_WIN
-    if (((nativeCode == 35 || key == Qt::Key_H) && control && !shift && !alt) || key == Qt::Key_F1) {
+    if (shortcut == "f1" || shortcut == "control-h") {
         setHelpVisible(!m_helpVisible);
-        return true;
-    }
-#else
-    if ((key == Qt::Key_H && control) || key == Qt::Key_F1) {
-        setHelpVisible(!m_helpVisible);
-        return true;
-    }
-
-#endif
-
-    return false;
-}
-
-void OpenApiExporterViewModel::keysReleased(int key) noexcept
-{
-    if (key == Qt::Key_Control && m_openedCommandPalette) {
-        m_openedCommandPalette = false;
-        m_addressPalette->selectItem();
-        emit openedCommandPaletteChanged();
+        return;
     }
 }
 

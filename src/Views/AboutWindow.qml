@@ -21,8 +21,8 @@ ApplicationWindow {
     Image {
         id: logoImage
         source: storagePaths.icons + "logo.svg"
-        width: 50
-        height: 50
+        width: 54
+        height: 54
         mipmap: true
         anchors.left: parent.left
         anchors.leftMargin: 20

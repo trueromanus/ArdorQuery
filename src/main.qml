@@ -228,4 +228,13 @@ ApplicationWindow {
         }
     }
 
+    GlobalEventHandlerModel {
+        id: globalEventHandler
+        onKeysChanged: function (state) {
+            if (!window.active) return;
+
+
+        }
+    }
+
 }
