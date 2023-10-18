@@ -1,7 +1,7 @@
 # Getting started and Basic shortcuts
 
-Any HTTP request in an application is represented as a set of strings (fields in term of application).
-Each field contains a separate part of the HTTP request, such as a header, parameter, etc.
+Any HTTP request in an application is represented as a set of lines, each line contains some field.
+Each field contains a separate part of the HTTP request, such as a URL address, method, header, parameter, etc.
 There can be only one selected field, and it is highlighted with a colored frame.  
 
 ## Simple steps to get started with the application
@@ -15,7 +15,7 @@ There can be only one selected field, and it is highlighted with a colored frame
 
 **Most used shortcuts:**
 
-## Help about fields
+## List of keyboard shortcuts
 
 * `F1` - If you forgot a shortcut, you can check it at any time in the popup-help. It contains search by name or label.
 

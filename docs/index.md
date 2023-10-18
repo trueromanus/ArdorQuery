@@ -1,9 +1,9 @@
 # ArdorQuery
 
 Cross-platform desktop is a tool for making HTTP(S) requests from websites or RESTful APIs. Similar to cURL, but with a graphical interface.
-Can be used for testing and/or developing web applications. Application have minimal user interface and keyboard oriented.  
+Can be used for testing and/or developing web applications. Application have minimal user interface and keyboard oriented.
 The HTTP request is broken down into a human-readable set of lines. Each line describes the type at the beginning, for example `url ` means we define the URL for the HTTP request.
-Each type of line has a different color to help visually identify that content.
+Each type of line has a different color to help visually identify that content.    
 
 ![Screenshot](images/index.png)
 
