@@ -574,8 +574,8 @@ QString HttpRequestViewModel::getAllFields() const noexcept
         }
     );
 
-    qsizetype count = m_items->size();
-    QStringList lines(count);
+    QStringList lines;
+    lines.resize(m_items->size());
     int iterator = 0;
 
     foreach(auto item, sortedList) {
