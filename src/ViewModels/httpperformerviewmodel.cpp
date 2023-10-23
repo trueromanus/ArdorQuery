@@ -444,8 +444,8 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     QStringList rawHeaders;
     auto headers = reply->rawHeaderPairs();
     foreach (auto header, headers) {
-        auto name = std::get<0>(header);
-        auto value = std::get<1>(header);
+        auto name = header.first;
+        auto value = header.second;
         responseHeaders.append("<font color='#8812a1'>" + name + ":</font> " + value);
         rawHeaders.append(name + " " + value);
     }
