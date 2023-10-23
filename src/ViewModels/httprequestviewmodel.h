@@ -19,6 +19,8 @@
 #include <QObject>
 #include <QAbstractListModel>
 #include <QList>
+#include <QSharedPointer>
+#include <QScopedPointer>
 #include "../Models/httprequestitem.h"
 #include "textadvisorviewmodel.h"
 
