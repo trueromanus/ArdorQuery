@@ -23,6 +23,8 @@
 #include <QMap>
 #include <QList>
 #include <QHttpMultiPart>
+#include <QScopedPointer>
+#include <QSharedPointer>
 #include "httprequestviewmodel.h"
 #include "httprequestresultviewmodel.h"
 #include "../Models/httprequestmodel.h"
