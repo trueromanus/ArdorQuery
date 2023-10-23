@@ -22,7 +22,7 @@ jobs:
     - name: run make
       run: make -C src
     - name: Run MacDeployQt
-      run: macdeployqt src/ArdorQuery.app -appstore-compliant -dmg -qmldir=src
+      run: cd src && macdeployqt ArdorQuery.app -appstore-compliant -dmg -qmldir=src
     - uses: actions/upload-artifact@v3
       with:
         path: src/ArdorQuery.dmg
