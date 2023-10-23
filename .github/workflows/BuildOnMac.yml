@@ -21,6 +21,8 @@ jobs:
       run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
     - name: run make
       run: make -C src
+    - name: check folder
+      run: ls
     - uses: actions/upload-artifact@v3
       with:
         path: ArdorQuery.app
