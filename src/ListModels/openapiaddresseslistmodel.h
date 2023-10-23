@@ -17,6 +17,7 @@
 #define OPENAPIADDRESSESLISTMODEL_H
 
 #include <QAbstractListModel>
+#include <QSharedPointer>
 #include "../Models/openapiaddressmodel.h"
 
 class OpenApiAddressesListModel : public QAbstractListModel

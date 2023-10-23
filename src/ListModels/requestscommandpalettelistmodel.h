@@ -20,6 +20,7 @@
 #include <QUuid>
 #include <QList>
 #include <QMap>
+#include <QSharedPointer>
 #include "../Models/httprequestmodel.h"
 
 class RequestsCommandPaletteListModel : public QAbstractListModel

@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QScopedPointer>
 
 class MainTabsListModel : public QAbstractListModel
 {
