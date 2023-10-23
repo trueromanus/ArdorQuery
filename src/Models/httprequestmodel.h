@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include <QUuid>
+#include <QScopedPointer>
 #include "../ViewModels/httprequestviewmodel.h"
 #include "../ViewModels/httprequestresultviewmodel.h"
 
