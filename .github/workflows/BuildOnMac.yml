@@ -2,7 +2,7 @@ name: Build on macOS
 
 on:
   push:
-    branches: []
+    branches: [ "deploy" ]
 
 jobs:
   build:
@@ -17,7 +17,6 @@ jobs:
         version: 6.5.3
         cache: true
         modules: 'qtscxml qt5compat qtshadertools qtimageformats qtwebsockets'
-        archives: 'qtbase qtsvg'
     - name: run qmake
       run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
     - name: run make
