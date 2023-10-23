@@ -16,7 +16,7 @@ jobs:
       with:
         version: 6.5.3
         cache: true
-        modules: 'qtscxml qt5compat qtshadertools qtimageformats'
+        modules: 'qtscxml qt5compat qtshadertools qtimageformats qtwebsockets'
     - name: run qmake
       run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
     - name: run make
