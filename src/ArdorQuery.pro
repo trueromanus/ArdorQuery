@@ -1,4 +1,4 @@
-QT += quick network websockets quickcontrols2 concurrent
+QT += quick network websockets quickcontrols2 concurrent svg
 
 CONFIG(debug, debug|release) {
     QT += testlib
