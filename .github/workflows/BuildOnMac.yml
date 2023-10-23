@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Build on macOS
 
 on:
   push:
@@ -23,4 +23,4 @@ jobs:
       run: make -C src
     - uses: actions/upload-artifact@v3
       with:
-        path: ardorquery_macos.dmg      
+        path: ArdorQuery.app
