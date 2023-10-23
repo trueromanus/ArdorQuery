@@ -25,4 +25,4 @@ jobs:
       run: macdeployqt src/ArdorQuery.app -appstore-compliant -dmg -qmldir=src
     - uses: actions/upload-artifact@v3
       with:
-        path: ArdorQuery.dmg
+        path: src/ArdorQuery.dmg
