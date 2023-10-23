@@ -1,0 +1,29 @@
+name: Build on macOS
+
+on:
+  push:
+    branches: []
+
+jobs:
+  build:
+
+    runs-on: macos-12
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Qt dependencies
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: 6.5.3
+        cache: true
+        modules: 'qtscxml qt5compat qtshadertools qtimageformats qtwebsockets'
+        archives: 'qtbase qtsvg'
+    - name: run qmake
+      run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
+    - name: run make
+      run: make -C src
+    - name: Run MacDeployQt
+      run: cd src && macdeployqt ArdorQuery.app -appstore-compliant -dmg -qmldir=.
+    - uses: actions/upload-artifact@v3
+      with:
+        path: src/ArdorQuery.dmg
