@@ -25,4 +25,4 @@ jobs:
       run: ls
     - uses: actions/upload-artifact@v3
       with:
-        path: ArdorQuery.app
+        path: src/ArdorQuery.app
