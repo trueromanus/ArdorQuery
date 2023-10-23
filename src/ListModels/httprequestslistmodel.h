@@ -19,6 +19,7 @@
 #include <QObject>
 #include <QAbstractListModel>
 #include <QUuid>
+#include <QSharedPointer>
 #include "../Models/httprequestmodel.h"
 
 class HttpRequestsListModel : public QAbstractListModel
