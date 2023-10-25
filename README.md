@@ -1,4 +1,5 @@
 # ArdorQuery
+[![CI](https://github.com/trueromanus/ArdorQuery/actions/workflows/ci.yml/badge.svg)](https://github.com/trueromanus/ArdorQuery/actions/workflows/ci.yml)  
 ArdorQuery is a tool for performing any HTTP(S) endpoints like REST API, HTML, Images, GraphQL, OData etc.  
 The main goal is to make an application with minimal user interface and keyboard oriented.  
 Application is fully native, your don't need to install additional stuff.  

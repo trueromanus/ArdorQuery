@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  linuxbuild:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: apt-update
+      run: sudo apt-get update -qq
+    - name: apt get qt
+      run: sudo apt-get install -y --no-install-recommends build-essential qt6-base-dev libqt6websockets6-dev libqt6svg6-dev qt6-declarative-dev qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-dialogs qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-layouts qml6-module-qtqml-workerscript qml-qt6 libqt6quick6 libqt6quickcontrols2-6 libqt6opengl6-dev libgl1-mesa-dev
+    - name: run qmake
+      run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
+    - name: run make
+      run: make -C src
+  macosbuild:
+    runs-on: macos-12    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Qt dependencies
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: 6.5.3
+        cache: true
+        modules: 'qtscxml qt5compat qtshadertools qtimageformats qtwebsockets'
+    - name: run qmake
+      run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
+    - name: run make
+      run: make -C src
