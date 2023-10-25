@@ -162,12 +162,15 @@ ApplicationWindow {
             }
             onNeedOpenFile: {
                 openDialog.open();
+                globalEventHandler.clear();
             }
             onNeedSaveFile: {
                 saveDialog.open();
+                globalEventHandler.clear();
             }
             onNeedGenerateImage: {
                 saveImageDialog.open();
+                globalEventHandler.clear();
             }
             onNeedOpenApiExportWindow: {
                 openApiExportWindow.showWindow = true;
@@ -230,10 +233,10 @@ ApplicationWindow {
 
     GlobalEventHandlerModel {
         id: globalEventHandler
-        onKeysChanged: function (state) {
+        onKeysChanged: function (shortcut) {
             if (!window.active) return;
 
-
+            backend.shortcutHandler(shortcut);
         }
     }
 

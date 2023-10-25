@@ -33,6 +33,13 @@ private:
     const QString m_control { "control" };
     const QString m_shift { "shift" };
     const QString m_alt { "alt" };
+    const QString m_leftBracket { "{" };
+    const QString m_rightBracket { "}" };
+    const QString m_enter { "enter" };
+    const QString m_pageDown { "pagedown" };
+    const QString m_pageUp { "pageup" };
+    const QString m_down { "down" };
+    const QString m_up { "up" };
     const QString m_aKey { "a" };
     const QString m_bKey { "b" };
     const QString m_cKey { "c" };
@@ -41,7 +48,6 @@ private:
     const QString m_fKey { "f" };
     const QString m_gKey { "g" };
     const QString m_hKey { "h" };
-
     const QString m_iKey { "i" };
     const QString m_jKey { "j" };
     const QString m_kKey { "k" };
@@ -61,6 +67,17 @@ private:
     const QString m_yKey { "y" };
     const QString m_zKey { "z" };
 
+    const QString m_zeroKey { "0" };
+    const QString m_oneKey { "1" };
+    const QString m_twoKey { "2" };
+    const QString m_threeKey { "3" };
+    const QString m_fooKey { "4" };
+    const QString m_fiveKey { "5" };
+    const QString m_sixKey { "6" };
+    const QString m_sevenKey { "7" };
+    const QString m_eightKey { "8" };
+    const QString m_nineKey { "9" };
+
     const QString m_mouseXButton1 { "xbutton1" };
     const QString m_mouseXButton2 { "xbutton2" };
     QMap<int, QString> m_keyMapping { QMap<int, QString>() };
@@ -73,6 +90,8 @@ public:
     explicit GlobalEventHandlerModel(QObject *parent = nullptr);
 
     bool eventFilter(QObject* watched, QEvent* event);
+
+    Q_INVOKABLE void clear();
 
 private:
     QString pressedKeysToString();

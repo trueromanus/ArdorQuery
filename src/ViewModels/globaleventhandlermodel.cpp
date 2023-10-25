@@ -59,6 +59,48 @@ GlobalEventHandlerModel::GlobalEventHandlerModel(QObject *parent)
     m_keyMapping.insert(Qt::Key_Delete, m_deleteKey);
     m_keyOrder.insert(m_deleteKey, 22);
 
+    m_keyMapping.insert(Qt::Key_BracketLeft, m_leftBracket);
+    m_keyMapping.insert(Qt::Key_BraceLeft, m_leftBracket);
+    m_keyOrder.insert(m_leftBracket, 23);
+    m_keyMapping.insert(Qt::Key_BracketRight, m_rightBracket);
+    m_keyMapping.insert(Qt::Key_BraceRight, m_rightBracket);
+    m_keyOrder.insert(m_rightBracket, 24);
+
+    m_keyMapping.insert(Qt::Key_Enter, m_enter);
+    m_keyMapping.insert(Qt::Key_Return, m_enter);
+    m_keyOrder.insert(m_enter, 25);
+
+    m_keyMapping.insert(Qt::Key_PageDown, m_pageDown);
+    m_keyOrder.insert(m_pageDown, 26);
+    m_keyMapping.insert(Qt::Key_PageUp, m_pageUp);
+    m_keyOrder.insert(m_pageDown, 27);
+
+    m_keyMapping.insert(Qt::Key_0, m_zeroKey);
+    m_keyOrder.insert(m_zeroKey, 28);
+    m_keyMapping.insert(Qt::Key_1, m_oneKey);
+    m_keyOrder.insert(m_oneKey, 29);
+    m_keyMapping.insert(Qt::Key_2, m_twoKey);
+    m_keyOrder.insert(m_twoKey, 30);
+    m_keyMapping.insert(Qt::Key_3, m_threeKey);
+    m_keyOrder.insert(m_threeKey, 31);
+    m_keyMapping.insert(Qt::Key_4, m_fooKey);
+    m_keyOrder.insert(m_fooKey, 32);
+    m_keyMapping.insert(Qt::Key_5, m_fiveKey);
+    m_keyOrder.insert(m_fiveKey, 33);
+    m_keyMapping.insert(Qt::Key_6, m_sixKey);
+    m_keyOrder.insert(m_sixKey, 34);
+    m_keyMapping.insert(Qt::Key_7, m_sevenKey);
+    m_keyOrder.insert(m_sevenKey, 35);
+    m_keyMapping.insert(Qt::Key_8, m_eightKey);
+    m_keyOrder.insert(m_eightKey, 36);
+    m_keyMapping.insert(Qt::Key_9, m_nineKey);
+    m_keyOrder.insert(m_nineKey, 37);
+
+    m_keyMapping.insert(Qt::Key_Down, m_down);
+    m_keyOrder.insert(m_down, 38);
+    m_keyMapping.insert(Qt::Key_Up, m_up);
+    m_keyOrder.insert(m_up, 39);
+
     m_keyMapping.insert(Qt::Key_A, m_aKey);
     m_keyOrder.insert(m_aKey, 100);
     m_keyMapping.insert(Qt::Key_B, m_bKey);
@@ -158,6 +200,12 @@ bool GlobalEventHandlerModel::eventFilter(QObject *watched, QEvent *event)
     }
 
     return QObject::eventFilter(watched, event);
+}
+
+void GlobalEventHandlerModel::clear()
+{
+    m_pressedKeys.clear();
+    m_pressedMouseKeys.clear();
 }
 
 QString GlobalEventHandlerModel::pressedKeysToString()

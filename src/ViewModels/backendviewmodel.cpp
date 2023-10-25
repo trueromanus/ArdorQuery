@@ -38,164 +38,16 @@ void BackendViewModel::addNewRequest()
     m_requests->addItem(model);
 }
 
-bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept
+void BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
 {
-    auto request = m_requests->selectedItem()->requestModel();
-    auto result = m_requests->selectedItem()->resultModel();
-
-    // ---------
-    // Perform requests
-
-    // Ctrl-M
-    if ((nativeCode == 50 || key == Qt::Key_M) && control) {
-        m_requestPerformer->performAllRequest();
-        return true;
+    if (!shortcut.startsWith("control") && m_openedCommandPalette) {
+        m_openedCommandPalette = false;
+        m_requestsCommandPaletter->selectItem();
+        emit openedCommandPaletteChanged();
+        return;
     }
 
-    // Ctrl-Z or F5
-    if (((nativeCode == 44 || key == Qt::Key_Z) && control) || (nativeCode == 63 || key == Qt::Key_F5)) {
-        auto request = m_requests->getSelectedRequest();
-        m_requestPerformer->performOneRequest(request);
-        return true;
-    }
-
-    // Ctrl-B or F4
-    if (((nativeCode == 48 || key == Qt::Key_B) && control) || (nativeCode == 62 || key == Qt::Key_F4)) {
-        m_requestPerformer->cancelRequest();
-        return true;
-    }
-
-    // ---------
-    // Export
-
-    // Ctrl-S or F10
-    if (((nativeCode == 31 || key == Qt::Key_S) && control) || (nativeCode == 68 || key == Qt::Key_F10)) {
-        m_requestExternal->copyToClipboard();
-        return true;
-    }
-
-    // ---------
-    // Import
-
-    // Shift-Alt-L
-    if ((nativeCode == 38 || key == Qt::Key_L) && shift && alt) {
-        m_requestExternal->replaceFromClipboard();
-        return true;
-    }
-
-    // Ctrl-L or F3
-    if (((nativeCode == 38 || key == Qt::Key_L) && control) || (nativeCode == 61 || key == Qt::Key_F3)) {
-        m_requestExternal->appendFromClipboard();
-        return true;
-    }
-
-    // Ctrl-F6
-    if (key == Qt::Key_F6 && control) {
-        emit needGlobalVariablesWindow();
-    }
-
-    // F6
-    if (key == Qt::Key_F6 && !control) {
-        emit needOpenApiExportWindow();
-    }
-
-    // ---------
-    // Change selection
-
-    // PgUp/Numpad PgUp or Ctrl-PgUp/Ctrl-Numpad PgUp
-    if (nativeCode == 329 || nativeCode == 73 || key == Qt::Key_PageUp) {
-        if (control) {
-            request->selectFirstField();
-        } else {
-            request->selectUpField();
-        }
-        return true;
-    }
-
-    // PgDown/Numpad PgDown or Ctrl-PgDown/Ctrl-Numpad PgDown
-    if (nativeCode == 337 || nativeCode == 81 || key == Qt::Key_PageDown) {
-        if (control) {
-            request->selectLastField();
-        } else {
-            request->selectDownField();
-        }
-        return true;
-    }
-
-    // ---------
-    // Miscellanious
-
-    // Ctrl-H or F1
-#ifdef Q_OS_WIN
-    if (((nativeCode == 35 || key == Qt::Key_H) && control && !shift && !alt) || (nativeCode == 59 || key == Qt::Key_F1)) {
-        setHelpVisible(!m_helpVisible);
-        return true;
-    }
-#else
-    if ((key == Qt::Key_H && control) || key == Qt::Key_F1) {
-        setHelpVisible(!m_helpVisible);
-        return true;
-    }
-
-#endif
-
-    // ---------
-    // Fields
-
-    // Ctrl-R
-    if ((nativeCode == 19 || key == Qt::Key_R) && control) {
-        request->clearFields();
-        return true;
-    }
-
-    // Alt-Shift-R
-    if ((nativeCode == 19 || key == Qt::Key_R) && alt && shift) {
-        request->clearSelectedField();
-        return true;
-    }
-
-    // Ctrl-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && control) {
-        request->addItem(request->selectedItem() + 1);
-        return true;
-    }
-
-    // Alt-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && alt) {
-        request->addItem(request->selectedItem());
-        return true;
-    }
-
-    // Shift-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && shift) {
-        request->addItem(-1);
-        return true;
-    }
-
-
-    // Ctrl-{
-    if ((nativeCode == 26 || key == Qt::Key_BracketLeft) && control) {
-        request->sortingFields(false);
-        return true;
-    }
-
-    // Ctrl-}
-    if ((nativeCode == 27 || key == Qt::Key_BracketRight) && control) {
-        request->sortingFields(true);
-        return true;
-    }
-
-    // F11
-    if (key == Qt::Key_F11) {
-        m_tabs->toggleTabs();
-        return true;
-    }
-
-    // ---------
-    // Queries
-
-    // Ctrl-Tab
-    if (key == Qt::Key_Tab && control) {
+    if (shortcut == "control-tab") {
         if (!m_openedCommandPalette) {
             m_openedCommandPalette = true;
             m_requestsCommandPaletter->refresh(true);
@@ -203,87 +55,168 @@ bool BackendViewModel::keysHandler(int key, quint32 nativeCode, bool control, bo
         } else {
             m_requestsCommandPaletter->selectNext();
         }
-        return true;
+        return;
     }
 
-    // ---------
-    // Body search
-
-    // Ctrl-Alt-Down or Shift-Alt-Down
-    if ((nativeCode == 336 || key == Qt::Key_Down) && (control || shift) && alt) {
-        auto index = result->bodyModel()->nextFindedResult();
-        if (index > -1) emit changedFindedIndex(index);
-        return true;
+    if (shortcut == "control-m") {
+        m_requestPerformer->performAllRequest();
+        return;
     }
 
-    // Ctrl-Alt-Up or Shift-Alt-Up
-    if ((nativeCode == 328 || key == Qt::Key_Up) && (control || shift) && alt) {
-        auto index = result->bodyModel()->previousFindedResult();
-        if (index > -1) emit changedFindedIndex(index);
-        return true;
+    if (shortcut == "control-z" || shortcut == "f5") {
+        m_requestPerformer->performAllRequest();
+        auto request = m_requests->getSelectedRequest();
+        m_requestPerformer->performOneRequest(request);
+        return;
     }
 
-    // ---------
-    // Queries
+    if (shortcut == "control-b" || shortcut == "f4") {
+        m_requestPerformer->cancelRequest();
+        return;
+    }
 
-    // Ctrl-Insert
-    if ((nativeCode == 338 || key == Qt::Key_Insert) && control) {
+    if (shortcut == "f10" || shortcut == "control-s") {
+        m_requestExternal->copyToClipboard();
+        return;
+    }
+
+    if (shortcut == "f1" || shortcut == "control-h") {
+        setHelpVisible(!m_helpVisible);
+        return;
+    }
+
+    if (shortcut == "shift-alt-l") {
+        m_requestExternal->replaceFromClipboard();
+        return;
+    }
+
+    if (shortcut == "control-l" || shortcut == "f3") {
+        m_requestExternal->appendFromClipboard();
+        return;
+    }
+
+    if (shortcut == "control-f6") {
+        emit needGlobalVariablesWindow();
+        return;
+    }
+
+    if (shortcut == "f6") {
+        emit needOpenApiExportWindow();
+        return;
+    }
+
+    if (shortcut == "control-f6") {
+        m_requests->selectedItem()->requestModel()->clearFields();
+        return;
+    }
+
+    if (shortcut == "shift-alt-r") {
+        m_requests->selectedItem()->requestModel()->clearSelectedField();
+        return;
+    }
+
+    if (shortcut == "control-enter") {
+        auto request = m_requests->selectedItem()->requestModel();
+        request->addItem(request->selectedItem() + 1);
+        return;
+    }
+
+    if (shortcut == "alt-enter") {
+        auto request = m_requests->selectedItem()->requestModel();
+        request->addItem(request->selectedItem());
+        return;
+    }
+
+    if (shortcut == "shift-enter") {
+        m_requests->selectedItem()->requestModel()->addItem(-1);
+        return;
+    }
+
+    if (shortcut == "control-{") {
+        m_requests->selectedItem()->requestModel()->sortingFields(false);
+        return;
+    }
+
+    if (shortcut == "control-}") {
+        m_requests->selectedItem()->requestModel()->sortingFields(true);
+        return;
+    }
+
+    if (shortcut == "f11") {
+        m_tabs->toggleTabs();
+        return;
+    }
+
+    if (shortcut == "control-insert") {
         addNewRequest();
+        return;
     }
 
-    // Ctrl-Delete
-    if ((nativeCode == 339 || key == Qt::Key_Delete) && control) {
+    if (shortcut == "control-delete") {
         deleteCurrentRequest();
+        return;
     }
 
-    // --------
-    // Copying results
-
-    // Shift-Alt-B
-    if ((nativeCode == 48 || key == Qt::Key_B) && shift && alt) {
-        result->copyBodyToClipboard();
-        return true;
+    if (shortcut == "control-pagedown") {
+        m_requests->selectedItem()->requestModel()->selectLastField();
+        return;
     }
 
-    // Shift-Alt-H
-    if ((nativeCode == 35 || key == Qt::Key_H) && shift && alt) {
-        result->copyHeadersToClipboard();
-        return true;
+    if (shortcut == "pagedown") {
+        m_requests->selectedItem()->requestModel()->selectDownField();
+        return;
     }
 
-    // Alt-=
-    if (key == Qt::Key_Equal && alt) {
+    if (shortcut == "control-pageup") {
+        m_requests->selectedItem()->requestModel()->selectFirstField();
+        return;
+    }
+
+    if (shortcut == "pageup") {
+        m_requests->selectedItem()->requestModel()->selectUpField();
+        return;
+    }
+
+    if (shortcut == "shift-alt-b") {
+        m_requests->selectedItem()->resultModel()->copyBodyToClipboard();
+        return;
+    }
+
+    if (shortcut == "shift-alt-h") {
+        m_requests->selectedItem()->resultModel()->copyHeadersToClipboard();
+        return;
+    }
+
+    if (shortcut == "alt-plus") {
         emit needOpenFile();
-        return true;
+        return;
     }
 
-    // Ctrl-=
-    if (key == Qt::Key_Equal && control) {
+    if (shortcut == "control-plus") {
         emit needSaveFile();
-        return true;
+        return;
     }
 
-    // Ctrl-8
-    if (key == Qt::Key_8 && control) {
+    if (shortcut == "control-8") {
         emit needGenerateImage();
-        return true;
+        return;
     }
 
-    // Alt-8
-    if (key == Qt::Key_8 && alt) {
+    if (shortcut == "alt-8") {
         generateImageToClipboard();
-        return true;
+        return;
     }
 
-    return false;
-}
+    if (shortcut == "control-alt-down") {
+        auto index = m_requests->selectedItem()->resultModel()->bodyModel()->nextFindedResult();
+        if (index > -1) emit changedFindedIndex(index);
+        return;
+    }
 
-void BackendViewModel::keysReleased(int key) noexcept
-{
-    if (key == Qt::Key_Control && m_openedCommandPalette) {
-        m_openedCommandPalette = false;
-        m_requestsCommandPaletter->selectItem();
-        emit openedCommandPaletteChanged();
+    if (shortcut == "control-alt-up") {
+        auto index = m_requests->selectedItem()->resultModel()->bodyModel()->previousFindedResult();
+        if (index > -1) emit changedFindedIndex(index);
+        return;
     }
 }
 

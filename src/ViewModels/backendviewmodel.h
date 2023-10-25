@@ -75,8 +75,7 @@ public:
     GlobalVariablesListModel* globalVariables() const noexcept { return m_globalVariables; }
 
     Q_INVOKABLE void addNewRequest();
-    Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
-    Q_INVOKABLE void keysReleased(int key) noexcept;
+    Q_INVOKABLE void shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void refreshFindedIndex() noexcept;
     Q_INVOKABLE void openedFile(const QString& filePath) noexcept;
     Q_INVOKABLE void savedFile(const QString& filePath) noexcept;

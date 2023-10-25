@@ -5,19 +5,6 @@ Item {
     id: root
     anchors.fill: parent
     focus: true
-    Keys.onPressed: (event) => {
-        const needAccepted = backend.keysHandler(
-            event.key,
-            event.nativeScanCode,
-            (event.modifiers & Qt.ControlModifier),
-            (event.modifiers & Qt.ShiftModifier),
-            (event.modifiers & Qt.AltModifier)
-        );
-        if (needAccepted) event.accepted = true;
-    }
-    Keys.onReleased: (event) => {
-        backend.keysReleased(event.key);
-    }
 
     property alias viewModel: listView.model
 
@@ -79,17 +66,17 @@ Item {
                     if (listView.model.selectedItem !== currentIndex) listView.model.selectedItem = currentIndex;
                 }
                 Keys.onPressed: (event) => {
-                    const needAccepted = backend.keysHandler(
-                        event.key,
-                        event.nativeScanCode,
-                        (event.modifiers & Qt.ControlModifier),
-                        (event.modifiers & Qt.ShiftModifier),
-                        (event.modifiers & Qt.AltModifier)
-                    );
-                    if (needAccepted) event.accepted = true;
-                }
-                Keys.onReleased: (event) => {
-                    backend.keysReleased(event.key);
+                    const isControl = event.modifiers & Qt.ControlModifier;
+                    const isShift = event.modifiers & Qt.ShiftModifier;
+                    const isAlt = event.modifiers & Qt.AltModifier;
+                    if (isControl && event.key === Qt.Key_Z) { // disable shotcut Ctrl-Z because it can make undo
+                        event.accepted = true;
+                        return;
+                    }
+                    if (isAlt) {
+                        event.accepted = true;
+                        return;
+                    }
                 }
             }
         }
