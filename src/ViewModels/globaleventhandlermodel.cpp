@@ -73,7 +73,7 @@ GlobalEventHandlerModel::GlobalEventHandlerModel(QObject *parent)
     m_keyMapping.insert(Qt::Key_PageDown, m_pageDown);
     m_keyOrder.insert(m_pageDown, 26);
     m_keyMapping.insert(Qt::Key_PageUp, m_pageUp);
-    m_keyOrder.insert(m_pageDown, 27);
+    m_keyOrder.insert(m_pageUp, 27);
 
     m_keyMapping.insert(Qt::Key_0, m_zeroKey);
     m_keyOrder.insert(m_zeroKey, 28);
