@@ -24,24 +24,6 @@ ApplicationWindow {
     footer: ApplicationFooter {
     }
 
-    Item {
-        id: keysItem
-        Keys.onPressed: (event) => {
-            const needAccepted = backend.keysHandler(
-                event.key,
-                event.nativeScanCode,
-                (event.modifiers & Qt.ControlModifier),
-                (event.modifiers & Qt.ShiftModifier),
-                (event.modifiers & Qt.AltModifier)
-            );
-            if (needAccepted) event.accepted = true;
-        }
-        Keys.onReleased: (event) => {
-            backend.keysReleased(event.key);
-        }
-    }
-
-
     HttpRequestEditor {
         id: requestEditor
         visible: backend.tabs.currentTab === 'Request'
