@@ -28,6 +28,6 @@ jobs:
         cache: true
         modules: 'qtscxml qt5compat qtshadertools qtimageformats qtwebsockets'
     - name: run qmake
-      run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro
+      run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro QMAKE_APPLE_DEVICE_ARCHS="x86_64 arm64"
     - name: run make
       run: make -C src
