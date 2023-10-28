@@ -186,6 +186,7 @@ signals:
     void bodyTypesChanged();
     void prepareBodyTypeChanged();
     void errorMessageChanged();
+    void needCloseWindow();
 
 };
 

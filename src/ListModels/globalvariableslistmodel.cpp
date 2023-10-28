@@ -126,61 +126,36 @@ void GlobalVariablesListModel::addVariable(const QString &name, const QString &v
     m_variables.insert(name, value);
 }
 
-bool GlobalVariablesListModel::keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept
+void GlobalVariablesListModel::shortcutHandler(const QString &shortcut) noexcept
 {
-    Q_UNUSED(nativeCode);
-    Q_UNUSED(shift);
-    Q_UNUSED(alt);
-
-    // Esc
-    if (key == Qt::Key_Escape) {
-        emit closeWindowRequired();
-        return true;
-    }
-
-    // Ctrl-Enter
-    if ((key == Qt::Key_Enter || key == Qt::Key_Return) && control) {
+    if (shortcut == "control-enter") {
         addLine();
-        return true;
+        return;
     }
-
-    // Ctrl-S
-    if ((nativeCode == 31 || key == Qt::Key_S) && control) {
+    if (shortcut == "control-s") {
         parseLines();
-        return true;
+        return;
     }
-
-    // PgUp
-    if (key == Qt::Key_PageUp && !control) {
+    if (shortcut == "escape") {
+        emit closeWindowRequired();
+        return;
+    }
+    if (shortcut == "pageup") {
         if (m_selected > 0) setSelected(m_selected - 1);
-        return true;
+        return;
     }
-
-    // PgDown
-    if (key == Qt::Key_PageDown && !control) {
+    if (shortcut == "pagedown") {
         if (m_selected < m_lines.count() - 1) setSelected(m_selected + 1);
-        return true;
+        return;
     }
-
-    // Ctrl-PgUp
-    if (key == Qt::Key_PageUp && control) {
+    if (shortcut == "control-pageup") {
         setSelected(0);
-        return true;
+        return;
     }
-
-    // Ctrl-PgDown
-    if (key == Qt::Key_PageDown && control) {
+    if (shortcut == "control-pagedown") {
         if (!m_lines.isEmpty()) setSelected(m_lines.count() - 1);
-        return true;
+        return;
     }
-
-
-    return false;
-}
-
-void GlobalVariablesListModel::keysReleased(int key) noexcept
-{
-    Q_UNUSED(key);
 }
 
 void GlobalVariablesListModel::fillLines()

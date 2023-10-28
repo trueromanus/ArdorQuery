@@ -207,7 +207,7 @@ Item {
                                     event.accepted = true;
                                     return;
                                 }
-                                if (isShift && isAlt) {
+                                if (isAlt) {
                                     event.accepted = true;
                                     return;
                                 }

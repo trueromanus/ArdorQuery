@@ -19,24 +19,6 @@ ApplicationWindow {
         opacity: .3
     }
 
-    Item {
-        id: keysItem
-        focus: true
-        Keys.onPressed: (event) => {
-            const needAccepted = backend.globalVariables.keysHandler(
-                event.key,
-                event.nativeScanCode,
-                (event.modifiers & Qt.ControlModifier),
-                (event.modifiers & Qt.ShiftModifier),
-                (event.modifiers & Qt.AltModifier)
-            );
-            if (needAccepted) event.accepted = true;
-        }
-        Keys.onReleased: (event) => {
-            backend.globalVariables.keysReleased(event.key);
-        }
-    }
-
     Text {
         text: "To add a new global variable press Ctrl-Enter<br />To save changes press Ctrl-S"
         anchors.centerIn: parent
@@ -89,11 +71,32 @@ ApplicationWindow {
                 onPressed: {
                     if (listView.model.selected !== identifier) listView.model.selected = identifier;
                 }
-                Keys.forwardTo: [keysItem]
+                Keys.onPressed: (event) => {
+                    const isControl = event.modifiers & Qt.ControlModifier;
+                    const isShift = event.modifiers & Qt.ShiftModifier;
+                    const isAlt = event.modifiers & Qt.AltModifier;
+                    if (isControl && event.key === Qt.Key_Z) { // disable shotcut Ctrl-Z because it can make undo
+                        event.accepted = true;
+                        return;
+                    }
+                    if (isAlt) {
+                        event.accepted = true;
+                        return;
+                    }
+                }
             }
         }
         ScrollBar.vertical: ScrollBar {
             active: true
+        }
+    }
+
+    Connections {
+        target: globalEventHandler
+        function onKeysChanged (state) {
+            if (!root.activeFocusItem) return;
+
+            backend.globalVariables.shortcutHandler(state);
         }
     }
 }

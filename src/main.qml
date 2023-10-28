@@ -139,6 +139,9 @@ ApplicationWindow {
             requestExternal.httpRequest: backend.requests.selectedItem.requestModel
             requestExternal.textAdvisor: backend.textAdviser
             requestPerformer.globalVariable: backend.globalVariables
+            openApiExporter.onNeedCloseWindow: {
+                openApiExportWindow.item.close();
+            }
             globalVariables.onCloseWindowRequired: {
                 globalVariablesWindow.item.close();
             }
@@ -216,7 +219,7 @@ ApplicationWindow {
     GlobalEventHandlerModel {
         id: globalEventHandler
         onKeysChanged: function (shortcut) {
-            if (!window.active) return;
+            if (!window.activeFocusItem) return;
 
             backend.shortcutHandler(shortcut);
         }

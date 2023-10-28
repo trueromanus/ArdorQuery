@@ -555,7 +555,7 @@ ApplicationWindow {
     Connections {
         target: globalEventHandler
         function onKeysChanged (state) {
-            if (!root.active) return;
+            if (!root.activeFocusItem) return;
 
             backend.openApiExporter.shortcutHandler(state);
         }

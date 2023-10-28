@@ -195,6 +195,11 @@ void OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
         setHelpVisible(!m_helpVisible);
         return;
     }
+
+    if (shortcut == "escape") {
+        emit needCloseWindow();
+        return;
+    }
 }
 
 void OpenApiExporterViewModel::addCurrentToAddresses() noexcept

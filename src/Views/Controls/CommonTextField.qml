@@ -3,6 +3,7 @@ import QtQuick.Controls
 
 TextField {
     id: root
+    selectByMouse: true
     background: Rectangle {
         anchors.fill: parent
         color: root.activeFocus ? "white" : "transparent"

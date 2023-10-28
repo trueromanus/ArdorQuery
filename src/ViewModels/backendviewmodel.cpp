@@ -115,6 +115,11 @@ void BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         return;
     }
 
+    if (shortcut == "control-r") {
+        m_requests->selectedItem()->requestModel()->clearFields();
+        return;
+    }
+
     if (shortcut == "control-enter") {
         auto request = m_requests->selectedItem()->requestModel();
         request->addItem(request->selectedItem() + 1);

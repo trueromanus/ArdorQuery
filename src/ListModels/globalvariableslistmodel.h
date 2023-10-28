@@ -53,8 +53,7 @@ public:
     void addLine();
     void addVariable(const QString& name, const QString& value);
 
-    Q_INVOKABLE bool keysHandler(int key, quint32 nativeCode, bool control, bool shift, bool alt) noexcept;
-    Q_INVOKABLE void keysReleased(int key) noexcept;
+    Q_INVOKABLE void shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void fillLines();
     Q_INVOKABLE void clearLines();
     Q_INVOKABLE void setLine(int identifier, const QString& value);
