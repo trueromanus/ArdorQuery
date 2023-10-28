@@ -1,5 +1,5 @@
-import QtQuick /* 2.15 */
-import QtQuick.Controls /* 2.15 */
+import QtQuick
+import QtQuick.Controls
 
 Item {
     id: root
@@ -57,7 +57,7 @@ Item {
                     color: typeColor
                     opacity: .3
                     border.width: isActive ? 1 : 0
-                    border.color: "blue"
+                    border.color: "#DC0000FF"
                 }
                 onTextChanged: {
                     listView.model.setItemContent(currentIndex, text);

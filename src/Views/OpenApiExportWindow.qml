@@ -11,7 +11,6 @@ ApplicationWindow {
     minimumHeight: 400
     maximumWidth: 800
     maximumHeight: 800
-    modality: Qt.WindowModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "Import from OpenAPI"
     background: Rectangle {
