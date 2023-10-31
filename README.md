@@ -116,7 +116,7 @@ header will be replaced on `bearer 4354534534534534534`.
 ## Supported platforms
 * Windows 10+
 * Linux
-* macOS (binary release coming soon)
+* macOS 12+
 
 ## Requirements
 * Qt >= 6.2.3
