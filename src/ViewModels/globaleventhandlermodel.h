@@ -40,6 +40,9 @@ private:
     const QString m_pageUp { "pageup" };
     const QString m_down { "down" };
     const QString m_up { "up" };
+    const QString m_dot { "dot" };
+    const QString m_comma { "comma" };
+    const QString m_backspace { "backspace" };
     const QString m_aKey { "a" };
     const QString m_bKey { "b" };
     const QString m_cKey { "c" };
@@ -85,6 +88,7 @@ private:
     QSet<QString> m_pressedKeys { QSet<QString>() };
     QSet<QString> m_pressedMouseKeys { QSet<QString>() };
     QMap<QString, int> m_keyOrder { QMap<QString, int>() };
+    QSet<int> m_remappingVirtualCodes { QSet<int>() };
 
 public:
     explicit GlobalEventHandlerModel(QObject *parent = nullptr);

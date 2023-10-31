@@ -47,7 +47,7 @@ void BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         return;
     }
 
-    if (shortcut == "control-tab") {
+    if (shortcut == "control-tab" || shortcut == "control-backspace") {
         if (!m_openedCommandPalette) {
             m_openedCommandPalette = true;
             m_requestsCommandPaletter->refresh(true);
@@ -95,12 +95,12 @@ void BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         return;
     }
 
-    if (shortcut == "control-f6") {
+    if (shortcut == "control-f6" || shortcut == "control-g") {
         emit needGlobalVariablesWindow();
         return;
     }
 
-    if (shortcut == "f6") {
+    if (shortcut == "f6" || shortcut == "control-o") {
         emit needOpenApiExportWindow();
         return;
     }
@@ -110,12 +110,12 @@ void BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         return;
     }
 
-    if (shortcut == "shift-alt-r") {
+    if (shortcut == "control-r") {
         m_requests->selectedItem()->requestModel()->clearSelectedField();
         return;
     }
 
-    if (shortcut == "control-r") {
+    if (shortcut == "shift-alt-r") {
         m_requests->selectedItem()->requestModel()->clearFields();
         return;
     }
