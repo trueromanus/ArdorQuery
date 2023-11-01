@@ -43,6 +43,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette NOTIFY openedCommandPaletteChanged)
     Q_PROPERTY(OpenApiExporterViewModel* openApiExporter READ openApiExporter NOTIFY openApiExporterChanged)
     Q_PROPERTY(GlobalVariablesListModel* globalVariables READ globalVariables NOTIFY globalVariablesChanged)
+    //Q_PROPERTY(QVariantList shortcuts READ shortcuts NOTIFY shortcutsChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -58,6 +59,41 @@ private:
     OpenApiExporterViewModel* m_openApiExporter { new OpenApiExporterViewModel(this) };
     GlobalVariablesListModel* m_globalVariables { new GlobalVariablesListModel(this) };
     bool m_openApiHelpVisible { false };
+    QVariantList m_shortcuts { QVariantList() };
+    QMap<QString, QString> m_shortcutCommandMapping { QMap<QString, QString>() };
+    QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
+    const QString m_changeSelectedQueryCommand { "changeselectedquery" };
+    const QString m_performQueriesMultipleCommand { "performqueriesmultiple" };
+    const QString m_performQueryCommand { "performquery" };
+    const QString m_cancelQueryCommand { "cancelmquery" };
+    const QString m_saveToClipboardCommand { "savetoclipboard" };
+    const QString m_helpCommand { "help" };
+    const QString m_replaceFromClipboardCommand { "replacefromclipboard" };
+    const QString m_appendFromClipboardCommand { "appendfromclipboard" };
+    const QString m_globalVariablesCommand { "globalvariables" };
+    const QString m_opeApiExportCommand { "openApiExport" };
+    const QString m_removeSelectedFieldCommand { "removeselectedfield" };
+    const QString m_removeAllFieldCommand { "removeallfield" };
+    const QString m_addLineBelowCommand { "addLineBelow" };
+    const QString m_addLineAboveCommand { "addLineAbove" };
+    const QString m_addLineToEndCommand { "addLineToTop" };
+    const QString m_sortAscendingCommand { "sortAscending" };
+    const QString m_sortDescendingCommand { "sortDescending" };
+    const QString m_toggleTabsCommand { "toggletabs" };
+    const QString m_addQueryCommand { "addquery" };
+    const QString m_deleteSelectedQueryCommand { "deleteselectedquery" };
+    const QString m_selectLastFieldCommand { "selectlastfield" };
+    const QString m_selectNextFieldCommand { "selectnextfield" };
+    const QString m_selectTopFieldCommand { "selecttopfield" };
+    const QString m_selectPreviousFieldCommand { "selectpreviousfield" };
+    const QString m_copyHeadersToClipboardCommand { "copyheaderstoclipboard" };
+    const QString m_copyBodyToClipboardCommand { "copybodytoclipboard" };
+    const QString m_openFromFileCommand { "openfromfile" };
+    const QString m_saveToFileCommand { "savetofile" };
+    const QString m_generateImageToFileCommand { "generateimagetofile" };
+    const QString m_generateImageToClipboardCommand { "generateimagetoclipboard" };
+    const QString m_nextFindedResultCommand { "nextfindedresult" };
+    const QString m_previousFindedResultCommand { "previousfindedresult" };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);
@@ -93,6 +129,8 @@ public:
 private:
     QString removeProtocol(const QString& filePath) noexcept;
     void fillAuthorizationSecurity(const QString& key, HttpRequestViewModel* request, const OpenApiRoutesOptions& options);
+    void fillMappings();
+    void fillCommands();
 
 signals:
     void requestPerformerChanged();
@@ -114,6 +152,7 @@ signals:
     void openApiHelpVisibleChanged();
     void globalVariablesChanged();
     void needGlobalVariablesWindow();
+    void shortcutsChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);
