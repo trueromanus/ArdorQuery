@@ -89,6 +89,7 @@ private:
     QSet<QString> m_pressedMouseKeys { QSet<QString>() };
     QMap<QString, int> m_keyOrder { QMap<QString, int>() };
     QSet<int> m_remappingVirtualCodes { QSet<int>() };
+    bool m_handledFromLastSession { false };
 
 public:
     explicit GlobalEventHandlerModel(QObject *parent = nullptr);
@@ -96,6 +97,7 @@ public:
     bool eventFilter(QObject* watched, QEvent* event);
 
     Q_INVOKABLE void clear();
+    Q_INVOKABLE void setHandledLastSession() noexcept { m_handledFromLastSession = true; }
 
 private:
     QString pressedKeysToString();

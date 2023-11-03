@@ -44,16 +44,19 @@ void BackendViewModel::addNewRequest()
     m_requests->addItem(model);
 }
 
-void BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
+bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
 {
     if (!shortcut.startsWith("control") && m_openedCommandPalette) {
         m_openedCommandPalette = false;
         m_requestsCommandPaletter->selectItem();
         emit openedCommandPaletteChanged();
-        return;
     }
 
-    if (shortcut == "control-tab" || shortcut == "control-backspace") {
+    if (!m_shortcutCommandMapping.contains(shortcut)) return false;
+
+    auto command = m_shortcutCommandMapping[shortcut];
+
+    if (command == m_changeSelectedQueryCommand) {
         if (!m_openedCommandPalette) {
             m_openedCommandPalette = true;
             m_requestsCommandPaletter->refresh(true);
@@ -61,169 +64,77 @@ void BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         } else {
             m_requestsCommandPaletter->selectNext();
         }
-        return;
-    }
-
-    if (shortcut == "control-m") {
+    } else if (command == m_performQueriesMultipleCommand) {
         m_requestPerformer->performAllRequest();
-        return;
-    }
-
-    if (shortcut == "control-z" || shortcut == "f5") {
+    } else if (command == m_performQueryCommand) {
         m_requestPerformer->performAllRequest();
         auto request = m_requests->getSelectedRequest();
         m_requestPerformer->performOneRequest(request);
-        return;
-    }
-
-    if (shortcut == "control-b" || shortcut == "f4") {
+    } else if (command == m_cancelQueryCommand) {
         m_requestPerformer->cancelRequest();
-        return;
-    }
-
-    if (shortcut == "f10" || shortcut == "control-s") {
+    } else if (command == m_saveToClipboardCommand) {
         m_requestExternal->copyToClipboard();
-        return;
-    }
-
-    if (shortcut == "f1" || shortcut == "control-h") {
+    } else if (command == m_helpCommand) {
         setHelpVisible(!m_helpVisible);
-        return;
-    }
-
-    if (shortcut == "shift-alt-l") {
+    } else if (command == m_replaceFromClipboardCommand) {
         m_requestExternal->replaceFromClipboard();
-        return;
-    }
-
-    if (shortcut == "control-l" || shortcut == "f3") {
+    } else if (command == m_appendFromClipboardCommand) {
         m_requestExternal->appendFromClipboard();
-        return;
-    }
-
-    if (shortcut == "control-f6" || shortcut == "control-g") {
+    } else if (command == m_globalVariablesCommand) {
         emit needGlobalVariablesWindow();
-        return;
-    }
-
-    if (shortcut == "f6" || shortcut == "control-o") {
+    } else if (command == m_opeApiExportCommand) {
         emit needOpenApiExportWindow();
-        return;
-    }
-
-    if (shortcut == "control-r") {
+    } else if (command == m_removeSelectedFieldCommand) {
         m_requests->selectedItem()->requestModel()->clearSelectedField();
-        return;
-    }
-
-    if (shortcut == "shift-alt-r") {
+    } else if (command == m_removeAllFieldCommand) {
         m_requests->selectedItem()->requestModel()->clearFields();
-        return;
-    }
-
-    if (shortcut == "control-enter") {
+    } else if (command == m_addLineBelowCommand) {
         auto request = m_requests->selectedItem()->requestModel();
         request->addItem(request->selectedItem() + 1);
-        return;
-    }
-
-    if (shortcut == "alt-enter") {
+    } else if (command == m_addLineAboveCommand) {
         auto request = m_requests->selectedItem()->requestModel();
         request->addItem(request->selectedItem());
-        return;
-    }
-
-    if (shortcut == "shift-enter") {
+    } else if (command == m_addLineToEndCommand) {
         m_requests->selectedItem()->requestModel()->addItem(-1);
-        return;
-    }
-
-    if (shortcut == "control-{") {
+    } else if (command == m_sortAscendingCommand) {
         m_requests->selectedItem()->requestModel()->sortingFields(false);
-        return;
-    }
-
-    if (shortcut == "control-}") {
+    } else if (command == m_sortDescendingCommand) {
         m_requests->selectedItem()->requestModel()->sortingFields(true);
-        return;
-    }
-
-    if (shortcut == "f11") {
+    } else if (command == m_toggleTabsCommand) {
         m_tabs->toggleTabs();
-        return;
-    }
-
-    if (shortcut == "control-insert") {
+    } else if (command == m_addQueryCommand) {
         addNewRequest();
-        return;
-    }
-
-    if (shortcut == "control-delete") {
+    } else if (command == m_deleteSelectedQueryCommand) {
         deleteCurrentRequest();
-        return;
-    }
-
-    if (shortcut == "control-pagedown") {
+    } else if (command == m_selectLastFieldCommand) {
         m_requests->selectedItem()->requestModel()->selectLastField();
-        return;
-    }
-
-    if (shortcut == "pagedown") {
+    } else if (command == m_selectNextFieldCommand) {
         m_requests->selectedItem()->requestModel()->selectDownField();
-        return;
-    }
-
-    if (shortcut == "control-pageup") {
+    } else if (command == m_selectTopFieldCommand) {
         m_requests->selectedItem()->requestModel()->selectFirstField();
-        return;
-    }
-
-    if (shortcut == "pageup") {
+    } else if (command == m_selectPreviousFieldCommand) {
         m_requests->selectedItem()->requestModel()->selectUpField();
-        return;
-    }
-
-    if (shortcut == "shift-alt-b") {
+    } else if (command == m_copyBodyToClipboardCommand) {
         m_requests->selectedItem()->resultModel()->copyBodyToClipboard();
-        return;
-    }
-
-    if (shortcut == "shift-alt-h") {
+    } else if (command == m_copyHeadersToClipboardCommand) {
         m_requests->selectedItem()->resultModel()->copyHeadersToClipboard();
-        return;
-    }
-
-    if (shortcut == "alt-plus") {
+    } else if (command == m_openFromFileCommand) {
         emit needOpenFile();
-        return;
-    }
-
-    if (shortcut == "control-plus") {
+    } else if (command == m_saveToFileCommand) {
         emit needSaveFile();
-        return;
-    }
-
-    if (shortcut == "control-8") {
+    } else if (command == m_generateImageToFileCommand) {
         emit needGenerateImage();
-        return;
-    }
-
-    if (shortcut == "alt-8") {
+    } else if (command == m_generateImageToClipboardCommand) {
         generateImageToClipboard();
-        return;
-    }
-
-    if (shortcut == "control-alt-down") {
+    } else if (command == m_nextFindedResultCommand) {
         auto index = m_requests->selectedItem()->resultModel()->bodyModel()->nextFindedResult();
         if (index > -1) emit changedFindedIndex(index);
-        return;
-    }
-
-    if (shortcut == "control-alt-up") {
+    } else if (command == m_previousFindedResultCommand) {
         auto index = m_requests->selectedItem()->resultModel()->bodyModel()->previousFindedResult();
         if (index > -1) emit changedFindedIndex(index);
-        return;
     }
+
+    return true;
 }
 
 void BackendViewModel::refreshFindedIndex() noexcept

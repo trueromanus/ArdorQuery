@@ -219,7 +219,8 @@ ApplicationWindow {
         onKeysChanged: function (shortcut) {
             if (!window.activeFocusItem) return;
 
-            backend.shortcutHandler(shortcut);
+            const handled = backend.shortcutHandler(shortcut);
+            if (handled) globalEventHandler.setHandledLastSession();
         }
     }
 

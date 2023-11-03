@@ -215,7 +215,13 @@ bool GlobalEventHandlerModel::eventFilter(QObject *watched, QEvent *event)
         if (t == QEvent::KeyRelease && m_pressedKeys.contains(keyName)) m_pressedKeys.remove(keyName);
 
         auto isChanged = countKeys != m_pressedKeys.count();
-        if (isChanged) emit keysChanged(pressedKeysToString());
+        if (isChanged) {
+            emit keysChanged(pressedKeysToString());
+            if (m_handledFromLastSession) {
+                m_handledFromLastSession = false;
+                return true;
+            }
+        }
     }
 
     return QObject::eventFilter(watched, event);

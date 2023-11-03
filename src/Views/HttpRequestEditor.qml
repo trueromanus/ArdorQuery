@@ -65,19 +65,6 @@ Item {
                 onPressed: {
                     if (listView.model.selectedItem !== currentIndex) listView.model.selectedItem = currentIndex;
                 }
-                Keys.onPressed: (event) => {
-                    const isControl = event.modifiers & Qt.ControlModifier;
-                    const isShift = event.modifiers & Qt.ShiftModifier;
-                    const isAlt = event.modifiers & Qt.AltModifier;
-                    if (isControl && event.key === Qt.Key_Z) { // disable shotcut Ctrl-Z because it can make undo
-                        event.accepted = true;
-                        return;
-                    }
-                    if (isAlt) {
-                        event.accepted = true;
-                        return;
-                    }
-                }
             }
         }
         ScrollBar.vertical: ScrollBar {
