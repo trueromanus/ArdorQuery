@@ -43,7 +43,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(bool openedCommandPalette READ openedCommandPalette NOTIFY openedCommandPaletteChanged)
     Q_PROPERTY(OpenApiExporterViewModel* openApiExporter READ openApiExporter NOTIFY openApiExporterChanged)
     Q_PROPERTY(GlobalVariablesListModel* globalVariables READ globalVariables NOTIFY globalVariablesChanged)
-    //Q_PROPERTY(QVariantList shortcuts READ shortcuts NOTIFY shortcutsChanged)
+    Q_PROPERTY(QList<QVariantMap> shortcuts READ shortcuts NOTIFY shortcutsChanged)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -59,7 +59,7 @@ private:
     OpenApiExporterViewModel* m_openApiExporter { new OpenApiExporterViewModel(this) };
     GlobalVariablesListModel* m_globalVariables { new GlobalVariablesListModel(this) };
     bool m_openApiHelpVisible { false };
-    QVariantList m_shortcuts { QVariantList() };
+    QList<QVariantMap> m_shortcuts { QList<QVariantMap>() };
     QMap<QString, QString> m_shortcutCommandMapping { QMap<QString, QString>() };
     QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
     const QString m_changeSelectedQueryCommand { "changeselectedquery" };
@@ -109,6 +109,7 @@ public:
     bool openedCommandPalette() const noexcept { return m_openedCommandPalette; }
     OpenApiExporterViewModel* openApiExporter() const noexcept { return m_openApiExporter; }
     GlobalVariablesListModel* globalVariables() const noexcept { return m_globalVariables; }
+    QList<QVariantMap> shortcuts() const noexcept { return m_shortcuts; }
 
     Q_INVOKABLE void addNewRequest();
     Q_INVOKABLE void shortcutHandler(const QString& shortcut) noexcept;
@@ -131,6 +132,7 @@ private:
     void fillAuthorizationSecurity(const QString& key, HttpRequestViewModel* request, const OpenApiRoutesOptions& options);
     void fillMappings();
     void fillCommands();
+    void fillHelpShortcuts();
 
 signals:
     void requestPerformerChanged();

@@ -20,22 +20,20 @@
 #include <QAbstractListModel>
 #include "../Models/shortcutsection.h"
 
-class ShortcutsListModel : public QAbstractListModel
+class ShortcutsListModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY(bool isFiltered READ isFiltered NOTIFY isFilteredChanged)
-    Q_PROPERTY(QString mode READ mode WRITE setMode NOTIFY modeChanged)
-    Q_PROPERTY(QString mainMode READ mainMode NOTIFY mainModeChanged)
-    Q_PROPERTY(QString openApiMode READ openApiMode NOTIFY openApiModeChanged)
+    Q_PROPERTY(QList<QVariantMap> shortcuts READ shortcuts WRITE setShortcuts NOTIFY shortcutsChanged)
+    Q_PROPERTY(QList<QVariantMap> filteredShortcuts READ filteredShortcuts NOTIFY filteredShortcutsChanged)
 
 private:
-    const QString m_mainMode { "main" };
-    const QString m_openApiMode { "openapi" };
     QString m_filter { "" };
-    QString m_mode { "" };
     QList<ShortcutSection*> m_sections { QList<ShortcutSection*>() };
     QList<ShortcutSection*> m_filteredSections { QList<ShortcutSection*>() };
+    QList<QVariantMap> m_shortcuts { QList<QVariantMap>() };
+    QList<QVariantMap> m_filteredShortcuts { QList<QVariantMap>() };
     enum ShortCutRoles {
         SectionTitleRole = Qt::UserRole + 1,
         ShortcutsRole,
@@ -45,18 +43,13 @@ private:
 public:
     explicit ShortcutsListModel(QObject *parent = nullptr);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QHash<int, QByteArray> roleNames() const override;
-
-    QString mainMode() const noexcept { return m_mainMode; }
-    QString openApiMode() const noexcept { return m_openApiMode; }
-
     QString filter() const noexcept { return m_filter; }
     void setFilter(const QString& filter) noexcept;
 
-    QString mode() const noexcept { return m_mode; }
-    void setMode(const QString& mode) noexcept;
+    QList<QVariantMap> shortcuts() const noexcept { return m_shortcuts; }
+    void setShortcuts(QList<QVariantMap> shortcuts) noexcept;
+
+    QList<QVariantMap> filteredShortcuts() const noexcept { return m_filteredShortcuts; }
 
     bool isFiltered() const noexcept { return m_filter.isEmpty(); }
 
@@ -65,9 +58,10 @@ public:
 signals:
     void filterChanged();
     void isFilteredChanged();
-    void modeChanged();
     void mainModeChanged();
     void openApiModeChanged();
+    void shortcutsChanged();
+    void filteredShortcutsChanged();
 
 };
 

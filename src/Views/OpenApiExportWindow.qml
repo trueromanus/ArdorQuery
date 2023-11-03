@@ -504,11 +504,11 @@ ApplicationWindow {
         enabled: backend.openApiExporter.openedCommandPalette
     }
 
-    ShorcutsHelperPanel {
+    /*ShorcutsHelperPanel {
         id: openApiShortcutPanel
         mode: "openapi"
         visible: backend.openApiExporter.helpVisible
-    }
+    }*/
 
     BodyTypesPopup {
         id: bodyTypesPopup

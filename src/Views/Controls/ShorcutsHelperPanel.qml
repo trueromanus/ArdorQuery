@@ -10,11 +10,12 @@ Rectangle {
     anchors.right: parent.right
     visible: false
 
-    property alias mode: listModel.mode
     property Item keysItem
+    property var shortcuts
 
     ShortcutsListModel {
-        id: listModel
+        id: viewModel
+        shortcuts: root.shortcuts
     }
 
     MouseArea {
@@ -40,11 +41,10 @@ Rectangle {
                 anchors.margins: 4
                 activeFocusOnTab: false
                 anchors.fill: parent
-                text: listModel.filter
+                text: viewModel.filter
                 onTextChanged: {
-                    listModel.filter = text;
+                    viewModel.filter = text;
                 }
-                Keys.forwardTo: [keysItem]
             }
         }
 
@@ -53,46 +53,22 @@ Rectangle {
             clip: true
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: listModel
+            model: viewModel.filteredShortcuts
             delegate: Item {
-                required property string title
-                required property string shortcuts
-                required property string description
-
                 width: listView.width
-                height: titleText.height + descriptionText.height + shortcutsText.height + 20
-                Text {
-                    id: titleText
-                    anchors.left: parent.left
-                    anchors.leftMargin: 6
-                    anchors.right: parent.right
-                    anchors.rightMargin: 6
-                    font.pointSize: 14
-                    font.bold: true
-                    text: title
-                }
+                height: descriptionText.height + 4
+
                 Text {
                     id: descriptionText
-                    anchors.top: titleText.bottom
-                    anchors.topMargin: 8
+                    anchors.top: parent.top
+                    anchors.topMargin: 2
                     anchors.left: parent.left
-                    anchors.leftMargin: 4
+                    anchors.leftMargin: 8
                     anchors.right: parent.right
-                    anchors.rightMargin: 4
+                    anchors.rightMargin: 14
                     font.pointSize: 10
-                    text: description
-                    wrapMode: Text.WordWrap
-                }
-                Text {
-                    id: shortcutsText
-                    anchors.top: descriptionText.bottom
-                    anchors.topMargin: 8
-                    anchors.left: parent.left
-                    anchors.leftMargin: 4
-                    anchors.right: parent.right
-                    anchors.rightMargin: 4
-                    font.pointSize: 10
-                    text: shortcuts
+                    textFormat: Text.RichText
+                    text: "<b>" + modelData.shortcuts + "</b> " + modelData.description
                     wrapMode: Text.WordWrap
                 }
             }

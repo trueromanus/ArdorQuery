@@ -40,9 +40,7 @@ ApplicationWindow {
         id: shortcutPanel
         visible: backend.helpVisible
         keysItem: keysItem
-        Component.onCompleted: {
-            shortcutPanel.mode = "main";
-        }
+        shortcuts: backend.shortcuts
     }
 
     CommandPalette {

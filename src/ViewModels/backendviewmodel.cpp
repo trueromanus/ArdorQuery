@@ -14,6 +14,8 @@
 */
 
 #include <QFile>
+#include <QMapIterator>
+#include <QMultiMap>
 #include "backendviewmodel.h"
 
 BackendViewModel::BackendViewModel(QObject *parent)
@@ -29,6 +31,7 @@ BackendViewModel::BackendViewModel(QObject *parent)
 
     fillMappings();
     fillCommands();
+    fillHelpShortcuts();
 }
 
 void BackendViewModel::addNewRequest()
@@ -412,7 +415,10 @@ void BackendViewModel::fillMappings()
     m_shortcutCommandMapping.insert("control-}", m_sortDescendingCommand);
     m_shortcutCommandMapping.insert("f11", m_toggleTabsCommand);
     m_shortcutCommandMapping.insert("control-insert", m_addQueryCommand);
+    m_shortcutCommandMapping.insert("control-d", m_deleteSelectedQueryCommand);
+#ifndef Q_OS_MACOS
     m_shortcutCommandMapping.insert("control-delete", m_deleteSelectedQueryCommand);
+#endif
     m_shortcutCommandMapping.insert("control-pagedown", m_selectLastFieldCommand);
     m_shortcutCommandMapping.insert("pagedown", m_selectNextFieldCommand);
     m_shortcutCommandMapping.insert("control-pageup", m_selectTopFieldCommand);
@@ -456,11 +462,71 @@ void BackendViewModel::fillCommands()
     m_shortcutCommands.insert(m_copyHeadersToClipboardCommand, "Copy result headers to clipboard");
     m_shortcutCommands.insert(m_copyBodyToClipboardCommand, "Copy result body to clipboard");
     m_shortcutCommands.insert(m_openFromFileCommand, "Import fields from file");
-    m_shortcutCommands.insert(m_saveToFileCommand, "");
+    m_shortcutCommands.insert(m_saveToFileCommand, "Save fields to file");
     m_shortcutCommands.insert(m_generateImageToFileCommand, "Generate image contains query fields, response summary and headers and save to file");
     m_shortcutCommands.insert(m_generateImageToClipboardCommand, "Generate image contains query fields, response summary and headers and save to clipboard");
     m_shortcutCommands.insert(m_nextFindedResultCommand, "Next founded result");
     m_shortcutCommands.insert(m_previousFindedResultCommand, "Previous founded result");
+}
+
+void BackendViewModel::fillHelpShortcuts()
+{
+    m_shortcuts.clear();
+
+    auto mappingIterator = QMapIterator(m_shortcutCommandMapping);
+    QMultiMap<QString, QString> commandWithShortcuts;
+    while (mappingIterator.hasNext()) {
+        mappingIterator.next();
+        commandWithShortcuts.insert(mappingIterator.value(), mappingIterator.key());
+    }
+
+    auto iterator = QMapIterator(m_shortcutCommands);
+
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        auto key = iterator.key();
+        auto value = iterator.value();
+        QVariantMap map;
+        map["description"] = value;
+        auto shortcuts = commandWithShortcuts.values(key);
+        map["shortcuts"] = shortcuts.join(" or ")
+#ifdef Q_OS_MACOS
+           .replace("control", "Command")
+           .replace("alt", "Option")
+#else
+            .replace("control", "Control")
+            .replace("alt", "Alt")
+#endif
+            .replace("shift", "Shift")
+            .replace("page", "Page")
+            .replace("up", "Up")
+            .replace("down", "Down")
+            .replace("enter", "Enter")
+            .replace("insert", "Insert")
+            .replace("delete", "Delete")
+            .replace("tab", "Tab")
+            .replace("backspace", "Backspace")
+            .replace("plus", "Plus")
+            .replace("minus", "Minus")
+            .replace("f1", "F1")
+            .replace("f2", "F2")
+            .replace("f3", "F3")
+            .replace("f4", "F4")
+            .replace("f5", "F5")
+            .replace("f6", "F6")
+            .replace("f7", "F7")
+            .replace("f8", "F8")
+            .replace("f9", "F9")
+            .replace("f10", "F10")
+            .replace("f11", "F11")
+            .replace("f12", "F12");
+
+
+        m_shortcuts.append(map);
+    }
+
+    emit shortcutsChanged();
 }
 
 void BackendViewModel::errorNotification(const QString &title, const QString &message)
