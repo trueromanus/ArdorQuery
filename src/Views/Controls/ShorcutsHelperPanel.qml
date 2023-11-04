@@ -1,7 +1,7 @@
-import QtQuick /* 2.15 */
-import QtQuick.Layouts /* 2.15 */
-import QtQuick.Controls /* 2.15 */
-import ArdorQuery.Backend /* 1.0 */
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import ArdorQuery.Backend
 
 Rectangle {
     id: root
@@ -10,7 +10,6 @@ Rectangle {
     anchors.right: parent.right
     visible: false
 
-    property Item keysItem
     property var shortcuts
 
     ShortcutsListModel {

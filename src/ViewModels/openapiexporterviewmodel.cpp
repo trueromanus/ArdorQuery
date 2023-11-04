@@ -34,6 +34,10 @@ OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
     connect(m_addresses, &OpenApiAddressesListModel::addressesChanged, this, &OpenApiExporterViewModel::addressListChanged);
     connect(m_addressPalette, &AddressesPaletteListModel::itemSelected, this, &OpenApiExporterViewModel::addressItemSelected);
     connect(m_schemeWatcher, &QFutureWatcher<int>::finished, this, &OpenApiExporterViewModel::parsingFinished);
+
+    fillMappings();
+    fillCommands();
+    fillHelpShortcuts();
 }
 
 void OpenApiExporterViewModel::setBaseUrl(const QString &baseUrl) noexcept
@@ -152,7 +156,7 @@ void OpenApiExporterViewModel::setUrl(const QString &url) noexcept
     emit alreadyLoadedChanged();
 }
 
-void OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
+bool OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
 {
     if (!shortcut.startsWith("control") && m_openedCommandPalette) {
         m_openedCommandPalette = false;
@@ -160,27 +164,19 @@ void OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
         emit openedCommandPaletteChanged();
     }
 
-    if (shortcut == "f5" || shortcut == "control-z") {
+    if (!m_shortcutCommandMapping.contains(shortcut)) return false;
+
+    auto command = m_shortcutCommandMapping.value(shortcut);
+
+    if (command == m_loadSchemaCommand) {
         loadOpenApiScheme();
-        return;
-    }
-
-    if (shortcut == "f4" || shortcut == "control-b") {
+    } else if (command == m_cancelLoadSchemaCommand) {
         cancelCurrentRequest();
-        return;
-    }
-
-    if (shortcut == "control-home") {
+    } else if (command == m_saveSchemaCommand) {
         editInSelectedAddress();
-        return;
-    }
-
-    if (shortcut == "control-insert") {
+    } else if (command == m_addSchemaCommand) {
         addCurrentToAddresses();
-        return;
-    }
-
-    if (shortcut == "control-tab") {
+    } else if (command == m_changeSelectedSchemaCommand) {
         if (!m_openedCommandPalette) {
             m_openedCommandPalette = true;
             m_addressPalette->refresh(true);
@@ -188,18 +184,15 @@ void OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
         } else {
             m_addressPalette->selectNext();
         }
-        return;
-    }
-
-    if (shortcut == "f1" || shortcut == "control-h") {
+    } else if (command == m_helpCommand) {
         setHelpVisible(!m_helpVisible);
-        return;
+    } else if (command == m_closeWindowCommand) {
+        emit needCloseWindow();
+    } else if (command == m_deleteSelectedSchemaCommand) {
+        deleteSelectedAddress();
     }
 
-    if (shortcut == "escape") {
-        emit needCloseWindow();
-        return;
-    }
+    return true;
 }
 
 void OpenApiExporterViewModel::addCurrentToAddresses() noexcept
@@ -225,6 +218,15 @@ void OpenApiExporterViewModel::editInSelectedAddress() noexcept
     auto index = m_addressPalette->getSelectedAddressIndex();
 
     m_addresses->editItem(index, m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter(), m_authMethod);
+}
+
+void OpenApiExporterViewModel::deleteSelectedAddress() noexcept
+{
+    auto index = m_addressPalette->getSelectedAddressIndex();
+
+    m_addresses->deleteItem(index);
+    m_addressPalette->selectNext();
+    m_addressPalette->selectItem();
 }
 
 bool OpenApiExporterViewModel::isHasFewBodies(int identifier) noexcept
@@ -579,6 +581,98 @@ void OpenApiExporterViewModel::writeCache(const QString& cacheFile, const QList<
     QJsonDocument document(array);
     file.write(document.toJson());
     file.close();
+}
+
+void OpenApiExporterViewModel::fillMappings()
+{
+    m_shortcutCommandMapping.insert("f5", m_loadSchemaCommand);
+    m_shortcutCommandMapping.insert("control-z", m_loadSchemaCommand);
+
+    m_shortcutCommandMapping.insert("f4", m_cancelLoadSchemaCommand);
+    m_shortcutCommandMapping.insert("control-b", m_cancelLoadSchemaCommand);
+
+    m_shortcutCommandMapping.insert("control-s", m_saveSchemaCommand);
+    m_shortcutCommandMapping.insert("control-insert", m_addSchemaCommand);
+    m_shortcutCommandMapping.insert("control-tab", m_changeSelectedSchemaCommand);
+    m_shortcutCommandMapping.insert("control-backspace", m_changeSelectedSchemaCommand);
+    m_shortcutCommandMapping.insert("control-h", m_helpCommand);
+    m_shortcutCommandMapping.insert("f1", m_helpCommand);
+    m_shortcutCommandMapping.insert("escape", m_closeWindowCommand);
+    m_shortcutCommandMapping.insert("control-d", m_deleteSelectedSchemaCommand);
+#ifndef Q_OS_MACOS
+    m_shortcutCommandMapping.insert("control-delete", m_deleteSelectedSchemaCommand);
+#endif
+}
+
+void OpenApiExporterViewModel::fillCommands()
+{
+    m_shortcutCommands.insert(m_loadSchemaCommand, "Load OpenAPI schema");
+    m_shortcutCommands.insert(m_cancelLoadSchemaCommand, "Cancel OpenAPI schema loading if it is in progress");
+    m_shortcutCommands.insert(m_saveSchemaCommand, "Save the current OpenAPI scheme (all fields are saved, including Filter)");
+    m_shortcutCommands.insert(m_addSchemaCommand, "Add new OpenAPI schema");
+    m_shortcutCommands.insert(m_changeSelectedSchemaCommand, "holding Ctrl/Command and then pressing Tab/Backspace to change OpenAPI schema");
+    m_shortcutCommands.insert(m_helpCommand, "Show interactive help for shortcuts");
+    m_shortcutCommands.insert(m_closeWindowCommand, "Close Export OpenAPI window");
+}
+
+void OpenApiExporterViewModel::fillHelpShortcuts()
+{
+    m_shortcuts.clear();
+
+    auto mappingIterator = QMapIterator(m_shortcutCommandMapping);
+    QMultiMap<QString, QString> commandWithShortcuts;
+    while (mappingIterator.hasNext()) {
+        mappingIterator.next();
+        commandWithShortcuts.insert(mappingIterator.value(), mappingIterator.key());
+    }
+
+    auto iterator = QMapIterator(m_shortcutCommands);
+
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        auto key = iterator.key();
+        auto value = iterator.value();
+        QVariantMap map;
+        map["description"] = value;
+        auto shortcuts = commandWithShortcuts.values(key);
+        map["shortcuts"] = shortcuts.join(" or ")
+#ifdef Q_OS_MACOS
+           .replace("control", "Command")
+           .replace("alt", "Option")
+#else
+           .replace("control", "Control")
+           .replace("alt", "Alt")
+#endif
+           .replace("shift", "Shift")
+           .replace("page", "Page")
+           .replace("up", "Up")
+           .replace("down", "Down")
+           .replace("enter", "Enter")
+           .replace("insert", "Insert")
+           .replace("delete", "Delete")
+           .replace("tab", "Tab")
+           .replace("backspace", "Backspace")
+           .replace("plus", "Plus")
+           .replace("minus", "Minus")
+           .replace("f1", "F1")
+           .replace("f2", "F2")
+           .replace("f3", "F3")
+           .replace("f4", "F4")
+           .replace("f5", "F5")
+           .replace("f6", "F6")
+           .replace("f7", "F7")
+           .replace("f8", "F8")
+           .replace("f9", "F9")
+           .replace("f10", "F10")
+           .replace("f11", "F11")
+           .replace("f12", "F12");
+
+
+        m_shortcuts.append(map);
+    }
+
+    emit shortcutsChanged();
 }
 
 void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)

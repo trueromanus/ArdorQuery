@@ -504,11 +504,11 @@ ApplicationWindow {
         enabled: backend.openApiExporter.openedCommandPalette
     }
 
-    /*ShorcutsHelperPanel {
+    ShorcutsHelperPanel {
         id: openApiShortcutPanel
-        mode: "openapi"
         visible: backend.openApiExporter.helpVisible
-    }*/
+        shortcuts: backend.openApiExporter.shortcuts
+    }
 
     BodyTypesPopup {
         id: bodyTypesPopup
@@ -556,7 +556,8 @@ ApplicationWindow {
         function onKeysChanged (state) {
             if (!root.activeFocusItem) return;
 
-            backend.openApiExporter.shortcutHandler(state);
+            const handled = backend.openApiExporter.shortcutHandler(state);
+            if (handled) globalEventHandler.setHandledLastSession();
         }
     }
 }

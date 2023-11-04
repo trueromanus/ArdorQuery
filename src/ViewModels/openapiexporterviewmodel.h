@@ -49,6 +49,7 @@ class OpenApiExporterViewModel : public QObject
     Q_PROPERTY(QString prepareBodyType READ prepareBodyType WRITE setPrepareBodyType NOTIFY prepareBodyTypeChanged)
     Q_PROPERTY(QStringList bodyTypes READ bodyTypes NOTIFY bodyTypesChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
+    Q_PROPERTY(QList<QVariantMap> shortcuts READ shortcuts NOTIFY shortcutsChanged)
 
 private:
     OpenApiAddressesListModel* m_addresses { new OpenApiAddressesListModel(this) };
@@ -68,6 +69,9 @@ private:
     bool m_openedCommandPalette { false };
     int m_prepareIndetifier { -1 };
     QString m_prepareBodyType { "" };
+    QList<QVariantMap> m_shortcuts { QList<QVariantMap>() };
+    QMap<QString, QString> m_shortcutCommandMapping { QMap<QString, QString>() };
+    QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
     const QString IntegerType { "integer" };
     const QString DoubleType { "number" };
     const QString StringType { "string" };
@@ -81,6 +85,14 @@ private:
     const QString CookieIn { "cookie" };
     const QString Exporter { "Exporter" };
     const QString SavedOptions { "Saved options" };
+    const QString m_helpCommand { "exportopenapihelp" };
+    const QString m_closeWindowCommand { "exportopenapiclosewindow" };
+    const QString m_changeSelectedSchemaCommand { "exportopenapichangeselectedschema" };
+    const QString m_addSchemaCommand { "exportopenapiaddschema" };
+    const QString m_saveSchemaCommand { "exportopenapisaveschema" };
+    const QString m_loadSchemaCommand { "exportopenapiloadschema" };
+    const QString m_cancelLoadSchemaCommand { "exportopenapicancelloadschema" };
+    const QString m_deleteSelectedSchemaCommand { "exportopenapicanceldeleteselectedschema" };
     QString m_selectedTab { Exporter };
     QStringList m_bodyTypes { QStringList() };
     QString m_errorMessage { "" };
@@ -136,13 +148,16 @@ public:
 
     QString errorMessage() const noexcept { return m_errorMessage; }
 
+    QList<QVariantMap> shortcuts() const noexcept { return m_shortcuts; }
+
     void cancelCurrentRequest() noexcept;
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
-    Q_INVOKABLE void shortcutHandler(const QString& shortcut) noexcept;
+    Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void addCurrentToAddresses() noexcept;
     Q_INVOKABLE void togglePages() noexcept;
     Q_INVOKABLE void editInSelectedAddress() noexcept;
+    Q_INVOKABLE void deleteSelectedAddress() noexcept;
     Q_INVOKABLE bool isHasFewBodies(int identifier) noexcept;
     Q_INVOKABLE void clearErrorMessage() noexcept;
 
@@ -159,6 +174,9 @@ private:
     void loadRoutes(const QString& addressId);
     QList<OpenApiRouteModel*> readCache(const QString& cacheFile);
     void writeCache(const QString& cacheFile, const QList<OpenApiRouteModel*>& routes);
+    void fillMappings();
+    void fillCommands();
+    void fillHelpShortcuts();
 
 private slots:
     void requestFinished(QNetworkReply *reply);
@@ -187,6 +205,7 @@ signals:
     void prepareBodyTypeChanged();
     void errorMessageChanged();
     void needCloseWindow();
+    void shortcutsChanged();
 
 };
 

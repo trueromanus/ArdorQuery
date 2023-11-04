@@ -39,7 +39,6 @@ ApplicationWindow {
     ShorcutsHelperPanel {
         id: shortcutPanel
         visible: backend.helpVisible
-        keysItem: keysItem
         shortcuts: backend.shortcuts
     }
 
