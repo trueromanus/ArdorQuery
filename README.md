@@ -32,28 +32,6 @@ Each type of line has a different color to help visually identify that content.
 
 Please see the latest documentation [here](https://trueromanus.github.io/ArdorQuery/).
 
-## Alias commands
-### bearer
-`bearer X` - where X is bearer token.  
-  
-`bearer 345453` turn on to `Authorization Bearer 345453`
-
-### json
-`json X` - where X it body content. This can be useful if you are making a request to a restful API.
-  
-`json {"result": true}` turn into several field commands:  
-`Content-Type application/json`  
-`Accept application/json`  
-`body {"result": true}` 
-
-### xmla
-`xmla X` - where X it body content. This can be useful if you are making a request to a XML service or API.  
-  
-`xmla <xml></xml>` turn into several field commands:  
-`Content-Type application/xml`  
-`Accept application/xml`  
-`body <xml></xml>` 
-
 ## Supported platforms
 * Windows 10+
 * Linux
