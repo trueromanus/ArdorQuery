@@ -1,54 +1,35 @@
-# Console Application
+# Scripting
 
-To download binary build please check the [github repository](https://github.com/EmptyFlow/PostgreSQL.Migrations/releases).
+For scripting in application uses JavaScript language.
 
-## Commands
- 
-* `apply [options]` - Apply all new migrations to database(s)
-* `revert [options]` - Revert database to state before migration specified in parameter
-* `force-revert [options]` - Revert only one migration specified in parameter
-* `version` - Display version information
+## Post scripting
 
-### apply
-For check available options use command `apply --help`.    
+### Global objects
+Post scripts have access to global objects `response` and `result`. Object `response` using for get data about result of HTTP request. Object `result` usings for set of result validation HTTP request.
 
-* `-f [file] [file] or --files [file] [file]` - [required] List of files containing migrations.
-* `-c [string] [string] or --connectionStrings [string] [string]` - [required] List of connection strings to which migrations will be applied.
-* `-s [string] or --strategy [string]` - [default = MigrationResolverAttribute] Select strategy for read migrations.
-* `-g  [string] or --group [string]` - If you specify some group or groups (separated by commas), migrations will be filtered by these groups
-
-### revert
-For check available options use command `revert --help`.    
-
-* `-m [number] or --migration [number]` - [required] The parameter specifies the number of the migration to which you want to roll back the changes
-* `-f [file] [file] or --files [file] [file]` - [required] List of files containing migrations.
-* `-c [string] [string] or --connectionStrings [string] [string]` - [required] List of connection strings to which migrations will be applied
-* `-s [string] or --strategy [string]` - [default = MigrationResolverAttribute] Select strategy for read migrations.
-* `-g  [string] or --group [string]` - If you specify some group or groups (separated by commas), migrations will be filtered by these groups
-
-### force-revert
-For check available options use command `force-revert --help`.    
-
-* `-m [number] or --migration [number]` - [required] The parameter specifies the number of the migration which will be reverted (if it was applied before) and after it applied once again
-* `-f [file] [file] or --files [file] [file]` - [required] List of files containing migrations.
-* `-c [string] [string] or --connectionStrings [string] [string]` - [required] List of connection strings to which migrations will be applied.
-* `-s [string] or --strategy [string]` - [default = MigrationResolverAttribute] Select strategy for read migrations.
-* `-g  [string] or --group [string]` - If you specify some group or groups (separated by commas), migrations will be filtered by these groups
-
-## Strategies
-
-### MigrationResolverAttribute
-Migrations are organized into C# classes.
-Each class inherits from the `MigrationScript` class from the `PostgreSQL.Migrations` assembly and decorated `MigrationNumber` attribute.
-You must implement the `Up` and `Down` methods, where `Up` returns the SQL script that will be executed during the `Apply operation`, and `Down` returns the SQL script that will be executed during the `Revert operation`.
-Optional you can fill fields `Issue` (to bound the issue from bugtracker) and `Group` (to bound migration with group or groups).
-```csharp
-[MigrationNumber ( 1, "http://issue/1", "firstGroup" )]
-public class InitialMigration : MigrationScript {
-
-    public override string Down () => "DROP TABLE test;";
-
-    public override string Up () => "CREATE TABLE test(id int4);";
-
+### Response
+`headers` - array contains all response headers with values in format `HeaderName HeaderValue`.
+`statusCode` - number in range 0-600 from HTTP status code.
+`errorMessage` - if the request was in error, this field will contain a description of the error.
+`bodySize` - number from header Content-Length (or the actual size of the response body if not specified).
+`route` - the final URL with which the request was launched.
+### Result
+`hasErrors` (editable) - indicate if some error happened while postsctipr works.
+`errorMessage` (editable) - may contain a description of the user's error, which is displayed next to the status code in the results tab.  
+### Examples
+Check status code it is equal 200 (OK):
+```js
+postscript result.hasErrors = response.statusCode == 200;
+```
+Check if the response has a `server` header:
+```js
+postscript 
+if(!response.headers.find(a => a.indexOf("server"))) {
+  result.hasErrors = true;
+  result.errorMessage = "Header server not specified!!!";
 }
 ```
+
+## Pre scripting
+
+## Web socket scripting

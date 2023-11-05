@@ -1,54 +1,19 @@
-# Console Application
+# Options
 
-To download binary build please check the [github repository](https://github.com/EmptyFlow/PostgreSQL.Migrations/releases).
+Options are written as a set of words separated by a comma (option 1, option 2).  
+Example: `options noautoredirect,noweaksslcheck`.
 
-## Commands
- 
-* `apply [options]` - Apply all new migrations to database(s)
-* `revert [options]` - Revert database to state before migration specified in parameter
-* `force-revert [options]` - Revert only one migration specified in parameter
-* `version` - Display version information
+## Change redirect behaviour
 
-### apply
-For check available options use command `apply --help`.    
+Default behaviour is auto redirect if server responsed any from 30x HTTP codes.
 
-* `-f [file] [file] or --files [file] [file]` - [required] List of files containing migrations.
-* `-c [string] [string] or --connectionStrings [string] [string]` - [required] List of connection strings to which migrations will be applied.
-* `-s [string] or --strategy [string]` - [default = MigrationResolverAttribute] Select strategy for read migrations.
-* `-g  [string] or --group [string]` - If you specify some group or groups (separated by commas), migrations will be filtered by these groups
+* `noautoredirect` - If the endpoint tries to redirect, this will not happen. In response, you will see information about the redirect.
+* `autoredirect` - If the endpoint tries to redirect, this will happen without any limitation. The only exception is a redirect between **https** to **http** which is not allowed.
+* `autoredirectsameorigin` - If the endpoint tries to redirect, this will happen only if it happened on same host, port and protocol.
 
-### revert
-For check available options use command `revert --help`.    
+## Check SSL Certificate
 
-* `-m [number] or --migration [number]` - [required] The parameter specifies the number of the migration to which you want to roll back the changes
-* `-f [file] [file] or --files [file] [file]` - [required] List of files containing migrations.
-* `-c [string] [string] or --connectionStrings [string] [string]` - [required] List of connection strings to which migrations will be applied
-* `-s [string] or --strategy [string]` - [default = MigrationResolverAttribute] Select strategy for read migrations.
-* `-g  [string] or --group [string]` - If you specify some group or groups (separated by commas), migrations will be filtered by these groups
+Default behaviour is strong SSL check.
 
-### force-revert
-For check available options use command `force-revert --help`.    
-
-* `-m [number] or --migration [number]` - [required] The parameter specifies the number of the migration which will be reverted (if it was applied before) and after it applied once again
-* `-f [file] [file] or --files [file] [file]` - [required] List of files containing migrations.
-* `-c [string] [string] or --connectionStrings [string] [string]` - [required] List of connection strings to which migrations will be applied.
-* `-s [string] or --strategy [string]` - [default = MigrationResolverAttribute] Select strategy for read migrations.
-* `-g  [string] or --group [string]` - If you specify some group or groups (separated by commas), migrations will be filtered by these groups
-
-## Strategies
-
-### MigrationResolverAttribute
-Migrations are organized into C# classes.
-Each class inherits from the `MigrationScript` class from the `PostgreSQL.Migrations` assembly and decorated `MigrationNumber` attribute.
-You must implement the `Up` and `Down` methods, where `Up` returns the SQL script that will be executed during the `Apply operation`, and `Down` returns the SQL script that will be executed during the `Revert operation`.
-Optional you can fill fields `Issue` (to bound the issue from bugtracker) and `Group` (to bound migration with group or groups).
-```csharp
-[MigrationNumber ( 1, "http://issue/1", "firstGroup" )]
-public class InitialMigration : MigrationScript {
-
-    public override string Down () => "DROP TABLE test;";
-
-    public override string Up () => "CREATE TABLE test(id int4);";
-
-}
-```
+* `weaksslcheck` - The request a certificate from the peer will be happened, but does not require this certificate to be valid.
+* `noweaksslcheck` - No SSL certificate verification. This can be useful if you are testing a web server using a developer/local certificate on local machine.
