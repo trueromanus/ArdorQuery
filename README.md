@@ -32,13 +32,6 @@ Each type of line has a different color to help visually identify that content.
 
 Please see the latest documentation [here](https://trueromanus.github.io/ArdorQuery/).
 
-## Options
-* `noautoredirect` - If the endpoint tries to redirect, this will not happen. In response, you will see information about the redirect.
-* `autoredirect` - If the endpoint tries to redirect, this will happen without any limitation. The only exception is a redirect between **https** to **http** which is not allowed.
-* `autoredirectsameorigin` - If the endpoint tries to redirect, this will happen only if it happened on same host, port and protocol.
-* `weaksslcheck` - The request a certificate from the peer will be happened, but does not require this certificate to be valid.
-* `noweaksslcheck` - No SSL certificate verification. This can be useful if you are testing a web server using a developer/local certificate on local machine.
-
 ## Alias commands
 ### bearer
 `bearer X` - where X is bearer token.  
@@ -60,46 +53,6 @@ Please see the latest documentation [here](https://trueromanus.github.io/ArdorQu
 `Content-Type application/xml`  
 `Accept application/xml`  
 `body <xml></xml>` 
-
-## Post Scripting
-### Global objects
-All scripts have access to global objects `response` and `result`. Object `response` using for get data about result of HTTP request. Object `result` usings for set of result validation HTTP request.
-
-### Response
-`headers` - array contains all response headers with values in format `HeaderName HeaderValue`.
-`statusCode` - number in range 0-600 from HTTP status code.
-`errorMessage` - if the request was in error, this field will contain a description of the error.
-`bodySize` - number from header Content-Length (or the actual size of the response body if not specified).
-`route` - the final URL with which the request was launched.
-### Result
-`hasErrors` (editable) - indicate if some error happened while postsctipr works.
-`errorMessage` (editable) - may contain a description of the user's error, which is displayed next to the status code in the results tab.  
-### Examples
-Check status code it is equal 200 (OK):
-```js
-postscript result.hasErrors = response.statusCode == 200;
-```
-Check if the response has a `server` header:
-```js
-postscript 
-if(!response.headers.find(a => a.indexOf("server"))) {
-  result.hasErrors = true;
-  result.errorMessage = "Header server not specified!!!";
-}
-```
-
-## Global variables
-You can define a global variable and use it in your queries. To open the `Global Variables` window, press `Ctrl-F6`.  
-The format of a global variable is the same as in the `<variable name> <value>` query editor.
-You can press `Ctrl-Enter` to add a new line for create a new global variable.
-At the end of edit session you need to save the global variables by pressing `Ctrl-S`.
-After this you can use the global variable in your queries like `{{<name of variable>}}`.  
-  
-As example global variable `mytoken 4354534534534534534`
-```
-bearer {{mytoken}}
-```
-header will be replaced on `bearer 4354534534534534534`.
 
 ## Supported platforms
 * Windows 10+
