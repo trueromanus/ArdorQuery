@@ -9,3 +9,4 @@ nav:
   - Fields: commonfields.md
   - Options: options.md
   - Scripting: postscript.md
+  - Global Variables: globalvariables.md
