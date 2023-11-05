@@ -28,21 +28,9 @@ Each type of line has a different color to help visually identify that content.
 * Control over redirection and SSL checks
 * Global variables
 
-## Field types
-* `url X` - where X is valid url. This is the URL that will be requested.
-* `method X` - where X can be - GET, POST, PUT, DELETE. This command defines the request method.
-* `form X=Y` - where X it name of form parameter and Y it value. This command adds a value to the form in the body.
-* `file X=Y` - where X it name of form parameter and Y it path to file in filesystem. This command adds a file to the form in the body.
-* `param X=Y` - where X it name of query parameter and Y it value. This command adds parameter to the URL.
-* `pastry X=Y` - where X it name of cookie parameter and Y it value. This command adds parameter to `Cookie` header.
-* `body X` - where X it body content. This command adding body to request.
-* `header X` (also it have shortcut `X-` if header started with it) - where X it any custom header. This command adds a custom header to the request.
-* `X Y` - where X it any header described in HTTP spec. This command adds a standard header to the request.
-* `title X` - where X it any characters. This command specifies the title for the current request, by default it is called "Unnamed".
-* `protocol X` - where X can be - `1.1`. By default, all requests will try to make requests in the h2 protocol, but if you need to force it to do in the HTTP/1.1 protocol, you can add this command.
-* `route X=Y` - where X it name of URL segment and Y of it value. `http://test.com/{segment}` can be adjusted with `route segment=3`. Result will be `http://test.com/3`
-* `postscript X` - where X is the JavaScript source code for validating the HTTP response and generating custom errors. Check out JavaScript docs in section [PostScripting](https://github.com/trueromanus/ArdorQuery/blob/main/README.md#post-scripting).
-* `options X,Y,Z` - where X Y and Z it option name. Supported options in section [Options](https://github.com/trueromanus/ArdorQuery/blob/main/README.md#options)
+## Documentation
+
+Please see the latest documentation [here](https://trueromanus.github.io/ArdorQuery/).
 
 ## Options
 * `noautoredirect` - If the endpoint tries to redirect, this will not happen. In response, you will see information about the redirect.
