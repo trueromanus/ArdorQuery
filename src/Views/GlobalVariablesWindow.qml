@@ -71,19 +71,6 @@ ApplicationWindow {
                 onPressed: {
                     if (listView.model.selected !== identifier) listView.model.selected = identifier;
                 }
-                Keys.onPressed: (event) => {
-                    const isControl = event.modifiers & Qt.ControlModifier;
-                    const isShift = event.modifiers & Qt.ShiftModifier;
-                    const isAlt = event.modifiers & Qt.AltModifier;
-                    if (isControl && event.key === Qt.Key_Z) { // disable shotcut Ctrl-Z because it can make undo
-                        event.accepted = true;
-                        return;
-                    }
-                    if (isAlt) {
-                        event.accepted = true;
-                        return;
-                    }
-                }
             }
         }
         ScrollBar.vertical: ScrollBar {
@@ -91,12 +78,18 @@ ApplicationWindow {
         }
     }
 
+    ShorcutsHelperPanel {
+        visible: backend.globalVariables.helpVisible
+        shortcuts: backend.globalVariables.shortcuts
+    }
+
     Connections {
         target: globalEventHandler
         function onKeysChanged (state) {
             if (!root.activeFocusItem) return;
 
-            backend.globalVariables.shortcutHandler(state);
+            const handled = backend.globalVariables.shortcutHandler(state);
+            if (handled) globalEventHandler.setHandledLastSession();
         }
     }
 }

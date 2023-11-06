@@ -25,6 +25,9 @@ GlobalVariablesListModel::GlobalVariablesListModel(QObject *parent)
     m_savedGlobalVariablesFile = getCachePath(m_savedGlobalVariablesFile);
     createIfNotExistsFile(m_savedGlobalVariablesFile, "[]");
     readCache();
+    fillMappings();
+    fillCommands();
+    fillHelpShortcuts();
 }
 
 int GlobalVariablesListModel::rowCount(const QModelIndex &parent) const
@@ -106,6 +109,14 @@ void GlobalVariablesListModel::setSelected(int selected) noexcept
     emit dataChanged(index(m_selected), index(m_selected));
 }
 
+void GlobalVariablesListModel::setHelpVisible(bool helpVisible) noexcept
+{
+    if (m_helpVisible == helpVisible) return;
+
+    m_helpVisible = helpVisible;
+    emit helpVisibleChanged();
+}
+
 void GlobalVariablesListModel::addLine()
 {
     beginResetModel();
@@ -126,36 +137,31 @@ void GlobalVariablesListModel::addVariable(const QString &name, const QString &v
     m_variables.insert(name, value);
 }
 
-void GlobalVariablesListModel::shortcutHandler(const QString &shortcut) noexcept
+bool GlobalVariablesListModel::shortcutHandler(const QString &shortcut) noexcept
 {
-    if (shortcut == "control-enter") {
+    if (!m_shortcutCommandMapping.contains(shortcut)) return false;
+
+    auto command = m_shortcutCommandMapping.value(shortcut);
+
+    if (command == m_addNewLineBelowCommand) {
         addLine();
-        return;
-    }
-    if (shortcut == "control-s") {
+    } else if (command == m_saveGlobalVariablesCommand) {
         parseLines();
-        return;
-    }
-    if (shortcut == "escape") {
+    } else if (command == m_closeWindowCommand) {
         emit closeWindowRequired();
-        return;
-    }
-    if (shortcut == "pageup") {
+    } else if (command == m_selectPreviousFieldCommand) {
         if (m_selected > 0) setSelected(m_selected - 1);
-        return;
-    }
-    if (shortcut == "pagedown") {
+    } else if (command == m_selectNextFieldCommand) {
         if (m_selected < m_lines.count() - 1) setSelected(m_selected + 1);
-        return;
-    }
-    if (shortcut == "control-pageup") {
+    } else if (command == m_selectTopFieldCommand) {
         setSelected(0);
-        return;
-    }
-    if (shortcut == "control-pagedown") {
+    } else if (command == m_selectLastFieldCommand) {
         if (!m_lines.isEmpty()) setSelected(m_lines.count() - 1);
-        return;
+    } else if (command == m_helpCommand) {
+        setHelpVisible(!m_helpVisible);
     }
+
+    return true;
 }
 
 void GlobalVariablesListModel::fillLines()
@@ -261,3 +267,89 @@ void GlobalVariablesListModel::writeCache()
     file.write(json);
     file.close();
 }
+
+void GlobalVariablesListModel::fillMappings()
+{
+    m_shortcutCommandMapping.insert("control-enter", m_addNewLineBelowCommand);
+    m_shortcutCommandMapping.insert("control-s", m_saveGlobalVariablesCommand);
+    m_shortcutCommandMapping.insert("control-pagedown", m_selectLastFieldCommand);
+    m_shortcutCommandMapping.insert("pagedown", m_selectNextFieldCommand);
+    m_shortcutCommandMapping.insert("control-pageup", m_selectTopFieldCommand);
+    m_shortcutCommandMapping.insert("pageup", m_selectPreviousFieldCommand);
+    m_shortcutCommandMapping.insert("control-h", m_helpCommand);
+    m_shortcutCommandMapping.insert("f1", m_helpCommand);
+    m_shortcutCommandMapping.insert("escape", m_closeWindowCommand);
+}
+
+void GlobalVariablesListModel::fillCommands()
+{
+    m_shortcutCommands.insert(m_addNewLineBelowCommand, "Adding a new empty field below the selected field");
+    m_shortcutCommands.insert(m_saveGlobalVariablesCommand, "Save current global variables");
+    m_shortcutCommands.insert(m_selectLastFieldCommand, "Selecting end a text field");
+    m_shortcutCommands.insert(m_selectNextFieldCommand, "Select a text field below the currently selected field");
+    m_shortcutCommands.insert(m_selectTopFieldCommand, "Selecting start a text field");
+    m_shortcutCommands.insert(m_selectPreviousFieldCommand, "Select a text field above the currently selected field");
+    m_shortcutCommands.insert(m_helpCommand, "Show interactive help for shortcuts");
+    m_shortcutCommands.insert(m_closeWindowCommand, "Close Global Variables window");
+}
+
+void GlobalVariablesListModel::fillHelpShortcuts()
+{
+    m_shortcuts.clear();
+
+    auto mappingIterator = QMapIterator(m_shortcutCommandMapping);
+    QMultiMap<QString, QString> commandWithShortcuts;
+    while (mappingIterator.hasNext()) {
+        mappingIterator.next();
+        commandWithShortcuts.insert(mappingIterator.value(), mappingIterator.key());
+    }
+
+    auto iterator = QMapIterator(m_shortcutCommands);
+
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        auto key = iterator.key();
+        auto value = iterator.value();
+        QVariantMap map;
+        map["description"] = value;
+        auto shortcuts = commandWithShortcuts.values(key);
+        map["shortcuts"] = shortcuts.join(" or ")
+#ifdef Q_OS_MACOS
+           .replace("control", "Command")
+           .replace("alt", "Option")
+#else
+           .replace("control", "Control")
+           .replace("alt", "Alt")
+#endif
+           .replace("shift", "Shift")
+           .replace("page", "Page")
+           .replace("up", "Up")
+           .replace("down", "Down")
+           .replace("enter", "Enter")
+           .replace("insert", "Insert")
+           .replace("delete", "Delete")
+           .replace("tab", "Tab")
+           .replace("backspace", "Backspace")
+           .replace("plus", "Plus")
+           .replace("minus", "Minus")
+           .replace("escape", "Escape")
+           .replace("f1", "F1")
+           .replace("f2", "F2")
+           .replace("f3", "F3")
+           .replace("f4", "F4")
+           .replace("f5", "F5")
+           .replace("f6", "F6")
+           .replace("f7", "F7")
+           .replace("f8", "F8")
+           .replace("f9", "F9")
+           .replace("f10", "F10")
+           .replace("f11", "F11")
+           .replace("f12", "F12");
+
+        m_shortcuts.append(map);
+    }
+
+    emit shortcutsChanged();
+}
+

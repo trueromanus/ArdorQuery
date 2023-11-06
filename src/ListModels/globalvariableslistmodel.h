@@ -24,6 +24,8 @@ class GlobalVariablesListModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int selected READ selected WRITE setSelected NOTIFY selectedChanged)
+    Q_PROPERTY(QList<QVariantMap> shortcuts READ shortcuts NOTIFY shortcutsChanged)
+    Q_PROPERTY(bool helpVisible READ helpVisible WRITE setHelpVisible NOTIFY helpVisibleChanged)
 
 private:
     enum GlobaVariablesRoles {
@@ -37,6 +39,18 @@ private:
     QMap<QString, QString> m_variables { QMap<QString, QString>() };
     QStringList m_lines { QStringList() };
     int m_selected { 0 };
+    QList<QVariantMap> m_shortcuts { QList<QVariantMap>() };
+    QMap<QString, QString> m_shortcutCommandMapping { QMap<QString, QString>() };
+    QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
+    bool m_helpVisible { false };
+    const QString m_helpCommand { "globalvariableshelp" };
+    const QString m_closeWindowCommand { "globalvariablesclosewindow" };
+    const QString m_saveGlobalVariablesCommand { "globalvariablessave" };
+    const QString m_addNewLineBelowCommand { "globalvariablesaddlinebelow" };
+    const QString m_selectLastFieldCommand { "globalvariablesselectlastfield" };
+    const QString m_selectNextFieldCommand { "globalvariablesselectnextfield" };
+    const QString m_selectTopFieldCommand { "globalvariablesselecttopfield" };
+    const QString m_selectPreviousFieldCommand { "globalvariablesselectpreviousfield" };
 
 public:
     explicit GlobalVariablesListModel(QObject *parent = nullptr);
@@ -50,10 +64,15 @@ public:
     int selected() const noexcept { return m_selected; }
     void setSelected(int selected) noexcept;
 
+    QList<QVariantMap> shortcuts() const noexcept { return m_shortcuts; }
+
+    bool helpVisible() const noexcept { return m_helpVisible; }
+    void setHelpVisible(bool helpVisible) noexcept;
+
     void addLine();
     void addVariable(const QString& name, const QString& value);
 
-    Q_INVOKABLE void shortcutHandler(const QString& shortcut) noexcept;
+    Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void fillLines();
     Q_INVOKABLE void clearLines();
     Q_INVOKABLE void setLine(int identifier, const QString& value);
@@ -63,10 +82,15 @@ public:
 private:
     void readCache();
     void writeCache();
+    void fillMappings();
+    void fillCommands();
+    void fillHelpShortcuts();
 
 signals:
     void selectedChanged();
     void closeWindowRequired();
+    void shortcutsChanged();
+    void helpVisibleChanged();
 
 };
 
