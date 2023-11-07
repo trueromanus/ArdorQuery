@@ -25,17 +25,27 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
     auto zeroItem = new HttpRequestItem();
     m_items->append(zeroItem);
 
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UrlType), 0);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::MethodType), 1);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HeaderType), 2);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormItemType), 3);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormFileType), 4);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HttpProtocolType), 5);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::ParamType), 6);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::PastryType), 7);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::RouteType), 8);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 9);
-    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 10);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::TitleType), 1);
+
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UrlType), 10);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::RouteType), 11);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::ParamType), 12);
+
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::MethodType), 20);
+
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HeaderType), 30);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::HttpProtocolType), 31);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BearerType), 32);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::PastryType), 33);
+
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormItemType), 40);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::FormFileType), 41);
+
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::OptionsType), 50);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::PostScriptType), 51);
+
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 60);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 1000);
 }
 
 int HttpRequestViewModel::rowCount(const QModelIndex &parent) const
@@ -605,9 +615,9 @@ QString HttpRequestViewModel::getTypeColor(int type) const
         case HttpRequestTypes::UnknownType:
             return "#CDCDB4";
         case HttpRequestTypes::UrlType:
-            return  "#FDD12D";
+            return  "#78D34E24";
         case HttpRequestTypes::MethodType:
-            return "#F68989";
+            return "#788332AC";
         case HttpRequestTypes::HeaderType:
             return "#8FBDD3";
         case HttpRequestTypes::BodyType:
@@ -615,23 +625,23 @@ QString HttpRequestViewModel::getTypeColor(int type) const
         case HttpRequestTypes::FormItemType:
             return "#9FC088";
         case HttpRequestTypes::FormFileType:
-            return "#FFD9C0";
+            return "#9FC088";
         case HttpRequestTypes::HttpProtocolType:
-            return "#A5BECC";
+            return "#8FBDD3";
         case HttpRequestTypes::BearerType:
-            return "#8879B0";
+            return "#8FBDD3";
         case HttpRequestTypes::TitleType:
             return "#C8E3D4";
         case HttpRequestTypes::ParamType:
-            return "#D4D925";
+            return "#78D34E24";
         case HttpRequestTypes::PastryType:
-            return "#E0D8B0";
+            return "#8FBDD3";
         case HttpRequestTypes::RouteType:
-            return "#975C8D";
+            return "#78D34E24";
         case HttpRequestTypes::OptionsType:
-            return "#FFC3A1";
+            return "#78FDB833";
         case HttpRequestTypes::PostScriptType:
-            return "#FFC3A1";
+            return "#78FDB833";
         default:
             return "#CDCDB4";
     }
