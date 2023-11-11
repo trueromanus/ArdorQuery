@@ -199,18 +199,9 @@ Item {
                                 viewModel.bodyModel.searchText(text);
                                 backend.refreshFindedIndex();
                             }
-                            Keys.onPressed: (event) => {
-                                const isControl = event.modifiers & Qt.ControlModifier;
-                                const isShift = event.modifiers & Qt.ShiftModifier;
-                                const isAlt = event.modifiers & Qt.AltModifier;
-                                if (isControl && event.key === Qt.Key_Z) { // disable shotcut Ctrl-Z because it can make undo
-                                    event.accepted = true;
-                                    return;
-                                }
-                                if (isAlt) {
-                                    event.accepted = true;
-                                    return;
-                                }
+                            onPressed: {
+                                root.focus = true;
+                                searchTextField.forceActiveFocus();
                             }
                         }
 
@@ -252,7 +243,7 @@ Item {
 
                                 Menu {
                                     id: outputFormatMenu
-                                    y: -20
+                                    y: -60
                                     modal: true
                                     focus: true
                                     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
@@ -315,9 +306,9 @@ Item {
 
                     Loader {
                         id: listComponentLoader
-                        visible: !viewModel.showImage
+                        visible: !viewModel.showImage && !viewModel.showDownloadFile
                         anchors.fill: parent
-                        sourceComponent: !viewModel.showImage ? listComponent : null
+                        sourceComponent: !viewModel.showImage && !viewModel.showDownloadFile ? listComponent : null
                     }
 
                     Component {
@@ -391,6 +382,36 @@ Item {
 
                                 onPressed: {
                                     imageWindow.showWindow = true;
+                                }
+                            }
+                        }
+                    }
+
+                    Loader {
+                        visible: viewModel.showDownloadFile
+                        anchors.fill: parent
+                        sourceComponent: viewModel.showDownloadFile ? downloadComponent : null
+                    }
+
+                    Component {
+                        id: downloadComponent
+
+                        Item {
+                            anchors.fill: parent
+                            anchors.topMargin: -20
+
+                            Text {
+                                anchors.centerIn: parent
+                                textFormat: Text.RichText
+                                font.pointSize: 11
+                                text: "<a href='download-file'>Save file as</a>"
+                                onLinkActivated: {
+                                    saveDownloadFileDialog.open();
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.NoButton
+                                    cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
                                 }
                             }
                         }

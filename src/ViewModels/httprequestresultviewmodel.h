@@ -41,6 +41,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(bool isFormatting READ isFormatting NOTIFY isFormattingChanged)
     Q_PROPERTY(bool showImage READ showImage NOTIFY showImageChanged)
     Q_PROPERTY(bool hasError READ hasError NOTIFY hasErrorChanged)
+    Q_PROPERTY(bool showDownloadFile READ showDownloadFile NOTIFY showDownloadFileChanged)
 
 private:
     int m_statusCode { 0 };
@@ -60,6 +61,8 @@ private:
     QString m_actualFormat { "" };
     bool m_customErrorResult { false };
     QString m_postScript { "" };
+    bool m_showDownloadFile { false };
+    QString m_defaultDownloadFile { "" };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -107,6 +110,8 @@ public:
 
     bool hasError() const noexcept { return m_customErrorResult || !m_networkError.isEmpty(); }
 
+    bool showDownloadFile() const noexcept { return m_showDownloadFile; }
+
     void setCustomErrorResult(bool hasErrors, const QString& errorMessage);
 
     uint64_t originResponseSize() const noexcept { return m_responseSize; }
@@ -117,11 +122,12 @@ public:
 
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
+    Q_INVOKABLE void saveBodyToFile(const QString& fileName);
     Q_INVOKABLE void reformatBody();
 
 private:
     QString getReadableSize(uint64_t size) const noexcept;
-    QString getFormatFromContentType() const noexcept;
+    QString getFormatFromContentType() noexcept;
     void setBoldTextToPainter(QPainter& painter) noexcept;
     void setNormalTextToPainter(QPainter& painter) noexcept;
     void paintText(QPainter& painter, const QImage& image, int& currentLine, int& lineHeight, const QString& text, bool bold) noexcept;
@@ -144,6 +150,7 @@ signals:
     void actualFormatChanged();
     void errorSavingGeneratedFile();
     void hasErrorChanged();
+    void showDownloadFileChanged();
 
 };
 

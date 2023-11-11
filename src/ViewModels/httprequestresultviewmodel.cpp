@@ -16,6 +16,7 @@
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QPainter>
+#include <QFile>
 #include "httprequestresultviewmodel.h"
 
 HttpRequestResultViewModel::HttpRequestResultViewModel(QObject *parent)
@@ -53,6 +54,7 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
         m_bodyModel->setBody("", "");
         m_isFormatting = false;
         m_showImage = false;
+        m_showDownloadFile = false;
         emit isFormattingChanged();
         return;
     }
@@ -66,6 +68,7 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
 
     m_isFormatting = !outputFormat.isEmpty();
     m_showImage = outputFormat == OutputFormatImage;
+    m_showDownloadFile = outputFormat == OutputNeedDownloaded;
 
     m_bodyModel->setBody(body, outputFormat);
 
@@ -78,6 +81,7 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
     emit responseSizeChanged();
     emit isFormattingChanged();
     emit showImageChanged();
+    emit showDownloadFileChanged();
     emit actualFormatChanged();
 }
 
@@ -88,11 +92,13 @@ void HttpRequestResultViewModel::reformatting() noexcept
 
     m_isFormatting = !outputFormat.isEmpty();
     m_showImage = outputFormat == OutputFormatImage;
+    m_showDownloadFile = outputFormat == OutputNeedDownloaded;
 
     m_bodyModel->reformatBody(outputFormat);
 
     emit isFormattingChanged();
     emit showImageChanged();
+    emit showDownloadFileChanged();
 }
 
 QString HttpRequestResultViewModel::responseTime() const noexcept
@@ -263,6 +269,17 @@ void HttpRequestResultViewModel::copyBodyToClipboard()
     }
 }
 
+void HttpRequestResultViewModel::saveBodyToFile(const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+
+    auto content = m_bodyModel->getFullBody();
+    file.write(content.toUtf8());
+
+    file.close();
+}
+
 void HttpRequestResultViewModel::reformatBody()
 {
     reformatting();
@@ -284,12 +301,17 @@ QString HttpRequestResultViewModel::getReadableSize(uint64_t size) const noexcep
     return result;
 }
 
-QString HttpRequestResultViewModel::getFormatFromContentType() const noexcept
+QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
 {
     QString contentTypeHeader = "";
+    QString contentDisposition = "";
     foreach (auto header, m_headers) {
         if (header.contains("content-type:", Qt::CaseInsensitive)) {
             contentTypeHeader = header.toLower();
+            break;
+        }
+        if (header.contains("content-disposition:", Qt::CaseInsensitive)) {
+            contentDisposition = header.toLower();
             break;
         }
     }
@@ -308,6 +330,15 @@ QString HttpRequestResultViewModel::getFormatFromContentType() const noexcept
         contentTypeHeader.contains("image/svg+xml") || contentTypeHeader.contains("image/webp") ||
         contentTypeHeader.contains("image/gif")) {
         return OutputFormatImage;
+    }
+
+    if (!contentDisposition.isEmpty()) {
+        m_defaultDownloadFile = "";
+        auto value = contentDisposition.toLower().replace("content-disposition: ", "");
+        if (!value.contains("attachment", Qt::CaseInsensitive)) return "";
+        auto fileNameIndex = value.indexOf("filename=", Qt::CaseInsensitive);
+        if (fileNameIndex > -1) m_defaultDownloadFile = value.mid(fileNameIndex + 10);
+        return OutputNeedDownloaded;
     }
 
     return "";
@@ -346,7 +377,7 @@ QStringList HttpRequestResultViewModel::getHeaderLines()
             .replace("</font>", "")
             .replace("\n", "")
             .replace("\r", "");
-        if (clearedHeader.count() > lineCount) {
+        if (clearedHeader.size() > lineCount) {
             int position = 0;
             QString content;
             bool isFull = false;
@@ -356,7 +387,7 @@ QStringList HttpRequestResultViewModel::getHeaderLines()
                 if (content.isEmpty()) break;
                 lines.append(content);
                 position += lineCount;
-                isFull = content.count() == lineCount;
+                isFull = content.size() == lineCount;
             } while (isFull);
         } else {
             lines.append(clearedHeader);

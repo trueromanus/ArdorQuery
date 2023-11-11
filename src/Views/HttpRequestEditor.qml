@@ -23,6 +23,7 @@ Item {
 
     ListView {
         id: listView
+        focus: true
         anchors.fill: parent
         clip: true
         boundsBehavior: ListView.StopAtBounds
@@ -39,9 +40,8 @@ Item {
 
             onIsNeedFocusedChanged: {
                 if (isNeedFocused) {
+                    listView.forceActiveFocus();
                     textArea.forceActiveFocus();
-                } else {
-                    textArea.focus = false;
                 }
             }
 
@@ -65,14 +65,17 @@ Item {
                 onPressed: {
                     if (listView.model.selectedItem !== currentIndex) listView.model.selectedItem = currentIndex;
                 }
+                onActiveFocusChanged: {
+                    if (backend.tabs.currentTab !== 'Request') return; //dirty hack but I don't know how to resolve it
+
+                    if (isNeedFocused && !textArea.activeFocus) {
+                        textArea.forceActiveFocus();
+                    }
+                }
             }
         }
         ScrollBar.vertical: ScrollBar {
             active: true
         }
-    }
-
-    Component.onCompleted: {
-        viewModel.selectedItem = 0; //WORKAROUND: fix loosing focus after start application
     }
 }

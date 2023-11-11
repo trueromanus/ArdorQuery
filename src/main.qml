@@ -26,6 +26,7 @@ ApplicationWindow {
 
     HttpRequestEditor {
         id: requestEditor
+        focus: true
         visible: backend.tabs.currentTab === 'Request'
         viewModel: backend.requests.selectedItem.requestModel
     }
@@ -213,6 +214,15 @@ ApplicationWindow {
         }
     }
 
+    FileDialog {
+        id: saveDownloadFileDialog
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["Any files (*.*)"]
+        onAccepted: {
+            backend.saveDownloadedFile(saveDownloadFileDialog.selectedFile);
+        }
+    }
+
     GlobalEventHandlerModel {
         id: globalEventHandler
         onKeysChanged: function (shortcut) {
@@ -223,4 +233,7 @@ ApplicationWindow {
         }
     }
 
+    onActiveFocusItemChanged: {
+        if (!window.activeFocusItem) globalEventHandler.clear();
+    }
 }

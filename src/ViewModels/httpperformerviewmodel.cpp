@@ -76,11 +76,18 @@ void HttpPerformerViewModel::cancelRequest()
 
 void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 {
-    if (m_runningRequests->contains(request->requestId().toString())) return;
+    if (m_runningRequests.contains(request->requestId().toString())) return;
 
     if (performSingleRequest(request)) {
-        addToCounter(1);
-        emit countRequestsChanged();
+        if (m_countFinishedRequests < m_countRequests) {
+            addToCounter(1);
+            emit countRequestsChanged();
+        } else {
+            m_countFinishedRequests = 0;
+            m_countRequests = 0;
+            emit countFinishedRequestsChanged();
+            emit countRequestsChanged();
+        }
     }
 }
 
@@ -249,7 +256,7 @@ void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply, const QUuid
 
     reply->setProperty("id", id.toString());
 
-    m_runningRequests->insert(id.toString(), resultModel);
+    m_runningRequests.insert(id.toString(), resultModel);
 }
 
 void HttpPerformerViewModel::adjustOptions(QStringList options, QNetworkRequest &request)
@@ -280,7 +287,7 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     auto id = modelRequest->requestId();
 
     //if request already performing don't need make something
-    if (m_runningRequests->contains(id.toString())) return false;
+    if (m_runningRequests.contains(id.toString())) return false;
 
     auto resultModel = modelRequest->resultModel();
     auto requestModel = modelRequest->requestModel();
@@ -378,7 +385,7 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
 
 void HttpPerformerViewModel::addToCounter(int number) noexcept
 {
-    if (m_countRequests == m_countFinishedRequests) {
+    if (m_countRequests > 0 && m_countRequests == m_countFinishedRequests) {
         m_countRequests = 0;
         m_countFinishedRequests = 0;
     }
@@ -421,13 +428,13 @@ void HttpPerformerViewModel::runPostScript(const QString &script, QObject* prope
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 {
     auto id = reply->property("id").toString();
-    if (!m_runningRequests->contains(id)) return;
+    if (!m_runningRequests.contains(id)) return;
 
-    auto result = m_runningRequests->value(id);
+    auto result = m_runningRequests.value(id);
     if (result == nullptr) return;
 
     result->untrackRequestTime();
-    m_runningRequests->remove(id);
+    m_runningRequests.remove(id);
     reduceFromCounter();
 
     result->setNetworkError("");

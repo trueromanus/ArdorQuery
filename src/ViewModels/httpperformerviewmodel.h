@@ -40,7 +40,7 @@ class HttpPerformerViewModel : public QObject
 private:
     QScopedPointer<QNetworkAccessManager> m_networkManager { new QNetworkAccessManager() };
     QScopedPointer<QMap<QString, QString>> m_rawHeaders { new QMap<QString, QString>() };
-    QScopedPointer<QMap<QString, HttpRequestResultViewModel*>> m_runningRequests { new QMap<QString, HttpRequestResultViewModel*>() };
+    QMap<QString, HttpRequestResultViewModel*> m_runningRequests { QMap<QString, HttpRequestResultViewModel*>() };
     QSharedPointer<QList<HttpRequestModel*>> m_requests { nullptr };
     int m_countRequests { 0 };
     int m_countFinishedRequests { 0 };

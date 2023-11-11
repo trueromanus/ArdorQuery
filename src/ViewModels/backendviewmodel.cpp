@@ -40,6 +40,7 @@ void BackendViewModel::addNewRequest()
 
     auto request = model->requestModel();
     request->setTextAdvisor(m_textAdviser);
+    request->setSelectedItem(0); // select first empty field for new request
 
     m_requests->addItem(model);
 }
@@ -67,7 +68,6 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
     } else if (command == m_performQueriesMultipleCommand) {
         m_requestPerformer->performAllRequest();
     } else if (command == m_performQueryCommand) {
-        m_requestPerformer->performAllRequest();
         auto request = m_requests->getSelectedRequest();
         m_requestPerformer->performOneRequest(request);
     } else if (command == m_cancelQueryCommand) {
@@ -257,6 +257,11 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
 
     auto createdIndex = m_requests->addItem(model);
     m_requests->selectItem(createdIndex);
+}
+
+void BackendViewModel::saveDownloadedFile(const QString &fileName) noexcept
+{
+    m_requests->selectedItem()->resultModel()->saveBodyToFile(removeProtocol(fileName));
 }
 
 void BackendViewModel::deleteCurrentRequest() noexcept

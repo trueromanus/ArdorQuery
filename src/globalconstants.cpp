@@ -41,5 +41,6 @@ QString OutputFormatJson = "json";
 QString OutputFormatHtml = "html";
 QString OutputFormatXml = "xml";
 QString OutputFormatImage = "image";
+QString OutputNeedDownloaded = "downloadable";
 
 bool IsPortable = false;

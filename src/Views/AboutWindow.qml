@@ -75,7 +75,7 @@ ApplicationWindow {
         anchors.top: opensourceInfo.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 12
-        text: "Used Qt version 6.2.3<br>If you want to get sources of Qt please <a href='mailto:rorhww3glmwj@list.ru'>email this address</a>."
+        text: "Used <a href='https://www.qt.io/'>Qt</a><br>If you want to get sources of Qt please <a href='mailto:rorhww3glmwj@list.ru'>email this address</a>."
         font.pointSize: 10
         onLinkActivated: function (link) {
             Qt.openUrlExternally(link);

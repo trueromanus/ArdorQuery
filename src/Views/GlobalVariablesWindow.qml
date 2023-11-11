@@ -92,4 +92,8 @@ ApplicationWindow {
             if (handled) globalEventHandler.setHandledLastSession();
         }
     }
+
+    onActiveFocusItemChanged: {
+        if (!root.activeFocusItem) globalEventHandler.clear();
+    }
 }
