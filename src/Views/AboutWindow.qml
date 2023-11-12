@@ -4,11 +4,11 @@ import QtQuick.Controls
 ApplicationWindow {
     id: root
     width: 500
-    height: 190
+    height: 240
     minimumWidth: 500
-    minimumHeight: 190
+    minimumHeight: 240
     maximumWidth: 500
-    maximumHeight: 190
+    maximumHeight: 240
     modality: Qt.WindowModal
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "About ArdorQuery"
@@ -47,7 +47,7 @@ ApplicationWindow {
         anchors.top: applicationName.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 4
-        text: "version 0.0.9"
+        text: "version 0.0.10"
         font.pointSize: 10
     }
 
@@ -75,7 +75,11 @@ ApplicationWindow {
         anchors.top: opensourceInfo.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 12
-        text: "Used <a href='https://www.qt.io/'>Qt</a><br>If you want to get sources of Qt please <a href='mailto:rorhww3glmwj@list.ru'>email this address</a>."
+        text: "Used 3rd libraries and technologies:<br>
+            &nbsp;&nbsp;&nbsp;<a href='https://www.qt.io/'>Qt framework</a> cross-platform UI toolkit<br>
+            &nbsp;&nbsp;&nbsp;<a href='https://www.openssl.org/'>OpenSSL</a> transport layer security<br>
+            <br>
+            If you have any questions please <a href='mailto:trueromanus@outlook.com'>email at this address</a>."
         font.pointSize: 10
         onLinkActivated: function (link) {
             Qt.openUrlExternally(link);
