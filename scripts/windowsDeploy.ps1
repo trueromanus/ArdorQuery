@@ -9,11 +9,11 @@
 # Prepare files
 Remove-Item -Path ../deploy/output -Recurse -Force -ErrorAction Ignore
 New-Item -Path ../deploy -Name "output" -ItemType "directory"
-Copy-Item -Path ../releasebuild/release/ArdorQuery.exe -Destination ../deploy/output
+Copy-Item -Path ../releaseBuild/ArdorQuery.exe -Destination ../deploy/output
 
 # Build project
 
-& $Env:QTWINDEPLOYPATH --no-translations --release --no-sql --no-xml --no-positioning --no-system-d3d-compiler --no-virtualkeyboard --no-opengl-sw --no-qmltooling --no-3dcore --no-3drenderer --no-3dquick --no-3dquickrenderer --no-3dinput --no-3danimation --no-3dextras --no-serialport --qmldir ../src ../deploy\output
+& "C:\IDEs\opensourceqt\6.2.3\msvc2019_64\bin\windeployqt.exe" --no-translations --release --no-sql --no-xml --no-positioning --no-system-d3d-compiler --no-virtualkeyboard --no-opengl-sw --no-qmltooling --no-3dcore --no-3drenderer --no-3dquick --no-3dquickrenderer --no-3dinput --no-3danimation --no-3dextras --no-serialport --qmldir ../src ../deploy\output
 
 # Remove redundant thing
 Remove-Item -Path ../deploy/output\Qt6QuickTimeline.dll
