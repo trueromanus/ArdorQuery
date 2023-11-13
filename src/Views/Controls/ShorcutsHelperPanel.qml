@@ -12,6 +12,8 @@ Rectangle {
 
     property var shortcuts
 
+    signal innerTextPressed()
+
     ShortcutsListModel {
         id: viewModel
         shortcuts: root.shortcuts
@@ -43,6 +45,9 @@ Rectangle {
                 text: viewModel.filter
                 onTextChanged: {
                     viewModel.filter = text;
+                }
+                onPressed: {
+                    root.innerTextPressed();
                 }
             }
         }

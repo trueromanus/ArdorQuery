@@ -44,6 +44,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(OpenApiExporterViewModel* openApiExporter READ openApiExporter NOTIFY openApiExporterChanged)
     Q_PROPERTY(GlobalVariablesListModel* globalVariables READ globalVariables NOTIFY globalVariablesChanged)
     Q_PROPERTY(QList<QVariantMap> shortcuts READ shortcuts NOTIFY shortcutsChanged)
+    Q_PROPERTY(bool focusedHelpTextField READ focusedHelpTextField WRITE setFocusedHelpTextField NOTIFY focusedHelpTextFieldChanged FINAL)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -62,6 +63,7 @@ private:
     QList<QVariantMap> m_shortcuts { QList<QVariantMap>() };
     QMap<QString, QString> m_shortcutCommandMapping { QMap<QString, QString>() };
     QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
+    bool m_focusedHelpTextField { false };
     const QString m_changeSelectedQueryCommand { "changeselectedquery" };
     const QString m_performQueriesMultipleCommand { "performqueriesmultiple" };
     const QString m_performQueryCommand { "performquery" };
@@ -111,6 +113,9 @@ public:
     GlobalVariablesListModel* globalVariables() const noexcept { return m_globalVariables; }
     QList<QVariantMap> shortcuts() const noexcept { return m_shortcuts; }
 
+    bool focusedHelpTextField() const noexcept { return m_focusedHelpTextField; }
+    void setFocusedHelpTextField(bool focusedHelpTextField) noexcept;
+
     Q_INVOKABLE void addNewRequest();
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void refreshFindedIndex() noexcept;
@@ -156,6 +161,7 @@ signals:
     void globalVariablesChanged();
     void needGlobalVariablesWindow();
     void shortcutsChanged();
+    void focusedHelpTextFieldChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

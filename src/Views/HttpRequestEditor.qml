@@ -63,10 +63,12 @@ Item {
                     listView.model.setItemContent(currentIndex, text);
                 }
                 onPressed: {
+                    backend.focusedHelpTextField = false;
                     if (listView.model.selectedItem !== currentIndex) listView.model.selectedItem = currentIndex;
                 }
                 onActiveFocusChanged: {
                     if (backend.tabs.currentTab !== 'Request') return; //dirty hack but I don't know how to resolve it
+                    if (backend.focusedHelpTextField) return; // fixing for text field in help
 
                     if (isNeedFocused && !textArea.activeFocus) {
                         textArea.forceActiveFocus();

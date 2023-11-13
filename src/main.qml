@@ -41,6 +41,12 @@ ApplicationWindow {
         id: shortcutPanel
         visible: backend.helpVisible
         shortcuts: backend.shortcuts
+        onInnerTextPressed: {
+            backend.focusedHelpTextField = true;
+        }
+        onVisibleChanged: {
+            if (!visible) backend.focusedHelpTextField = false;
+        }
     }
 
     CommandPalette {

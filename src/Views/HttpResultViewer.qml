@@ -200,6 +200,7 @@ Item {
                                 backend.refreshFindedIndex();
                             }
                             onPressed: {
+                                backend.focusedHelpTextField = false;
                                 root.focus = true;
                                 searchTextField.forceActiveFocus();
                             }

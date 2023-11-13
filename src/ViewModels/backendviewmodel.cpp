@@ -34,6 +34,14 @@ BackendViewModel::BackendViewModel(QObject *parent)
     fillHelpShortcuts();
 }
 
+void BackendViewModel::setFocusedHelpTextField(bool focusedHelpTextField) noexcept
+{
+    if (m_focusedHelpTextField == focusedHelpTextField) return;
+
+    m_focusedHelpTextField = focusedHelpTextField;
+    emit focusedHelpTextFieldChanged();
+}
+
 void BackendViewModel::addNewRequest()
 {
     auto model = new HttpRequestModel(this);
