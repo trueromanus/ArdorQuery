@@ -135,7 +135,7 @@ void HttpRequestViewModel::setTextAdvisor(const QSharedPointer<TextAdvisorViewMo
     m_textAdvisor = textAdviser;
 }
 
-void HttpRequestViewModel::addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType, const QString initialValue)
+void HttpRequestViewModel::addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType, const QString initialValue, const QString& alias)
 {
     int actualPosition = position;
 
@@ -143,7 +143,10 @@ void HttpRequestViewModel::addItem(const int position, const HttpRequestViewMode
 
     auto item = new HttpRequestItem();
     if (itemType != HttpRequestTypes::UnknownType) item->setType(static_cast<int>(itemType));
-    if (!initialValue.isEmpty()) item->setText(getItemPrefix(itemType, initialValue) + initialValue);
+    if (!initialValue.isEmpty()) {
+        auto prefix = alias.isEmpty() ? getItemPrefix(itemType, initialValue) : alias;
+        item->setText(prefix + initialValue);
+    }
 
     if (actualPosition == -1) {
         m_items->append(item);

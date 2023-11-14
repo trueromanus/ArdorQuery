@@ -241,7 +241,12 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
 
     auto prepareBody = m_openApiExporter->prepareBodyType();
     if (!prepareBody.isEmpty()) {
-        request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::BodyType, route->bodyByType(prepareBody));
+        request->addItem(
+            -1,
+            HttpRequestViewModel::HttpRequestTypes::BodyType,
+            route->bodyByType(prepareBody),
+            prepareBody.contains("/json") ? JsonPrefix : ""
+        );
         m_openApiExporter->setPrepareBodyType("");
     }
 

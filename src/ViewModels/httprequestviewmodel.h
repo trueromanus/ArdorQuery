@@ -79,7 +79,7 @@ public:
 
     void setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept;
 
-    Q_INVOKABLE void addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType = HttpRequestTypes::UnknownType, const QString initialValue = "");
+    Q_INVOKABLE void addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType = HttpRequestTypes::UnknownType, const QString initialValue = "", const QString& alias = "");
     Q_INVOKABLE void removeFirstItem();
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
