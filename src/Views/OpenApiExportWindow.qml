@@ -309,7 +309,6 @@ ApplicationWindow {
 
                         } else {
                             backend.importFromOpenApi(identifier);
-                            root.close();
                         }
                     }
                 }

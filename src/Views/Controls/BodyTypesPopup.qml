@@ -67,7 +67,6 @@ Popup {
                         onPressed: {
                             backend.openApiExporter.prepareBodyType = modelData;
                             backend.importFromOpenApi(backend.openApiExporter.prepareIdentifier);
-                            openApiExportWindow.item.close();
                         }
                     }
                 }
