@@ -85,7 +85,7 @@ void ResponseBodyListModel::setBody(const QByteArray &body, const QString& forma
         //WORKAROUND: Clearing image
         if (m_imageSource.width() > 2) m_imageSource = QPixmap(2,2).toImage();
 
-        reformatting(formatter);
+        if (formatter != OutputNeedDownloaded) reformatting(formatter);
     }
 
     endResetModel();

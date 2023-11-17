@@ -70,19 +70,19 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
     m_showImage = outputFormat == OutputFormatImage;
     m_showDownloadFile = outputFormat == OutputNeedDownloaded;
 
-    m_bodyModel->setBody(body, outputFormat);
-
     m_responseSize = body.size();
     if (m_responseSize > 0) {
         setResponseReadableSize(getReadableSize(m_responseSize));
     } else {
         setResponseReadableSize("");
     }
-    emit responseSizeChanged();
-    emit isFormattingChanged();
     emit showImageChanged();
     emit showDownloadFileChanged();
+    emit responseSizeChanged();
+    emit isFormattingChanged();
     emit actualFormatChanged();
+
+    m_bodyModel->setBody(body, outputFormat);
 }
 
 void HttpRequestResultViewModel::reformatting() noexcept
@@ -347,6 +347,14 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
             if (nameParts[0].trimmed() != "filename") continue;
             m_defaultDownloadFile = nameParts[1];
         }
+        return OutputNeedDownloaded;
+    }
+
+    //all non text unsupported types we can only download
+    if (contentTypeHeader.contains("application/") ||
+        contentTypeHeader.contains("audio/") ||
+        contentTypeHeader.contains("video/") ||
+        contentTypeHeader.contains("font/")) {
         return OutputNeedDownloaded;
     }
 
