@@ -63,6 +63,8 @@ private:
     QString m_postScript { "" };
     bool m_showDownloadFile { false };
     QString m_defaultDownloadFile { "" };
+    const QString StartHeaderTag { "<font color='#8812a1'>" };
+    const QString EndHeaderTag { "</font>" };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);

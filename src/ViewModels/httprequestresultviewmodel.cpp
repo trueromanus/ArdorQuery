@@ -272,10 +272,10 @@ void HttpRequestResultViewModel::copyBodyToClipboard()
 void HttpRequestResultViewModel::saveBodyToFile(const QString &fileName)
 {
     QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+    if (!file.open(QIODevice::WriteOnly)) return;
 
-    auto content = m_bodyModel->getFullBody();
-    file.write(content.toUtf8());
+    auto content = m_bodyModel->getFullBodyArray();
+    file.write(content);
 
     file.close();
 }
@@ -308,11 +308,11 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
     foreach (auto header, m_headers) {
         if (header.contains("content-type:", Qt::CaseInsensitive)) {
             contentTypeHeader = header.toLower();
-            break;
+            continue;
         }
         if (header.contains("content-disposition:", Qt::CaseInsensitive)) {
             contentDisposition = header.toLower();
-            break;
+            continue;
         }
     }
     if (contentTypeHeader.isEmpty()) return "";
@@ -334,10 +334,19 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
 
     if (!contentDisposition.isEmpty()) {
         m_defaultDownloadFile = "";
-        auto value = contentDisposition.toLower().replace("content-disposition: ", "");
+        auto value = contentDisposition
+            .replace(StartHeaderTag, "")
+            .replace(EndHeaderTag, "")
+            .replace("content-disposition: ", "");
         if (!value.contains("attachment", Qt::CaseInsensitive)) return "";
-        auto fileNameIndex = value.indexOf("filename=", Qt::CaseInsensitive);
-        if (fileNameIndex > -1) m_defaultDownloadFile = value.mid(fileNameIndex + 10);
+        auto parts = value.split(";");
+        foreach (auto part, parts) {
+            auto nameParts = part.split("=");
+            if (nameParts.length() != 2) continue;
+
+            if (nameParts[0].trimmed() != "filename") continue;
+            m_defaultDownloadFile = nameParts[1];
+        }
         return OutputNeedDownloaded;
     }
 
@@ -373,8 +382,8 @@ QStringList HttpRequestResultViewModel::getHeaderLines()
     QStringList lines;
     foreach (auto header, m_headers) {
         auto clearedHeader = QString(header)
-            .replace("<font color='#8812a1'>", "")
-            .replace("</font>", "")
+            .replace(StartHeaderTag, "")
+            .replace(EndHeaderTag, "")
             .replace("\n", "")
             .replace("\r", "");
         if (clearedHeader.size() > lineCount) {

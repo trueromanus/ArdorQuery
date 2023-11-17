@@ -457,7 +457,6 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
         rawHeaders.append(name + " " + value);
     }
     result->setHeaders(responseHeaders);
-
     result->setBody(reply->readAll());
 
     auto postScript = result->postScript();
