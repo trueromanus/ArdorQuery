@@ -244,7 +244,7 @@ Item {
 
                                 Menu {
                                     id: outputFormatMenu
-                                    y: -60
+                                    y: -101
                                     modal: true
                                     focus: true
                                     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
@@ -351,13 +351,6 @@ Item {
                                         wrapMode: Text.Wrap
                                         font.pointSize: 9
                                     }
-                                }
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onPressed: {
-                                    console.log(mouseX, mouseY, listStrings.contentX, listStrings.contentY);
                                 }
                             }
                         }

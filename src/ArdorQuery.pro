@@ -13,6 +13,7 @@ SOURCES += \
         Formatters/htmlformatter.cpp \
         Formatters/jsonformatter.cpp \
         Formatters/outputformatter.cpp \
+        Formatters/plaintextformatter.cpp \
         Formatters/xmlformatter.cpp \
         ListModels/addressespalettelistmodel.cpp \
         ListModels/globalvariableslistmodel.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
     Formatters/htmlformatter.h \
     Formatters/jsonformatter.h \
     Formatters/outputformatter.h \
+    Formatters/plaintextformatter.h \
     Formatters/xmlformatter.h \
     ListModels/addressespalettelistmodel.h \
     ListModels/globalvariableslistmodel.h \

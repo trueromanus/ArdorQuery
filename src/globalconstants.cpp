@@ -42,5 +42,6 @@ QString OutputFormatHtml = "html";
 QString OutputFormatXml = "xml";
 QString OutputFormatImage = "image";
 QString OutputNeedDownloaded = "downloadable";
+QString OutputFormatPlainText = "plaintext";
 
 bool IsPortable = false;

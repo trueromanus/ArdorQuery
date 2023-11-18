@@ -18,6 +18,7 @@
 #include "jsonformatter.h"
 #include "htmlformatter.h"
 #include "xmlformatter.h"
+#include "plaintextformatter.h"
 
 FormatterFactory::FormatterFactory()
 {
@@ -44,6 +45,12 @@ OutputFormatter* FormatterFactory::getFormatter(const QString& formatter)
         auto xmlFormatter = new XmlFormatter();
         m_instanceCache.insert(OutputFormatXml, xmlFormatter);
         return xmlFormatter;
+    }
+
+    if (formatter == OutputFormatPlainText) {
+        auto plainTextFormatter = new PlainTextFormatter();
+        m_instanceCache.insert(OutputFormatPlainText, plainTextFormatter);
+        return plainTextFormatter;
     }
 
     return m_nullableFormatter;

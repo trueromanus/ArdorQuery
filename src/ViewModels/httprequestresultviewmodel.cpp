@@ -66,7 +66,7 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
         m_actualFormat = outputFormat;
     }
 
-    m_isFormatting = !outputFormat.isEmpty();
+    m_isFormatting = !outputFormat.isEmpty() && outputFormat != OutputFormatPlainText;
     m_showImage = outputFormat == OutputFormatImage;
     m_showDownloadFile = outputFormat == OutputNeedDownloaded;
 
@@ -88,9 +88,12 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
 void HttpRequestResultViewModel::reformatting() noexcept
 {
     auto outputFormat = m_outputFormat;
-    if (outputFormat == OutputFormatAuto) outputFormat = getFormatFromContentType();
+    if (outputFormat == OutputFormatAuto) {
+        outputFormat = getFormatFromContentType();
+        m_actualFormat = outputFormat;
+    }
 
-    m_isFormatting = !outputFormat.isEmpty();
+    m_isFormatting = !outputFormat.isEmpty() && outputFormat != OutputFormatPlainText;
     m_showImage = outputFormat == OutputFormatImage;
     m_showDownloadFile = outputFormat == OutputNeedDownloaded;
 
@@ -99,6 +102,7 @@ void HttpRequestResultViewModel::reformatting() noexcept
     emit isFormattingChanged();
     emit showImageChanged();
     emit showDownloadFileChanged();
+    emit actualFormatChanged();
 }
 
 QString HttpRequestResultViewModel::responseTime() const noexcept
@@ -282,6 +286,10 @@ void HttpRequestResultViewModel::saveBodyToFile(const QString &fileName)
 
 void HttpRequestResultViewModel::reformatBody()
 {
+    if (m_outputFormat != OutputFormatAuto) {
+        m_actualFormat.clear();
+        emit actualFormatChanged();
+    }
     reformatting();
 }
 
@@ -357,6 +365,8 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
         contentTypeHeader.contains("font/")) {
         return OutputNeedDownloaded;
     }
+
+    if (contentTypeHeader.contains("text/")) return OutputFormatPlainText;
 
     return "";
 }

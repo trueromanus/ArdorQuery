@@ -115,7 +115,7 @@ void ResponseBodyListModel::reformatting(const QString &formatter) noexcept
         }
 
         int currentStart = 0;
-        int count = line.count();
+        int count = line.length();
 
         while (currentStart < count) {
             int end = currentStart + 100;

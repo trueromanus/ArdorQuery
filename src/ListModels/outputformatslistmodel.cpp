@@ -23,6 +23,7 @@ OutputFormatsListModel::OutputFormatsListModel(QObject *parent)
     m_outputFormats.append(OutputFormatJson);
     m_outputFormats.append(OutputFormatXml);
     m_outputFormats.append(OutputFormatHtml);
+    m_outputFormats.append(OutputFormatPlainText);
     m_outputFormats.append(OutputFormatImage);
     m_outputFormats.append(OutputNeedDownloaded);
 
@@ -32,6 +33,7 @@ OutputFormatsListModel::OutputFormatsListModel(QObject *parent)
     m_outputFormatTitles.insert(OutputFormatImage, "Image");
     m_outputFormatTitles.insert(OutputFormatHtml, "HTML");
     m_outputFormatTitles.insert(OutputNeedDownloaded, "Attachment");
+    m_outputFormatTitles.insert(OutputFormatPlainText, "Plain Text");
 }
 
 int OutputFormatsListModel::rowCount(const QModelIndex &parent) const
