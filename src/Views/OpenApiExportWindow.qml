@@ -39,7 +39,7 @@ ApplicationWindow {
             iconHeight: 20
             tooltipMessage: "Show keyboard shortcut description"
             onPressed: {
-                openApiShortcutPanel.visible = !openApiShortcutPanel.visible;
+                backend.openApiExporter.helpVisible = !backend.openApiExporter.helpVisible;
             }
         }
     }
