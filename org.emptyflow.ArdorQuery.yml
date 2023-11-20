@@ -15,6 +15,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/trueromanus/ArdorQuery
+        branch: main
 finish-args:
   - --share=ipc
   - --socket=x11

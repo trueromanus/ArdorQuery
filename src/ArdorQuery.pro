@@ -125,9 +125,13 @@ flatpak {
 
     desktop.files += ../org.emptyflow.ArdorQuery.desktop
     desktop.path = $$PREFIX/share/applications
+    INSTALLS += desktop
+
+    metadata.path = $$PREFIX/share/metainfo
+    metadata.files += ../org.emptyflow.ArdorQuery.appdata.xml
+    INSTALLS += metadata
 
     target.path = $$PREFIX/bin
-
     INSTALLS += target
 }
 
