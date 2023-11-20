@@ -1,0 +1,24 @@
+app-id: org.emptyflow.ArdorQuery
+runtime: org.kde.Platform
+runtime-version: 'kde-6.6'
+sdk: org.kde.Sdk
+command: ArdorQuery
+modules:
+  - name: anilibria
+    buildsystem: qmake
+    subdir: src
+    build-options:
+      env:
+        PREFIX: /app
+      config-opts:
+        - CONFIG += flatpak
+    sources:
+      - type: git
+        url: https://github.com/trueromanus/ArdorQuery
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --share=network
+  - --filesystem=host

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ArdorQuery
+Comment=ArdorQuery application
+Exec=/app/bin/ArdorQuery
+Icon=ardorquery
+Type=Application
+Terminal=false
+Categories=Qt

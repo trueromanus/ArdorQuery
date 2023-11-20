@@ -441,7 +441,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     result->setCustomErrorResult(false, "");
 
     if (reply->error() != QNetworkReply::NoError) {
-        result->setNetworkError(reply->errorString());
+        result->setCustomErrorResult(true, reply->errorString());
     }
 
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);

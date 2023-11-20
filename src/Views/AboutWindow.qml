@@ -10,7 +10,7 @@ ApplicationWindow {
     maximumWidth: 500
     maximumHeight: 240
     modality: Qt.WindowModal
-    flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
+    flags: Qt.platform.os !== `windows` ? Qt.Dialog : Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "About ArdorQuery"
 
     Rectangle {

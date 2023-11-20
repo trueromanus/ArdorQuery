@@ -342,7 +342,11 @@ void BackendViewModel::fillMappings()
     m_shortcutCommandMapping.insert("shift-enter", m_addLineToEndCommand);
     m_shortcutCommandMapping.insert("control-{", m_sortAscendingCommand);
     m_shortcutCommandMapping.insert("control-}", m_sortDescendingCommand);
+#ifdef Q_OS_MACOS
+    m_shortcutCommandMapping.insert("control-f11", m_toggleTabsCommand);
+#else
     m_shortcutCommandMapping.insert("f11", m_toggleTabsCommand);
+#endif
     m_shortcutCommandMapping.insert("control-insert", m_addQueryCommand);
     m_shortcutCommandMapping.insert("control-d", m_deleteSelectedQueryCommand);
 #ifndef Q_OS_MACOS
