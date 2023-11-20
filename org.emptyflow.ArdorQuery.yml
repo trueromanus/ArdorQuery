@@ -1,6 +1,6 @@
 app-id: org.emptyflow.ArdorQuery
 runtime: org.kde.Platform
-runtime-version: 'kde-6.6'
+runtime-version: '6.6'
 sdk: org.kde.Sdk
 command: ArdorQuery
 modules:
