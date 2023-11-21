@@ -133,6 +133,32 @@ flatpak {
 
     target.path = $$PREFIX/bin
     INSTALLS += target
+
+    icon_16.path = $$PREFIX/share/icons/hicolor/16x16/apps
+    icon_16.files += ../linuxicons/16/ardorquery.png
+    icon_16.CONFIG += no_check_exist
+
+    icon_32.path = $$PREFIX/share/icons/hicolor/32x32/apps
+    icon_32.files += ../linuxicons/32/ardorquery.png
+    icon_32.CONFIG += no_check_exist
+
+    icon_48.path = $$PREFIX/share/icons/hicolor/32x32/apps
+    icon_48.files += ../linuxicons/48/ardorquery.png
+    icon_48.CONFIG += no_check_exist
+
+    icon_128.path = $$PREFIX/share/icons/hicolor/128x128/apps
+    icon_128.files += ../linuxicons/128/ardorquery.png
+    icon_128.CONFIG += no_check_exist
+
+    icon_256.path = $$PREFIX/share/icons/hicolor/256x256/apps
+    icon_256.files += ../linuxicons/256/ardorquery.png
+    icon_256.CONFIG += no_check_exist
+
+    icon_512.path = $$PREFIX/share/icons/hicolor/512x512/apps
+    icon_512.files += ../linuxicons/512/ardorquery.png
+    icon_512.CONFIG += no_check_exist
+
+    INSTALLS += icon_16 icon_32 icon_48 icon_128 icon_256 icon_512
 }
 
 #unix: {
