@@ -28,4 +28,7 @@
 	</releases>
 
 	<url type="homepage">https://trueromanus.github.io/ArdorQuery</url>
+	<url type="help">https://trueromanus.github.io/ArdorQuery</url>
+	<url type="contribute">https://github.com/trueromanus/ArdorQuery/blob/main/CONTRIBUTING.md</url>
+	<url type="donation">https://ko-fi.com/trueromanus</url>
 </component>

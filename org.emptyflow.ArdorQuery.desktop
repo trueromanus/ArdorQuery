@@ -5,4 +5,4 @@ Exec=/app/bin/ArdorQuery
 Icon=org.emptyflow.ArdorQuery
 Type=Application
 Terminal=false
-Categories=Qt
+Categories=Qt;Network
