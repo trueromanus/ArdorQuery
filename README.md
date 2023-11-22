@@ -37,5 +37,16 @@ Please see the latest documentation [here](https://trueromanus.github.io/ArdorQu
 * Linux
 * macOS 12+
 
-## Requirements
+## Build Requirements
 * Qt >= 6.2.3
+## Build instructions
+### Flatpak
+```shell
+flatpak-builder --user --install --force-clean build org.emptyflow.ArdorQuery.yml
+flatpak build-bundle ~/.local/share/flatpak/repo/ ardorquery.flatpak org.emptyflow.ArdorQuery
+```
+### Debian based distros
+```shell
+cd src
+qmake "CONFIG+=debianinstall"
+```
