@@ -1,9 +1,8 @@
 # ArdorQuery
 [![CI](https://github.com/trueromanus/ArdorQuery/actions/workflows/ci.yml/badge.svg)](https://github.com/trueromanus/ArdorQuery/actions/workflows/ci.yml)
 [![Release](https://github.com/trueromanus/ArdorQuery/actions/workflows/BuildOnMac.yml/badge.svg)](https://github.com/trueromanus/ArdorQuery/actions/workflows/BuildOnMac.yml)  
-ArdorQuery is a cross-platform tool for performing any HTTP(S) endpoints like REST API, HTML, Images, GraphQL, OData etc.
-The main goal is to make an application with minimal user interface and keyboard oriented.
-Application is fully native, your don't need to install additional stuff.  
+ArdorQuery is a cross-platform tool for performing any HTTP(S) endpoints like REST API, HTML, Images, GraphQL, OData etc. It is similar to cURL and Postman. 
+The main goal is to make an application with minimal user interface and keyboard oriented. Application is fully native, your don't need to install additional stuff. 
 The HTTP request is broken down into a human-readable set of lines. Each line describes the type at the beginning, for example `url ` means we define the URL for the HTTP request.
 Each type of line has a different color to help visually identify that content.
   
