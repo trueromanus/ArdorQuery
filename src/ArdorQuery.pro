@@ -112,9 +112,12 @@ HEADERS += \
     Tests/htmlformatterunittests.h
 }
 
-#qnx: target.path = /tmp/$${TARGET}/bin
-#else: unix:!android: target.path = /opt/$${TARGET}/bin
-#!isEmpty(target.path): INSTALLS += target
+debianinstall {
+    target.path = /opt/$${TARGET}/bin
+    INSTALLS += target
+
+    CONFIG += installicons
+}
 
 flatpak {
     ENV_PREFIX=$$(PREFIX)
@@ -135,6 +138,10 @@ flatpak {
     target.path = $$PREFIX/bin
     INSTALLS += target
 
+    CONFIG += installicons
+}
+
+installicons {
     icon_16.path = $$PREFIX/share/icons/hicolor/16x16/apps
     icon_16.files += ../linuxicons/16/org.emptyflow.ArdorQuery.png
     icon_16.CONFIG += no_check_exist
