@@ -112,11 +112,34 @@ HEADERS += \
     Tests/htmlformatterunittests.h
 }
 
+usrbininstalldesktop {
+    desktop.files += ../desktopspecs/usrbin/org.emptyflow.ArdorQuery.desktop
+    desktop.path = $$PREFIX/share/applications
+    INSTALLS += desktop
+}
+
 debianinstall {
-    target.path = /opt/$${TARGET}/bin
+    target.path = /usr/bin
     INSTALLS += target
 
     CONFIG += installicons
+    CONFIG += usrbininstalldesktop
+}
+
+manjaroinstall {
+    target.path = /usr/bin
+    INSTALLS += target
+
+    CONFIG += installicons
+    CONFIG += usrbininstalldesktop
+}
+
+fedorainstall {
+    target.path = /usr/bin
+    INSTALLS += target
+
+    CONFIG += installicons
+    CONFIG += usrbininstalldesktop
 }
 
 flatpak {

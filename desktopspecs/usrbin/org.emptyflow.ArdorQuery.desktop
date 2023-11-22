@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ArdorQuery
+Comment=ArdorQuery application
+Exec=/usr/bin/ArdorQuery
+Icon=org.emptyflow.ArdorQuery
+Type=Application
+Terminal=false
+Categories=Qt;Network
