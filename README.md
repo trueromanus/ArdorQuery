@@ -37,6 +37,9 @@ Please see the latest documentation [here](https://trueromanus.github.io/ArdorQu
 * Linux
 * macOS 12+
 
+## Install
+[<img src="https://dl.flathub.org/assets/badges/flathub-badge-en.png">](https://flathub.org/apps/org.emptyflow.ArdorQuery)
+
 ## Build Requirements
 * Qt >= 6.2.3
 ## Build instructions
