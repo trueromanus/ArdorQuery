@@ -195,9 +195,8 @@ Item {
                             anchors.rightMargin: 10
                             width: 150
                             selectByMouse: true
-                            onEditingFinished: {
-                                viewModel.bodyModel.searchText(text);
-                                backend.refreshFindedIndex();
+                            onTextEdited: {
+                                viewModel.bodyModel.startSearchText(text);
                             }
                             onPressed: {
                                 backend.focusedHelpTextField = false;

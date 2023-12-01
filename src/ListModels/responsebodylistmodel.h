@@ -46,6 +46,8 @@ private:
     QRegularExpression m_fontTagStartRegExp { R"a(<font color=\"\#[A-Za-z0-9]{1,6}\">)a" };
     bool m_notFounded { false };
     QString m_previousFilter { "" };
+    int m_typingTimerId { -1 };
+    QString m_typingFilter { "" };
 
     enum ResponseBodyRoles {
         CurrentLineRole = Qt::UserRole + 1,
@@ -77,9 +79,13 @@ public:
     void clear() noexcept;
 
     Q_INVOKABLE void searchText(const QString& filter) noexcept;
+    Q_INVOKABLE void startSearchText(const QString& filter) noexcept;
 
 private:
     QString& cleanLineFromTags(QString& line) noexcept;
+
+protected:
+    void timerEvent(QTimerEvent *event) override;
 
 signals:
     void visibleBodyChanged();

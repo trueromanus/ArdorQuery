@@ -15,6 +15,7 @@
 
 #include <QPixmap>
 #include <QRegularExpression>
+#include <QTimerEvent>
 #include "responsebodylistmodel.h"
 
 ResponseBodyListModel::ResponseBodyListModel(QObject *parent)
@@ -96,6 +97,12 @@ void ResponseBodyListModel::setBody(const QByteArray &body, const QString& forma
     m_findedLinesMap.clear();
     emit countFindedLinesChanged();
     emit countFindedLinesTextChanged();
+
+    if (!m_previousFilter.isEmpty()) {
+        auto filter = m_previousFilter;
+        m_previousFilter = "";
+        searchText(filter);
+    }
 }
 
 void ResponseBodyListModel::reformatting(const QString &formatter) noexcept
@@ -251,7 +258,23 @@ void ResponseBodyListModel::searchText(const QString &filter) noexcept
     emit countFindedLinesTextChanged();
 }
 
+void ResponseBodyListModel::startSearchText(const QString &filter) noexcept
+{
+    if (m_typingTimerId != -1) killTimer(m_typingTimerId);
+
+    m_typingTimerId = startTimer(1000);
+    m_typingFilter = filter;
+}
+
 QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept
 {
     return line.replace("</font>", "").replace("&lt;", "<").replace("&gt;", "<").replace(m_fontTagStartRegExp, "");
+}
+
+void ResponseBodyListModel::timerEvent(QTimerEvent *event)
+{
+    if (m_typingTimerId != event->timerId()) return;
+
+    m_typingTimerId = -1;
+    searchText(m_typingFilter);
 }
