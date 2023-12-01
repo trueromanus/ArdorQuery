@@ -45,6 +45,7 @@ Please see the latest documentation [here](https://trueromanus.github.io/ArdorQu
 ## Build instructions
 ### Flatpak
 ```shell
+sudo flatpak install flathub org.kde.Platform//6.6 org.kde.Sdk//6.6
 flatpak-builder --user --install --force-clean build org.emptyflow.ArdorQuery.yml
 flatpak build-bundle ~/.local/share/flatpak/repo/ ardorquery.flatpak org.emptyflow.ArdorQuery
 ```
@@ -52,4 +53,14 @@ flatpak build-bundle ~/.local/share/flatpak/repo/ ardorquery.flatpak org.emptyfl
 ```shell
 cd src
 qmake "CONFIG+=debianinstall"
+```
+### Manjaro
+```shell
+cd src
+qmake "CONFIG+=manjaroinstall"
+```
+### Fedora based distros
+```shell
+cd src
+qmake "CONFIG+=fedorainstall"
 ```
