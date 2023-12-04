@@ -94,6 +94,12 @@ void RequestsCommandPaletteListModel::selectNext()
     refresh();
 }
 
+void RequestsCommandPaletteListModel::forceSelectItem(QUuid id)
+{
+    m_selected = m_history.indexOf(id);
+    selectItem();
+}
+
 void RequestsCommandPaletteListModel::refresh(bool needRecreateHistory)
 {
     beginResetModel();

@@ -42,7 +42,7 @@ void BackendViewModel::setFocusedHelpTextField(bool focusedHelpTextField) noexce
     emit focusedHelpTextFieldChanged();
 }
 
-void BackendViewModel::addNewRequest()
+void BackendViewModel::addNewRequest(bool forceSelectedAddedItem)
 {
     auto model = new HttpRequestModel(this);
 
@@ -51,6 +51,11 @@ void BackendViewModel::addNewRequest()
     request->setSelectedItem(0); // select first empty field for new request
 
     m_requests->addItem(model);
+
+    if (forceSelectedAddedItem) {
+        m_requestsCommandPaletter->refresh(true); // recreate history
+        m_requestsCommandPaletter->forceSelectItem(model->requestId()); // force selection of added element
+    }
 }
 
 bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
@@ -111,7 +116,7 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
     } else if (command == m_toggleTabsCommand) {
         m_tabs->toggleTabs();
     } else if (command == m_addQueryCommand) {
-        addNewRequest();
+        addNewRequest(true);
     } else if (command == m_deleteSelectedQueryCommand) {
         deleteCurrentRequest();
     } else if (command == m_selectLastFieldCommand) {

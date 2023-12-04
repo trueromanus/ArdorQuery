@@ -48,6 +48,7 @@ public:
 
     void selectItem();
     void selectNext();
+    void forceSelectItem(QUuid id);
     void refresh(bool needRecreateHistory = false);
     void recreateHistory();
 

@@ -116,7 +116,7 @@ public:
     bool focusedHelpTextField() const noexcept { return m_focusedHelpTextField; }
     void setFocusedHelpTextField(bool focusedHelpTextField) noexcept;
 
-    Q_INVOKABLE void addNewRequest();
+    Q_INVOKABLE void addNewRequest(bool forceSelectedAddedItem = false);
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void refreshFindedIndex() noexcept;
     Q_INVOKABLE void openedFile(const QString& filePath) noexcept;
