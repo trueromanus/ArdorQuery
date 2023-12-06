@@ -54,6 +54,7 @@ public:
     void recreateHistory();
     OpenApiAddressModel* getSelectedAddressById(const QUuid& id);
     int getSelectedAddressIndex();
+    OpenApiAddressModel* getSelectedAddressByTitle(const QString& title);
 
 signals:
     void itemSelected(const QUuid& id);

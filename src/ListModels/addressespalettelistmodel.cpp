@@ -149,3 +149,17 @@ int AddressesPaletteListModel::getSelectedAddressIndex()
     auto address = m_addressesMap.value(id);
     return m_addresses->indexOf(address);
 }
+
+OpenApiAddressModel *AddressesPaletteListModel::getSelectedAddressByTitle(const QString &title)
+{
+    auto iterator = std::find_if(
+        m_addresses->cbegin(),
+        m_addresses->cend(),
+        [title](OpenApiAddressModel* model) {
+            return model->title() == title;
+        }
+    );
+    if (iterator == m_addresses->cend()) return nullptr;
+
+    return *iterator;
+}

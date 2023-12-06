@@ -527,8 +527,14 @@ ApplicationWindow {
         radius: 4
 
         Text {
-            anchors.fill: parent
-            anchors.margins: 4
+            width: parent.width - 30
+            height: parent.height - 2
+            anchors.left: parent.left
+            anchors.leftMargin: 4
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.WordWrap
+            maximumLineCount: 3
+            elide: Text.ElideRight
             text: backend.openApiExporter.errorMessage
         }
 

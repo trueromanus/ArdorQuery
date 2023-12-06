@@ -173,7 +173,7 @@ bool OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
     } else if (command == m_cancelLoadSchemaCommand) {
         cancelCurrentRequest();
     } else if (command == m_saveSchemaCommand) {
-        editInSelectedAddress();
+        saveToAddressByTitle();
     } else if (command == m_addSchemaCommand) {
         addCurrentToAddresses();
     } else if (command == m_changeSelectedSchemaCommand) {
@@ -190,6 +190,8 @@ bool OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
         emit needCloseWindow();
     } else if (command == m_deleteSelectedSchemaCommand) {
         deleteSelectedAddress();
+    } else if(command == m_toggleTabsCommand) {
+        togglePages();
     }
 
     return true;
@@ -197,8 +199,6 @@ bool OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
 
 void OpenApiExporterViewModel::addCurrentToAddresses() noexcept
 {
-    if (m_url.isEmpty() && m_baseUrl.isEmpty()) return;
-
     m_addresses->addAddress(m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter(), m_authMethod);
 }
 
@@ -211,20 +211,17 @@ void OpenApiExporterViewModel::togglePages() noexcept
     }
 }
 
-void OpenApiExporterViewModel::editInSelectedAddress() noexcept
-{
-    if (m_url.isEmpty() && m_baseUrl.isEmpty()) return;
-
-    auto index = m_addressPalette->getSelectedAddressIndex();
-
-    m_addresses->editItem(index, m_title.isEmpty() ? m_url : m_title, m_url, m_baseUrl, m_routeList->filter(), m_authMethod);
-}
-
 void OpenApiExporterViewModel::deleteSelectedAddress() noexcept
 {
-    auto index = m_addressPalette->getSelectedAddressIndex();
+    clearErrorMessage();
 
-    m_addresses->deleteItem(index);
+    if (m_title.isEmpty()) {
+        m_errorMessage = "To delete, you must fill in the Name field!";
+        emit errorMessageChanged();
+        return;
+    }
+
+    m_addresses->deleteItem(m_title);
     m_addressPalette->selectNext();
     m_addressPalette->selectItem();
 }
@@ -592,7 +589,6 @@ void OpenApiExporterViewModel::fillMappings()
     m_shortcutCommandMapping.insert("control-b", m_cancelLoadSchemaCommand);
 
     m_shortcutCommandMapping.insert("control-s", m_saveSchemaCommand);
-    m_shortcutCommandMapping.insert("control-insert", m_addSchemaCommand);
     m_shortcutCommandMapping.insert("control-tab", m_changeSelectedSchemaCommand);
     m_shortcutCommandMapping.insert("control-backspace", m_changeSelectedSchemaCommand);
     m_shortcutCommandMapping.insert("control-h", m_helpCommand);
@@ -602,17 +598,24 @@ void OpenApiExporterViewModel::fillMappings()
 #ifndef Q_OS_MACOS
     m_shortcutCommandMapping.insert("control-delete", m_deleteSelectedSchemaCommand);
 #endif
+#ifdef Q_OS_MACOS
+    m_shortcutCommandMapping.insert("control-f11", m_toggleTabsCommand);
+#else
+    m_shortcutCommandMapping.insert("f11", m_toggleTabsCommand);
+#endif
+
 }
 
 void OpenApiExporterViewModel::fillCommands()
 {
     m_shortcutCommands.insert(m_loadSchemaCommand, "Load OpenAPI schema");
     m_shortcutCommands.insert(m_cancelLoadSchemaCommand, "Cancel OpenAPI schema loading if it is in progress");
-    m_shortcutCommands.insert(m_saveSchemaCommand, "Save the current OpenAPI scheme (all fields are saved, including Filter)");
-    m_shortcutCommands.insert(m_addSchemaCommand, "Add new OpenAPI schema");
+    m_shortcutCommands.insert(m_saveSchemaCommand, "Edit scheme or add new scheme (identifier for scheme is title)");
     m_shortcutCommands.insert(m_changeSelectedSchemaCommand, "holding Ctrl/Command and then pressing Tab/Backspace to change OpenAPI schema");
     m_shortcutCommands.insert(m_helpCommand, "Show interactive help for shortcuts");
     m_shortcutCommands.insert(m_closeWindowCommand, "Close Export OpenAPI window");
+    m_shortcutCommands.insert(m_deleteSelectedSchemaCommand, "Delete schema (identifier for scheme is title)");
+    m_shortcutCommands.insert(m_toggleTabsCommand, "Toggle tabs betweens Exporter and Saved options");
 }
 
 void OpenApiExporterViewModel::fillHelpShortcuts()
@@ -636,43 +639,38 @@ void OpenApiExporterViewModel::fillHelpShortcuts()
         QVariantMap map;
         map["description"] = value;
         auto shortcuts = commandWithShortcuts.values(key);
-        map["shortcuts"] = shortcuts.join(" or ")
-#ifdef Q_OS_MACOS
-           .replace("control", "Command")
-           .replace("alt", "Option")
-#else
-           .replace("control", "Control")
-           .replace("alt", "Alt")
-#endif
-           .replace("shift", "Shift")
-           .replace("page", "Page")
-           .replace("up", "Up")
-           .replace("down", "Down")
-           .replace("enter", "Enter")
-           .replace("insert", "Insert")
-           .replace("delete", "Delete")
-           .replace("tab", "Tab")
-           .replace("backspace", "Backspace")
-           .replace("plus", "Plus")
-           .replace("minus", "Minus")
-           .replace("f1", "F1")
-           .replace("f2", "F2")
-           .replace("f3", "F3")
-           .replace("f4", "F4")
-           .replace("f5", "F5")
-           .replace("f6", "F6")
-           .replace("f7", "F7")
-           .replace("f8", "F8")
-           .replace("f9", "F9")
-           .replace("f10", "F10")
-           .replace("f11", "F11")
-           .replace("f12", "F12");
-
+        auto joinedShortcuts = shortcuts.join(" or ");
+        map["shortcuts"] = adjustShortcutsForDisplay(joinedShortcuts);
 
         m_shortcuts.append(map);
     }
 
     emit shortcutsChanged();
+}
+
+void OpenApiExporterViewModel::saveToAddressByTitle()
+{
+    clearErrorMessage();
+
+    if (m_url.isEmpty() || m_baseUrl.isEmpty() || m_title.isEmpty()) {
+        m_errorMessage = "For saving need fill Base URL, URL and Title";
+        emit errorMessageChanged();
+        return;
+    }
+
+    auto address = m_addressPalette->getSelectedAddressByTitle(m_title);
+
+    if (address != nullptr) {
+        address->setAddress(m_url);
+        address->setBaseUrl(m_baseUrl);
+        address->setSecurities(m_url);
+        address->setFilter(m_routeList->filter());
+        address->setSecurities(m_authMethod);
+
+        m_addresses->refreshItems();
+    } else {
+        addCurrentToAddresses();
+    }
 }
 
 void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)

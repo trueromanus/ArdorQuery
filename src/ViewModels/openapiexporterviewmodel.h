@@ -93,6 +93,7 @@ private:
     const QString m_loadSchemaCommand { "exportopenapiloadschema" };
     const QString m_cancelLoadSchemaCommand { "exportopenapicancelloadschema" };
     const QString m_deleteSelectedSchemaCommand { "exportopenapicanceldeleteselectedschema" };
+    const QString m_toggleTabsCommand { "exportopenapitoggletabs" };
     QString m_selectedTab { Exporter };
     QStringList m_bodyTypes { QStringList() };
     QString m_errorMessage { "" };
@@ -156,7 +157,6 @@ public:
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void addCurrentToAddresses() noexcept;
     Q_INVOKABLE void togglePages() noexcept;
-    Q_INVOKABLE void editInSelectedAddress() noexcept;
     Q_INVOKABLE void deleteSelectedAddress() noexcept;
     Q_INVOKABLE bool isHasFewBodies(int identifier) noexcept;
     Q_INVOKABLE void clearErrorMessage() noexcept;
@@ -177,6 +177,7 @@ private:
     void fillMappings();
     void fillCommands();
     void fillHelpShortcuts();
+    void saveToAddressByTitle();
 
 private slots:
     void requestFinished(QNetworkReply *reply);

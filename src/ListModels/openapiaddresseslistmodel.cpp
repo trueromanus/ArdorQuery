@@ -119,6 +119,16 @@ QSharedPointer<QList<OpenApiAddressModel*>> OpenApiAddressesListModel::getAddres
     return m_usedAddresses;
 }
 
+void OpenApiAddressesListModel::refreshItems() noexcept
+{
+    beginResetModel();
+
+    endResetModel();
+
+    emit addressesChanged();
+    emit hasItemsChanged();
+}
+
 void OpenApiAddressesListModel::selectItem(int index) noexcept
 {
     if (index >= m_usedAddresses->count()) return;
@@ -150,15 +160,22 @@ void OpenApiAddressesListModel::editItem(int index, const QString &title, const 
     emit hasItemsChanged();
 }
 
-void OpenApiAddressesListModel::deleteItem(int index) noexcept
+void OpenApiAddressesListModel::deleteItem(const QString& title) noexcept
 {
-    if (index >= m_usedAddresses->count()) return;
+    auto iterator = std::find_if(
+        m_usedAddresses->cbegin(),
+        m_usedAddresses->cend(),
+        [title](OpenApiAddressModel* model) {
+            return model->title() == title;
+        }
+        );
+    if (iterator == m_usedAddresses->cend()) return;
+
+    auto item = *iterator;
 
     beginResetModel();
 
-    if (m_selectedIndex == index) m_selectedIndex = 0;
-
-    m_usedAddresses->removeAt(index);
+    m_usedAddresses->removeOne(item);
 
     endResetModel();
 
