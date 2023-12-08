@@ -160,7 +160,7 @@ void OpenApiAddressesListModel::editItem(int index, const QString &title, const 
     emit hasItemsChanged();
 }
 
-void OpenApiAddressesListModel::deleteItem(const QString& title) noexcept
+bool OpenApiAddressesListModel::deleteItem(const QString& title) noexcept
 {
     auto iterator = std::find_if(
         m_usedAddresses->cbegin(),
@@ -169,7 +169,7 @@ void OpenApiAddressesListModel::deleteItem(const QString& title) noexcept
             return model->title() == title;
         }
         );
-    if (iterator == m_usedAddresses->cend()) return;
+    if (iterator == m_usedAddresses->cend()) return false;
 
     auto item = *iterator;
 
@@ -181,6 +181,8 @@ void OpenApiAddressesListModel::deleteItem(const QString& title) noexcept
 
     emit addressesChanged();
     emit hasItemsChanged();
+
+    return true;
 }
 
 void OpenApiAddressesListModel::saveSavedOptions() noexcept

@@ -229,9 +229,10 @@ void OpenApiExporterViewModel::deleteSelectedAddress() noexcept
         return;
     }
 
-    m_addresses->deleteItem(m_title);
-    m_addressPalette->selectNext();
-    m_addressPalette->selectItem();
+    if (m_addresses->deleteItem(m_title)) {
+        m_addressPalette->selectNext();
+        m_addressPalette->selectItem();
+    }
 }
 
 bool OpenApiExporterViewModel::isHasFewBodies(int identifier) noexcept
