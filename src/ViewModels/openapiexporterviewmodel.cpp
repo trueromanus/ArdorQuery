@@ -135,6 +135,14 @@ void OpenApiExporterViewModel::cancelCurrentRequest() noexcept
 void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
 {
     if (m_loading) return;
+
+    clearErrorMessage();
+    if (m_url.isEmpty()) {
+        m_errorMessage = "To download the diagram, you must fill in the <b>Scheme URL</b> field!";
+        emit errorMessageChanged();
+        return;
+    }
+
     if (m_routes.contains(m_url)) removeLoadedRoutes(m_url);
 
     QNetworkRequest request(m_url);

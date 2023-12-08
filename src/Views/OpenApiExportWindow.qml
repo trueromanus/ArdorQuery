@@ -485,6 +485,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 width: 60
                 height: 60
+                mipmap: true
                 source: storagePaths.icons + "emptybox.svg"
             }
             Text {
