@@ -35,3 +35,6 @@ Copy-Item -Path ../windowsclibs/*.dll -Destination ../deploy/output
 # Compress final build to zip file
 Remove-Item -Path ../deploy/release.zip -ErrorAction Ignore
 Compress-Archive -Path ../deploy/output/* -DestinationPath ../deploy/windows.amd64-0.0.0.zip -Force
+
+# Copy icon file what need for building installer
+Copy-Item -Path ../src/logo.ico -Destination ../deploy/output

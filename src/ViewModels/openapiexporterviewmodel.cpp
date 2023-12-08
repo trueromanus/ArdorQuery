@@ -711,6 +711,8 @@ void OpenApiExporterViewModel::addressListChanged()
 void OpenApiExporterViewModel::addressItemSelected(const QUuid &id)
 {
     auto selectedItem = m_addressPalette->getSelectedAddressById(id);
+    if (selectedItem == nullptr) return;
+
     m_url = selectedItem->address();
     emit urlChanged();
     setBaseUrl(selectedItem->baseUrl());
