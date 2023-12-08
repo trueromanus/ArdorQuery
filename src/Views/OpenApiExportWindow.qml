@@ -344,7 +344,9 @@ ApplicationWindow {
                     anchors.top: routesEmptyBoxImage.bottom
                     anchors.horizontalCenter: routesEmptyBoxImage.horizontalCenter
                     font.pointSize: 10
-                    text: "Routes not loaded yet"
+                    horizontalAlignment: Text.AlignHCenter
+                    text: "Routes not loaded yet<br>For loading the routes, select item from the <b>Save Options</b> or<br> fill field <b>Scheme URL</b> and press " +
+                        (Qt.platform.os !== 'osx' ? "Ctrl-Z" : "Command-Z")
                 }
             }
         }
