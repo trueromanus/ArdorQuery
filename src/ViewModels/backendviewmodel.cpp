@@ -368,8 +368,13 @@ void BackendViewModel::fillMappings()
     m_shortcutCommandMapping.insert("control-plus", m_saveToFileCommand);
     m_shortcutCommandMapping.insert("control-8", m_generateImageToFileCommand);
     m_shortcutCommandMapping.insert("alt-8", m_generateImageToClipboardCommand);
+#ifdef Q_OS_LINUX
+    m_shortcutCommandMapping.insert("control-down", m_nextFindedResultCommand);
+    m_shortcutCommandMapping.insert("control-up", m_previousFindedResultCommand);
+#else
     m_shortcutCommandMapping.insert("control-alt-down", m_nextFindedResultCommand);
     m_shortcutCommandMapping.insert("control-alt-up", m_previousFindedResultCommand);
+#endif
 }
 
 void BackendViewModel::fillCommands()

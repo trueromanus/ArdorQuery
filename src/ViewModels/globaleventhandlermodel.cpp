@@ -205,6 +205,9 @@ bool GlobalEventHandlerModel::eventFilter(QObject *watched, QEvent *event)
         // fix issue with keyboard layout
         if (virtualCode >= 65 && virtualCode <= 90) button = virtualCode;
         if (m_remappingVirtualCodes.contains(virtualCode)) button = virtualCode;
+#ifdef Q_OS_LINUX
+        if (virtualCode == 65511) button = Qt::Key_Alt; //fixed Shift-Alt combination
+#endif
 
         if (!m_keyMapping.contains(button)) return QObject::eventFilter(watched, event);
 
