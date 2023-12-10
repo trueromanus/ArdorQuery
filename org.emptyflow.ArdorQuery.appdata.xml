@@ -25,9 +25,12 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.12" date="2023-11-20">
+		<release version="0.0.12" date="2023-12-10">
 			<description>
-			      <p>This stable release fixes bugs.</p>
+			      <p>Body Types window keep in opened state after selecting type in OpenAPI Export.</p>
+				  <p>Make search once again if search text field not empty after perform query.</p>
+				  <p>You don't need to press Enter to start searching in response body, the search will start automatically after you type.</p>
+				  <p>In the OpenAPI export window, Control-Insert keyboard shortcut has been removed, now Control-S edits if an address with the same name already exists, or creates a new address if not.</p>
 			</description>
 		</release>
 	</releases>
