@@ -17,6 +17,7 @@
 #include <QMapIterator>
 #include <QMultiMap>
 #include "backendviewmodel.h"
+#include "../globalhelpers.h"
 
 BackendViewModel::BackendViewModel(QObject *parent)
     : QObject{parent}
@@ -428,39 +429,8 @@ void BackendViewModel::fillHelpShortcuts()
         QVariantMap map;
         map["description"] = value;
         auto shortcuts = commandWithShortcuts.values(key);
-        map["shortcuts"] = shortcuts.join(" or ")
-#ifdef Q_OS_MACOS
-           .replace("control", "Command")
-           .replace("alt", "Option")
-#else
-            .replace("control", "Control")
-            .replace("alt", "Alt")
-#endif
-            .replace("shift", "Shift")
-            .replace("page", "Page")
-            .replace("up", "Up")
-            .replace("down", "Down")
-            .replace("enter", "Enter")
-            .replace("insert", "Insert")
-            .replace("delete", "Delete")
-            .replace("tab", "Tab")
-            .replace("backspace", "Backspace")
-            .replace("plus", "Plus")
-            .replace("minus", "Minus")
-            .replace("f1", "F1")
-            .replace("f2", "F2")
-            .replace("f3", "F3")
-            .replace("f4", "F4")
-            .replace("f5", "F5")
-            .replace("f6", "F6")
-            .replace("f7", "F7")
-            .replace("f8", "F8")
-            .replace("f9", "F9")
-            .replace("f10", "F10")
-            .replace("f11", "F11")
-            .replace("f12", "F12");
-
-
+        auto allShortcuts = shortcuts.join(" or ");
+        map["shortcuts"] = adjustShortcutsForDisplay(allShortcuts);
         m_shortcuts.append(map);
     }
 
