@@ -7,9 +7,9 @@ ApplicationWindow {
     id: root
     width: 700
     height: 600
-    minimumWidth: 700
+    minimumWidth: 600
     minimumHeight: 400
-    maximumWidth: 800
+    maximumWidth: 900
     maximumHeight: 800
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "Import from OpenAPI"
@@ -257,8 +257,17 @@ ApplicationWindow {
 
                 Rectangle {
                     anchors.fill: parent
-                    anchors.leftMargin: 2
-                    anchors.rightMargin: 2
+                    color: "#809fff"
+                    visible: isSelected
+                    opacity: .8
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.topMargin: 1
+                    anchors.bottomMargin: 1
+                    anchors.leftMargin: 4
+                    anchors.rightMargin: 16
                     color: "white"
                     border.color: methodColor
                     border.width: 1
@@ -268,7 +277,7 @@ ApplicationWindow {
                 Rectangle {
                     id: methodText
                     anchors.left: parent.left
-                    anchors.leftMargin: 6
+                    anchors.leftMargin: 14
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 5
                     anchors.top: parent.top
@@ -288,7 +297,7 @@ ApplicationWindow {
 
                 Text {
                     anchors.left: methodText.right
-                    anchors.leftMargin: 8
+                    anchors.leftMargin: 18
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - methodText.width - 30
                     height: parent.height
@@ -316,6 +325,7 @@ ApplicationWindow {
             ScrollBar.vertical: ScrollBar {
                 active: true
                 visible: true
+                policy: ScrollBar.AlwaysOn
             }
         }
 
@@ -472,7 +482,7 @@ ApplicationWindow {
                     iconHeight: 20
                     tooltipMessage: "Delete saved option"
                     onPressed: {
-                        backend.openApiExporter.addresses.deleteItem(identifier);
+                        backend.openApiExporter.addresses.deleteItem(title);
                     }
                 }
             }
@@ -566,6 +576,13 @@ ApplicationWindow {
 
             const handled = backend.openApiExporter.shortcutHandler(state);
             if (handled) globalEventHandler.setHandledLastSession();
+        }
+    }
+
+    Connections {
+        target: backend.openApiExporter.routeList
+        function onSelectedItemChanged(selectedIndex) {
+            routesListView.positionViewAtIndex(selectedIndex, ListView.Center);
         }
     }
 

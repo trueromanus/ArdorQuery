@@ -38,9 +38,11 @@ private:
         RouteRole,
         DescriptionRole,
         MethodColorRole,
+        IsSelectedRole,
     };
     QString m_filter { "" };
     QString m_orderField { "" };
+    int m_selectedRoute { -1 };
 
 public:
     explicit OpenApiRoutesListModel(QObject *parent = nullptr);
@@ -63,6 +65,9 @@ public:
 
     OpenApiRouteModel* getRouteByIndex(int index) const noexcept;
 
+    void nextRoute() noexcept;
+    void previousRoute() noexcept;
+
 private:
     QString getMethodColor(const OpenApiRouteModel* route) const noexcept;
 
@@ -70,6 +75,7 @@ signals:
     void filterChanged();
     void orderFieldChanged();
     void hasItemsChanged();
+    void selectedItemChanged(int selectedIndex);
 
 };
 

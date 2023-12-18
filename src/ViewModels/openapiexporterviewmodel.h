@@ -94,6 +94,8 @@ private:
     const QString m_cancelLoadSchemaCommand { "exportopenapicancelloadschema" };
     const QString m_deleteSelectedSchemaCommand { "exportopenapicanceldeleteselectedschema" };
     const QString m_toggleTabsCommand { "exportopenapitoggletabs" };
+    const QString m_nextRouteCommand { "exportopenapinextroute" };
+    const QString m_previousRouteCommand { "exportopenapipreviousroute" };
     QString m_selectedTab { Exporter };
     QStringList m_bodyTypes { QStringList() };
     QString m_errorMessage { "" };

@@ -143,7 +143,9 @@ void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
         return;
     }
 
-    if (m_routes.contains(m_url)) removeLoadedRoutes(m_url);
+    if (m_routes.contains(m_url)) {
+        removeLoadedRoutes(m_url);
+    }
 
     QNetworkRequest request(m_url);
 
@@ -200,6 +202,10 @@ bool OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
         deleteSelectedAddress();
     } else if(command == m_toggleTabsCommand) {
         togglePages();
+    } else if(command == m_nextRouteCommand) {
+        m_routeList->nextRoute();
+    } else if(command == m_previousRouteCommand) {
+        m_routeList->previousRoute();
     }
 
     return true;
@@ -253,7 +259,15 @@ void OpenApiExporterViewModel::clearErrorMessage() noexcept
 
 void OpenApiExporterViewModel::parseJsonSpecification(const QString& json) noexcept
 {
-    auto document = QJsonDocument::fromJson(json.toUtf8());
+    clearErrorMessage();
+
+    QJsonParseError parseError;
+    auto document = QJsonDocument::fromJson(json.toUtf8(), &parseError);
+    if (parseError.error != 0) {
+        m_errorMessage = "Unable to parse JSON response. Make sure the content contains valid JSON!";
+        emit errorMessageChanged();
+        return;
+    }
     auto rootObject = document.object();
     if (!rootObject.contains("openapi")) {
         //TODO: show error openapi parameter not defined
@@ -612,7 +626,8 @@ void OpenApiExporterViewModel::fillMappings()
 #else
     m_shortcutCommandMapping.insert("f11", m_toggleTabsCommand);
 #endif
-
+    m_shortcutCommandMapping.insert("pageup", m_previousRouteCommand);
+    m_shortcutCommandMapping.insert("pagedown", m_nextRouteCommand);
 }
 
 void OpenApiExporterViewModel::fillCommands()
@@ -625,6 +640,8 @@ void OpenApiExporterViewModel::fillCommands()
     m_shortcutCommands.insert(m_closeWindowCommand, "Close Export OpenAPI window");
     m_shortcutCommands.insert(m_deleteSelectedSchemaCommand, "Delete schema (identifier for scheme is title)");
     m_shortcutCommands.insert(m_toggleTabsCommand, "Toggle tabs betweens Exporter and Saved options");
+    m_shortcutCommands.insert(m_previousRouteCommand, "Select previous route");
+    m_shortcutCommands.insert(m_nextRouteCommand, "Select next route");
 }
 
 void OpenApiExporterViewModel::fillHelpShortcuts()
@@ -704,12 +721,10 @@ void OpenApiExporterViewModel::parsingFinished()
 {
     m_loading = false;
     m_currentReply = nullptr;
-    m_errorMessage = "";
     emit loadingChanged();
     emit alreadyLoadedChanged();
-    emit errorMessageChanged();
 
-    m_routeList->setupRoutes(std::get<1>(m_routes[m_url]));
+    if (m_errorMessage.isEmpty()) m_routeList->setupRoutes(std::get<1>(m_routes[m_url]));
 }
 
 void OpenApiExporterViewModel::addressListChanged()

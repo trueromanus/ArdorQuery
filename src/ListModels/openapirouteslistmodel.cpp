@@ -59,6 +59,9 @@ QVariant OpenApiRoutesListModel::data(const QModelIndex &index, int role) const
         case MethodColorRole: {
             return QVariant(getMethodColor(item));
         }
+        case IsSelectedRole: {
+            return QVariant(m_selectedRoute == currentIndex);
+        }
     }
 
     return QVariant();
@@ -86,6 +89,10 @@ QHash<int, QByteArray> OpenApiRoutesListModel::roleNames() const
         {
             MethodColorRole,
             "methodColor"
+        },
+        {
+            IsSelectedRole,
+            "isSelected"
         }
     };
 }
@@ -110,6 +117,8 @@ void OpenApiRoutesListModel::setOrderField(const QString &orderField) noexcept
 
 void OpenApiRoutesListModel::refresh()
 {
+    m_selectedRoute = -1;
+
     beginResetModel();
 
     m_filteredRoutes.clear();
@@ -157,6 +166,32 @@ OpenApiRouteModel *OpenApiRoutesListModel::getRouteByIndex(int index) const noex
     if (iterator == m_allRoutes.cend()) return nullptr;
 
     return *iterator;
+}
+
+void OpenApiRoutesListModel::nextRoute() noexcept
+{
+    if (m_selectedRoute >= m_filteredRoutes.size() - 1) return;
+
+    beginResetModel();
+
+    m_selectedRoute++;
+
+    endResetModel();
+
+    emit selectedItemChanged(m_selectedRoute);
+}
+
+void OpenApiRoutesListModel::previousRoute() noexcept
+{
+    if (m_selectedRoute <= 0) return;
+
+    beginResetModel();
+
+    m_selectedRoute--;
+
+    endResetModel();
+
+    emit selectedItemChanged(m_selectedRoute);
 }
 
 QString OpenApiRoutesListModel::getMethodColor(const OpenApiRouteModel *route) const noexcept
