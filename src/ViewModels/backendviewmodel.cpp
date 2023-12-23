@@ -206,7 +206,7 @@ void BackendViewModel::generateImageToClipboard() noexcept
     result->generateImage(fields, "", true);
 }
 
-void BackendViewModel::importFromOpenApi(int index) noexcept
+void BackendViewModel::importFromOpenApi(int index, bool replaceCurrent) noexcept
 {
     auto route = m_openApiExporter->getRouteFromOpenApiByIndex(index);
     if (route == nullptr) return;
@@ -214,7 +214,13 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
     auto routeOptions = m_openApiExporter->getRoutesOptions();
     if (routeOptions == nullptr) return;
 
-    auto model = new HttpRequestModel(this);
+    HttpRequestModel* model = nullptr;
+    if (replaceCurrent) {
+        model = m_requests->selectedItem();
+        model->requestModel()->clearFields();
+    } else {
+        model = new HttpRequestModel(this);
+    }
 
     auto request = model->requestModel();
     request->setTextAdvisor(m_textAdviser);
@@ -274,8 +280,12 @@ void BackendViewModel::importFromOpenApi(int index) noexcept
 
     request->removeFirstItem();
 
-    auto createdIndex = m_requests->addItem(model);
-    m_requests->selectItem(createdIndex);
+    if (!replaceCurrent) {
+        auto createdIndex = m_requests->addItem(model);
+        m_requests->selectItem(createdIndex);
+        m_requestsCommandPaletter->refresh(true);
+        m_requestsCommandPaletter->forceSelectItem(model->requestId());
+    }
 }
 
 void BackendViewModel::saveDownloadedFile(const QString &fileName) noexcept

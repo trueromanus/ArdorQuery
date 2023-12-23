@@ -7,7 +7,7 @@ There can be only one selected field, and it is highlighted with a colored frame
 ## Simple steps to get started with the application
 
 * Once application is launched, enter `url https://github.com/` in the one existing field.
-* You need to add a new field by pressing `Ctrl-Enter`.
+* You need to add a new field by pressing `Ctrl-Enter`(`Cmd-Enter` on macOS).
 * Enter in the new field - `method GET`
 * To make an HTTP request, press `Ctrl-Z` or `F5`.
 * For change tab on Result need press `F11`.
@@ -17,7 +17,7 @@ There can be only one selected field, and it is highlighted with a colored frame
 
 ## List of keyboard shortcuts
 
-* `F1` - If you forgot a shortcut, you can check it at any time in the popup-help. It contains search by name or label.
+* `F1` or `Ctrl-H` - If you forgot a shortcut, you can check it at any time in the popup-help. It contains search by name or keyboard shortcut.
 
 ## Manage fields
 

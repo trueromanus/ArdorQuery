@@ -66,7 +66,7 @@ Popup {
                         anchors.fill: parent
                         onPressed: {
                             backend.openApiExporter.prepareBodyType = modelData;
-                            backend.importFromOpenApi(backend.openApiExporter.prepareIdentifier);
+                            backend.importFromOpenApi(backend.openApiExporter.prepareIdentifier, false);
                             root.close();
                         }
                     }

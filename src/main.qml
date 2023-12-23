@@ -146,6 +146,9 @@ ApplicationWindow {
             openApiExporter.onNeedCloseWindow: {
                 openApiExportWindow.item.close();
             }
+            openApiExporter.onSelectRouteFromList: function (identifier, replaceCurrent) {
+                backend.importFromOpenApi(identifier, replaceCurrent);
+            }
             globalVariables.onCloseWindowRequired: {
                 globalVariablesWindow.item.close();
             }

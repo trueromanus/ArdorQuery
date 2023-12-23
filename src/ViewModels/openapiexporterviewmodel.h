@@ -96,6 +96,8 @@ private:
     const QString m_toggleTabsCommand { "exportopenapitoggletabs" };
     const QString m_nextRouteCommand { "exportopenapinextroute" };
     const QString m_previousRouteCommand { "exportopenapipreviousroute" };
+    const QString m_addAsNewQueryRouteCommand { "exportopenapiaddasnewquery" };
+    const QString m_addToCurrentQueryRouteCommand { "exportopenapiaddtocurrentquery" };
     QString m_selectedTab { Exporter };
     QStringList m_bodyTypes { QStringList() };
     QString m_errorMessage { "" };
@@ -209,6 +211,7 @@ signals:
     void errorMessageChanged();
     void needCloseWindow();
     void shortcutsChanged();
+    void selectRouteFromList(int identifier, bool replaceCurrent);
 
 };
 

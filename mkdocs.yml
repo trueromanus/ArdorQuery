@@ -6,7 +6,8 @@ repo_url: 'https://github.com/trueromanus/ArdorQuery'
 nav:
   - Home: index.md
   - Getting started: basicshortcuts.md
-  - Fields: commonfields.md
+  - Basic fields: commonfields.md
+  - Field aliases: fieldaliases.md
   - Options: options.md
   - Scripting: postscript.md
   - Global Variables: globalvariables.md

@@ -317,7 +317,7 @@ ApplicationWindow {
                             bodyTypesPopup.open();
 
                         } else {
-                            backend.importFromOpenApi(identifier);
+                            backend.importFromOpenApi(identifier, false);
                         }
                     }
                 }

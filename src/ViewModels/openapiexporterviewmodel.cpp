@@ -206,6 +206,12 @@ bool OpenApiExporterViewModel::shortcutHandler(const QString &shortcut) noexcept
         m_routeList->nextRoute();
     } else if(command == m_previousRouteCommand) {
         m_routeList->previousRoute();
+    } else if(command == m_addAsNewQueryRouteCommand) {
+        auto selectedRoute = m_routeList->getSelectedRoute();
+        if (selectedRoute != nullptr) emit selectRouteFromList(selectedRoute->identifier(), false);
+    } else if(command == m_addToCurrentQueryRouteCommand) {
+        auto selectedRoute = m_routeList->getSelectedRoute();
+        if (selectedRoute != nullptr) emit selectRouteFromList(selectedRoute->identifier(), true);
     }
 
     return true;
@@ -628,6 +634,8 @@ void OpenApiExporterViewModel::fillMappings()
 #endif
     m_shortcutCommandMapping.insert("pageup", m_previousRouteCommand);
     m_shortcutCommandMapping.insert("pagedown", m_nextRouteCommand);
+    m_shortcutCommandMapping.insert("control-enter", m_addAsNewQueryRouteCommand);
+    m_shortcutCommandMapping.insert("shift-enter", m_addToCurrentQueryRouteCommand);
 }
 
 void OpenApiExporterViewModel::fillCommands()
@@ -642,6 +650,8 @@ void OpenApiExporterViewModel::fillCommands()
     m_shortcutCommands.insert(m_toggleTabsCommand, "Toggle tabs betweens Exporter and Saved options");
     m_shortcutCommands.insert(m_previousRouteCommand, "Select previous route");
     m_shortcutCommands.insert(m_nextRouteCommand, "Select next route");
+    m_shortcutCommands.insert(m_addAsNewQueryRouteCommand, "Add the selected route to a new query");
+    m_shortcutCommands.insert(m_addToCurrentQueryRouteCommand, "Replace current query on selected route");
 }
 
 void OpenApiExporterViewModel::fillHelpShortcuts()

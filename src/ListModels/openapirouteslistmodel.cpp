@@ -168,6 +168,11 @@ OpenApiRouteModel *OpenApiRoutesListModel::getRouteByIndex(int index) const noex
     return *iterator;
 }
 
+OpenApiRouteModel *OpenApiRoutesListModel::getSelectedRoute() const noexcept
+{
+    return getRouteByIndex(m_selectedRoute);
+}
+
 void OpenApiRoutesListModel::nextRoute() noexcept
 {
     if (m_selectedRoute >= m_filteredRoutes.size() - 1) return;

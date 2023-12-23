@@ -123,7 +123,7 @@ public:
     Q_INVOKABLE void savedFile(const QString& filePath) noexcept;
     Q_INVOKABLE void generateImage(const QString& filePath) noexcept;
     Q_INVOKABLE void generateImageToClipboard() noexcept;
-    Q_INVOKABLE void importFromOpenApi(int index) noexcept;
+    Q_INVOKABLE void importFromOpenApi(int index, bool replaceCurrent) noexcept;
     Q_INVOKABLE void saveDownloadedFile(const QString& fileName) noexcept;
 
     void deleteCurrentRequest() noexcept;

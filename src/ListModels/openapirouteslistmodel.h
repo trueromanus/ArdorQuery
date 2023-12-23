@@ -64,6 +64,7 @@ public:
     void refresh();
 
     OpenApiRouteModel* getRouteByIndex(int index) const noexcept;
+    OpenApiRouteModel* getSelectedRoute() const noexcept;
 
     void nextRoute() noexcept;
     void previousRoute() noexcept;
