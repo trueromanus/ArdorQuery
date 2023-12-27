@@ -24,4 +24,4 @@ jobs:
     - name: run qmake
       run: qmake -makefile -o src/Makefile src/ArdorQuery.pro
     - name: run make
-      run: cd src && make /F Makefile
+      run: cd src && nmake /F Makefile
