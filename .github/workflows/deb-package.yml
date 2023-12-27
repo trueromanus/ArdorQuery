@@ -20,9 +20,8 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         version: 6.6.0
-        cache: true
-        modules: 'qtscxml qt5compat qtshadertools qtimageformats qtwebsockets'
+        modules: qtscxml qt5compat qtimageformats qtwebsockets
     - name: run qmake
       run: qmake -makefile -o src/Makefile src/ArdorQuery.pro
     - name: run make
-      run: make /F src/Makefile
+      run: cd src && make /F Makefile
