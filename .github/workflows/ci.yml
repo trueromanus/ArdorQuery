@@ -31,6 +31,24 @@ jobs:
       run: qmake6 -makefile -o src/Makefile src/ArdorQuery.pro QMAKE_APPLE_DEVICE_ARCHS="x86_64 arm64"
     - name: run make
       run: make -C src
+  windowsbuild:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure MSVC
+      uses: ilammy/msvc-dev-cmd@v1.12.1
+      with:
+        arch: x64
+        spectre: true
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: 6.6.0
+        modules: qtscxml qt5compat qtimageformats qtwebsockets
+    - name: run qmake
+      run: qmake -makefile -o src/Makefile src/ArdorQuery.pro
+    - name: run make
+      run: cd src && nmake /F Makefile      
   publishdocs:
     runs-on: ubuntu-latest
     steps:
