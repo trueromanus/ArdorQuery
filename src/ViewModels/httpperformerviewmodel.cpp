@@ -71,7 +71,15 @@ void HttpPerformerViewModel::setup(QSharedPointer<QList<HttpRequestModel *> > re
 
 void HttpPerformerViewModel::cancelRequest()
 {
-    //TODO: cancel request
+    foreach (auto item, m_runningRequests.values()) {
+        if (!item->isRunning()) continue; // in case if it already not run
+
+        auto reply = item->currentReply();
+        if (reply == nullptr) continue; // same case as above
+
+        reply->abort();
+        item->setCurrentReply(nullptr);
+    }
 }
 
 void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
@@ -253,6 +261,7 @@ void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply, const QUuid
     if (resultModel->isRunning()) return; // already runned
 
     resultModel->trackRequestTime();
+    resultModel->setCurrentReply(reply);
 
     reply->setProperty("id", id.toString());
 
@@ -369,13 +378,13 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
         }
     }
     if (method == "patch") {
-        QNetworkReply* putReply = nullptr;
-        if (isBodyAndFormEmpty) putReply = m_networkManager->sendCustomRequest(request, "PATCH", "");
-        if (isBodyFilled) putReply = m_networkManager->sendCustomRequest(request, "PATCH", body.toUtf8());
-        if (!isBodyFilled && isSimpleForm) putReply = m_networkManager->sendCustomRequest(request, "PATCH", setupSimpleForm(std::move(forms)));
-        if (!isBodyFilled && isComplexForm) putReply = m_networkManager->sendCustomRequest(request, "PATCH", setupMultiPartForm(std::move(files), std::move(forms)));
-        if (putReply != nullptr) {
-            startTrackRequest(putReply, id, resultModel);
+        QNetworkReply* patchReply = nullptr;
+        if (isBodyAndFormEmpty) patchReply = m_networkManager->sendCustomRequest(request, "PATCH", "");
+        if (isBodyFilled) patchReply = m_networkManager->sendCustomRequest(request, "PATCH", body.toUtf8());
+        if (!isBodyFilled && isSimpleForm) patchReply = m_networkManager->sendCustomRequest(request, "PATCH", setupSimpleForm(std::move(forms)));
+        if (!isBodyFilled && isComplexForm) patchReply = m_networkManager->sendCustomRequest(request, "PATCH", setupMultiPartForm(std::move(files), std::move(forms)));
+        if (patchReply != nullptr) {
+            startTrackRequest(patchReply, id, resultModel);
             return true;
         }
     }
@@ -426,7 +435,7 @@ void HttpPerformerViewModel::runPostScript(const QString &script, QObject* prope
 }
 
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
-{
+{   
     auto id = reply->property("id").toString();
     if (!m_runningRequests.contains(id)) return;
 
@@ -434,6 +443,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     if (result == nullptr) return;
 
     result->untrackRequestTime();
+    result->setCurrentReply(nullptr);
     m_runningRequests.remove(id);
     reduceFromCounter();
 
@@ -457,7 +467,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
         rawHeaders.append(name + " " + value);
     }
     result->setHeaders(responseHeaders);
-    result->setBody(reply->readAll());
+    if (reply->isReadable()) result->setBody(reply->readAll());
 
     auto postScript = result->postScript();
     if (postScript.isEmpty()) return;

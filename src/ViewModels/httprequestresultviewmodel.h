@@ -20,6 +20,7 @@
 #include <QDateTime>
 #include <QTime>
 #include <QElapsedTimer>
+#include <QNetworkReply>
 #include "../ListModels/responsebodylistmodel.h"
 #include "../globalconstants.h"
 
@@ -61,6 +62,7 @@ private:
     QString m_actualFormat { "" };
     bool m_customErrorResult { false };
     QString m_postScript { "" };
+    QNetworkReply *m_currentReply { nullptr };
     bool m_showDownloadFile { false };
     QString m_defaultDownloadFile { "" };
     const QString StartHeaderTag { "<font color='#8812a1'>" };
@@ -121,6 +123,9 @@ public:
     void setPostScript(const QString& script);
     void clearPostScript();
     QString postScript() const noexcept { return m_postScript; }
+
+    QNetworkReply * currentReply() const noexcept { return m_currentReply; }
+    void setCurrentReply(QNetworkReply* reply) noexcept { m_currentReply = reply; }
 
     Q_INVOKABLE void copyHeadersToClipboard();
     Q_INVOKABLE void copyBodyToClipboard();
