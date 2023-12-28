@@ -4,11 +4,11 @@ import QtQuick.Controls
 ApplicationWindow {
     id: root
     width: 500
-    height: 240
+    height: 260
     minimumWidth: 500
-    minimumHeight: 240
+    minimumHeight: 260
     maximumWidth: 500
-    maximumHeight: 240
+    maximumHeight: 260
     modality: Qt.WindowModal
     flags: Qt.platform.os !== `windows` ? Qt.Dialog : Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
     title: "About ArdorQuery"
@@ -47,7 +47,7 @@ ApplicationWindow {
         anchors.top: applicationName.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 4
-        text: "version 0.0.12"
+        text: "version 0.0.13"
         font.pointSize: 10
     }
 
@@ -92,9 +92,27 @@ ApplicationWindow {
     }
 
     Text {
-        id: copyrightInfo
+        id: documentationInfo
         anchors.left: logoImage.right
         anchors.top: qtInfo.bottom
+        anchors.leftMargin: 20
+        anchors.topMargin: 12
+        text: "You can check out <a href='https://trueromanus.github.io/ArdorQuery/'>online documentation</a>."
+        font.pointSize: 10
+        onLinkActivated: function (link) {
+            Qt.openUrlExternally(link);
+        }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+        }
+    }
+
+    Text {
+        id: copyrightInfo
+        anchors.left: logoImage.right
+        anchors.top: documentationInfo.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 12
         text: "Copyright (c) 2022-2023 Roman Vladimirov"

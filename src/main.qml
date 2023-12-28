@@ -9,8 +9,10 @@ import "Views"
 ApplicationWindow {
     id: window
     visible: true
-    minimumWidth: 800
-    minimumHeight: 600
+    minimumWidth: 600
+    minimumHeight: 480
+    width: 800
+    height: 600
     font.capitalization: Font.MixedCase
     background: Rectangle {
         anchors.fill: parent
