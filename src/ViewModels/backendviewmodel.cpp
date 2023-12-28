@@ -333,7 +333,11 @@ void BackendViewModel::fillAuthorizationSecurity(const QString &key, HttpRequest
 
 void BackendViewModel::fillMappings()
 {
+#ifdef Q_OS_MACOS
+    m_shortcutCommandMapping.insert("control-t", m_changeSelectedQueryCommand);
+#else
     m_shortcutCommandMapping.insert("control-tab", m_changeSelectedQueryCommand);
+#endif
     m_shortcutCommandMapping.insert("control-backspace", m_changeSelectedQueryCommand);
     m_shortcutCommandMapping.insert("control-m", m_performQueriesMultipleCommand);
     m_shortcutCommandMapping.insert("control-z", m_performQueryCommand);
@@ -342,7 +346,9 @@ void BackendViewModel::fillMappings()
     m_shortcutCommandMapping.insert("f4", m_cancelQueryCommand);
     m_shortcutCommandMapping.insert("control-s", m_saveToClipboardCommand);
     m_shortcutCommandMapping.insert("f10", m_saveToClipboardCommand);
+#ifndef Q_OS_MACOS
     m_shortcutCommandMapping.insert("control-h", m_helpCommand);
+#endif
     m_shortcutCommandMapping.insert("f1", m_helpCommand);
     m_shortcutCommandMapping.insert("shift-alt-l", m_replaceFromClipboardCommand);
     m_shortcutCommandMapping.insert("control-l", m_appendFromClipboardCommand);
