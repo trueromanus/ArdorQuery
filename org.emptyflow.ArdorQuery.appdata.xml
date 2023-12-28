@@ -25,7 +25,7 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.12" date="2023-12-10">
+		<release version="0.0.13" date="2023-12-28">
 			<description>
 			      <p>Body Types window keep in opened state after selecting type in OpenAPI Export.</p>
 				  <p>Make search once again if search text field not empty after perform query.</p>
