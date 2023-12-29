@@ -27,10 +27,13 @@
 	<releases>
 		<release version="0.0.13" date="2023-12-28">
 			<description>
-			      <p>Body Types window keep in opened state after selecting type in OpenAPI Export.</p>
-				  <p>Make search once again if search text field not empty after perform query.</p>
-				  <p>You don't need to press Enter to start searching in response body, the search will start automatically after you type.</p>
-				  <p>In the OpenAPI export window, Control-Insert keyboard shortcut has been removed, now Control-S edits if an address with the same name already exists, or creates a new address if not.</p>
+				<p>Fixed Shift-Alt-X keyboard combinations on Linux. Changed shortcuts Ctrl-Alt-(Up/Down) on Ctrl-(Up/Down) on Linux.</p>
+				<p>Fixed crash if try to use non JSON response in OpenAPI Export window</p>
+				<p>Now you can select route in OpenAPI Export from keyboard - PageUp for previous route and PageDown for next route</p>
+				<p>Added new shortcuts - create new query from route Ctrl-Enter and replace current from route Ctrl-Enter on OpenAPI Export window</p>
+				<p>Fixed action on delete icon button in addresses list</p>
+				<p>Keyboard shortcut Ctrl-B now cancel all active queries</p>
+				<p>On macOS keyboard shortcut Ctrl-Tab replaced on Ctrl-T</p>
 			</description>
 		</release>
 	</releases>
