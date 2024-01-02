@@ -458,13 +458,11 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     if (status_code.isValid()) result->setStatusCode(status_code.toInt());
 
     QStringList responseHeaders;
-    QStringList rawHeaders;
     auto headers = reply->rawHeaderPairs();
     foreach (auto header, headers) {
         auto name = header.first;
         auto value = header.second;
-        responseHeaders.append("<font color='#8812a1'>" + name + ":</font> " + value);
-        rawHeaders.append(name + " " + value);
+        responseHeaders.append(name + " " + value);
     }
     result->setHeaders(responseHeaders);
     if (reply->isReadable()) result->setBody(reply->readAll());
@@ -473,7 +471,7 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     if (postScript.isEmpty()) return;
 
     auto response = new PostScriptResponseModel();
-    response->setHeaders(rawHeaders);
+    response->setHeaders(responseHeaders);
     response->setStatusCode(status_code.toInt());
     response->setErrorMessage(result->networkError());
     response->setBodySize(result->originResponseSize());

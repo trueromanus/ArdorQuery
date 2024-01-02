@@ -47,6 +47,7 @@ class HttpRequestResultViewModel : public QObject
 private:
     int m_statusCode { 0 };
     QStringList m_headers { QStringList() };
+    QStringList m_displayHeaders { QStringList() };
     QElapsedTimer* m_elapsedTimer { nullptr };
     bool m_hasResultTime { false };
     uint64_t m_elapsedTime { 0 };
@@ -66,7 +67,7 @@ private:
     bool m_showDownloadFile { false };
     QString m_defaultDownloadFile { "" };
     const QString StartHeaderTag { "<font color='#8812a1'>" };
-    const QString EndHeaderTag { "</font>" };
+    const QString EndHeaderTag { ":</font> " };
 
 public:
     explicit HttpRequestResultViewModel(QObject *parent = nullptr);
@@ -74,7 +75,7 @@ public:
     int statusCode() const noexcept { return m_statusCode; }
     void setStatusCode(const int statusCode) noexcept;
 
-    QStringList headers() const noexcept { return m_headers; }
+    QStringList headers() const noexcept { return m_displayHeaders; }
     void setHeaders(const QStringList& headers) noexcept;
 
     void setBody(const QByteArray& body) noexcept;

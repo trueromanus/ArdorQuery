@@ -41,8 +41,12 @@ void HttpRequestResultViewModel::setStatusCode(const int statusCode) noexcept
 void HttpRequestResultViewModel::setHeaders(const QStringList &headers) noexcept
 {
     m_headers.clear();
+    m_displayHeaders.clear();
     foreach (auto header, headers) {
         m_headers.append(header);
+        auto spaceIndex = header.indexOf(" ");
+        auto mid = StartHeaderTag + header.mid(0, spaceIndex) + EndHeaderTag;
+        m_displayHeaders.append(mid + header.mid(spaceIndex + 1));
     }
 
     emit headersChanged();
@@ -252,7 +256,7 @@ void HttpRequestResultViewModel::copyHeadersToClipboard()
     if (m_headers.isEmpty()) return;
 
     QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(m_headers.join("\n").replace("<font color='#8812a1'>", "").replace("</font>", ""));
+    clipboard->setText(m_headers.join("\n"));
 }
 
 void HttpRequestResultViewModel::copyBodyToClipboard()
@@ -314,11 +318,11 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
     QString contentTypeHeader = "";
     QString contentDisposition = "";
     foreach (auto header, m_headers) {
-        if (header.contains("content-type:", Qt::CaseInsensitive)) {
+        if (header.startsWith("content-type ", Qt::CaseInsensitive)) {
             contentTypeHeader = header.toLower();
             continue;
         }
-        if (header.contains("content-disposition:", Qt::CaseInsensitive)) {
+        if (header.startsWith("content-disposition ", Qt::CaseInsensitive)) {
             contentDisposition = header.toLower();
             continue;
         }
@@ -400,8 +404,6 @@ QStringList HttpRequestResultViewModel::getHeaderLines()
     QStringList lines;
     foreach (auto header, m_headers) {
         auto clearedHeader = QString(header)
-            .replace(StartHeaderTag, "")
-            .replace(EndHeaderTag, "")
             .replace("\n", "")
             .replace("\r", "");
         if (clearedHeader.size() > lineCount) {
