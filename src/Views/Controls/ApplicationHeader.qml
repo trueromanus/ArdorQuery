@@ -99,7 +99,7 @@ Item {
                     iconHeight: 15
                     icon: storagePaths.icons + "downmenu.svg"
                     onPressed: {
-                        requestsPopup.open();
+                        queriesPopupLoader.popupLoaded = true;
                     }
                 }
             }
@@ -136,9 +136,27 @@ Item {
         }
     }
 
-    RequestDropDownPopup {
-        id: requestsPopup
-        x: 10
-        y: 30
+    Loader {
+        id: queriesPopupLoader
+        sourceComponent: queriesPopupLoader.popupLoaded ? queriesPopup : null
+
+        property bool popupLoaded: false
+        onLoaded: {
+            queriesPopupLoader.item.open();
+        }
     }
+
+    Component {
+        id: queriesPopup
+
+        RequestDropDownPopup {
+            id: requestsPopup
+            x: 10
+            y: 30
+            onClosed: {
+                queriesPopupLoader.popupLoaded = false;
+            }
+        }
+    }
+
 }
