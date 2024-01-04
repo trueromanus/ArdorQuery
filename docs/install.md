@@ -15,6 +15,12 @@ sudo flatpak install flathub org.emptyflow.ArdorQuery
 ```
 
 ## Windows
+### Winget
+- Open console and write
+```shell
+winget install EmptyFlow.ArdorQuery
+```
+### Archive
 - Open latest release by [link](https://github.com/trueromanus/ArdorQuery/releases/latest)
 - Download file `ardorquery_windows-X.X.X.zip` (X will be version numbers)
 
