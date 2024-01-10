@@ -43,6 +43,7 @@ class HttpRequestResultViewModel : public QObject
     Q_PROPERTY(bool showImage READ showImage NOTIFY showImageChanged)
     Q_PROPERTY(bool hasError READ hasError NOTIFY hasErrorChanged)
     Q_PROPERTY(bool showDownloadFile READ showDownloadFile NOTIFY showDownloadFileChanged)
+    Q_PROPERTY(QString defaultDownloadFile READ defaultDownloadFile NOTIFY defaultDownloadFileChanged FINAL)
 
 private:
     int m_statusCode { 0 };
@@ -103,6 +104,8 @@ public:
 
     QString displayStatus() const noexcept;
 
+    QString defaultDownloadFile() const noexcept { return m_defaultDownloadFile; }
+
     QString outputFormat() const noexcept { return m_outputFormat; }
     void setOutputFormat(const QString& outputFormat) noexcept;
 
@@ -159,6 +162,7 @@ signals:
     void errorSavingGeneratedFile();
     void hasErrorChanged();
     void showDownloadFileChanged();
+    void defaultDownloadFileChanged();
 
 };
 

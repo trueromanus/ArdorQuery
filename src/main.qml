@@ -229,6 +229,7 @@ ApplicationWindow {
         id: saveDownloadFileDialog
         fileMode: FileDialog.SaveFile
         nameFilters: ["Any files (*.*)"]
+        selectedFile: backend.requests.selectedItem.resultModel.defaultDownloadFile
         onAccepted: {
             backend.saveDownloadedFile(saveDownloadFileDialog.selectedFile);
         }

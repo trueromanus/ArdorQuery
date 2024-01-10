@@ -85,6 +85,7 @@ void HttpRequestResultViewModel::setBody(const QByteArray &body) noexcept
     emit responseSizeChanged();
     emit isFormattingChanged();
     emit actualFormatChanged();
+    emit defaultDownloadFileChanged();
 
     m_bodyModel->setBody(body, outputFormat);
 }
@@ -107,6 +108,7 @@ void HttpRequestResultViewModel::reformatting() noexcept
     emit showImageChanged();
     emit showDownloadFileChanged();
     emit actualFormatChanged();
+    emit defaultDownloadFileChanged();
 }
 
 QString HttpRequestResultViewModel::responseTime() const noexcept
@@ -356,8 +358,13 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
             auto nameParts = part.split("=");
             if (nameParts.length() != 2) continue;
 
-            if (nameParts[0].trimmed() != "filename") continue;
-            m_defaultDownloadFile = nameParts[1];
+            auto fileNamePart = nameParts[0].trimmed();
+            if (fileNamePart != "filename" && fileNamePart != "filename*") continue;
+            bool isEncoded = fileNamePart == "filename*";
+            auto fileNameValue = nameParts[1];
+            if (fileNameValue.size() > 2 && !isEncoded) fileNameValue = fileNameValue.mid(1, fileNameValue.size() - 2); // remove quotes
+            if (fileNameValue.size() > 8 && isEncoded) fileNameValue = fileNameValue.mid(7); // remove utf-8''
+            m_defaultDownloadFile = isEncoded ? QUrl::fromPercentEncoding(fileNameValue.toUtf8()) : fileNameValue;
         }
         return OutputNeedDownloaded;
     }
