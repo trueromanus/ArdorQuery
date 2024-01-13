@@ -35,6 +35,7 @@ class HttpPerformerViewModel : public QObject
     Q_OBJECT
     Q_PROPERTY(int countRequests READ countRequests NOTIFY countRequestsChanged)
     Q_PROPERTY(int countFinishedRequests READ countFinishedRequests NOTIFY countFinishedRequestsChanged)
+    Q_PROPERTY(int countErrorRequests READ countErrorRequests NOTIFY countErrorRequestsChanged)
     Q_PROPERTY(GlobalVariablesListModel* globalVariable READ globalVariable WRITE setGlobalVariable NOTIFY globalVariableChanged)
 
 private:
@@ -44,6 +45,7 @@ private:
     QSharedPointer<QList<HttpRequestModel*>> m_requests { nullptr };
     int m_countRequests { 0 };
     int m_countFinishedRequests { 0 };
+    int m_countErrorRequests { 0 };
     GlobalVariablesListModel* m_globalVariable { nullptr };
 
 public:
@@ -61,6 +63,8 @@ public:
 
     int countFinishedRequests() const noexcept { return m_countFinishedRequests; }
 
+    int countErrorRequests() const noexcept { return m_countErrorRequests; }
+
     GlobalVariablesListModel* globalVariable() const noexcept { return m_globalVariable; }
     void setGlobalVariable(const GlobalVariablesListModel* globalVariable) noexcept;
 
@@ -74,6 +78,7 @@ private:
     bool performSingleRequest(HttpRequestModel* modelRequest);
     void addToCounter(int number) noexcept;
     void reduceFromCounter() noexcept;
+    void increaseErrorCounter() noexcept;
     void runPostScript(const QString& script, QObject* properties, HttpRequestResultViewModel* result) noexcept;
 
 private slots:
@@ -86,6 +91,7 @@ signals:
     void countRequestsChanged();
     void countFinishedRequestsChanged();
     void globalVariableChanged();
+    void countErrorRequestsChanged();
 
 };
 

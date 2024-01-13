@@ -93,16 +93,25 @@ void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
         } else {
             m_countFinishedRequests = 0;
             m_countRequests = 0;
+            m_countErrorRequests = 0;
             emit countFinishedRequestsChanged();
             emit countRequestsChanged();
+            emit countErrorRequestsChanged();
         }
     }
 }
 
 void HttpPerformerViewModel::performAllRequest()
 {
+    if (m_runningRequests.isEmpty()) {
+        m_countErrorRequests = 0;
+        m_countFinishedRequests = 0;
+        emit countErrorRequestsChanged();
+        emit countFinishedRequestsChanged();
+    }
+    m_countRequests = m_requests->size();
     foreach (auto request, *m_requests) {
-        if (performSingleRequest(request)) addToCounter(1);
+        if (!performSingleRequest(request)) m_countRequests -= 1;
     }
 
     emit countRequestsChanged();
@@ -412,6 +421,13 @@ void HttpPerformerViewModel::reduceFromCounter() noexcept
     emit countFinishedRequestsChanged();
 }
 
+void HttpPerformerViewModel::increaseErrorCounter() noexcept
+{
+    m_countErrorRequests += 1;
+
+    emit countErrorRequestsChanged();
+}
+
 void HttpPerformerViewModel::runPostScript(const QString &script, QObject* properties, HttpRequestResultViewModel* result) noexcept
 {
     QJSEngine resultEngine;
@@ -468,7 +484,10 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     if (reply->isReadable()) result->setBody(reply->readAll());
 
     auto postScript = result->postScript();
-    if (postScript.isEmpty()) return;
+    if (postScript.isEmpty()) {
+        if (result->hasError()) increaseErrorCounter();
+        return;
+    }
 
     auto response = new PostScriptResponseModel();
     response->setHeaders(responseHeaders);
@@ -478,4 +497,5 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     response->setRoute(reply->url().toString());
 
     runPostScript(postScript, response, result);
+    if (result->hasError()) increaseErrorCounter();
 }
