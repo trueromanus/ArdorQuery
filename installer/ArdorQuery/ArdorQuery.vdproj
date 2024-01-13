@@ -111,6 +111,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0A4E3F03072A44CFA021940F2E0346C4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0B96D14C73104884A8237E154529AB79"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -160,6 +166,12 @@
         "Entry"
         {
         "MsmKey" = "8:_1087F1D25FF34DD1AC2DD1C389603F33"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_10D01A8850194B7FB62CD3CCAD78E35A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -363,6 +375,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_308005E39A144796BF3B873BD0E60CD4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3171A0E161B34D14A9A05A01709F7D28"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -429,6 +447,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3BD7BAD307774C3FAC490BCA1B27FFCC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3C4FAB1EE0034F37B6C78F384CA6A1D5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -484,6 +508,12 @@
         "Entry"
         {
         "MsmKey" = "8:_41AA07B5136D490E8747DB7B3CCF8F27"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_43BA47AD4DE24555820EEE02C31B808E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -669,6 +699,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_634D2FB8516D40999101CB1D87B46448"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_63DFA499C52840549E247CB3B6BB184F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -832,6 +868,12 @@
         "Entry"
         {
         "MsmKey" = "8:_76F1F7E880BA412D8B8BEE5F15EDFF81"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_777B9420AC684703BA193CD5AB2BCEE4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1084,6 +1126,12 @@
         "Entry"
         {
         "MsmKey" = "8:_9952FDF36D614C6FADA13D7B83B86030"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_998B399D139B41B68CA1E056455AAA25"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1515,6 +1563,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D0D03483BD3A47B6B9D438DFA8C4DFD0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_D1618DA731D14E1AB131CDDAF0644685"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1887,6 +1941,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_FCE0E5DDE5314377A70136FB3C79E7D3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_FEB15C2ED85844A4AD9F8F8443ADBD92"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1961,6 +2021,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -2303,6 +2371,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0A4E3F03072A44CFA021940F2E0346C4"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\msvcp140_2.dll"
+            "TargetName" = "8:msvcp140_2.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0B96D14C73104884A8237E154529AB79"
             {
             "SourcePath" = "8:..\\..\\deploy\\output\\qml\\QtQuick\\Dialogs\\quickimpl\\qml\\+Material\\MessageDialog.qml"
@@ -2469,6 +2557,26 @@
             "TargetName" = "8:MonthGrid.qml"
             "Tag" = "8:"
             "Folder" = "8:_912FE438F29844AB94A92B4AD86D2935"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_10D01A8850194B7FB62CD3CCAD78E35A"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\msvcp140_1.dll"
+            "TargetName" = "8:msvcp140_1.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3143,6 +3251,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_308005E39A144796BF3B873BD0E60CD4"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\ucrtbased.dll"
+            "TargetName" = "8:ucrtbased.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3171A0E161B34D14A9A05A01709F7D28"
             {
             "SourcePath" = "8:..\\..\\deploy\\output\\qml\\QtQuick\\Dialogs\\quickimpl\\qml\\+Material\\FolderBreadcrumbBar.qml"
@@ -3363,6 +3491,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3BD7BAD307774C3FAC490BCA1B27FFCC"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\vcruntime140d.dll"
+            "TargetName" = "8:vcruntime140d.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3C4FAB1EE0034F37B6C78F384CA6A1D5"
             {
             "SourcePath" = "8:..\\..\\deploy\\output\\qml\\QtQuick\\Controls\\Universal\\MenuItem.qml"
@@ -3549,6 +3697,26 @@
             "TargetName" = "8:GroupBox.qml"
             "Tag" = "8:"
             "Folder" = "8:_D1C438BE2D38429880CA1D3309A0537E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43BA47AD4DE24555820EEE02C31B808E"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\msvcp140.dll"
+            "TargetName" = "8:msvcp140.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4163,6 +4331,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_634D2FB8516D40999101CB1D87B46448"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\msvcp_win.dll"
+            "TargetName" = "8:msvcp_win.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_63DFA499C52840549E247CB3B6BB184F"
             {
             "SourcePath" = "8:..\\..\\deploy\\output\\qml\\QtQuick\\Controls\\Universal\\Label.qml"
@@ -4709,6 +4897,26 @@
             "TargetName" = "8:FileDialog.qml"
             "Tag" = "8:"
             "Folder" = "8:_88AF612EA6D54485BAB2DA312EA44D3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_777B9420AC684703BA193CD5AB2BCEE4"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\ucrtbase.dll"
+            "TargetName" = "8:ucrtbase.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5549,6 +5757,26 @@
             "TargetName" = "8:quicktoolingplugin.dll"
             "Tag" = "8:"
             "Folder" = "8:_7578C7D4E6AF4424988E94747306087C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_998B399D139B41B68CA1E056455AAA25"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\vcruntime140.dll"
+            "TargetName" = "8:vcruntime140.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6983,6 +7211,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D0D03483BD3A47B6B9D438DFA8C4DFD0"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\vcruntime140_1d.dll"
+            "TargetName" = "8:vcruntime140_1d.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D1618DA731D14E1AB131CDDAF0644685"
             {
             "SourcePath" = "8:..\\..\\deploy\\output\\networkinformation\\qnetworklistmanager.dll"
@@ -8223,6 +8471,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FCE0E5DDE5314377A70136FB3C79E7D3"
+            {
+            "SourcePath" = "8:..\\..\\deploy\\output\\vcruntime140_1.dll"
+            "TargetName" = "8:vcruntime140_1.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_176E9290FC5B49D1A603A44005D2D38C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FEB15C2ED85844A4AD9F8F8443ADBD92"
             {
             "SourcePath" = "8:..\\..\\deploy\\output\\qml\\QtQuick\\Controls\\Basic\\ApplicationWindow.qml"
@@ -8810,15 +9078,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ArdorQuery"
-        "ProductCode" = "8:{EBE34EE1-85DB-4115-A8EB-59FD029384B7}"
-        "PackageCode" = "8:{C67A74EF-FECC-4B61-A940-CD4DB4F4F04A}"
+        "ProductCode" = "8:{7801CCC2-451C-40CA-8659-80F3391DB3CD}"
+        "PackageCode" = "8:{61E1318F-201B-49EC-8AF3-D30847C27F2C}"
         "UpgradeCode" = "8:{225F6DFB-9EB6-4188-9C0D-6752E2842B65}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.12"
+        "ProductVersion" = "8:0.0.14"
         "Manufacturer" = "8:EmptyFlow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
