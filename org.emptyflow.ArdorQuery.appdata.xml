@@ -25,15 +25,13 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.13" date="2023-12-28">
+		<release version="0.0.14" date="2023-01-14">
 			<description>
-				<p>Fixed Shift-Alt-X keyboard combinations on Linux. Changed shortcuts Ctrl-Alt-(Up/Down) on Ctrl-(Up/Down) on Linux.</p>
-				<p>Fixed crash if try to use non JSON response in OpenAPI Export window</p>
-				<p>Now you can select route in OpenAPI Export from keyboard - PageUp for previous route and PageDown for next route</p>
-				<p>Added new shortcuts - create new query from route Ctrl-Enter and replace current from route Ctrl-Enter on OpenAPI Export window</p>
-				<p>Fixed action on delete icon button in addresses list</p>
-				<p>Keyboard shortcut Ctrl-B now cancel all active queries</p>
-				<p>On macOS keyboard shortcut Ctrl-Tab replaced on Ctrl-T</p>
+				<p>Fixed refresh title name in queries list popup.</p>
+				<p>Remove : character in all export/import actions from HTTP headers.</p>
+				<p>The default filename is automatically populated in the Save File dialog based on the name from the Content-Disposition header.</p>
+				<p>Added link to documentation in About window.</p>
+				<p>Show count of queries with errors in lower toolbar.</p>
 			</description>
 		</release>
 	</releases>
