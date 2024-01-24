@@ -277,7 +277,7 @@ ApplicationWindow {
                 Rectangle {
                     id: methodText
                     anchors.left: parent.left
-                    anchors.leftMargin: 14
+                    anchors.leftMargin: 8
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 5
                     anchors.top: parent.top
@@ -297,9 +297,9 @@ ApplicationWindow {
 
                 Text {
                     anchors.left: methodText.right
-                    anchors.leftMargin: 18
+                    anchors.leftMargin: 12
                     anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width - methodText.width - 30
+                    width: parent.width - methodText.width - 38
                     height: parent.height
                     text: route + " <b>" + description + "</b>"
                     verticalAlignment: Text.AlignVCenter

@@ -37,14 +37,11 @@ QString HtmlFormatter::format(const QString &data)
 {
     m_stackSize = -1;
     QString currentFullTag = "";
-    int iterator = -1;
     m_result.clear();
     bool tagStarted = false;
     bool contentStarted = false;
 
     for(auto character: data) {
-        iterator++;
-
         auto latinCharacter = character.toLatin1();
 
         if (latinCharacter == m_tagStart && !tagStarted) {

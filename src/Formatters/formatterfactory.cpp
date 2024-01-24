@@ -19,6 +19,7 @@
 #include "htmlformatter.h"
 #include "xmlformatter.h"
 #include "plaintextformatter.h"
+#include "cssformatter.h"
 
 FormatterFactory::FormatterFactory()
 {
@@ -51,6 +52,12 @@ OutputFormatter* FormatterFactory::getFormatter(const QString& formatter)
         auto plainTextFormatter = new PlainTextFormatter();
         m_instanceCache.insert(OutputFormatPlainText, plainTextFormatter);
         return plainTextFormatter;
+    }
+
+    if (formatter == OutputFormatCss) {
+        auto cssFormatter = new CssFormatter();
+        m_instanceCache.insert(OutputFormatCss, cssFormatter);
+        return cssFormatter;
     }
 
     return m_nullableFormatter;

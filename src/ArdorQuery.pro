@@ -10,6 +10,7 @@ RC_ICONS = logo.ico
 ICON = ardorquery.icns
 
 SOURCES += \
+        Formatters/cssformatter.cpp \
         Formatters/formatterfactory.cpp \
         Formatters/htmlformatter.cpp \
         Formatters/jsonformatter.cpp \
@@ -56,12 +57,14 @@ SOURCES += \
         Tests/jsonformatterunittests.cpp \
         Tests/textadvisorviewmodelunittests.cpp \
         Tests/globalvariablesunittest.cpp \
-        Tests/htmlformatterunittests.cpp
+        Tests/htmlformatterunittests.cpp \
+        Tests/cssformatterunittests.cpp \
 }
 
 RESOURCES += qml.qrc
 
 HEADERS += \
+    Formatters/cssformatter.h \
     Formatters/formatterfactory.h \
     Formatters/htmlformatter.h \
     Formatters/jsonformatter.h \
@@ -109,7 +112,8 @@ HEADERS += \
     Tests/jsonformatterunittests.h \
     Tests/textadvisorviewmodelunittests.h \
     Tests/globalvariablesunittest.h \
-    Tests/htmlformatterunittests.h
+    Tests/htmlformatterunittests.h \
+    Tests/cssformatterunittests.h \
 }
 
 usrbininstalldesktop {

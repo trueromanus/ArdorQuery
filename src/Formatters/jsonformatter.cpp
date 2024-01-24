@@ -77,7 +77,7 @@ QString JsonFormatter::format(const QString &data)
 
         if (m_string == latinCharacter) {
             if (stringStarted) {
-                auto isProperty = iterator < data.count() - 1 ? data[iterator + 1].toLatin1() == m_colon : false;
+                auto isProperty = iterator < data.size() - 1 ? data[iterator + 1].toLatin1() == m_colon : false;
                 result += (isProperty ? m_propertyStringStart : m_plainStringStart)  + currentString + "\"</font>";
                 currentString.clear();
             }
@@ -87,7 +87,7 @@ QString JsonFormatter::format(const QString &data)
         }
 
         if (m_backslash == latinCharacter && stringStarted) {
-            if (iterator < data.count()) {
+            if (iterator < data.size()) {
                 auto nextCharacter = data[iterator + 1].toLatin1();
                 if (nextCharacter == m_reverse || nextCharacter == m_newline) skipNextCharacters += 1;
                 if (nextCharacter == m_unicode) {

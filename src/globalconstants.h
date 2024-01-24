@@ -43,5 +43,6 @@ extern QString OutputFormatXml;
 extern QString OutputFormatImage;
 extern QString OutputNeedDownloaded;
 extern QString OutputFormatPlainText;
+extern QString OutputFormatCss;
 
 extern bool IsPortable;

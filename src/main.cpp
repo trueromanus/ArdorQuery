@@ -36,6 +36,7 @@
 #include "Tests/htmlformatterunittests.h"
 #include "Tests/textadvisorviewmodelunittests.h"
 #include "Tests/globalvariablesunittest.h"
+#include "Tests/cssformatterunittests.h""
 #endif
 
 void registerQmlTypes();
@@ -121,5 +122,6 @@ void runTest(int argc, char *argv[]) {
     QTest::qExec(new HtmlFormatterUnitTests, argc - 1, argv);
     QTest::qExec(new TextAdvisorViewModelUnitTests, argc - 1, argv);
     QTest::qExec(new GlobalVariablesUnitTest, argc - 1, argv);
+    QTest::qExec(new CssFormatterUnitTests, argc - 1, argv);
 }
 #endif
