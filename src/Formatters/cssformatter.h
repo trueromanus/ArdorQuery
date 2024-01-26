@@ -28,6 +28,8 @@ private:
     const QString m_endField { ";" };
     const QString m_import { "@import" };
     const QString m_newline { "\n" };
+    const QString m_asteriks { "*" };
+    const QString m_slash { "/" };
     const QString m_caretBack { "\r" };
     const QString m_cssTab { "    " };
     int m_stackSize { -1 };

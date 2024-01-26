@@ -25,10 +25,23 @@ QString CssFormatter::format(const QString &data)
 {
     m_stackSize = 0;
     QString currentOpenBlock = "";
+    bool isComment = false;
     m_result.clear();
 
     for(auto character: data) {
         auto latinCharacter = character.toLatin1();
+
+        if (isComment) {
+            if (latinCharacter == m_slash && currentOpenBlock.right(1) == m_asteriks) {
+                isComment = false;
+                currentOpenBlock.append(latinCharacter);
+                currentOpenBlock.append("</font>");
+                continue;
+            } else {
+                currentOpenBlock.append(latinCharacter);
+                continue;
+            }
+        }
 
         if (latinCharacter == m_blockStart) {
             setOffset(m_stackSize);
@@ -50,7 +63,7 @@ QString CssFormatter::format(const QString &data)
             auto trimmedValue = currentOpenBlock.trimmed();
             if (trimmedValue.indexOf(":") > -1) {
                 auto parts = trimmedValue.split(":");
-                m_result.append("<font color=\"#008000\">" + parts.first().trimmed() + "</font>: ");
+                m_result.append("<font color=\"#009dd5\">" + parts.first().trimmed() + "</font>: ");
                 m_result.append(parts.last().trimmed() + ";\n");
             } else {
                 m_result.append(currentOpenBlock.trimmed() + ";\n");
@@ -59,7 +72,14 @@ QString CssFormatter::format(const QString &data)
             continue;
         }
 
-        currentOpenBlock += latinCharacter;
+        if (latinCharacter == m_asteriks && !currentOpenBlock.isEmpty() && currentOpenBlock.right(1) == m_slash) {
+            isComment = true;
+            currentOpenBlock = currentOpenBlock.left(currentOpenBlock.size() - 1);
+            currentOpenBlock.append("<font color=\"#008000\">/*");
+            continue;
+        }
+
+        currentOpenBlock.append(latinCharacter);
     }
 
     return m_result;

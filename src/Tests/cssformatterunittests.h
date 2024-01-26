@@ -29,6 +29,7 @@ private slots:
     void simplestyle_multiplevalues_completed();
     void multiplestyles_multiplevalues_completed();
     void nestedstyles_completed();
+    void comment_beforeStyle();
 
 };
 
