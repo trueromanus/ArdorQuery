@@ -28,7 +28,7 @@ void CssFormatterUnitTests::simplestyle_completed()
     CssFormatter formatter;
     auto result = formatter.format(".myclass {property: value;}");
     auto expectedResult = QString(R"a(<font color="#8812a1">.myclass</font> {
-    <font color="#009dd5">property</font>: value;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;
 }
 )a");
     QCOMPARE(result, expectedResult);
@@ -39,9 +39,9 @@ void CssFormatterUnitTests::simplestyle_multiplevalues_completed()
     CssFormatter formatter;
     auto result = formatter.format(".myclass {property: value; property2: lalala ; purupu  : vallll    ;}");
     auto expectedResult = QString(R"a(<font color="#8812a1">.myclass</font> {
-    <font color="#009dd5">property</font>: value;
-    <font color="#009dd5">property2</font>: lalala;
-    <font color="#009dd5">purupu</font>: vallll;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property2</font>: lalala;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">purupu</font>: vallll;
 }
 )a");
     QCOMPARE(result, expectedResult);
@@ -52,13 +52,13 @@ void CssFormatterUnitTests::multiplestyles_multiplevalues_completed()
     CssFormatter formatter;
     auto result = formatter.format(".myclass {property: value; property2: lalala ; purupu  : vallll;}   .myclass2 { muhers: pruher; muhers2: pruher2; }");
     auto expectedResult = QString(R"a(<font color="#8812a1">.myclass</font> {
-    <font color="#009dd5">property</font>: value;
-    <font color="#009dd5">property2</font>: lalala;
-    <font color="#009dd5">purupu</font>: vallll;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property2</font>: lalala;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">purupu</font>: vallll;
 }
 <font color="#8812a1">.myclass2</font> {
-    <font color="#009dd5">muhers</font>: pruher;
-    <font color="#009dd5">muhers2</font>: pruher2;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">muhers</font>: pruher;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">muhers2</font>: pruher2;
 }
 )a");
     QCOMPARE(result, expectedResult);
@@ -69,10 +69,10 @@ void CssFormatterUnitTests::nestedstyles_completed()
     CssFormatter formatter;
     auto result = formatter.format(".myclass {property: value; .nestedclass { nestedproperty: nestedvalue; } }");
     auto expectedResult = QString(R"a(<font color="#8812a1">.myclass</font> {
-    <font color="#009dd5">property</font>: value;
-    <font color="#8812a1">.nestedclass</font> {
-        <font color="#009dd5">nestedproperty</font>: nestedvalue;
-    }
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8812a1">.nestedclass</font> {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">nestedproperty</font>: nestedvalue;
+&nbsp;&nbsp;&nbsp;&nbsp;}
 }
 )a");
     QCOMPARE(result, expectedResult);
@@ -83,10 +83,44 @@ void CssFormatterUnitTests::comment_beforeStyle()
     CssFormatter formatter;
     auto result = formatter.format("/* This is the comment!!!! */.myclass {property: value; .nestedclass { nestedproperty: nestedvalue; } }");
     auto expectedResult = QString(R"a(<font color="#8812a1"><font color="#008000">/* This is the comment!!!! */</font>.myclass</font> {
-    <font color="#009dd5">property</font>: value;
-    <font color="#8812a1">.nestedclass</font> {
-        <font color="#009dd5">nestedproperty</font>: nestedvalue;
-    }
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8812a1">.nestedclass</font> {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">nestedproperty</font>: nestedvalue;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}
+)a");
+    QCOMPARE(result, expectedResult);
+}
+
+void CssFormatterUnitTests::comment_insideProperty()
+{
+    CssFormatter formatter;
+    auto result = formatter.format(".myclass {property: value /* This is the comment!!!! */; }");
+    auto expectedResult = QString(R"a(<font color="#8812a1">.myclass</font> {
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value <font color="#008000">/* This is the comment!!!! */</font>;
+}
+)a");
+    QCOMPARE(result, expectedResult);
+}
+
+void CssFormatterUnitTests::simplestyle_singlePropertyWithoutSemicolon()
+{
+    CssFormatter formatter;
+    auto result = formatter.format(".myclass {property: value }");
+    auto expectedResult = QString(R"a(<font color="#8812a1">.myclass</font> {
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;
+}
+)a");
+    QCOMPARE(result, expectedResult);
+}
+
+void CssFormatterUnitTests::simplestyle_multiplePropertyLastWithoutSemicolon()
+{
+    CssFormatter formatter;
+    auto result = formatter.format(".myclass {property: value; property2: value2 }");
+    auto expectedResult = QString(R"a(<font color="#8812a1">.myclass</font> {
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property2</font>: value2;
 }
 )a");
     QCOMPARE(result, expectedResult);

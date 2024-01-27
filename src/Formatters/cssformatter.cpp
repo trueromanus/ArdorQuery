@@ -51,6 +51,12 @@ QString CssFormatter::format(const QString &data)
             continue;
         }
         if (latinCharacter == m_blockEnd) {
+            auto trimmedValue = currentOpenBlock.trimmed();
+            if (!trimmedValue.isEmpty()) {
+                setOffset(m_stackSize);
+                fillValue(trimmedValue);
+            }
+
             if (m_stackSize > 0) m_stackSize -= 1;
             setOffset(m_stackSize);
             m_result.append("}\n");
@@ -60,14 +66,7 @@ QString CssFormatter::format(const QString &data)
 
         if (latinCharacter == m_endField) {
             setOffset(m_stackSize);
-            auto trimmedValue = currentOpenBlock.trimmed();
-            if (trimmedValue.indexOf(":") > -1) {
-                auto parts = trimmedValue.split(":");
-                m_result.append("<font color=\"#009dd5\">" + parts.first().trimmed() + "</font>: ");
-                m_result.append(parts.last().trimmed() + ";\n");
-            } else {
-                m_result.append(currentOpenBlock.trimmed() + ";\n");
-            }
+            fillValue(currentOpenBlock.trimmed());
             currentOpenBlock.clear();
             continue;
         }
@@ -89,6 +88,17 @@ void CssFormatter::setOffset(int stackSize) noexcept
 {
     for (auto i = 0; i < stackSize; i++) {
         m_result.append(m_cssTab);
+    }
+}
+
+void CssFormatter::fillValue(const QString &trimmedValue) noexcept
+{
+    if (trimmedValue.indexOf(":") > -1) {
+        auto parts = trimmedValue.split(":");
+        m_result.append("<font color=\"#009dd5\">" + parts.first().trimmed() + "</font>: ");
+        m_result.append(parts.last().trimmed() + ";\n");
+    } else {
+        m_result.append(trimmedValue + ";\n");
     }
 }
 

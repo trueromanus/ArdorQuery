@@ -31,7 +31,7 @@ private:
     const QString m_asteriks { "*" };
     const QString m_slash { "/" };
     const QString m_caretBack { "\r" };
-    const QString m_cssTab { "    " };
+    const QString m_cssTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
     int m_stackSize { -1 };
     QString m_result { "" };
 
@@ -42,6 +42,7 @@ public:
 
 private:
     void setOffset(int stackSize) noexcept;
+    void fillValue(const QString& trimmedValue) noexcept;
 
 };
 

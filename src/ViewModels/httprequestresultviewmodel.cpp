@@ -340,6 +340,8 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
     auto isHtml = contentTypeHeader.contains("text/html");
     if (isHtml) return OutputFormatHtml;
 
+    if (contentTypeHeader.contains("text/css")) return OutputFormatCss;
+
     if (contentTypeHeader.contains("image/jpeg") || contentTypeHeader.contains("image/png") ||
         contentTypeHeader.contains("image/svg+xml") || contentTypeHeader.contains("image/webp") ||
         contentTypeHeader.contains("image/gif")) {
