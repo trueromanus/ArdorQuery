@@ -26,6 +26,9 @@ class GlobalVariablesListModel : public QAbstractListModel
     Q_PROPERTY(int selected READ selected WRITE setSelected NOTIFY selectedChanged)
     Q_PROPERTY(QList<QVariantMap> shortcuts READ shortcuts NOTIFY shortcutsChanged)
     Q_PROPERTY(bool helpVisible READ helpVisible WRITE setHelpVisible NOTIFY helpVisibleChanged)
+    Q_PROPERTY(QStringList tabs READ tabs NOTIFY tabsChanged)
+    Q_PROPERTY(QString selectedTab READ selectedTab WRITE setSelectedTab NOTIFY selectedTabChanged)
+    Q_PROPERTY(bool hasLines READ hasLines NOTIFY hasLinesChanged FINAL)
 
 private:
     enum GlobaVariablesRoles {
@@ -43,6 +46,9 @@ private:
     QMap<QString, QString> m_shortcutCommandMapping { QMap<QString, QString>() };
     QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
     bool m_helpVisible { false };
+    QStringList m_tabs { QStringList() };
+    QString m_selectedTab { "" };
+    const QString VariablesTab { "Variables" };
     const QString m_helpCommand { "globalvariableshelp" };
     const QString m_closeWindowCommand { "globalvariablesclosewindow" };
     const QString m_saveGlobalVariablesCommand { "globalvariablessave" };
@@ -52,6 +58,10 @@ private:
     const QString m_selectTopFieldCommand { "globalvariablesselecttopfield" };
     const QString m_selectPreviousFieldCommand { "globalvariablesselectpreviousfield" };
 
+    const QString m_addLineAboveCommand { "globalvariablesaddlineabovecommand" };
+    const QString m_addLineToEndCommand { "globalvariablesaddlinetoendcommand" };
+    const QString m_removeSelectedFieldCommand { "globalvariablesremoveselectedfieldcommand" };
+    const QString m_removeAllFieldCommand { "globalvariablesremoveallfieldcommand" };
 public:
     explicit GlobalVariablesListModel(QObject *parent = nullptr);
 
@@ -70,7 +80,18 @@ public:
     void setHelpVisible(bool helpVisible) noexcept;
 
     void addLine();
+    void addLineBefore();
+    void addLineToEnd();
+    void removeSelectedLine();
+    void removeAllLines();
     void addVariable(const QString& name, const QString& value);
+
+    QStringList tabs() const noexcept { return m_tabs; }
+
+    bool hasLines() const noexcept { return !m_lines.isEmpty(); }
+
+    QString selectedTab() const noexcept { return m_selectedTab; }
+    void setSelectedTab(const QString& selectedTab) noexcept;
 
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void fillLines();
@@ -91,6 +112,9 @@ signals:
     void closeWindowRequired();
     void shortcutsChanged();
     void helpVisibleChanged();
+    void selectedTabChanged();
+    void tabsChanged();
+    void hasLinesChanged();
 
 };
 

@@ -24,6 +24,8 @@ GlobalVariablesListModel::GlobalVariablesListModel(QObject *parent)
 {
     m_savedGlobalVariablesFile = getCachePath(m_savedGlobalVariablesFile);
     createIfNotExistsFile(m_savedGlobalVariablesFile, "[]");
+    m_tabs.append(VariablesTab);
+    m_selectedTab = VariablesTab;
     readCache();
     fillMappings();
     fillCommands();
@@ -131,11 +133,74 @@ void GlobalVariablesListModel::addLine()
     }
 
     endResetModel();
+
+    emit hasLinesChanged();
+}
+
+void GlobalVariablesListModel::addLineBefore()
+{
+    beginResetModel();
+
+    if (m_lines.isEmpty()) {
+        m_lines.append("");
+    } else {
+        m_lines.insert(m_selected, "");
+    }
+
+    endResetModel();
+
+    emit hasLinesChanged();
+}
+
+void GlobalVariablesListModel::addLineToEnd()
+{
+    beginResetModel();
+
+    m_lines.append("");
+
+    endResetModel();
+    setSelected(m_lines.size() - 1);
+
+    emit hasLinesChanged();
+}
+
+void GlobalVariablesListModel::removeSelectedLine()
+{
+    beginResetModel();
+
+    m_lines.removeAt(m_selected);
+
+    endResetModel();
+
+    setSelected(m_selected >= m_lines.size() ? m_selected - 1 : m_selected);
+
+    emit hasLinesChanged();
+}
+
+void GlobalVariablesListModel::removeAllLines()
+{
+    beginResetModel();
+
+    m_lines.clear();
+
+    endResetModel();
+
+    setSelected(0);
+
+    emit hasLinesChanged();
 }
 
 void GlobalVariablesListModel::addVariable(const QString &name, const QString &value)
 {
     m_variables.insert(name, value);
+}
+
+void GlobalVariablesListModel::setSelectedTab(const QString &selectedTab) noexcept
+{
+    if (m_selectedTab == selectedTab) return;
+
+    m_selectedTab = selectedTab;
+    emit selectedTabChanged();
 }
 
 bool GlobalVariablesListModel::shortcutHandler(const QString &shortcut) noexcept
@@ -158,6 +223,14 @@ bool GlobalVariablesListModel::shortcutHandler(const QString &shortcut) noexcept
         setSelected(0);
     } else if (command == m_selectLastFieldCommand) {
         if (!m_lines.isEmpty()) setSelected(m_lines.count() - 1);
+    } else if (command == m_addLineAboveCommand) {
+        addLineBefore();
+    } else if (command == m_addLineToEndCommand) {
+        addLineToEnd();
+    } else if (command == m_removeSelectedFieldCommand) {
+        removeSelectedLine();
+    } else if (command == m_removeAllFieldCommand) {
+        removeAllLines();
     } else if (command == m_helpCommand) {
         setHelpVisible(!m_helpVisible);
     }
@@ -175,6 +248,8 @@ void GlobalVariablesListModel::fillLines()
     }
 
     endResetModel();
+
+    emit hasLinesChanged();
 }
 
 void GlobalVariablesListModel::clearLines()
@@ -280,6 +355,11 @@ void GlobalVariablesListModel::fillMappings()
     m_shortcutCommandMapping.insert("control-h", m_helpCommand);
     m_shortcutCommandMapping.insert("f1", m_helpCommand);
     m_shortcutCommandMapping.insert("escape", m_closeWindowCommand);
+
+    m_shortcutCommandMapping.insert("alt-enter", m_addLineAboveCommand);
+    m_shortcutCommandMapping.insert("shift-enter", m_addLineToEndCommand);
+    m_shortcutCommandMapping.insert("control-r", m_removeSelectedFieldCommand);
+    m_shortcutCommandMapping.insert("shift-alt-r", m_removeAllFieldCommand);
 }
 
 void GlobalVariablesListModel::fillCommands()
@@ -292,6 +372,11 @@ void GlobalVariablesListModel::fillCommands()
     m_shortcutCommands.insert(m_selectPreviousFieldCommand, "Select a text field above the currently selected field");
     m_shortcutCommands.insert(m_helpCommand, "Show interactive help for shortcuts");
     m_shortcutCommands.insert(m_closeWindowCommand, "Close Global Variables window");
+
+    m_shortcutCommands.insert(m_addLineAboveCommand, "Adding a new empty line on top of the selected line");
+    m_shortcutCommands.insert(m_addLineToEndCommand, "Adding a new empty line at the end of the lines");
+    m_shortcutCommands.insert(m_removeSelectedFieldCommand, "Remove selected line");
+    m_shortcutCommands.insert(m_removeAllFieldCommand, "Remove all lines");
 }
 
 void GlobalVariablesListModel::fillHelpShortcuts()

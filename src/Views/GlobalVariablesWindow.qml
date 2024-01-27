@@ -18,8 +18,34 @@ ApplicationWindow {
         color: "lightgray"
         opacity: .3
     }
+    header: Item {
+        id: headerContainer
+        height: 30
+        width: root.width
+
+        GlobalVariablesHeader {
+            anchors.left: parent.left
+            anchors.top: parent.top
+        }
+
+        IconButton {
+            id: helpButton
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            icon: storagePaths.icons + "question.svg"
+            width: 30
+            height: parent.height
+            iconWidth: 20
+            iconHeight: 20
+            tooltipMessage: "Show keyboard shortcut description"
+            onPressed: {
+                backend.globalVariables.helpVisible = !backend.globalVariables.helpVisible;
+            }
+        }
+    }
 
     Text {
+        visible: !backend.globalVariables.hasLines
         text: "To add a new global variable press Ctrl-Enter<br />To save changes press Ctrl-S"
         anchors.centerIn: parent
         font.pointSize: 11
