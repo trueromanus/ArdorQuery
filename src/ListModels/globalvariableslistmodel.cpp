@@ -90,8 +90,9 @@ QString GlobalVariablesListModel::replaceGlobalVariables(const QString &value)
     QString result = value;
     foreach (auto variable, m_variables.keys()) {
         auto fullVariable = "{{" + variable + "}}";
+        auto fullVariableSpaces = "{{ " + variable + " }}";
         auto value = m_variables.value(variable);
-        result = result.replace(fullVariable, value);
+        result = result.replace(fullVariable, value).replace(fullVariableSpaces, value);
     }
 
     return result;
