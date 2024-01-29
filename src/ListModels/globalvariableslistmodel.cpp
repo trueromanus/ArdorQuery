@@ -214,6 +214,7 @@ bool GlobalVariablesListModel::shortcutHandler(const QString &shortcut) noexcept
     } else if (command == m_saveGlobalVariablesCommand) {
         parseLines();
     } else if (command == m_closeWindowCommand) {
+        fillLines();
         emit closeWindowRequired();
     } else if (command == m_selectPreviousFieldCommand) {
         if (m_selected > 0) setSelected(m_selected - 1);
