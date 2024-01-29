@@ -7,9 +7,9 @@ Each type of line has a different color to help visually identify that content.
 
 ![Screenshot](images/index.png)
 
-## Download
+## Install
 
-You can always download the latest stable version from this [link](https://github.com/trueromanus/ArdorQuery/releases/latest).
+Installation instructions for your operating system at this [link](install.md).
 
 ## Getting started
 
