@@ -30,6 +30,8 @@ GlobalVariablesListModel::GlobalVariablesListModel(QObject *parent)
     fillMappings();
     fillCommands();
     fillHelpShortcuts();
+    m_globalVariableHandlers.insert(m_dateTimeNowGlobalVariable, &GlobalVariablesListModel::dateTimeNowVariable);
+    m_globalVariableHandlers.insert(m_time24HoursNowGlobalVariable, &GlobalVariablesListModel::timeNowVariable);
 }
 
 int GlobalVariablesListModel::rowCount(const QModelIndex &parent) const
@@ -97,6 +99,11 @@ QString GlobalVariablesListModel::replaceGlobalVariables(const QString &value)
         result = result.replace(fullVariable, value).replace(fullVariableSpaces, value);
     }
 
+    foreach (auto key, m_globalVariableHandlers.keys()) {
+        auto item = m_globalVariableHandlers.value(key);
+        result = std::invoke(item, this, value);
+    }
+
     return result;
 }
 
@@ -135,6 +142,7 @@ void GlobalVariablesListModel::addLine()
     endResetModel();
 
     emit hasLinesChanged();
+    setChanges();
 }
 
 void GlobalVariablesListModel::addLineBefore()
@@ -150,6 +158,7 @@ void GlobalVariablesListModel::addLineBefore()
     endResetModel();
 
     emit hasLinesChanged();
+    setChanges();
 }
 
 void GlobalVariablesListModel::addLineToEnd()
@@ -162,6 +171,7 @@ void GlobalVariablesListModel::addLineToEnd()
     setSelected(m_lines.size() - 1);
 
     emit hasLinesChanged();
+    setChanges();
 }
 
 void GlobalVariablesListModel::removeSelectedLine()
@@ -175,6 +185,7 @@ void GlobalVariablesListModel::removeSelectedLine()
     setSelected(m_selected >= m_lines.size() ? m_selected - 1 : m_selected);
 
     emit hasLinesChanged();
+    setChanges();
 }
 
 void GlobalVariablesListModel::removeAllLines()
@@ -188,6 +199,7 @@ void GlobalVariablesListModel::removeAllLines()
     setSelected(0);
 
     emit hasLinesChanged();
+    setChanges();
 }
 
 void GlobalVariablesListModel::addVariable(const QString &name, const QString &value)
@@ -251,6 +263,8 @@ void GlobalVariablesListModel::fillLines()
     endResetModel();
 
     emit hasLinesChanged();
+    clearChanges();
+    if (m_selected >= m_lines.size()) setSelected(0);
 }
 
 void GlobalVariablesListModel::clearLines()
@@ -288,13 +302,12 @@ void GlobalVariablesListModel::parseLines()
 
     foreach (auto line, m_lines) {
         if (line.isEmpty()) continue;
+        if (!line.contains(" ")) continue;
 
-        if (line.contains(" ")) {
-            auto parts = line.split(" ");
-            m_variables.insert(parts[0], parts[1]);
-        } else {
-            m_variables.insert(line, "");
-        }
+        auto parts = line.split(" ");
+        if (parts[0].isEmpty() || parts[1].isEmpty()) continue;
+
+        m_variables.insert(parts[0], parts[1]);
     }
 
     writeCache();
@@ -438,5 +451,39 @@ void GlobalVariablesListModel::fillHelpShortcuts()
     }
 
     emit shortcutsChanged();
+}
+
+QString GlobalVariablesListModel::dateTimeNowVariable(const QString &content)
+{
+    if (content.indexOf(m_dateTimeNowGlobalVariable) == -1) return content;
+
+    QDateTime date = QDateTime::currentDateTime();
+    QString dateAsAstring = date.toString(Qt::ISODate);
+    auto nospaced = "{{" + m_dateTimeNowGlobalVariable + "}}";
+    auto spaced = "{{ " + m_dateTimeNowGlobalVariable + " }}";
+    return QString(content).replace(nospaced, dateAsAstring).replace(spaced, dateAsAstring);
+}
+
+QString GlobalVariablesListModel::timeNowVariable(const QString &content)
+{
+    if (content.indexOf(m_time24HoursNowGlobalVariable) == -1) return content;
+
+    auto time = QDateTime::currentDateTimeUtc().time();
+    QString timeAsAstring = time.toString("hh:mm:ss");
+    auto nospaced = "{{" + m_time24HoursNowGlobalVariable + "}}";
+    auto spaced = "{{ " + m_time24HoursNowGlobalVariable + " }}";
+    return QString(content).replace(nospaced, timeAsAstring).replace(spaced, timeAsAstring);
+}
+
+void GlobalVariablesListModel::setChanges()
+{
+    m_hasChanges = true;
+    emit hasChangesChanged();
+}
+
+void GlobalVariablesListModel::clearChanges()
+{
+    m_hasChanges = false;
+    emit hasChangesChanged();
 }
 

@@ -71,9 +71,8 @@ ApplicationWindow {
 
             onIsActiveChanged: {
                 if (isActive) {
+                    listView.forceActiveFocus();
                     textArea.forceActiveFocus();
-                } else {
-                    textArea.focus = false;
                 }
             }
 
@@ -95,7 +94,16 @@ ApplicationWindow {
                     listView.model.setLine(identifier, text);
                 }
                 onPressed: {
+                    backend.focusedHelpTextField = false;
                     if (listView.model.selected !== identifier) listView.model.selected = identifier;
+                }               
+                onActiveFocusChanged: {
+                    //if (backend.tabs.currentTab !== 'Variables') return; //dirty hack but I don't know how to resolve it
+                    if (backend.globalVariables.focusedHelpTextField) return; // fixing for text field in help
+
+                    if (isActive && !textArea.activeFocus) {
+                        textArea.forceActiveFocus();
+                    }
                 }
             }
         }
@@ -104,9 +112,49 @@ ApplicationWindow {
         }
     }
 
+    Item {
+        id: notificationContainer
+        visible: backend.globalVariables.hasChanges
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 4
+        anchors.rightMargin: 4
+        width: 200
+        height: 60
+
+        Rectangle {
+            anchors.fill: parent
+            border.width: 1
+            border.color: "#d3d3d3"
+            radius: 4
+            color: "#96d3d3d3"
+        }
+
+        Text {
+            width: parent.width - 30
+            height: parent.height - 2
+            anchors.left: parent.left
+            anchors.leftMargin: 4
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+            font.pointSize: 9
+            maximumLineCount: 3
+            elide: Text.ElideRight
+            color: "#996633"
+            text: "Any changes will be discarded once the window is closed. Save your changes by pressing Ctrl-S."
+        }
+    }
+
     ShorcutsHelperPanel {
         visible: backend.globalVariables.helpVisible
         shortcuts: backend.globalVariables.shortcuts
+        onInnerTextPressed: {
+            backend.globalVariables.focusedHelpTextField = true;
+        }
+        onVisibleChanged: {
+            if (!visible) backend.globalVariables.focusedHelpTextField = false;
+        }
     }
 
     Connections {
@@ -121,5 +169,9 @@ ApplicationWindow {
 
     onActiveFocusItemChanged: {
         if (!root.activeFocusItem) globalEventHandler.clear();
+    }
+
+    onClosing: {
+        backend.globalVariables.fillLines();
     }
 }

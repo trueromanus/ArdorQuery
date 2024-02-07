@@ -29,6 +29,7 @@ class GlobalVariablesListModel : public QAbstractListModel
     Q_PROPERTY(QStringList tabs READ tabs NOTIFY tabsChanged)
     Q_PROPERTY(QString selectedTab READ selectedTab WRITE setSelectedTab NOTIFY selectedTabChanged)
     Q_PROPERTY(bool hasLines READ hasLines NOTIFY hasLinesChanged FINAL)
+    Q_PROPERTY(bool hasChanges READ hasChanges NOTIFY hasChangesChanged FINAL)
 
 private:
     enum GlobaVariablesRoles {
@@ -48,6 +49,7 @@ private:
     bool m_helpVisible { false };
     QStringList m_tabs { QStringList() };
     QString m_selectedTab { "" };
+    bool m_hasChanges { false };
     const QString VariablesTab { "Variables" };
     const QString m_helpCommand { "globalvariableshelp" };
     const QString m_closeWindowCommand { "globalvariablesclosewindow" };
@@ -62,6 +64,12 @@ private:
     const QString m_addLineToEndCommand { "globalvariablesaddlinetoendcommand" };
     const QString m_removeSelectedFieldCommand { "globalvariablesremoveselectedfieldcommand" };
     const QString m_removeAllFieldCommand { "globalvariablesremoveallfieldcommand" };
+
+    typedef QString (GlobalVariablesListModel::*globalVariableDelegate)(const QString& content);
+
+    const QString m_dateTimeNowGlobalVariable { "dateTimeUtcNow" };
+    const QString m_time24HoursNowGlobalVariable { "time24HoursNow" };
+    QMap<QString, GlobalVariablesListModel::globalVariableDelegate> m_globalVariableHandlers { QMap<QString, GlobalVariablesListModel::globalVariableDelegate>() };
 public:
     explicit GlobalVariablesListModel(QObject *parent = nullptr);
 
@@ -89,6 +97,7 @@ public:
     QStringList tabs() const noexcept { return m_tabs; }
 
     bool hasLines() const noexcept { return !m_lines.isEmpty(); }
+    bool hasChanges() const noexcept { return m_hasChanges; }
 
     QString selectedTab() const noexcept { return m_selectedTab; }
     void setSelectedTab(const QString& selectedTab) noexcept;
@@ -106,6 +115,10 @@ private:
     void fillMappings();
     void fillCommands();
     void fillHelpShortcuts();
+    QString dateTimeNowVariable(const QString& content);
+    QString timeNowVariable(const QString& content);
+    void setChanges();
+    void clearChanges();
 
 signals:
     void selectedChanged();
@@ -115,6 +128,7 @@ signals:
     void selectedTabChanged();
     void tabsChanged();
     void hasLinesChanged();
+    void hasChangesChanged();
 
 };
 
