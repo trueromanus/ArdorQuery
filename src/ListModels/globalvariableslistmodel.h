@@ -41,6 +41,7 @@ private:
 
     QString m_savedGlobalVariablesFile { "globalvariables" };
     QMap<QString, QString> m_variables { QMap<QString, QString>() };
+    QList<QString> m_variablesOrders { QList<QString>() };
     QStringList m_lines { QStringList() };
     int m_selected { 0 };
     QList<QVariantMap> m_shortcuts { QList<QVariantMap>() };

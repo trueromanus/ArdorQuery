@@ -256,7 +256,7 @@ void GlobalVariablesListModel::fillLines()
     beginResetModel();
 
     m_lines.clear();
-    foreach (auto key, m_variables.keys()) {
+    foreach (auto key, m_variablesOrders) {
         m_lines.append(key + " " + m_variables[key]);
     }
 
@@ -299,6 +299,7 @@ void GlobalVariablesListModel::removeLine(int index)
 void GlobalVariablesListModel::parseLines()
 {
     m_variables.clear();
+    m_variablesOrders.clear();
 
     foreach (auto line, m_lines) {
         if (line.isEmpty()) continue;
@@ -308,9 +309,11 @@ void GlobalVariablesListModel::parseLines()
         if (parts[0].isEmpty() || parts[1].isEmpty()) continue;
 
         m_variables.insert(parts[0], parts[1]);
+        m_variablesOrders.append(parts[0]);
     }
 
     writeCache();
+    clearChanges();
 }
 
 void GlobalVariablesListModel::readCache()
@@ -333,13 +336,14 @@ void GlobalVariablesListModel::readCache()
         auto name = variableObject.value("name").toString();
         auto value = variableObject.contains("value") ? variableObject.value("value").toString() : "";
         m_variables.insert(name, value);
+        m_variablesOrders.append(name);
     }
 }
 
 void GlobalVariablesListModel::writeCache()
 {
     QJsonArray items;
-    foreach (auto key, m_variables.keys()) {
+    foreach (auto key, m_variablesOrders) {
         auto value = m_variables.value(key);
         QJsonObject jsonObject;
         jsonObject["name"] = key;
