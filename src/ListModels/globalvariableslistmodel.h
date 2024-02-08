@@ -29,7 +29,7 @@ class GlobalVariablesListModel : public QAbstractListModel
     Q_PROPERTY(QStringList tabs READ tabs NOTIFY tabsChanged)
     Q_PROPERTY(QString selectedTab READ selectedTab WRITE setSelectedTab NOTIFY selectedTabChanged)
     Q_PROPERTY(bool hasLines READ hasLines NOTIFY hasLinesChanged FINAL)
-    Q_PROPERTY(bool hasChanges READ hasChanges NOTIFY hasChangesChanged FINAL)
+    Q_PROPERTY(bool needShowSaveNotifications READ needShowSaveNotifications WRITE setNeedShowSaveNotifications NOTIFY needShowSaveNotificationsChanged FINAL)
 
 private:
     enum GlobaVariablesRoles {
@@ -50,7 +50,7 @@ private:
     bool m_helpVisible { false };
     QStringList m_tabs { QStringList() };
     QString m_selectedTab { "" };
-    bool m_hasChanges { false };
+    bool m_needShowSaveNotifications { true };
     const QString VariablesTab { "Variables" };
     const QString m_helpCommand { "globalvariableshelp" };
     const QString m_closeWindowCommand { "globalvariablesclosewindow" };
@@ -98,7 +98,9 @@ public:
     QStringList tabs() const noexcept { return m_tabs; }
 
     bool hasLines() const noexcept { return !m_lines.isEmpty(); }
-    bool hasChanges() const noexcept { return m_hasChanges; }
+
+    bool needShowSaveNotifications() const noexcept { return m_needShowSaveNotifications; }
+    void setNeedShowSaveNotifications(bool needShowSaveNotifications) noexcept;
 
     QString selectedTab() const noexcept { return m_selectedTab; }
     void setSelectedTab(const QString& selectedTab) noexcept;
@@ -118,8 +120,6 @@ private:
     void fillHelpShortcuts();
     QString dateTimeNowVariable(const QString& content);
     QString timeNowVariable(const QString& content);
-    void setChanges();
-    void clearChanges();
 
 signals:
     void selectedChanged();
@@ -129,7 +129,7 @@ signals:
     void selectedTabChanged();
     void tabsChanged();
     void hasLinesChanged();
-    void hasChangesChanged();
+    void needShowSaveNotificationsChanged();
 
 };
 

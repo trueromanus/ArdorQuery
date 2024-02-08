@@ -114,13 +114,13 @@ ApplicationWindow {
 
     Item {
         id: notificationContainer
-        visible: backend.globalVariables.hasChanges
+        visible: backend.globalVariables.needShowSaveNotifications
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 4
         anchors.rightMargin: 4
-        width: 200
-        height: 60
+        width: 260
+        height: 80
 
         Rectangle {
             anchors.fill: parent
@@ -136,13 +136,29 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.leftMargin: 4
             verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
+            horizontalAlignment: Text.AlignJustify
             wrapMode: Text.WordWrap
-            font.pointSize: 9
+            font.pointSize: 10
             maximumLineCount: 3
             elide: Text.ElideRight
-            color: "#996633"
             text: "Any changes will be discarded once the window is closed. Save your changes by pressing Ctrl-S."
+        }
+
+        IconButton {
+            id: closeButton
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.topMargin: 2
+            anchors.rightMargin: 2
+            icon: storagePaths.icons + "cancel.svg"
+            width: 22
+            height: 22
+            iconWidth: 20
+            iconHeight: 20
+            tooltipMessage: "Close notification"
+            onPressed: {
+                backend.globalVariables.needShowSaveNotifications = false;
+            }
         }
     }
 

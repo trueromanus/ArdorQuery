@@ -142,7 +142,6 @@ void GlobalVariablesListModel::addLine()
     endResetModel();
 
     emit hasLinesChanged();
-    setChanges();
 }
 
 void GlobalVariablesListModel::addLineBefore()
@@ -158,7 +157,6 @@ void GlobalVariablesListModel::addLineBefore()
     endResetModel();
 
     emit hasLinesChanged();
-    setChanges();
 }
 
 void GlobalVariablesListModel::addLineToEnd()
@@ -171,7 +169,6 @@ void GlobalVariablesListModel::addLineToEnd()
     setSelected(m_lines.size() - 1);
 
     emit hasLinesChanged();
-    setChanges();
 }
 
 void GlobalVariablesListModel::removeSelectedLine()
@@ -185,7 +182,6 @@ void GlobalVariablesListModel::removeSelectedLine()
     setSelected(m_selected >= m_lines.size() ? m_selected - 1 : m_selected);
 
     emit hasLinesChanged();
-    setChanges();
 }
 
 void GlobalVariablesListModel::removeAllLines()
@@ -199,12 +195,19 @@ void GlobalVariablesListModel::removeAllLines()
     setSelected(0);
 
     emit hasLinesChanged();
-    setChanges();
 }
 
 void GlobalVariablesListModel::addVariable(const QString &name, const QString &value)
 {
     m_variables.insert(name, value);
+}
+
+void GlobalVariablesListModel::setNeedShowSaveNotifications(bool needShowSaveNotifications) noexcept
+{
+    if (m_needShowSaveNotifications == needShowSaveNotifications) return;
+
+    m_needShowSaveNotifications = needShowSaveNotifications;
+    emit needShowSaveNotificationsChanged();
 }
 
 void GlobalVariablesListModel::setSelectedTab(const QString &selectedTab) noexcept
@@ -263,7 +266,6 @@ void GlobalVariablesListModel::fillLines()
     endResetModel();
 
     emit hasLinesChanged();
-    clearChanges();
     if (m_selected >= m_lines.size()) setSelected(0);
 }
 
@@ -313,7 +315,6 @@ void GlobalVariablesListModel::parseLines()
     }
 
     writeCache();
-    clearChanges();
 }
 
 void GlobalVariablesListModel::readCache()
@@ -478,16 +479,3 @@ QString GlobalVariablesListModel::timeNowVariable(const QString &content)
     auto spaced = "{{ " + m_time24HoursNowGlobalVariable + " }}";
     return QString(content).replace(nospaced, timeAsAstring).replace(spaced, timeAsAstring);
 }
-
-void GlobalVariablesListModel::setChanges()
-{
-    m_hasChanges = true;
-    emit hasChangesChanged();
-}
-
-void GlobalVariablesListModel::clearChanges()
-{
-    m_hasChanges = false;
-    emit hasChangesChanged();
-}
-
