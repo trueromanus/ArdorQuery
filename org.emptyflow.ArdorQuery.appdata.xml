@@ -25,13 +25,15 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.14" date="2023-01-14">
+		<release version="0.0.15" date="2024-02-10">
 			<description>
-				<p>Fixed refresh title name in queries list popup.</p>
-				<p>Remove : character in all export/import actions from HTTP headers.</p>
-				<p>The default filename is automatically populated in the Save File dialog based on the name from the Content-Disposition header.</p>
-				<p>Added link to documentation in About window.</p>
-				<p>Show count of queries with errors in lower toolbar.</p>
+				<p>Fixed layout for OpenAPI Export routes list.</p>
+				<p>Added CSS formatter.</p>
+				<p>Added support "spaced" global variables like this {{ name }}.</p>
+				<p>Added keyboard shortcuts for Global Variables window.</p>
+				<p>Unsaved changes after close Global Variables window will be abandoned.</p>
+				<p>Fixed order of global variables in Global Variables window.</p>
+				<p>Added two predefined global variables.</p>
 			</description>
 		</release>
 	</releases>
