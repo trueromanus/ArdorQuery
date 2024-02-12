@@ -84,7 +84,7 @@ void GlobalVariablesUnitTest::parseLines_singleEmptyVariable()
     QString testString = "test string {{variable}} empty";
     auto result = model.replaceGlobalVariables(testString);
 
-    QString resultString = "test string  empty";
+    QString resultString = "test string {{variable}} empty";
     QCOMPARE(result, resultString);
 }
 
@@ -98,5 +98,31 @@ void GlobalVariablesUnitTest::parseLines_singleIncorrectVariable()
     auto result = model.replaceGlobalVariables(testString);
 
     QString resultString = "test string {{variable}} empty";
+    QCOMPARE(result, resultString);
+}
+
+void GlobalVariablesUnitTest::parseLines_dateTimeUtcNowPredefinedVariable()
+{
+    GlobalVariablesListModel model;
+    QString testString = "test string {{dateTimeUtcNow}} empty";
+    auto result = model.replaceGlobalVariables(testString);
+
+    QDateTime date = QDateTime::currentDateTime();
+    QString dateAsAstring = date.toString(Qt::ISODate);
+
+    QString resultString = "test string " + dateAsAstring + " empty";
+    QCOMPARE(result, resultString);
+}
+
+void GlobalVariablesUnitTest::parseLines_ttime24HoursNowPredefinedVariable()
+{
+    GlobalVariablesListModel model;
+    QString testString = "test string {{time24HoursNow}} empty";
+    auto result = model.replaceGlobalVariables(testString);
+
+    auto time = QDateTime::currentDateTimeUtc().time();
+    QString timeAsAstring = time.toString("hh:mm:ss");
+
+    QString resultString = "test string " + timeAsAstring + " empty";
     QCOMPARE(result, resultString);
 }

@@ -89,19 +89,20 @@ QHash<int, QByteArray> GlobalVariablesListModel::roleNames() const
 
 QString GlobalVariablesListModel::replaceGlobalVariables(const QString &value)
 {
-    if (m_variables.isEmpty()) return value;
-
     QString result = value;
-    foreach (auto variable, m_variables.keys()) {
-        auto fullVariable = "{{" + variable + "}}";
-        auto fullVariableSpaces = "{{ " + variable + " }}";
-        auto value = m_variables.value(variable);
-        result = result.replace(fullVariable, value).replace(fullVariableSpaces, value);
+
+    if (!m_variables.isEmpty()) {
+        foreach (auto variable, m_variables.keys()) {
+            auto fullVariable = "{{" + variable + "}}";
+            auto fullVariableSpaces = "{{ " + variable + " }}";
+            auto value = m_variables.value(variable);
+            result = result.replace(fullVariable, value).replace(fullVariableSpaces, value);
+        }
     }
 
     foreach (auto key, m_globalVariableHandlers.keys()) {
         auto item = m_globalVariableHandlers.value(key);
-        result = std::invoke(item, this, value);
+        result = std::invoke(item, this, result);
     }
 
     return result;
