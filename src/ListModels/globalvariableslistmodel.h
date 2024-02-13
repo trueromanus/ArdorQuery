@@ -68,7 +68,7 @@ private:
 
     typedef QString (GlobalVariablesListModel::*globalVariableDelegate)(const QString& content);
 
-    const QString m_dateTimeNowGlobalVariable { "dateTimeUtcNow" };
+    const QString m_dateTimeNowGlobalVariable { "dateTimeNow" };
     const QString m_time24HoursNowGlobalVariable { "time24HoursNow" };
     QMap<QString, GlobalVariablesListModel::globalVariableDelegate> m_globalVariableHandlers { QMap<QString, GlobalVariablesListModel::globalVariableDelegate>() };
 public:

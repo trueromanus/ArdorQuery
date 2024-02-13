@@ -11,3 +11,28 @@ As example global variable `mytoken 4354534534534534534`
 bearer {{mytoken}}
 ```
 header will be replaced on `bearer 4354534534534534534`.
+
+### Navigation
+`PgDown` - Select a text field below the currently selected field.  
+`PgUp` - Select a text field above the currently selected field.  
+`Ctrl-PgDown` - Selecting end a text field.  
+`Ctrl-PgUp` - Selecting start a text field.
+
+### Working with lines
+`Alt-Enter` - Adding a new empty line on top of the selected line.  
+`Shift-Enter` - Adding a new empty line at the end of the lines.  
+`Control-R` - Remove selected line.  
+`Shift-Alt-R` - Remove all lines.
+
+### Predefined global variables
+You can use predefined global variables to inject some stuff like date, time, etc.
+
+#### `dateTimeNow`
+
+It will be replaced to the current date according to local time in ISO 8601 format.
+Example: `2024-01-01T12:00:00`
+
+#### `time24HoursNow`
+
+It will be replaced to current local time in 24 hours format.
+Example: `18:00:00`
