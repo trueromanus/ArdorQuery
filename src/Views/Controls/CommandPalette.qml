@@ -19,7 +19,7 @@ Item {
         model: backend.requestsCommandPaletter
         delegate: Item {
             width: items.width
-            height: 26
+            height: 30
 
             Rectangle {
                 color: "lightgray"
@@ -34,6 +34,9 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 4
                 text: title
+                wrapMode: Text.Wrap
+                elide: Text.ElideRight
+                maximumLineCount: 2
             }
         }
         ScrollBar.vertical: ScrollBar {
