@@ -127,7 +127,9 @@ Item {
             if (leftCursor > leftCursotLimit) leftCursor = leftCursotLimit;
 
             globalVariablesListView.x = leftCursor;
-            globalVariablesListView.y = (activeItem.y + activeItem.height) - listView.contentY;
+            let bottomElement = activeItem.y + activeItem.height - listView.contentY;
+            if (bottomElement > root.height - 100) bottomElement = activeItem.y - listView.contentY - globalVariablesListView.height;
+            globalVariablesListView.y = bottomElement;
         }
     }
 
