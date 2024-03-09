@@ -24,6 +24,7 @@ class HttpRequestItem
 private:
     int m_type { 0 };
     QString m_text { "" };
+    int m_cursor { 0 };
 
 public:
     HttpRequestItem();
@@ -33,6 +34,9 @@ public:
 
     QString text() const noexcept { return m_text; }
     void setText(QString text) noexcept;
+
+    int cursor() const noexcept { return m_cursor; }
+    void setCursor(int cursor) noexcept { m_cursor = cursor; }
 
 };
 

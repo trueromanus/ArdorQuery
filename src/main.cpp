@@ -36,7 +36,7 @@
 #include "Tests/htmlformatterunittests.h"
 #include "Tests/textadvisorviewmodelunittests.h"
 #include "Tests/globalvariablesunittest.h"
-#include "Tests/cssformatterunittests.h""
+#include "Tests/cssformatterunittests.h"
 #endif
 
 void registerQmlTypes();

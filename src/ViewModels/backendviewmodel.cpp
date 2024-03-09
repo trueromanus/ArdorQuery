@@ -61,6 +61,45 @@ void BackendViewModel::addNewRequest(bool forceSelectedAddedItem)
 
 bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
 {
+    if (m_showGlobalVariablesPopup) {
+
+        if (shortcut == "escape") {
+            m_showGlobalVariablesPopup = false;
+            emit showGlobalVariablesPopupChanged();
+            return true;
+        }
+
+        if (shortcut == "down") {
+            if (m_selectedGlobalVariableIndex < m_globalVariables->variableNames().size() - 1) {
+                m_selectedGlobalVariableIndex++;
+                m_selectedGlobalVariable = m_globalVariables->variableNames().value(m_selectedGlobalVariableIndex);
+                emit selectedGlobalVariableChanged();
+            }
+            return true;
+        }
+
+        if (shortcut == "up") {
+            if (m_selectedGlobalVariableIndex > 0) {
+                m_selectedGlobalVariableIndex--;
+                m_selectedGlobalVariable = m_globalVariables->variableNames().value(m_selectedGlobalVariableIndex);
+                emit selectedGlobalVariableChanged();
+            }
+            return true;
+        }
+
+        if (shortcut == "enter") {
+            if (m_selectedGlobalVariableIndex > -1)  {
+                auto variable = m_globalVariables->variableNames().value(m_selectedGlobalVariableIndex);
+                m_requests->selectedItem()->requestModel()->insertGlobalVariableToCursor(variable);
+            }
+            m_showGlobalVariablesPopup = false;
+            emit showGlobalVariablesPopupChanged();
+            return true;
+        }
+
+        return false;
+    }
+
     if (!shortcut.startsWith("control") && m_openedCommandPalette) {
         m_openedCommandPalette = false;
         m_requestsCommandPaletter->selectItem();
@@ -96,6 +135,10 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         m_requestExternal->appendFromClipboard();
     } else if (command == m_globalVariablesCommand) {
         emit needGlobalVariablesWindow();
+    } else if (command == m_addGlobalVariablesCommand) {
+        m_showGlobalVariablesPopup = !m_showGlobalVariablesPopup;
+        if (m_showGlobalVariablesPopup) m_selectedGlobalVariableIndex = -1;
+        emit showGlobalVariablesPopupChanged();
     } else if (command == m_opeApiExportCommand) {
         emit needOpenApiExportWindow();
     } else if (command == m_removeSelectedFieldCommand) {
@@ -355,6 +398,7 @@ void BackendViewModel::fillMappings()
     m_shortcutCommandMapping.insert("f3", m_appendFromClipboardCommand);
     m_shortcutCommandMapping.insert("control-f6", m_globalVariablesCommand);
     m_shortcutCommandMapping.insert("control-g", m_globalVariablesCommand);
+    m_shortcutCommandMapping.insert("control-0", m_addGlobalVariablesCommand);
     m_shortcutCommandMapping.insert("f6", m_opeApiExportCommand);
     m_shortcutCommandMapping.insert("control-o", m_opeApiExportCommand);
     m_shortcutCommandMapping.insert("control-r", m_removeSelectedFieldCommand);
@@ -427,6 +471,7 @@ void BackendViewModel::fillCommands()
     m_shortcutCommands.insert(m_generateImageToClipboardCommand, "Generate image contains query fields, response summary and headers and save to clipboard");
     m_shortcutCommands.insert(m_nextFindedResultCommand, "Next founded result");
     m_shortcutCommands.insert(m_previousFindedResultCommand, "Previous founded result");
+    m_shortcutCommands.insert(m_addGlobalVariablesCommand, "Add a global variable to the selected line and the location where the cursor is located");
 }
 
 void BackendViewModel::fillHelpShortcuts()

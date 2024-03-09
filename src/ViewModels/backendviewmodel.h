@@ -45,6 +45,8 @@ class BackendViewModel : public QObject
     Q_PROPERTY(GlobalVariablesListModel* globalVariables READ globalVariables NOTIFY globalVariablesChanged)
     Q_PROPERTY(QList<QVariantMap> shortcuts READ shortcuts NOTIFY shortcutsChanged)
     Q_PROPERTY(bool focusedHelpTextField READ focusedHelpTextField WRITE setFocusedHelpTextField NOTIFY focusedHelpTextFieldChanged FINAL)
+    Q_PROPERTY(bool showGlobalVariablesPopup READ showGlobalVariablesPopup NOTIFY showGlobalVariablesPopupChanged FINAL)
+    Q_PROPERTY(QString selectedGlobalVariable READ selectedGlobalVariable NOTIFY selectedGlobalVariableChanged FINAL)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -64,6 +66,9 @@ private:
     QMap<QString, QString> m_shortcutCommandMapping { QMap<QString, QString>() };
     QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
     bool m_focusedHelpTextField { false };
+    bool m_showGlobalVariablesPopup { false };
+    int m_selectedGlobalVariableIndex { -1 };
+    QString m_selectedGlobalVariable { "" };
     const QString m_changeSelectedQueryCommand { "changeselectedquery" };
     const QString m_performQueriesMultipleCommand { "performqueriesmultiple" };
     const QString m_performQueryCommand { "performquery" };
@@ -73,6 +78,7 @@ private:
     const QString m_replaceFromClipboardCommand { "replacefromclipboard" };
     const QString m_appendFromClipboardCommand { "appendfromclipboard" };
     const QString m_globalVariablesCommand { "globalvariables" };
+    const QString m_addGlobalVariablesCommand { "addglobalvariable" };
     const QString m_opeApiExportCommand { "openApiExport" };
     const QString m_removeSelectedFieldCommand { "removeselectedfield" };
     const QString m_removeAllFieldCommand { "removeallfield" };
@@ -115,6 +121,9 @@ public:
 
     bool focusedHelpTextField() const noexcept { return m_focusedHelpTextField; }
     void setFocusedHelpTextField(bool focusedHelpTextField) noexcept;
+
+    bool showGlobalVariablesPopup() const noexcept { return m_showGlobalVariablesPopup; }
+    QString selectedGlobalVariable() const noexcept { return m_selectedGlobalVariable; }
 
     Q_INVOKABLE void addNewRequest(bool forceSelectedAddedItem = false);
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
@@ -162,6 +171,8 @@ signals:
     void needGlobalVariablesWindow();
     void shortcutsChanged();
     void focusedHelpTextFieldChanged();
+    void showGlobalVariablesPopupChanged();
+    void selectedGlobalVariableChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

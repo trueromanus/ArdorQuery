@@ -31,6 +31,7 @@ GlobalVariablesListModel::GlobalVariablesListModel(QObject *parent)
     fillCommands();
     fillHelpShortcuts();
     m_globalVariableHandlers.insert(m_dateTimeNowGlobalVariable, &GlobalVariablesListModel::dateTimeNowVariable);
+    m_globalVariableHandlers.insert(m_dateTimeUtcNowGlobalVariable, &GlobalVariablesListModel::dateTimeUtcNowVariable);
     m_globalVariableHandlers.insert(m_time24HoursNowGlobalVariable, &GlobalVariablesListModel::timeNowVariable);
 }
 
@@ -467,6 +468,17 @@ QString GlobalVariablesListModel::dateTimeNowVariable(const QString &content)
     QString dateAsAstring = date.toString(Qt::ISODate);
     auto nospaced = "{{" + m_dateTimeNowGlobalVariable + "}}";
     auto spaced = "{{ " + m_dateTimeNowGlobalVariable + " }}";
+    return QString(content).replace(nospaced, dateAsAstring).replace(spaced, dateAsAstring);
+}
+
+QString GlobalVariablesListModel::dateTimeUtcNowVariable(const QString &content)
+{
+    if (content.indexOf(m_dateTimeUtcNowGlobalVariable) == -1) return content;
+
+    QDateTime date = QDateTime::currentDateTimeUtc();
+    QString dateAsAstring = date.toString(Qt::ISODate);
+    auto nospaced = "{{" + m_dateTimeUtcNowGlobalVariable + "}}";
+    auto spaced = "{{ " + m_dateTimeUtcNowGlobalVariable + " }}";
     return QString(content).replace(nospaced, dateAsAstring).replace(spaced, dateAsAstring);
 }
 

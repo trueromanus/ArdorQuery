@@ -30,6 +30,7 @@ class GlobalVariablesListModel : public QAbstractListModel
     Q_PROPERTY(QString selectedTab READ selectedTab WRITE setSelectedTab NOTIFY selectedTabChanged)
     Q_PROPERTY(bool hasLines READ hasLines NOTIFY hasLinesChanged FINAL)
     Q_PROPERTY(bool needShowSaveNotifications READ needShowSaveNotifications WRITE setNeedShowSaveNotifications NOTIFY needShowSaveNotificationsChanged FINAL)
+    Q_PROPERTY(QStringList variableNames READ variableNames NOTIFY variableNamesChanged FINAL)
 
 private:
     enum GlobaVariablesRoles {
@@ -69,6 +70,7 @@ private:
     typedef QString (GlobalVariablesListModel::*globalVariableDelegate)(const QString& content);
 
     const QString m_dateTimeNowGlobalVariable { "dateTimeNow" };
+    const QString m_dateTimeUtcNowGlobalVariable { "dateTimeUtcNow" };
     const QString m_time24HoursNowGlobalVariable { "time24HoursNow" };
     QMap<QString, GlobalVariablesListModel::globalVariableDelegate> m_globalVariableHandlers { QMap<QString, GlobalVariablesListModel::globalVariableDelegate>() };
 public:
@@ -105,6 +107,8 @@ public:
     QString selectedTab() const noexcept { return m_selectedTab; }
     void setSelectedTab(const QString& selectedTab) noexcept;
 
+    QStringList variableNames() const noexcept { return m_variables.keys(); }
+
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void fillLines();
     Q_INVOKABLE void clearLines();
@@ -119,6 +123,7 @@ private:
     void fillCommands();
     void fillHelpShortcuts();
     QString dateTimeNowVariable(const QString& content);
+    QString dateTimeUtcNowVariable(const QString& content);
     QString timeNowVariable(const QString& content);
 
 signals:
@@ -130,6 +135,7 @@ signals:
     void tabsChanged();
     void hasLinesChanged();
     void needShowSaveNotificationsChanged();
+    void variableNamesChanged();
 
 };
 

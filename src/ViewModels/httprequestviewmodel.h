@@ -55,6 +55,7 @@ private:
     int m_selectedItem { -1 };
     QSharedPointer<TextAdvisorViewModel> m_textAdvisor { nullptr };
     const QString m_unnamed { "Unnamed" };
+    bool m_visibleAddGlobalVariablePopup { false };
 
     enum HttpRequestRoles {
         TypeRole = Qt::UserRole + 1,
@@ -83,6 +84,7 @@ public:
     Q_INVOKABLE void removeFirstItem();
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
+    Q_INVOKABLE void setItemCursor(int position, int cursor);
     Q_INVOKABLE void selectUpField();
     Q_INVOKABLE void selectDownField();
     Q_INVOKABLE void selectFirstField();
@@ -106,6 +108,7 @@ public:
     void sortingFields(const bool descending) noexcept;
     QString getAllFields() const noexcept;
     QStringList getAllFieldsAsList() const noexcept;
+    void insertGlobalVariableToCursor(const QString& variable) noexcept;
 
 private:
     QString getTypeColor(int type) const;

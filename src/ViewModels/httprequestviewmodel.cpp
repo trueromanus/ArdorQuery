@@ -273,6 +273,12 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
     if (needRefresh) emit dataChanged(index(position, 0), index(position, 0));
 }
 
+void HttpRequestViewModel::setItemCursor(int position, int cursor)
+{
+    auto item = m_items->value(position);
+    item->setCursor(cursor);
+}
+
 void HttpRequestViewModel::selectUpField()
 {
     if (m_selectedItem == 0) return;
@@ -608,6 +614,23 @@ QStringList HttpRequestViewModel::getAllFieldsAsList() const noexcept
          result.append(item->text());
     }
     return result;
+}
+
+void HttpRequestViewModel::insertGlobalVariableToCursor(const QString &variable) noexcept
+{
+    auto item = m_items->value(m_selectedItem);
+    auto content = item->text();
+    auto cursorIndex = item->cursor();
+    auto insertedVariable = "{{ " + variable + " }}";
+    if (cursorIndex > content.size()) {
+        content.append(insertedVariable);
+    } else {
+        content.insert(cursorIndex, insertedVariable);
+    }
+
+    item->setText(content);
+
+    emit dataChanged(index(m_selectedItem, 0), index(m_selectedItem, 0));
 }
 
 QString HttpRequestViewModel::getTypeColor(int type) const
