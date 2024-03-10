@@ -108,6 +108,7 @@ public:
     void setSelectedTab(const QString& selectedTab) noexcept;
 
     QStringList variableNames() const noexcept { return m_variables.keys(); }
+    void refreshVariableNames() noexcept;
 
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void fillLines();

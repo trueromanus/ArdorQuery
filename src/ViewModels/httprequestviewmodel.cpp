@@ -81,6 +81,9 @@ QVariant HttpRequestViewModel::data(const QModelIndex &index, int role) const
             case IsFocusedRole: {
                 return QVariant(rowIndex == m_selectedItem);
             }
+            case LastCursorPositionRole: {
+                return QVariant(item->cursor());
+            }
         }
 
         return QVariant();
@@ -113,6 +116,10 @@ QHash<int, QByteArray> HttpRequestViewModel::roleNames() const
         {
             IsFocusedRole,
             "isNeedFocused"
+        },
+        {
+            LastCursorPositionRole,
+            "lastCursorPosition"
         }
     };
 }
@@ -616,7 +623,7 @@ QStringList HttpRequestViewModel::getAllFieldsAsList() const noexcept
     return result;
 }
 
-void HttpRequestViewModel::insertGlobalVariableToCursor(const QString &variable) noexcept
+int HttpRequestViewModel::insertGlobalVariableToCursor(const QString &variable) noexcept
 {
     auto item = m_items->value(m_selectedItem);
     auto content = item->text();
@@ -629,8 +636,11 @@ void HttpRequestViewModel::insertGlobalVariableToCursor(const QString &variable)
     }
 
     item->setText(content);
+    item->setCursor(cursorIndex + insertedVariable.size());
 
     emit dataChanged(index(m_selectedItem, 0), index(m_selectedItem, 0));
+
+    return cursorIndex + insertedVariable.size();
 }
 
 QString HttpRequestViewModel::getTypeColor(int type) const

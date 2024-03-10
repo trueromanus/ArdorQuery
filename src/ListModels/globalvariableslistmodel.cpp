@@ -220,6 +220,11 @@ void GlobalVariablesListModel::setSelectedTab(const QString &selectedTab) noexce
     emit selectedTabChanged();
 }
 
+void GlobalVariablesListModel::refreshVariableNames() noexcept
+{
+    emit variableNamesChanged();
+}
+
 bool GlobalVariablesListModel::shortcutHandler(const QString &shortcut) noexcept
 {
     if (!m_shortcutCommandMapping.contains(shortcut)) return false;

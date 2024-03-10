@@ -46,7 +46,7 @@ public:
         PastryType,
         RouteType,
         OptionsType,
-        PostScriptType,
+        PostScriptType
     };
 
 private:
@@ -63,7 +63,8 @@ private:
         TextRole,
         IsActiveRole,
         IndexRole,
-        IsFocusedRole
+        IsFocusedRole,
+        LastCursorPositionRole
     };
 
 public:
@@ -108,7 +109,7 @@ public:
     void sortingFields(const bool descending) noexcept;
     QString getAllFields() const noexcept;
     QStringList getAllFieldsAsList() const noexcept;
-    void insertGlobalVariableToCursor(const QString& variable) noexcept;
+    int insertGlobalVariableToCursor(const QString& variable) noexcept;
 
 private:
     QString getTypeColor(int type) const;

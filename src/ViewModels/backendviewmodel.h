@@ -173,6 +173,7 @@ signals:
     void focusedHelpTextFieldChanged();
     void showGlobalVariablesPopupChanged();
     void selectedGlobalVariableChanged();
+    void globalVariableSelected(int lastPosition);
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

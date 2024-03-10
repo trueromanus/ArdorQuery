@@ -88,12 +88,18 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         }
 
         if (shortcut == "enter") {
+            auto lastPosition = 0;
             if (m_selectedGlobalVariableIndex > -1)  {
                 auto variable = m_globalVariables->variableNames().value(m_selectedGlobalVariableIndex);
-                m_requests->selectedItem()->requestModel()->insertGlobalVariableToCursor(variable);
+                lastPosition = m_requests->selectedItem()->requestModel()->insertGlobalVariableToCursor(variable);
+                m_globalVariables->refreshVariableNames();
             }
+            m_selectedGlobalVariableIndex = -1;
+            m_selectedGlobalVariable = "";
             m_showGlobalVariablesPopup = false;
             emit showGlobalVariablesPopupChanged();
+            emit selectedGlobalVariableChanged();
+            emit globalVariableSelected(lastPosition);
             return true;
         }
 

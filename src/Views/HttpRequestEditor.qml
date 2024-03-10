@@ -37,6 +37,7 @@ Item {
             required property bool isActive
             required property string textContent
             required property int currentIndex
+            property int lastCursorPosition
 
             onIsNeedFocusedChanged: {
                 if (isNeedFocused) {
@@ -149,6 +150,21 @@ Item {
                 if (bottomElement > root.height - 100) bottomElement = activeItem.y - listView.contentY - globalVariablesPopup.height;
                 globalVariablesPopup.y = bottomElement;
             }
+        }
+    }
+
+    Connections {
+        target: backend
+        function onGlobalVariableSelected(lastPosition) {
+            let activeItem;
+            for (const item of listView.contentItem.children) {
+                if (item.isActive) activeItem = item;
+            }
+
+            if (!activeItem) return;
+
+            const textField = activeItem.children[0];
+            textField.cursorPosition = lastPosition;
         }
     }
 
