@@ -85,51 +85,70 @@ Item {
         }
     }
 
-    ListView {
-        id: globalVariablesListView
+    Item {
+        id: globalVariablesPopup
         visible: backend.showGlobalVariablesPopup
-        width: 100
+        width: 200
         height: 100
-        model: backend.globalVariables.variableNames
-        delegate: Item {
-            width: globalVariablesListView.width
-            height: 30
 
-            Rectangle {
-                visible: modelData === backend.selectedGlobalVariable
-                anchors.fill: parent
-                color: "lightgray"
-                opacity: .8
-            }
-
-            Text {
-                text: modelData
-                maximumLineCount: 2
-                wrapMode: Text.Wrap
-            }
+        Rectangle {
+            anchors.fill: parent
+            border.width: 1
+            border.color: "lightgray"
+            radius: 4
         }
-        onVisibleChanged: {
-            if (!globalVariablesListView.visible) return;
 
-            let activeItem;
-            for (const item of listView.contentItem.children) {
-                if (item.isActive) activeItem = item;
+        ListView {
+            id: globalVariablesListView
+            anchors.fill: parent
+            model: backend.globalVariables.variableNames
+            delegate: Item {
+                width: globalVariablesListView.width
+                height: 30
+
+                Rectangle {
+                    visible: modelData === backend.selectedGlobalVariable
+                    anchors.fill: parent
+                    color: "lightgray"
+                    opacity: .8
+                    anchors.leftMargin: 1
+                    anchors.rightMargin: 1
+                }
+
+                Text {
+                    anchors.fill: parent
+                    anchors.leftMargin: 4
+                    anchors.rightMargin: 4
+                    text: modelData
+                    verticalAlignment: Text.AlignVCenter
+                    maximumLineCount: 2
+                    wrapMode: Text.Wrap
+                    elide: Text.ElideRight
+                }
             }
+            onVisibleChanged: {
+                if (!globalVariablesPopup.visible) return;
 
-            if (!activeItem) return;
+                let activeItem;
+                for (const item of listView.contentItem.children) {
+                    if (item.isActive) activeItem = item;
+                }
 
-            const textField = activeItem.children[0];
-            let originalText = textField.text;
-            let cursorPosition = textField.cursorPosition;
+                if (!activeItem) return;
 
-            let leftCursor = textField.cursorRectangle.x;
-            const leftCursotLimit = parent.width - globalVariablesListView.width;
-            if (leftCursor > leftCursotLimit) leftCursor = leftCursotLimit;
+                const textField = activeItem.children[0];
+                let originalText = textField.text;
+                let cursorPosition = textField.cursorPosition;
 
-            globalVariablesListView.x = leftCursor;
-            let bottomElement = activeItem.y + activeItem.height - listView.contentY;
-            if (bottomElement > root.height - 100) bottomElement = activeItem.y - listView.contentY - globalVariablesListView.height;
-            globalVariablesListView.y = bottomElement;
+                let leftCursor = textField.cursorRectangle.x;
+                const leftCursotLimit = root.width - globalVariablesPopup.width;
+                if (leftCursor > leftCursotLimit) leftCursor = leftCursotLimit;
+
+                globalVariablesPopup.x = leftCursor;
+                let bottomElement = activeItem.y + activeItem.height - listView.contentY;
+                if (bottomElement > root.height - 100) bottomElement = activeItem.y - listView.contentY - globalVariablesPopup.height;
+                globalVariablesPopup.y = bottomElement;
+            }
         }
     }
 
