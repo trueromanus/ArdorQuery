@@ -25,15 +25,11 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.15" date="2024-02-10">
+		<release version="0.0.16" date="2024-03-16">
 			<description>
-				<p>Fixed layout for OpenAPI Export routes list.</p>
-				<p>Added CSS formatter.</p>
-				<p>Added support "spaced" global variables like this {{ name }}.</p>
-				<p>Added keyboard shortcuts for Global Variables window.</p>
-				<p>Unsaved changes after close Global Variables window will be abandoned.</p>
-				<p>Fixed order of global variables in Global Variables window.</p>
-				<p>Added two predefined global variables.</p>
+				<p>Fixed replacing global variables.</p>
+				<p>Fixed text alignment in queries list, also make text wrapping.</p>
+				<p> You can select from list global variable and insert it to current line after position of cursor.</p>
 			</description>
 		</release>
 	</releases>
