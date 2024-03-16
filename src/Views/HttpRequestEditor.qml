@@ -66,7 +66,10 @@ Item {
                 }
                 onPressed: {
                     backend.focusedHelpTextField = false;
-                    if (listView.model.selectedItem !== currentIndex) listView.model.selectedItem = currentIndex;
+                    if (listView.model.selectedItem !== currentIndex) {
+                        listView.model.selectedItem = currentIndex;
+                        if (backend.showGlobalVariablesPopup) backend.closeGlobalVariables();
+                    }
                 }
                 onActiveFocusChanged: {
                     if (backend.tabs.currentTab !== 'Request') return; //dirty hack but I don't know how to resolve it

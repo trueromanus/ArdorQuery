@@ -134,6 +134,7 @@ public:
     Q_INVOKABLE void generateImageToClipboard() noexcept;
     Q_INVOKABLE void importFromOpenApi(int index, bool replaceCurrent) noexcept;
     Q_INVOKABLE void saveDownloadedFile(const QString& fileName) noexcept;
+    Q_INVOKABLE void closeGlobalVariables() noexcept;
 
     void deleteCurrentRequest() noexcept;
 

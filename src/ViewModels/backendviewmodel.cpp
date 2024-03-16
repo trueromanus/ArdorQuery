@@ -342,6 +342,15 @@ void BackendViewModel::saveDownloadedFile(const QString &fileName) noexcept
     m_requests->selectedItem()->resultModel()->saveBodyToFile(removeProtocol(fileName));
 }
 
+void BackendViewModel::closeGlobalVariables() noexcept
+{
+    m_showGlobalVariablesPopup = false;
+    m_selectedGlobalVariable = "";
+    m_selectedGlobalVariableIndex = -1;
+    emit showGlobalVariablesPopupChanged();
+    emit selectedGlobalVariableChanged();
+}
+
 void BackendViewModel::deleteCurrentRequest() noexcept
 {
     if (m_requests->singleRequest()) addNewRequest();
