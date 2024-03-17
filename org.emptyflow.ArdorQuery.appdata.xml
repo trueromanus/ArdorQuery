@@ -10,7 +10,7 @@
 	<name>ArdorQuery</name>
 
 	<summary>
-		Rest API, GraphQL, HTTP(s) testing tool
+		Testing websites
 	</summary>
 
 	<description>
@@ -20,7 +20,7 @@
 
 	<screenshots>
 		<screenshot type="default">
-			<image>https://raw.githubusercontent.com/trueromanus/ArdorQuery/0.0.11/src/screenshoot.png</image>
+			<image>https://raw.githubusercontent.com/trueromanus/ArdorQuery/0.0.17/src/linuxscreenshotmain.png</image>
 		</screenshot>
 	</screenshots>
 
