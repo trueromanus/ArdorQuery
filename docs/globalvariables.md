@@ -24,12 +24,21 @@ header will be replaced on `bearer 4354534534534534534`.
 `Control-R` - Remove selected line.  
 `Shift-Alt-R` - Remove all lines.
 
+### Quickly insert global variables in the Query Editor
+You can insert global variables in the Query Editor. To do this, you can place the cursor where you want, insert a global variable and press `Ctrl-0`.
+After this, a pop-up window opens with all global variables. You can select the desired variable by pressing `Up` or `Down`, and press `Enter` to insert the variable or `Escape` to cancel operation.
+
 ### Predefined global variables
 You can use predefined global variables to inject some stuff like date, time, etc.
 
 #### `dateTimeNow`
 
 It will be replaced to the current date according to local time in ISO 8601 format.
+Example: `2024-01-01T12:00:00`
+
+#### `dateTimeUtcNow`
+
+It will be replaced to the current date according to UTC in ISO 8601 format.
 Example: `2024-01-01T12:00:00`
 
 #### `time24HoursNow`
