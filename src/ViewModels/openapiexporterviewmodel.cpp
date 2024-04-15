@@ -27,7 +27,7 @@ OpenApiExporterViewModel::OpenApiExporterViewModel(QObject *parent)
 {
     m_addressPalette->setup(m_addresses->getAddresses());
 
-    m_tabs.append(Exporter);
+    m_tabs.append(Importer);
     m_tabs.append(SavedOptions);
 
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &OpenApiExporterViewModel::requestFinished);
@@ -126,8 +126,21 @@ void OpenApiExporterViewModel::cancelCurrentRequest() noexcept
     m_currentReply->abort();
     m_currentReply = nullptr;
 
+    clearError();
+}
+
+void OpenApiExporterViewModel::clearError() noexcept
+{
     m_loading = false;
     m_errorMessage = "";
+    emit loadingChanged();
+    emit errorMessageChanged();
+}
+
+void OpenApiExporterViewModel::setupError(const QString &message) noexcept
+{
+    m_loading = true;
+    m_errorMessage = message;
     emit loadingChanged();
     emit errorMessageChanged();
 }
@@ -143,6 +156,19 @@ void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
         return;
     }
 
+    if (m_url.startsWith("file://")) {
+        clearError();
+        auto schemaPath = removeFileProtocol(m_url);
+        auto schemaFile = QFile(schemaPath);
+        if (schemaFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            auto content = schemaFile.readAll();
+            loadSchemeFromArray(content, m_JsonSchemeFormat);
+        } else {
+            setupError("Can't read schema file!");
+        }
+        return;
+    }
+
     if (m_routes.contains(m_url)) {
         removeLoadedRoutes(m_url);
     }
@@ -151,10 +177,9 @@ void OpenApiExporterViewModel::loadOpenApiScheme() noexcept
 
     m_currentReply = m_networkManager->get(request);
 
+    clearError();
     m_loading = true;
-    m_errorMessage = "";
     emit loadingChanged();
-    emit errorMessageChanged();
 }
 
 void OpenApiExporterViewModel::setUrl(const QString &url) noexcept
@@ -224,10 +249,10 @@ void OpenApiExporterViewModel::addCurrentToAddresses() noexcept
 
 void OpenApiExporterViewModel::togglePages() noexcept
 {
-    if (m_selectedTab == Exporter) {
+    if (m_selectedTab == Importer) {
         setSelectedTab(SavedOptions);
     } else {
-        setSelectedTab(Exporter);
+        setSelectedTab(Importer);
     }
 }
 
@@ -709,6 +734,15 @@ void OpenApiExporterViewModel::saveToAddressByTitle()
     }
 }
 
+void OpenApiExporterViewModel::loadSchemeFromArray(const QByteArray &array, int format)
+{
+    //TODO: Support YAML
+    if (format == m_JsonSchemeFormat) {
+        auto future = QtConcurrent::run(&OpenApiExporterViewModel::parseJsonSpecification, this, array);
+        m_schemeWatcher->setFuture(future);
+    }
+}
+
 void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
 {
     if (reply->error() != QNetworkReply::NoError) {
@@ -719,12 +753,9 @@ void OpenApiExporterViewModel::requestFinished(QNetworkReply *reply)
         return;
     }
 
-    //TODO: Support YAML
-
     auto scheme = reply->readAll();
 
-    auto future = QtConcurrent::run(&OpenApiExporterViewModel::parseJsonSpecification, this, scheme);
-    m_schemeWatcher->setFuture(future);
+    loadSchemeFromArray(scheme, m_JsonSchemeFormat);
 }
 
 void OpenApiExporterViewModel::parsingFinished()

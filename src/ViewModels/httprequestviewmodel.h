@@ -56,6 +56,7 @@ private:
     QSharedPointer<TextAdvisorViewModel> m_textAdvisor { nullptr };
     const QString m_unnamed { "Unnamed" };
     bool m_visibleAddGlobalVariablePopup { false };
+    bool m_hideItems { false };
 
     enum HttpRequestRoles {
         TypeRole = Qt::UserRole + 1,
@@ -80,6 +81,8 @@ public:
     QString title() const noexcept { return getTitle(); }
 
     void setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept;
+
+    void redrawAllItems() noexcept;
 
     Q_INVOKABLE void addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType = HttpRequestTypes::UnknownType, const QString initialValue = "", const QString& alias = "");
     Q_INVOKABLE void removeFirstItem();

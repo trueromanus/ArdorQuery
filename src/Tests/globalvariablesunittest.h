@@ -21,6 +21,7 @@ private slots:
     void parseLines_singleEmptyVariable();
     void parseLines_singleIncorrectVariable();
     void parseLines_dateTimeUtcNowPredefinedVariable();
+    void parseLines_dateTimeNowPredefinedVariable();
     void parseLines_ttime24HoursNowPredefinedVariable();
 
 };

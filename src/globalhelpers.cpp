@@ -55,3 +55,12 @@ QString adjustShortcutsForDisplay(QString &value) noexcept
         .replace("f11", "F11")
         .replace("f12", "F12");
 }
+
+QString removeFileProtocol(QString &value) noexcept
+{
+#ifdef Q_OS_WIN
+    return value.replace("file:///", "");
+#else
+    return value.replace("file://", "");
+#endif
+}

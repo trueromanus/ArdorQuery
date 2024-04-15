@@ -54,6 +54,7 @@ Item {
                 wrapMode: Text.WrapAnywhere
                 selectByMouse: true
                 font.pointSize: 12
+                activeFocusOnTab: false
                 background: Rectangle {
                     anchors.fill: parent
                     color: typeColor
@@ -76,7 +77,7 @@ Item {
                     if (backend.focusedHelpTextField) return; // fixing for text field in help
 
                     if (isNeedFocused && !textArea.activeFocus) {
-                        textArea.forceActiveFocus();
+                        textArea.focus = true;
                     }
                 }
                 onCursorPositionChanged: {

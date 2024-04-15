@@ -135,6 +135,11 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         m_requestExternal->copyToClipboard();
     } else if (command == m_helpCommand) {
         setHelpVisible(!m_helpVisible);
+        if (!m_helpVisible) {
+            m_focusedHelpTextField = false;
+            emit focusedHelpTextFieldChanged();
+            m_requests->selectedItem()->requestModel()->redrawAllItems();
+        }
     } else if (command == m_replaceFromClipboardCommand) {
         m_requestExternal->replaceFromClipboard();
     } else if (command == m_appendFromClipboardCommand) {
@@ -369,7 +374,7 @@ void BackendViewModel::setHelpVisible(const bool helpVisible) noexcept
 QString BackendViewModel::removeProtocol(const QString& filePath) noexcept
 {
     auto path = filePath;
-    return path.replace("file:///", "").replace("file://", "");
+    return removeFileProtocol(path);
 }
 
 void BackendViewModel::fillAuthorizationSecurity(const QString &key, HttpRequestViewModel* request, const OpenApiRoutesOptions &options)

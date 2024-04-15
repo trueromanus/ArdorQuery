@@ -6,7 +6,8 @@ You can press `Ctrl-Enter` to add a new line for create a new global variable.
 At the end of edit session you need to save the global variables by pressing `Ctrl-S`/`Command-S`.
 After this you can use the global variable in your queries like `{{<name of variable>}}`.  
   
-As example global variable `mytoken 4354534534534534534`
+As example if I have global variable `mytoken 4354534534534534534`  
+I can use it in `Query Editor` as example in header like with `bearer` like this:
 ```
 bearer {{mytoken}}
 ```

@@ -22,16 +22,16 @@ winget install EmptyFlow.ArdorQuery
 ```
 ### Archive
 - Open latest release by [link](https://github.com/trueromanus/ArdorQuery/releases/latest)
-- Download file `ardorquery_windows-X.X.X.zip` (X will be version numbers)
+- Download file `ArdorQuery.msi` and run it
 
 ## macOS
 
 - Open latest release by [link](https://github.com/trueromanus/ArdorQuery/releases/latest)
-- Download file `ardorquery_macos-X.X.X.zip` (X will be version numbers)
+- Download file `ArdorQuery.dmg`
 - Run application `Terminal` and make follow commands:
 ```shell
 $ cd ~/Downloads/
-$ xattr -d com.apple.quarantine <name of dmg file>
+$ xattr -d com.apple.quarantine ArdorQuery.dmg
 ```
 You don't need type full name of dmg file just type `ardor` and press `Tab` button.
 - Open `Downloads` folder in `Finder` and just double click on dmg file for mount ArdorQuery disk.

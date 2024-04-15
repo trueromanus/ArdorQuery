@@ -104,6 +104,19 @@ void GlobalVariablesUnitTest::parseLines_singleIncorrectVariable()
 void GlobalVariablesUnitTest::parseLines_dateTimeUtcNowPredefinedVariable()
 {
     GlobalVariablesListModel model;
+    QString testString = "test string {{dateTimeUtcNow}} empty";
+    auto result = model.replaceGlobalVariables(testString);
+
+    QDateTime date = QDateTime::currentDateTimeUtc();
+    QString dateAsAstring = date.toString(Qt::ISODate);
+
+    QString resultString = "test string " + dateAsAstring + " empty";
+    QCOMPARE(result, resultString);
+}
+
+void GlobalVariablesUnitTest::parseLines_dateTimeNowPredefinedVariable()
+{
+    GlobalVariablesListModel model;
     QString testString = "test string {{dateTimeNow}} empty";
     auto result = model.replaceGlobalVariables(testString);
 

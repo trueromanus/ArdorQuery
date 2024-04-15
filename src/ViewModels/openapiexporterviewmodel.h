@@ -83,7 +83,7 @@ private:
     const QString HeaderIn { "header" };
     const QString PathIn { "path" };
     const QString CookieIn { "cookie" };
-    const QString Exporter { "Exporter" };
+    const QString Importer { "Importer" };
     const QString SavedOptions { "Saved options" };
     const QString m_helpCommand { "exportopenapihelp" };
     const QString m_closeWindowCommand { "exportopenapiclosewindow" };
@@ -98,7 +98,8 @@ private:
     const QString m_previousRouteCommand { "exportopenapipreviousroute" };
     const QString m_addAsNewQueryRouteCommand { "exportopenapiaddasnewquery" };
     const QString m_addToCurrentQueryRouteCommand { "exportopenapiaddtocurrentquery" };
-    QString m_selectedTab { Exporter };
+    const int m_JsonSchemeFormat { 1 };
+    QString m_selectedTab { Importer };
     QStringList m_bodyTypes { QStringList() };
     QString m_errorMessage { "" };
 
@@ -140,7 +141,7 @@ public:
     QString selectedTab() const noexcept { return m_selectedTab; }
     void setSelectedTab(const QString& selectedTab) noexcept;
 
-    bool exporterPage() const noexcept { return m_selectedTab == Exporter; }
+    bool exporterPage() const noexcept { return m_selectedTab == Importer; }
     bool savedOptionsPage() const noexcept { return m_selectedTab == SavedOptions; }
 
     int prepareIdentifier() const noexcept { return m_prepareIndetifier; }
@@ -156,6 +157,8 @@ public:
     QList<QVariantMap> shortcuts() const noexcept { return m_shortcuts; }
 
     void cancelCurrentRequest() noexcept;
+    void clearError() noexcept;
+    void setupError(const QString& message) noexcept;
     Q_INVOKABLE void loadOpenApiScheme() noexcept;
     Q_INVOKABLE void setUrl(const QString& url) noexcept;
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
@@ -182,6 +185,7 @@ private:
     void fillCommands();
     void fillHelpShortcuts();
     void saveToAddressByTitle();
+    void loadSchemeFromArray(const QByteArray& array, int format);
 
 private slots:
     void requestFinished(QNetworkReply *reply);

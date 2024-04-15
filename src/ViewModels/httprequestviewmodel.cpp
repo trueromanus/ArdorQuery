@@ -52,41 +52,43 @@ int HttpRequestViewModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
 
-    return m_items->count();
+    return m_hideItems ? 0 : m_items->count();
 }
 
 QVariant HttpRequestViewModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
 
-        auto rowIndex = index.row();
-        auto item = m_items->at(rowIndex);
+    if (m_hideItems) return QVariant();
 
-        switch (role) {
-            case TypeRole: {
-                return QVariant(item->type());
-            }
-            case TextRole: {
-                return QVariant(item->text());
-            }
-            case IsActiveRole: {
-                return QVariant(m_selectedItem == rowIndex);
-            }
-            case IndexRole: {
-                return QVariant(rowIndex);
-            }
-            case TypeColor: {
-                return QVariant(getTypeColor(item->type()));
-            }
-            case IsFocusedRole: {
-                return QVariant(rowIndex == m_selectedItem);
-            }
-            case LastCursorPositionRole: {
-                return QVariant(item->cursor());
-            }
+    auto rowIndex = index.row();
+    auto item = m_items->at(rowIndex);
+
+    switch (role) {
+        case TypeRole: {
+            return QVariant(item->type());
         }
+        case TextRole: {
+            return QVariant(item->text());
+        }
+        case IsActiveRole: {
+            return QVariant(m_selectedItem == rowIndex);
+        }
+        case IndexRole: {
+            return QVariant(rowIndex);
+        }
+        case TypeColor: {
+            return QVariant(getTypeColor(item->type()));
+        }
+        case IsFocusedRole: {
+            return QVariant(rowIndex == m_selectedItem);
+        }
+        case LastCursorPositionRole: {
+            return QVariant(item->cursor());
+        }
+    }
 
-        return QVariant();
+    return QVariant();
 }
 
 QHash<int, QByteArray> HttpRequestViewModel::roleNames() const
@@ -140,6 +142,21 @@ void HttpRequestViewModel::setSelectedItem(const int selectedItem) noexcept
 void HttpRequestViewModel::setTextAdvisor(const QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept
 {
     m_textAdvisor = textAdviser;
+}
+
+void HttpRequestViewModel::redrawAllItems() noexcept
+{
+    m_hideItems = true;
+
+    beginResetModel();
+
+    endResetModel();
+
+    m_hideItems = false;
+
+    beginResetModel();
+
+    endResetModel();
 }
 
 void HttpRequestViewModel::addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType, const QString initialValue, const QString& alias)
