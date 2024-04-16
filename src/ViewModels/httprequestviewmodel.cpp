@@ -146,14 +146,6 @@ void HttpRequestViewModel::setTextAdvisor(const QSharedPointer<TextAdvisorViewMo
 
 void HttpRequestViewModel::redrawAllItems() noexcept
 {
-    m_hideItems = true;
-
-    beginResetModel();
-
-    endResetModel();
-
-    m_hideItems = false;
-
     beginResetModel();
 
     endResetModel();
