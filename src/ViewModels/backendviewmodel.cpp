@@ -147,9 +147,11 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
     } else if (command == m_globalVariablesCommand) {
         emit needGlobalVariablesWindow();
     } else if (command == m_addGlobalVariablesCommand) {
-        m_showGlobalVariablesPopup = !m_showGlobalVariablesPopup;
-        if (m_showGlobalVariablesPopup) m_selectedGlobalVariableIndex = -1;
-        emit showGlobalVariablesPopupChanged();
+        if (m_globalVariables->hasVariableNames()) {
+            m_showGlobalVariablesPopup = !m_showGlobalVariablesPopup;
+            if (m_showGlobalVariablesPopup) m_selectedGlobalVariableIndex = -1;
+            emit showGlobalVariablesPopupChanged();
+        }
     } else if (command == m_opeApiExportCommand) {
         emit needOpenApiExportWindow();
     } else if (command == m_removeSelectedFieldCommand) {
