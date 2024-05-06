@@ -65,7 +65,9 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
 
         if (shortcut == "escape") {
             m_showGlobalVariablesPopup = false;
+            m_selectedGlobalVariable = "";
             emit showGlobalVariablesPopupChanged();
+            emit selectedGlobalVariableChanged();
             return true;
         }
 
@@ -148,10 +150,16 @@ bool BackendViewModel::shortcutHandler(const QString &shortcut) noexcept
         emit needGlobalVariablesWindow();
     } else if (command == m_addGlobalVariablesCommand) {
         if (m_globalVariables->hasVariableNames()) {
+            m_globalVariables->setFilterMode("default");
             m_showGlobalVariablesPopup = !m_showGlobalVariablesPopup;
             if (m_showGlobalVariablesPopup) m_selectedGlobalVariableIndex = -1;
             emit showGlobalVariablesPopupChanged();
         }
+    } else if (command == m_addPredefinedGlobalVariablesCommand) {
+        m_globalVariables->setFilterMode("predefined");
+        m_showGlobalVariablesPopup = !m_showGlobalVariablesPopup;
+        if (m_showGlobalVariablesPopup) m_selectedGlobalVariableIndex = -1;
+        emit showGlobalVariablesPopupChanged();
     } else if (command == m_opeApiExportCommand) {
         emit needOpenApiExportWindow();
     } else if (command == m_removeSelectedFieldCommand) {
@@ -421,6 +429,7 @@ void BackendViewModel::fillMappings()
     m_shortcutCommandMapping.insert("control-f6", m_globalVariablesCommand);
     m_shortcutCommandMapping.insert("control-g", m_globalVariablesCommand);
     m_shortcutCommandMapping.insert("control-0", m_addGlobalVariablesCommand);
+    m_shortcutCommandMapping.insert("control-9", m_addPredefinedGlobalVariablesCommand);
     m_shortcutCommandMapping.insert("f6", m_opeApiExportCommand);
     m_shortcutCommandMapping.insert("control-o", m_opeApiExportCommand);
     m_shortcutCommandMapping.insert("control-r", m_removeSelectedFieldCommand);
@@ -494,6 +503,7 @@ void BackendViewModel::fillCommands()
     m_shortcutCommands.insert(m_nextFindedResultCommand, "Next founded result");
     m_shortcutCommands.insert(m_previousFindedResultCommand, "Previous founded result");
     m_shortcutCommands.insert(m_addGlobalVariablesCommand, "Add a global variable to the selected line and the location where the cursor is located");
+    m_shortcutCommands.insert(m_addPredefinedGlobalVariablesCommand, "Add a predefined global variable to the selected line and the location where the cursor is located");
 }
 
 void BackendViewModel::fillHelpShortcuts()

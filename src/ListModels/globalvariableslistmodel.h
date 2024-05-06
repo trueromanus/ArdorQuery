@@ -50,6 +50,7 @@ private:
     QMap<QString, QString> m_shortcutCommands { QMap<QString, QString>() };
     bool m_helpVisible { false };
     QStringList m_tabs { QStringList() };
+    QString m_globalVariablesPopupMode { "default" };
     QString m_selectedTab { "" };
     bool m_needShowSaveNotifications { true };
     const QString VariablesTab { "Variables" };
@@ -90,6 +91,7 @@ public:
     bool helpVisible() const noexcept { return m_helpVisible; }
     void setHelpVisible(bool helpVisible) noexcept;
 
+    void setFilterMode(const QString& mode) noexcept;
     void addLine();
     void addLineBefore();
     void addLineToEnd();
@@ -107,7 +109,7 @@ public:
     QString selectedTab() const noexcept { return m_selectedTab; }
     void setSelectedTab(const QString& selectedTab) noexcept;
 
-    QStringList variableNames() const noexcept { return m_variables.keys(); }
+    QStringList variableNames() const noexcept;
     void refreshVariableNames() noexcept;
 
     bool hasVariableNames() const noexcept { return !m_variables.isEmpty(); }

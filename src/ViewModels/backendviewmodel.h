@@ -69,6 +69,7 @@ private:
     bool m_showGlobalVariablesPopup { false };
     int m_selectedGlobalVariableIndex { -1 };
     QString m_selectedGlobalVariable { "" };
+    QString m_globalVariablesPopupMode { "default" };
     const QString m_changeSelectedQueryCommand { "changeselectedquery" };
     const QString m_performQueriesMultipleCommand { "performqueriesmultiple" };
     const QString m_performQueryCommand { "performquery" };
@@ -102,6 +103,7 @@ private:
     const QString m_generateImageToClipboardCommand { "generateimagetoclipboard" };
     const QString m_nextFindedResultCommand { "nextfindedresult" };
     const QString m_previousFindedResultCommand { "previousfindedresult" };
+    const QString m_addPredefinedGlobalVariablesCommand { "addpredefinedglobalvariable" };
 
 public:
     explicit BackendViewModel(QObject *parent = nullptr);

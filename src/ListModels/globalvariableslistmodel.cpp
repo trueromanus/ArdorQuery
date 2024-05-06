@@ -129,6 +129,12 @@ void GlobalVariablesListModel::setHelpVisible(bool helpVisible) noexcept
     emit helpVisibleChanged();
 }
 
+void GlobalVariablesListModel::setFilterMode(const QString &mode) noexcept
+{
+    m_globalVariablesPopupMode = mode;
+    emit variableNamesChanged();
+}
+
 void GlobalVariablesListModel::addLine()
 {
     beginResetModel();
@@ -218,6 +224,14 @@ void GlobalVariablesListModel::setSelectedTab(const QString &selectedTab) noexce
 
     m_selectedTab = selectedTab;
     emit selectedTabChanged();
+}
+
+QStringList GlobalVariablesListModel::variableNames() const noexcept
+{
+    if (m_globalVariablesPopupMode == "predefined") {
+        return m_globalVariableHandlers.keys();
+    }
+    return m_variables.keys();
 }
 
 void GlobalVariablesListModel::refreshVariableNames() noexcept
