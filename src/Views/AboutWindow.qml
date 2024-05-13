@@ -47,7 +47,7 @@ ApplicationWindow {
         anchors.top: applicationName.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 4
-        text: "version 0.0.16"
+        text: "version 0.0.17"
         font.pointSize: 10
     }
 
@@ -115,7 +115,7 @@ ApplicationWindow {
         anchors.top: documentationInfo.bottom
         anchors.leftMargin: 20
         anchors.topMargin: 12
-        text: "Copyright (c) 2022-2023 Roman Vladimirov"
+        text: "Copyright (c) 2022-2024 Roman Vladimirov"
         font.pointSize: 10
     }
 }

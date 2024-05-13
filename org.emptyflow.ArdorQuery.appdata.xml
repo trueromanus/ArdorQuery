@@ -25,11 +25,12 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.16" date="2024-03-16">
+		<release version="0.0.17" date="2024-05-12">
 			<description>
-				<p>Fixed replacing global variables.</p>
-				<p>Fixed text alignment in queries list, also make text wrapping.</p>
-				<p> You can select from list global variable and insert it to current line after position of cursor.</p>
+				<p>Fixed crash on scroll in Query Editor.</p>
+				<p>Fixed select focused field after restore from help.</p>
+				<p>Fixed selected item in global variables list after reopen popup.</p>
+				<p>Added new shortcut Ctrl-9 in query editor. You can select from list predefined global variable and insert it to current line after position of cursor.</p>
 			</description>
 		</release>
 	</releases>
