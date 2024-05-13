@@ -46,4 +46,26 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: debian
-        path: ardorquery_amd64.deb        
+        path: ardorquery_amd64.deb
+  windowsbuild:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure MSVC
+      uses: ilammy/msvc-dev-cmd@v1.12.1
+      with:
+        arch: x64
+        spectre: true
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3.3.0
+      with:
+        version: 6.6.0
+        modules: qtscxml qt5compat qtimageformats qtwebsockets
+    - name: run qmake
+      run: qmake -makefile -o src/Makefile src/ArdorQuery.pro
+    - name: run make
+      run: cd src && nmake /F Makefile
+    - uses: actions/upload-artifact@v4
+      with:
+        name: windows
+        path: src/AniLibria.exe
