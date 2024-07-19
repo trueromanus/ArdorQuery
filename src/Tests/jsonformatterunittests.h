@@ -27,8 +27,11 @@ public:
 
 private slots:
     void stringOnly();
+    void stringOnlySilent();
     void objectOnly();
+    void objectOnlySilent();
     void objectOnlyMoreProperties();
+    void objectOnlyMorePropertiesSilent();
     void objectOnlyMorePropertiesWithNewLines();
     void objectOnlyMorePropertiesWithTabulators();
     void arrayOnly();

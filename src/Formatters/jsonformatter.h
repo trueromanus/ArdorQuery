@@ -18,6 +18,8 @@
 
 #include "outputformatter.h"
 
+#include "formatterline.h"
+
 class JsonFormatter: public OutputFormatter
 {
 private:
@@ -43,6 +45,7 @@ public:
     JsonFormatter();
 
     QString format(const QString& data) override;
+    QMap<int, FormatterLine*> silentFormat(const QString& data); //override;
     void setOffset(int stackSize, QString& target, bool newLine = false) noexcept;
 };
 

@@ -29,6 +29,16 @@ void JsonFormatterUnitTests::stringOnly()
     QCOMPARE(result, QString("<font color=\"#800000\">\"string\"</font>"));
 }
 
+void JsonFormatterUnitTests::stringOnlySilent()
+{
+    JsonFormatter formatter;
+    auto result = formatter.silentFormat("\"string\"");
+    QCOMPARE(result.size(), 1);
+    auto first = result.value(0);
+    QCOMPARE(first->line(), "\"string\"");
+    QCOMPARE(first->formattedLine(4), QString("<font color=\"#800000\">\"string\"</font>"));
+}
+
 void JsonFormatterUnitTests::objectOnly()
 {
     JsonFormatter formatter;
@@ -37,6 +47,19 @@ void JsonFormatterUnitTests::objectOnly()
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"property"</font>:&nbsp;<font color="#cc7700">35</font>
 <font color="black">}</font>)a");
     QCOMPARE(result, expectedResult);
+}
+
+void JsonFormatterUnitTests::objectOnlySilent()
+{
+    JsonFormatter formatter;
+    auto result = formatter.silentFormat("{\"property\":35}");
+    QCOMPARE(result.size(), 3);
+    QCOMPARE(result.value(0)->formattedLine(4), R"(<font color="black">{</font>)");
+    QCOMPARE(result.value(0)->line(), "{");
+    QCOMPARE(result.value(1)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"property"</font>:&nbsp;<font color="#cc7700">35</font>)");
+    QCOMPARE(result.value(1)->line(), "\"property\":35");
+    QCOMPARE(result.value(2)->formattedLine(4), R"(<font color="black">}</font>)");
+    QCOMPARE(result.value(2)->line(), "}");
 }
 
 void JsonFormatterUnitTests::objectOnlyMoreProperties()
@@ -49,6 +72,24 @@ void JsonFormatterUnitTests::objectOnlyMoreProperties()
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"third"</font>:&nbsp;<font color="#cc7700">45</font>
 <font color="black">}</font>)a");
     QCOMPARE(result, expectedResult);
+}
+
+void JsonFormatterUnitTests::objectOnlyMorePropertiesSilent()
+{
+    JsonFormatter formatter;
+    auto result = formatter.silentFormat("{\"first\": 35, \"second\": 89, \"third\": 45}");
+    QCOMPARE(result.size(), 5);
+    QCOMPARE(result.value(0)->formattedLine(4), R"(<font color="black">{</font>)");
+    QCOMPARE(result.value(1)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"first"</font>:&nbsp;<font color="#cc7700">35</font>,)");
+    QCOMPARE(result.value(2)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"second"</font>:&nbsp;<font color="#cc7700">89</font>,)");
+    QCOMPARE(result.value(3)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#750f8a">"third"</font>:&nbsp;<font color="#cc7700">45</font>)");
+    QCOMPARE(result.value(4)->formattedLine(4), R"(<font color="black">}</font>)");
+
+    QCOMPARE(result.value(0)->line(), "{");
+    QCOMPARE(result.value(1)->line(), "\"first\":35,");
+    QCOMPARE(result.value(2)->line(), "\"second\":89,");
+    QCOMPARE(result.value(3)->line(), "\"third\":45");
+    QCOMPARE(result.value(4)->line(), "}");
 }
 
 void JsonFormatterUnitTests::objectOnlyMorePropertiesWithNewLines()

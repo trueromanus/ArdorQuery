@@ -366,6 +366,12 @@ void BackendViewModel::closeGlobalVariables() noexcept
     emit selectedGlobalVariableChanged();
 }
 
+void BackendViewModel::setResultBodyFontFamily(const QString &family, int fontSize) noexcept
+{
+    auto font = QFont(family, fontSize);
+    m_bodyFontMetrics = QFontMetrics(font);
+}
+
 void BackendViewModel::deleteCurrentRequest() noexcept
 {
     if (m_requests->singleRequest()) addNewRequest();

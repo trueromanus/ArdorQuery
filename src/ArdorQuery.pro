@@ -12,6 +12,7 @@ ICON = ardorquery.icns
 SOURCES += \
         Formatters/cssformatter.cpp \
         Formatters/formatterfactory.cpp \
+        Formatters/formatterline.cpp \
         Formatters/htmlformatter.cpp \
         Formatters/jsonformatter.cpp \
         Formatters/outputformatter.cpp \
@@ -42,6 +43,7 @@ SOURCES += \
         QuickControls/backendimage.cpp \
         ViewModels/backendviewmodel.cpp \
         ViewModels/globaleventhandlermodel.cpp \
+        ViewModels/globalmouseviewmodel.cpp \
         ViewModels/httpperformerviewmodel.cpp \
         ViewModels/httprequestresultviewmodel.cpp \
         ViewModels/httprequestviewmodel.cpp \
@@ -66,6 +68,7 @@ RESOURCES += qml.qrc
 HEADERS += \
     Formatters/cssformatter.h \
     Formatters/formatterfactory.h \
+    Formatters/formatterline.h \
     Formatters/htmlformatter.h \
     Formatters/jsonformatter.h \
     Formatters/outputformatter.h \
@@ -96,6 +99,7 @@ HEADERS += \
     QuickControls/backendimage.h \
     ViewModels/backendviewmodel.h \
     ViewModels/globaleventhandlermodel.h \
+    ViewModels/globalmouseviewmodel.h \
     ViewModels/httpperformerviewmodel.h \
     ViewModels/httprequestresultviewmodel.h \
     ViewModels/httprequestviewmodel.h \

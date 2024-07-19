@@ -1,0 +1,40 @@
+#ifndef FORMATTERLINE_H
+#define FORMATTERLINE_H
+
+#include <QMap>
+#include <QString>
+
+class FormatterLine
+{
+private:
+    QString m_line { "" };
+    QString m_formattedLine { "" };
+    bool m_alreadyFormatted { false };
+    int m_offset { 0 };
+    QMap<int, std::tuple<QString, bool, bool>> m_indexes { QMap<int, std::tuple<QString, bool, bool>>() };
+    int m_lineIterator { -1 };
+
+public:
+    FormatterLine();
+
+    FormatterLine(int offset);
+
+    QString line() const noexcept { return m_line; }
+
+    QString formattedLine(int tabSize = 1) noexcept;
+
+    void setLine(const QString& line) noexcept;
+
+    void setOffset(int offset) noexcept { m_offset = offset; }
+
+    void addIndex(const QString& content, bool left, bool replace = false) noexcept;
+
+    void changeContentInLastIndex(const QString& content) noexcept;
+
+    void increaseLineIterator(QChar character) noexcept;
+
+    bool isEmpty() noexcept;
+
+};
+
+#endif // FORMATTERLINE_H

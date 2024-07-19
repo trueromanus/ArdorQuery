@@ -245,6 +245,17 @@ ApplicationWindow {
         }
     }
 
+    GlobalMouseViewModel {
+        id: globalMouseViewModel
+    }
+
+    Text {
+        id: emptyText
+        Component.onCompleted: {
+            backend.setResultBodyFontFamily(emptyText.font.family, emptyText.font.pointSize);
+        }
+    }
+
     onActiveFocusItemChanged: {
         if (!window.activeFocusItem) globalEventHandler.clear();
     }
