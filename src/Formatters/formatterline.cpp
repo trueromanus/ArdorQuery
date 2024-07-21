@@ -26,17 +26,27 @@ QString FormatterLine::formattedLine(int tabSize) noexcept
 
     foreach (auto character, m_line) {
         if (m_indexes.contains(index)) {
-            auto indexItem = m_indexes.value(index);
-            auto content = std::get<0>(indexItem);
-            auto left = std::get<1>(indexItem);
-            auto replace = std::get<2>(indexItem);
-            if (replace) {
-                result.append(content);
-            } else {
-                if (left) {
-                    result.append(content + character);
+            auto indexItems = m_indexes.values(index);
+            bool isCharacterInserted = false;
+
+            auto reversedIndexItems = QList<std::tuple<QString,bool,bool>>();
+            foreach (auto indexItem, indexItems) {
+                reversedIndexItems.insert(0, indexItem);
+            }
+
+            foreach (auto indexItem, reversedIndexItems) {
+                auto content = std::get<0>(indexItem);
+                auto left = std::get<1>(indexItem);
+                auto replace = std::get<2>(indexItem);
+                if (replace) {
+                    result.append(content);
                 } else {
-                    result.append(character + content);
+                    if (left) {
+                        result.append(content + (isCharacterInserted ? "" : QString(character)));
+                    } else {
+                        result.append((isCharacterInserted ? "" : QString(character)) + content);
+                    }
+                    if (!isCharacterInserted) isCharacterInserted = true;
                 }
             }
         } else {
@@ -67,9 +77,13 @@ void FormatterLine::changeContentInLastIndex(const QString &content) noexcept
 {
     if (m_indexes.isEmpty()) return;
 
-    auto previousItem = m_indexes.value(m_indexes.size() - 1);
-    std::get<0>(previousItem) = content;
-    m_indexes[m_indexes.size() - 1] = previousItem;
+    auto lastIndex = m_indexes.size() - 1;
+    auto previousItems = m_indexes.values(lastIndex);
+    std::get<0>(previousItems[0]) = content;
+    m_indexes.remove(lastIndex);
+    foreach(auto previousItem, previousItems) {
+        m_indexes.insert(lastIndex, previousItem);
+    }
 }
 
 void FormatterLine::increaseLineIterator(QChar character) noexcept

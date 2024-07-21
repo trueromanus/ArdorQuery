@@ -143,7 +143,7 @@ QMap<int, FormatterLine*> JsonFormatter::silentFormat(const QString &data)
 
         auto isSpecialCharacters = m_space == latinCharacter || m_tabulator == latinCharacter || m_newlineDivider == latinCharacter;
         auto isDigit = digitStarted && m_digits.contains(latinCharacter);
-        auto isNewLineCharacters = m_object.indexOf(latinCharacter) == 1 || m_comma == latinCharacter;
+        auto isNewLineCharacters = m_object.indexOf(latinCharacter) == 1 || m_comma == latinCharacter || m_array.indexOf(latinCharacter) == 1;
         if ((isDigit || !isSpecialCharacters) || (isSpecialCharacters && stringStarted)) {
             if (!isNewLineCharacters) {
                 formatterLine->increaseLineIterator(character);
@@ -173,6 +173,7 @@ QMap<int, FormatterLine*> JsonFormatter::silentFormat(const QString &data)
                 stackSize -= 1;
                 formatterLine = new FormatterLine(stackSize);
                 result[result.size()] = formatterLine;
+                formatterLine->increaseLineIterator(']');
                 formatterLine->addIndex( "<font color=\"black\">]</font>", false, true);
             }
             continue;

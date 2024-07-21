@@ -1,7 +1,7 @@
 #ifndef FORMATTERLINE_H
 #define FORMATTERLINE_H
 
-#include <QMap>
+#include <QMultiMap>
 #include <QString>
 
 class FormatterLine
@@ -11,7 +11,7 @@ private:
     QString m_formattedLine { "" };
     bool m_alreadyFormatted { false };
     int m_offset { 0 };
-    QMap<int, std::tuple<QString, bool, bool>> m_indexes { QMap<int, std::tuple<QString, bool, bool>>() };
+    QMultiMap<int, std::tuple<QString, bool, bool>> m_indexes { QMultiMap<int, std::tuple<QString, bool, bool>>() };
     int m_lineIterator { -1 };
 
 public:

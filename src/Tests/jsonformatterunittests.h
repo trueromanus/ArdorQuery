@@ -33,12 +33,19 @@ private slots:
     void objectOnlyMoreProperties();
     void objectOnlyMorePropertiesSilent();
     void objectOnlyMorePropertiesWithNewLines();
+    void objectOnlyMorePropertiesWithNewLinesSilent();
     void objectOnlyMorePropertiesWithTabulators();
+    void objectOnlyMorePropertiesWithTabulatorsSilent();
     void arrayOnly();
+    void arrayOnlySilent();
     void arrayInObject();
+    void arrayInObjectSilent();
     void objectWithNegativeDigit();
+    void objectWithNegativeDigitSilent();
     void objectWithHexDigit();
+    void objectWithHexDigitSilent();
     void objectWithDoubleDigit();
+    void objectWithDoubleDigitSilent();
 };
 
 #endif // JSONFORMATTERUNITTESTS_H
