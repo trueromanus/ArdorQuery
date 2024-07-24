@@ -17,7 +17,6 @@
 #define JSONFORMATTER_H
 
 #include "outputformatter.h"
-
 #include "formatterline.h"
 
 class JsonFormatter: public OutputFormatter

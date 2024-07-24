@@ -17,7 +17,9 @@
 #define HTMLFORMATTER_H
 
 #include <QSet>
+#include <QMap>
 #include "outputformatter.h"
+#include "formatterline.h"
 
 class HtmlFormatter : public OutputFormatter
 {
@@ -40,14 +42,18 @@ private:
     const QString m_tabulator { "\t" };
     int m_stackSize { -1 };
     QString m_result { "" };
+    FormatterLine* m_formatterLine { nullptr };
 
 public:
     HtmlFormatter();
 
     QString format(const QString& data) override;
+    QMap<int, FormatterLine*> silentFormat(const QString &data);
     bool isSelfClosedTag(const QString &tag);
     void formatTagWithOffset(QString &tag);
     void formatTag(QString &tag);
+    void formatTagSilent(QString &tag, QMap<int, FormatterLine*> result);
+    void formatTagWithOffsetSilent(QString &tag, QMap<int, FormatterLine*>& result);
     void setOffset(int tabSize = 4) noexcept;
 };
 

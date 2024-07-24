@@ -31,6 +31,15 @@ void HtmlFormatterUnitTests::htmlLowerHeader()
     QCOMPARE(result, expectedResult);
 }
 
+void HtmlFormatterUnitTests::htmlLowerHeaderSilent()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat("<!doctype html>");
+
+    QCOMPARE(result.size(), 1);
+    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="lightgray">&lt;!doctype html&gt;</font>)");
+}
+
 void HtmlFormatterUnitTests::htmlUpperHeader()
 {
     HtmlFormatter formatter;
@@ -38,6 +47,15 @@ void HtmlFormatterUnitTests::htmlUpperHeader()
     auto expectedResult = QString(R"a(<font color="lightgray">&lt;!DOCTYPE html&gt;</font>
 )a");
     QCOMPARE(result, expectedResult);
+}
+
+void HtmlFormatterUnitTests::htmlUpperHeaderSilent()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat("<!DOCTYPE html>");
+
+    QCOMPARE(result.size(), 1);
+    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="lightgray">&lt;!DOCTYPE html&gt;</font>)");
 }
 
 void HtmlFormatterUnitTests::emptyFullTag()
@@ -50,6 +68,16 @@ void HtmlFormatterUnitTests::emptyFullTag()
     QCOMPARE(result, expectedResult);
 }
 
+void HtmlFormatterUnitTests::emptyFullTagSilent()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat("<test></test>");
+
+    QCOMPARE(result.size(), 2);
+    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="#8812a1">&lt;test&gt;</font>)");
+    QCOMPARE(result.value(1)->formattedLine(1), R"(<font color="#8812a1">&lt;/test&gt;</font>)");
+}
+
 void HtmlFormatterUnitTests::attributeWithUrl()
 {
     HtmlFormatter formatter;
@@ -58,6 +86,16 @@ void HtmlFormatterUnitTests::attributeWithUrl()
 <font color="#8812a1">&lt;/test&gt;</font>
 )");
     QCOMPARE(result, expectedResult);
+}
+
+void HtmlFormatterUnitTests::attributeWithUrlSilent()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat(R"(<test attr="http://www.test.com"></test>)");
+
+    QCOMPARE(result.size(), 2);
+    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="#8812a1">&lt;test</font> <font color="#994500">attr=<font color="#2222dd">&quot;http://www.test.com&quot;</font>&gt;</font>)");
+    QCOMPARE(result.value(1)->formattedLine(1), R"(<font color="#8812a1">&lt;/test&gt;</font>)");
 }
 
 void HtmlFormatterUnitTests::commentTag()
@@ -69,4 +107,22 @@ void HtmlFormatterUnitTests::commentTag()
 <font color="#8812a1">&lt;/test&gt;</font>
 )");
     QCOMPARE(result, expectedResult);
+}
+
+void HtmlFormatterUnitTests::commentTagSilent()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat(R"(<test><!-- comment --></test>)");
+
+    QCOMPARE(result.size(), 3);
+    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="#8812a1">&lt;test&gt;</font>)");
+    qDebug() << R"(<font color="#008000">&lt;!-- comment --&gt;</font>)";
+    qDebug() << result.value(1)->formattedLine(1);
+    QCOMPARE(result.value(1)->formattedLine(1), R"(<font color="#008000">&lt;!-- comment --&gt;</font>)");
+    QCOMPARE(result.value(2)->formattedLine(1), R"(<font color="#8812a1">&lt;/test&gt;</font>)");
+
+    QCOMPARE(result.value(0)->line(), R"(<test>)");
+    QCOMPARE(result.value(1)->line(), R"(<!-- comment -->)");
+    QCOMPARE(result.value(2)->line(), R"(</test>)");
+
 }

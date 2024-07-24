@@ -33,6 +33,8 @@ public:
 
     void increaseLineIterator(QChar character) noexcept;
 
+    void increaseLineIteratorString(QString content) noexcept;
+
     bool isEmpty() noexcept;
 
 };

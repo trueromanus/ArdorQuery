@@ -86,10 +86,16 @@ void FormatterLine::changeContentInLastIndex(const QString &content) noexcept
     }
 }
 
-void FormatterLine::increaseLineIterator(QChar character) noexcept
+void FormatterLine::increaseLineIterator(QChar content) noexcept
 {
     m_lineIterator++;
-    m_line.append(character);
+    m_line.append(content);
+}
+
+void FormatterLine::increaseLineIteratorString(QString content) noexcept
+{
+    m_lineIterator += content.size();
+    m_line.append(content);
 }
 
 bool FormatterLine::isEmpty() noexcept
