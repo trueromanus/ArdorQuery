@@ -31,3 +31,36 @@ QString PlainTextFormatter::format(const QString &data)
 
     return result;
 }
+
+QMap<int, FormatterLine *> PlainTextFormatter::silentFormat(const QString &data)
+{
+    QMap<int, FormatterLine *> result;
+    FormatterLine* formatterLine = new FormatterLine(0);
+    result[0] = formatterLine;
+
+    auto lineWidth = 0;
+
+    for(auto character: data) {
+        auto latinCharacter = character.toLatin1();
+        formatterLine->increaseLineIterator(latinCharacter);
+
+        if (latinCharacter == m_newline || latinCharacter == m_caretBack) {
+            formatterLine = new FormatterLine(0);
+            result[result.size()] = formatterLine;
+
+            lineWidth = 0;
+            continue;
+        }
+
+        if (lineWidth >= 200) {
+            formatterLine = new FormatterLine(0);
+            result[result.size()] = formatterLine;
+
+            lineWidth = 0;
+        } else {
+            lineWidth += 1;
+        }
+    }
+
+    return result;
+}

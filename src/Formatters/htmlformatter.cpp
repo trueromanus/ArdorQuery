@@ -383,7 +383,6 @@ void HtmlFormatter::formatTagWithOffsetSilent(QString &tag, QMap<int, FormatterL
 
         m_formatterLine = new FormatterLine(m_stackSize);
         result[result.size()] = m_formatterLine;
-        qDebug() << result.size();
     } else if (selfClosedTag) {
         //setOffset();
         formatTagSilent(tag, result);
