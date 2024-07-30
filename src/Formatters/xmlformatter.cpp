@@ -306,7 +306,10 @@ void XmlFormatter::formatTagSilent(QString &tag)
     m_formatterLine->increaseLineIterator('<');
     m_formatterLine->addIndex("<font color=\"#8812a1\">&lt;", false, true);
 
-    foreach(auto character, tag) {
+    auto processedTag = tag.mid(1);
+    processedTag = processedTag.mid(0, processedTag.size() - 1);
+
+    foreach(auto character, processedTag) {
         auto latinCharacter = character.toLatin1();
 
         m_formatterLine->increaseLineIterator(latinCharacter);
@@ -349,7 +352,7 @@ void XmlFormatter::formatTagSilent(QString &tag)
             continue;
         }
 
-        if (!attributeStarted) {
+        if (!tagNameStarted && !attributeStarted) {
             attributeStarted = true;
             m_formatterLine->addIndex("<font color=\"#994500\">", true, false);
         }

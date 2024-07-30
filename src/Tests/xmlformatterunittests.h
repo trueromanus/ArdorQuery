@@ -15,6 +15,8 @@ signals:
 private slots:
     void xmlOnlyHeaderSilent();
     void xmlEmptyTagSilent();
+    void xmlNestedEmptyTagSilent();
+    void attibuteWithUrlSilent();
 
 };
 
