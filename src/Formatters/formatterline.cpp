@@ -73,6 +73,12 @@ void FormatterLine::addIndex(const QString &content, bool left, bool replace) no
     m_indexes.insert(m_lineIterator, tuple);
 }
 
+void FormatterLine::addCustomIndex(int index, const QString &content, bool left, bool replace) noexcept
+{
+    auto tuple = std::make_tuple(content, left, replace);
+    m_indexes.insert(index, tuple);
+}
+
 void FormatterLine::changeContentInLastIndex(const QString &content) noexcept
 {
     if (m_indexes.isEmpty()) return;

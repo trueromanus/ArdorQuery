@@ -29,6 +29,8 @@ public:
 
     void addIndex(const QString& content, bool left, bool replace = false) noexcept;
 
+    void addCustomIndex(int index, const QString& content, bool left, bool replace = false) noexcept;
+
     void changeContentInLastIndex(const QString& content) noexcept;
 
     void increaseLineIterator(QChar character) noexcept;
@@ -36,6 +38,8 @@ public:
     void increaseLineIteratorString(QString content) noexcept;
 
     bool isEmpty() noexcept;
+
+    int lineIterator() const noexcept { return m_lineIterator; }
 
 };
 

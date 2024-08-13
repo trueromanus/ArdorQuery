@@ -34,6 +34,17 @@ void CssFormatterUnitTests::simplestyle_completed()
     QCOMPARE(result, expectedResult);
 }
 
+void CssFormatterUnitTests::simplestyle_completedSilent()
+{
+    CssFormatter formatter;
+    auto result = formatter.silentFormat(".myclass {property: value;}");
+
+    QCOMPARE(result.size(), 3);
+    QCOMPARE(result.value(0)->formattedLine(4), R"(<font color="#8812a1">.myclass </font>{)");
+    QCOMPARE(result.value(1)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;)");
+    QCOMPARE(result.value(2)->formattedLine(4), R"(})");
+}
+
 void CssFormatterUnitTests::simplestyle_multiplevalues_completed()
 {
     CssFormatter formatter;
@@ -45,6 +56,19 @@ void CssFormatterUnitTests::simplestyle_multiplevalues_completed()
 }
 )a");
     QCOMPARE(result, expectedResult);
+}
+
+void CssFormatterUnitTests::simplestyle_multiplevalues_completedSilent()
+{
+    CssFormatter formatter;
+    auto result = formatter.silentFormat(".myclass {property: value; property2: lalala ; purupu  : vallll    ;}");
+
+    QCOMPARE(result.size(), 5);
+    QCOMPARE(result.value(0)->formattedLine(4), R"(<font color="#8812a1">.myclass </font>{)");
+    QCOMPARE(result.value(1)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;)");
+    QCOMPARE(result.value(2)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property2</font>: lalala;)");
+    QCOMPARE(result.value(3)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">purupu</font>: vallll;)");
+    QCOMPARE(result.value(4)->formattedLine(4), R"(})");
 }
 
 void CssFormatterUnitTests::multiplestyles_multiplevalues_completed()
@@ -62,6 +86,23 @@ void CssFormatterUnitTests::multiplestyles_multiplevalues_completed()
 }
 )a");
     QCOMPARE(result, expectedResult);
+}
+
+void CssFormatterUnitTests::multiplestyles_multiplevalues_completedSilent()
+{
+    CssFormatter formatter;
+    auto result = formatter.silentFormat(".myclass {property: value; property2: lalala ; purupu  : vallll;}   .myclass2 { muhers: pruher; muhers2: pruher2; }");
+
+    QCOMPARE(result.size(), 9);
+    QCOMPARE(result.value(0)->formattedLine(4), R"(<font color="#8812a1">.myclass </font>{)");
+    QCOMPARE(result.value(1)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property</font>: value;)");
+    QCOMPARE(result.value(2)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">property2</font>: lalala;)");
+    QCOMPARE(result.value(3)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">purupu</font>: vallll;)");
+    QCOMPARE(result.value(4)->formattedLine(4), R"(})");
+    QCOMPARE(result.value(5)->formattedLine(4), R"(<font color="#8812a1">.myclass2 </font>{)");
+    QCOMPARE(result.value(6)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">muhers</font>: pruher;)");
+    QCOMPARE(result.value(7)->formattedLine(4), R"(&nbsp;&nbsp;&nbsp;&nbsp;<font color="#009dd5">muhers2</font>: pruher2;)");
+    QCOMPARE(result.value(8)->formattedLine(4), R"(})");
 }
 
 void CssFormatterUnitTests::nestedstyles_completed()

@@ -26,8 +26,11 @@ public:
 
 private slots:
     void simplestyle_completed();
+    void simplestyle_completedSilent();
     void simplestyle_multiplevalues_completed();
+    void simplestyle_multiplevalues_completedSilent();
     void multiplestyles_multiplevalues_completed();
+    void multiplestyles_multiplevalues_completedSilent();
     void nestedstyles_completed();
     void comment_beforeStyle();
     void comment_insideProperty();
