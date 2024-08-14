@@ -44,7 +44,7 @@ public:
     XmlFormatter();
 
     QString format(const QString& data) override;
-    QMap<int, FormatterLine*> silentFormat(const QString &data);
+    QMap<int, FormatterLine*> silentFormat(const QString &data) override;
     void formatTagWithOffset(QString& tag);
     void formatTagWithOffsetSilent(QString& tag, QMap<int, FormatterLine*>& result);
     void formatTag(QString& tag);

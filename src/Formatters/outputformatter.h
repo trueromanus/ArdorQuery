@@ -18,7 +18,7 @@
 
 #include <QString>
 #include <QMap>
-//#include "formatterline.h"
+#include "formatterline.h"
 
 class OutputFormatter
 {
@@ -26,7 +26,7 @@ public:
     OutputFormatter();
 
     virtual QString format(const QString& data);
-    //virtual QMap<int, FormatterLine*> silentFormat(const QString& data);
+    virtual QMap<int, FormatterLine*> silentFormat(const QString& data);
 };
 
 #endif // OUTPUTFORMATTER_H

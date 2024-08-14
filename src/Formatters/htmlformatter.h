@@ -48,7 +48,7 @@ public:
     HtmlFormatter();
 
     QString format(const QString& data) override;
-    QMap<int, FormatterLine*> silentFormat(const QString &data);
+    QMap<int, FormatterLine*> silentFormat(const QString &data) override;
     bool isSelfClosedTag(const QString &tag);
     void formatTagWithOffset(QString &tag);
     void formatTag(QString &tag);

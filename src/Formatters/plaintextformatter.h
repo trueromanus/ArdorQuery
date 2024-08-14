@@ -16,7 +16,7 @@ public:
     PlainTextFormatter();
 
     QString format(const QString& data) override;
-    QMap<int, FormatterLine*> silentFormat(const QString &data);
+    QMap<int, FormatterLine*> silentFormat(const QString &data) override;
 };
 
 #endif // PLAINTEXTFORMATTER_H

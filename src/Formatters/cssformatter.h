@@ -42,7 +42,7 @@ public:
     CssFormatter();
 
     QString format(const QString& data) override;
-    QMap<int, FormatterLine*> silentFormat(const QString &data);
+    QMap<int, FormatterLine*> silentFormat(const QString &data) override;
 
 private:
     void setOffset(int stackSize) noexcept;
