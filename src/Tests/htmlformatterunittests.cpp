@@ -94,7 +94,7 @@ void HtmlFormatterUnitTests::attributeWithUrlSilent()
     auto result = formatter.silentFormat(R"(<test attr="http://www.test.com"></test>)");
 
     QCOMPARE(result.size(), 2);
-    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="#8812a1">&lt;test</font> <font color="#994500">attr=<font color="#2222dd">&quot;http://www.test.com&quot;</font>&gt;</font>)");
+    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="#8812a1">&lt;test</font><font color="#994500"> attr=<font color="#2222dd">&quot;http://www.test.com&quot;</font>&gt;</font>)");
     QCOMPARE(result.value(1)->formattedLine(1), R"(<font color="#8812a1">&lt;/test&gt;</font>)");
 }
 

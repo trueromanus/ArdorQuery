@@ -27,28 +27,34 @@ QString FormatterLine::formattedLine(int tabSize) noexcept
     foreach (auto character, m_line) {
         if (m_indexes.contains(index)) {
             auto indexItems = m_indexes.values(index);
-            bool isCharacterInserted = false;
 
             auto reversedIndexItems = QList<std::tuple<QString,bool,bool>>();
             foreach (auto indexItem, indexItems) {
                 reversedIndexItems.insert(0, indexItem);
             }
 
+            QString leftContent = "";
+            QString rightContent = "";
+            QString replaceContent = "";
+
             foreach (auto indexItem, reversedIndexItems) {
                 auto content = std::get<0>(indexItem);
                 auto left = std::get<1>(indexItem);
                 auto replace = std::get<2>(indexItem);
                 if (replace) {
-                    result.append(content);
+                    replaceContent.append(content);
                 } else {
                     if (left) {
-                        result.append(content + (isCharacterInserted ? "" : QString(character)));
+                        leftContent.append(content);
                     } else {
-                        result.append((isCharacterInserted ? "" : QString(character)) + content);
+                        rightContent.append(content);
                     }
-                    if (!isCharacterInserted) isCharacterInserted = true;
                 }
             }
+
+            result.append(leftContent);
+            result.append(replaceContent.isEmpty() ? character : replaceContent);
+            result.append(rightContent);
         } else {
             result.append(character);
         }
@@ -73,10 +79,21 @@ void FormatterLine::addIndex(const QString &content, bool left, bool replace) no
     m_indexes.insert(m_lineIterator, tuple);
 }
 
-void FormatterLine::addCustomIndex(int index, const QString &content, bool left, bool replace) noexcept
+void FormatterLine::addCustomIndex(int index, const QString &content, bool left, bool replace, bool toTop) noexcept
 {
     auto tuple = std::make_tuple(content, left, replace);
-    m_indexes.insert(index, tuple);
+
+    if (toTop) {
+        auto values = m_indexes.values(index);
+        m_indexes.remove(index);
+
+        m_indexes.insert(index, tuple);
+        foreach (auto value, values) {
+            m_indexes.insert(index, value);
+        }
+    } else {
+        m_indexes.insert(index, tuple);
+    }
 }
 
 void FormatterLine::changeContentInLastIndex(const QString &content) noexcept
@@ -107,4 +124,14 @@ void FormatterLine::increaseLineIteratorString(QString content) noexcept
 bool FormatterLine::isEmpty() noexcept
 {
     return m_line.isEmpty();
+}
+
+bool FormatterLine::containsCharacter(QChar character) const noexcept
+{
+    return m_line.contains(character);
+}
+
+void FormatterLine::removeLastCharacter() noexcept
+{
+    m_line.removeLast();
 }

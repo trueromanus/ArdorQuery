@@ -32,10 +32,15 @@ private slots:
     void multiplestyles_multiplevalues_completed();
     void multiplestyles_multiplevalues_completedSilent();
     void nestedstyles_completed();
+    void nestedstyles_silent_completed();
     void comment_beforeStyle();
+    void comment_silent_beforeStyle();
     void comment_insideProperty();
+    void comment_insideProperty_silent_completed();
     void simplestyle_singlePropertyWithoutSemicolon();
+    void simplestyle_singlePropertyWithoutSemicolon_silent_completed();
     void simplestyle_multiplePropertyLastWithoutSemicolon();
+    void simplestyle_multiplePropertyLastWithoutSemicolon_silent_completed();
 
 };
 

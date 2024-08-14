@@ -87,26 +87,29 @@ QString CssFormatter::format(const QString &data)
 QMap<int, FormatterLine *> CssFormatter::silentFormat(const QString &data)
 {
     int stackSize = 0;
-    QString currentOpenBlock = "";
     bool isComment = false;
     QMap<int, FormatterLine *> result;
     FormatterLine* formatterLine = new FormatterLine(0);
     result[0] = formatterLine;
+    int iterator = -1;
 
     for(auto character: data) {
         auto latinCharacter = character.toLatin1();
-        if (latinCharacter != m_space && !isComment) formatterLine->increaseLineIterator(latinCharacter);
+        iterator++;
+        if (isComment || latinCharacter != m_space) {
+            formatterLine->increaseLineIterator(latinCharacter);
+        }
 
-        if (isComment && latinCharacter == m_slash && currentOpenBlock.right(1) == m_asteriks) {
+        if (isComment && latinCharacter == m_slash && data[iterator - 1] == m_asteriks) {
             isComment = false;
-            formatterLine->addIndex("</font>", true, false);
+            formatterLine->addIndex("</font>", false, false);
             continue;
         }
         if (isComment) continue;
 
         if (latinCharacter == m_blockStart) {
             formatterLine->addIndex(" </font>", true, false);
-            formatterLine->addCustomIndex(0, "<font color=\"#8812a1\">", true);
+            formatterLine->addCustomIndex(0, "<font color=\"#8812a1\">", true, false, true);
 
             stackSize += 1;
             formatterLine = new FormatterLine(stackSize);
@@ -114,12 +117,26 @@ QMap<int, FormatterLine *> CssFormatter::silentFormat(const QString &data)
             continue;
         }
         if (latinCharacter == m_blockEnd) {
-            if (stackSize > 0) stackSize -= 1;
-            formatterLine->setOffset(stackSize);
+            //fix case where we omit ; in property
+            if (formatterLine->containsCharacter(m_separator[0])) {
+                formatterLine->removeLastCharacter();
+                formatterLine->addCustomIndex(0, "<font color=\"#009dd5\">", true, false);
+                auto propertyIndex = formatterLine->line().lastIndexOf(m_separator);
+                formatterLine->addCustomIndex(propertyIndex, "</font>", true, false);
+                formatterLine->increaseLineIterator(m_endField[0]);
 
-            formatterLine = new FormatterLine(stackSize);
-            result[result.size()] = formatterLine;
+                if (stackSize > 0) stackSize -= 1;
+                formatterLine = new FormatterLine(stackSize);
+                result[result.size()] = formatterLine;
+                formatterLine->increaseLineIterator(m_blockEnd[0]);
+            } else {
+                // default case
+                if (stackSize > 0) stackSize -= 1;
+                formatterLine->setOffset(stackSize);
 
+                formatterLine = new FormatterLine(stackSize);
+                result[result.size()] = formatterLine;
+            }
             continue;
         }
 
@@ -138,12 +155,14 @@ QMap<int, FormatterLine *> CssFormatter::silentFormat(const QString &data)
             continue;
         }
 
-        if (latinCharacter == m_asteriks && !currentOpenBlock.isEmpty() && currentOpenBlock.right(1) == m_slash) {
+        if (latinCharacter == m_asteriks && iterator > 0 && data[iterator - 1] == m_slash) {
             isComment = true;
             auto index = formatterLine->lineIterator() - 1;
             formatterLine->addCustomIndex(index, "<font color=\"#008000\">", true, false);
             continue;
         }
+
+
     }
 
     //remove last redundant item

@@ -29,7 +29,7 @@ public:
 
     void addIndex(const QString& content, bool left, bool replace = false) noexcept;
 
-    void addCustomIndex(int index, const QString& content, bool left, bool replace = false) noexcept;
+    void addCustomIndex(int index, const QString& content, bool left, bool replace = false, bool toTop = false) noexcept;
 
     void changeContentInLastIndex(const QString& content) noexcept;
 
@@ -40,6 +40,10 @@ public:
     bool isEmpty() noexcept;
 
     int lineIterator() const noexcept { return m_lineIterator; }
+
+    bool containsCharacter(QChar character) const noexcept;
+
+    void removeLastCharacter() noexcept;
 
 };
 
