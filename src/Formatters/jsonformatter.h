@@ -17,6 +17,7 @@
 #define JSONFORMATTER_H
 
 #include "outputformatter.h"
+#include "formatterline.h"
 
 class JsonFormatter: public OutputFormatter
 {
@@ -43,6 +44,8 @@ public:
     JsonFormatter();
 
     QString format(const QString& data) override;
+    QMap<int, FormatterLine*> silentFormat(const QString& data) override;
+    int silentFormatTab() override { return 4; }
     void setOffset(int stackSize, QString& target, bool newLine = false) noexcept;
 };
 

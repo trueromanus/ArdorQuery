@@ -125,6 +125,14 @@ HttpRequestModel *HttpRequestsListModel::getSelectedRequest() const noexcept
     return m_requests->value(m_selectedIndex);
 }
 
+void HttpRequestsListModel::fillFontMetrics(const QFontMetrics fontMetrics)
+{
+    foreach (auto request, *m_requests) {
+        auto result = request->resultModel();
+        result->bodyModel()->setFontMetrics(fontMetrics);
+    }
+}
+
 void HttpRequestsListModel::selectItem(const int newIndex) noexcept
 {
     if (newIndex < 0) return;

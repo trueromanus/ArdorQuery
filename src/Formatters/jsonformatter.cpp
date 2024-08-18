@@ -125,6 +125,135 @@ QString JsonFormatter::format(const QString &data)
     return result;
 }
 
+QMap<int, FormatterLine*> JsonFormatter::silentFormat(const QString &data)
+{
+    QMap<int, FormatterLine*> result;
+    int stackSize = 0;
+    bool stringStarted = false;
+    int iterator = -1;
+    int skipNextCharacters = 0;
+    bool digitStarted = false;
+    FormatterLine* formatterLine = new FormatterLine(0);
+    result[0] = formatterLine;
+
+    for (auto character: data) {
+        auto latinCharacter = character.toLatin1();
+
+        iterator++;
+
+        auto isSpecialCharacters = m_space == latinCharacter || m_tabulator == latinCharacter || m_newlineDivider == latinCharacter;
+        auto isDigit = digitStarted && m_digits.contains(latinCharacter);
+        auto isNewLineCharacters = m_object.indexOf(latinCharacter) == 1 || m_comma == latinCharacter || m_array.indexOf(latinCharacter) == 1;
+        if ((isDigit || !isSpecialCharacters) || (isSpecialCharacters && stringStarted)) {
+            if (!isNewLineCharacters) {
+                formatterLine->increaseLineIterator(character);
+            }
+        }
+
+        if (skipNextCharacters > 0) {
+            skipNextCharacters--;
+            continue;
+        }
+
+        if (stringStarted && m_string != latinCharacter) continue;
+        if (digitStarted && !m_digits.contains(latinCharacter)) {
+            formatterLine->addIndex("</font>", false, false);
+            digitStarted = false;
+        }
+        auto charIndex = m_array.indexOf(latinCharacter);
+        if (charIndex > -1) {
+            if (charIndex == 0) {
+                formatterLine->addIndex("<font color=\"black\">[</font>", false, true);
+                stackSize += 1;
+
+                formatterLine = new FormatterLine(stackSize);
+                result[result.size()] = formatterLine;
+            }
+            if (charIndex == 1) {
+                stackSize -= 1;
+                formatterLine = new FormatterLine(stackSize);
+                result[result.size()] = formatterLine;
+                formatterLine->increaseLineIterator(']');
+                formatterLine->addIndex( "<font color=\"black\">]</font>", false, true);
+            }
+            continue;
+        }
+
+        charIndex = m_object.indexOf(latinCharacter);
+        if (charIndex > -1) {
+            if (charIndex == 0) {
+                formatterLine->addIndex("<font color=\"black\">{</font>", false, true);
+                stackSize += 1;
+
+                formatterLine = new FormatterLine(stackSize);
+                result[result.size()] = formatterLine;
+            }
+            if (charIndex == 1) {
+                stackSize -= 1;
+
+                formatterLine = new FormatterLine(stackSize);
+                result[result.size()] = formatterLine;
+                formatterLine->increaseLineIterator('}');
+                formatterLine->addIndex("<font color=\"black\">}</font>", false, true);                
+
+                formatterLine = new FormatterLine(stackSize);
+                result[result.size()] = formatterLine;
+            }
+            continue;
+        }
+
+        if (m_string == latinCharacter) {
+            stringStarted = !stringStarted;
+
+            if (stringStarted) {
+                formatterLine->addIndex(m_plainStringStart, false, true);
+            } else {
+                auto isProperty = iterator < data.size() - 1 ? data[iterator + 1].toLatin1() == m_colon : false;
+                if (isProperty) formatterLine->changeContentInLastIndex(m_propertyStringStart);
+
+                formatterLine->addIndex("</font>", false, false);
+            }
+
+            continue;
+        }
+
+        if (m_backslash == latinCharacter && stringStarted) {
+            if (iterator < data.size()) {
+                auto nextCharacter = data[iterator + 1].toLatin1();
+                if (nextCharacter == m_reverse || nextCharacter == m_newline) skipNextCharacters += 1;
+                if (nextCharacter == m_unicode) skipNextCharacters += 5;
+            }
+            continue;
+        }
+
+        if (m_comma == latinCharacter && !stringStarted) {
+            formatterLine->increaseLineIterator(',');
+            formatterLine = new FormatterLine(stackSize);
+            result[result.size()] = formatterLine;
+            continue;
+        }
+
+        if (m_colon == latinCharacter && !stringStarted) {
+            formatterLine->addIndex(":&nbsp;", false, true);
+            continue;
+        }
+
+        if (!stringStarted && !digitStarted && m_startDigits.contains(latinCharacter)) {
+            formatterLine->addIndex("<font color=\"#cc7700\">", true);
+            digitStarted = true;
+            continue;
+        }
+    }
+
+    //remove last redundant item
+    if (!result.isEmpty()) {
+        auto lastItem = result.value(result.size() - 1);
+        if (lastItem->isEmpty()) result.remove(result.size() - 1);
+    }
+
+    return result;
+}
+
 void JsonFormatter::setOffset(int stackSize, QString& target, bool newLine) noexcept
 {
     if (newLine) target.append("\n");

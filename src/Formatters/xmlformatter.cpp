@@ -23,15 +23,12 @@ XmlFormatter::XmlFormatter()
 QString XmlFormatter::format(const QString &data)
 {
     QString currentFullTag = "";
-    int iterator = -1;
     m_result.clear();
     m_stackSize = 0;
     bool tagStarted = false;
     bool contentStarted = false;
 
     for(auto character: data) {
-        iterator++;
-
         auto latinCharacter = character.toLatin1();
 
         if (latinCharacter == m_tagStart && !tagStarted) {
@@ -68,6 +65,61 @@ QString XmlFormatter::format(const QString &data)
     return resultPass;
 }
 
+QMap<int, FormatterLine *> XmlFormatter::silentFormat(const QString &data)
+{
+    QString currentFullTag = "";
+    QMap<int, FormatterLine*> result;
+    m_stackSize = 0;
+    bool tagStarted = false;
+    bool contentStarted = false;
+    m_formatterLine = new FormatterLine();
+    result[0] = m_formatterLine;
+
+    for(auto character: data) {
+        auto latinCharacter = character.toLatin1();
+
+        if (latinCharacter == m_tagStart && !tagStarted) {
+            tagStarted = true;
+            currentFullTag = latinCharacter;
+            if (contentStarted) {
+                contentStarted = false;
+                m_formatterLine = new FormatterLine(m_stackSize);
+                result[result.size()] = m_formatterLine;
+            }
+            continue;
+        }
+
+        if (latinCharacter == m_tagEnd && tagStarted) {
+            tagStarted = false;
+            currentFullTag.append(character);
+            formatTagWithOffsetSilent(currentFullTag, result);
+            currentFullTag.clear();
+            continue;
+        }
+
+        if (!tagStarted && latinCharacter != m_newline && latinCharacter != m_caretBack && latinCharacter != m_space && latinCharacter != m_tabulator) {
+            if (!contentStarted) {
+                contentStarted = true;
+            }
+            //m_result.append(character);
+            m_formatterLine->increaseLineIterator(character);
+        }
+        if (latinCharacter == m_space && contentStarted) {
+            //m_result.append(m_space);
+            m_formatterLine->increaseLineIterator(m_space[0]);
+        }
+        if (tagStarted && latinCharacter != m_newline) currentFullTag.append(character);
+    }
+
+    //remove last redundant item
+    if (!result.isEmpty()) {
+        auto lastItem = result.value(result.size() - 1);
+        if (lastItem->isEmpty()) result.remove(result.size() - 1);
+    }
+
+    return result;
+}
+
 void XmlFormatter::formatTagWithOffset(QString &tag)
 {
     auto closedTag = tag[1] == m_closedTag;
@@ -97,6 +149,60 @@ void XmlFormatter::formatTagWithOffset(QString &tag)
         setOffset();
         formatTag(tag);
         m_stackSize += 1;
+    }
+}
+
+void XmlFormatter::formatTagWithOffsetSilent(QString &tag, QMap<int, FormatterLine *> &result)
+{
+    auto closedTag = tag[1] == m_closedTag;
+    auto selfClosedTag = tag[tag.length() - 2] == m_closedTag;
+    auto header = tag[1] == m_question;
+    auto comment = tag.startsWith(m_comment);
+
+    if (header) {
+        m_formatterLine->increaseLineIterator('<');
+        m_formatterLine->addIndex("<font color=\"gray\">&lt;", false, true);
+        m_formatterLine->increaseLineIteratorString(tag.replace(">", "").replace("<", ""));
+        m_formatterLine->increaseLineIterator('>');
+        m_formatterLine->addIndex("&gt;</font>", false, true);
+
+        m_formatterLine = new FormatterLine(m_stackSize);
+        result[result.size()] = m_formatterLine;
+        return;
+    }
+
+    if (comment) {
+        m_formatterLine->increaseLineIterator('<');
+        m_formatterLine->addIndex("<font color=\"#008000\">&lt;", false, true);
+        m_formatterLine->increaseLineIteratorString(tag.replace(">", "").replace("<", ""));
+        m_formatterLine->increaseLineIterator('>');
+        m_formatterLine->addIndex("&gt;</font>", false, true);
+
+        m_formatterLine = new FormatterLine(m_stackSize);
+        result[result.size()] = m_formatterLine;
+        return;
+    }
+
+    if (closedTag) {
+        if (!selfClosedTag) {
+            m_stackSize -= 1;
+            m_formatterLine->setOffset(m_stackSize);
+        }
+        formatTagSilent(tag);
+
+        m_formatterLine = new FormatterLine(m_stackSize);
+        result[result.size()] = m_formatterLine;
+    } else if (selfClosedTag) {
+        formatTagSilent(tag);
+
+        m_formatterLine = new FormatterLine(m_stackSize);
+        result[result.size()] = m_formatterLine;
+    } else {
+        formatTagSilent(tag);
+        m_stackSize += 1;
+
+        m_formatterLine = new FormatterLine(m_stackSize);
+        result[result.size()] = m_formatterLine;
     }
 }
 
@@ -176,6 +282,84 @@ void XmlFormatter::formatTag(QString &tag)
     }
 
     m_result.append("</font>\n");
+}
+
+void XmlFormatter::formatTagSilent(QString &tag)
+{
+    auto contentIndex = tag.indexOf(m_space);
+    // it means tag without attributes, and we can use shortcut
+    if (contentIndex == -1) {
+        //m_result.append("<font color=\"#8812a1\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
+        m_formatterLine->increaseLineIterator('<');
+        m_formatterLine->addIndex("<font color=\"#8812a1\">&lt;", false, true);
+        m_formatterLine->increaseLineIteratorString(tag.replace(">", "").replace("<", ""));
+        m_formatterLine->increaseLineIterator('>');
+        m_formatterLine->addIndex("&gt;</font>", false, true);
+        return;
+    }
+
+    bool attributeStarted = false;
+    bool stringStarted = false;
+    bool tagNameStarted = true;
+    bool closedPartStarted = false;
+
+    m_formatterLine->increaseLineIterator('<');
+    m_formatterLine->addIndex("<font color=\"#8812a1\">&lt;", false, true);
+
+    auto processedTag = tag.mid(1);
+    processedTag = processedTag.mid(0, processedTag.size() - 1);
+
+    foreach(auto character, processedTag) {
+        auto latinCharacter = character.toLatin1();
+
+        m_formatterLine->increaseLineIterator(latinCharacter);
+
+        if (latinCharacter == m_space && !stringStarted) {
+            if (attributeStarted) {
+                attributeStarted = false;
+                m_formatterLine->addIndex("</font>", true, false);
+            }
+            if (tagNameStarted) {
+                tagNameStarted = false;
+                m_formatterLine->addIndex("</font>", true, false);
+            }
+            m_result.append(" ");
+        }
+
+        if (latinCharacter == m_tagStart) {
+            m_formatterLine->addIndex("&lt;", false, true);
+            continue;
+        }
+
+        if (!closedPartStarted && !attributeStarted && (latinCharacter == m_tagEnd || latinCharacter == m_closedTag)) {
+            m_formatterLine->addIndex("</font><font color=\"#8812a1\">", true, false);
+            closedPartStarted = true;
+        }
+
+        if (latinCharacter == m_tagEnd) {
+            m_formatterLine->addIndex("&gt;", false, true);
+            continue;
+        }
+
+        if (latinCharacter == m_attributeDecorator) {
+            if (stringStarted) {
+                stringStarted = false;
+                m_formatterLine->addIndex("&quot;</font>", false, true);
+            } else {
+                stringStarted = true;
+                m_formatterLine->addIndex("<font color=\"#2222dd\">&quot;", false, true);
+            }
+            continue;
+        }
+
+        if (!tagNameStarted && !attributeStarted) {
+            attributeStarted = true;
+            m_formatterLine->addIndex("<font color=\"#994500\">", true, false);
+        }
+    }
+
+    m_formatterLine->increaseLineIterator('>');
+    m_formatterLine->addIndex("&gt;</font>", false, true);
 }
 
 void XmlFormatter::setOffset(int tabSize) noexcept

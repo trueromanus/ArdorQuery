@@ -25,3 +25,18 @@ QString OutputFormatter::format(const QString &data)
     //the actual formatting needs to be done in descendants
     return data;
 }
+
+QMap<int, FormatterLine *> OutputFormatter::silentFormat(const QString &data)
+{
+    Q_UNUSED(data);
+
+    //In the base class, simple return inputs
+    //the actual formatting needs to be done in descendants
+    QMap<int, FormatterLine *> result;
+    return result;
+}
+
+int OutputFormatter::silentFormatTab()
+{
+    return 0;
+}

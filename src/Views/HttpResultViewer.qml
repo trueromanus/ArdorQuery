@@ -334,22 +334,58 @@ Item {
                                     width: listStrings.width
                                     height: line.height
 
+                                    required property string currentLine
+                                    required property bool isFindIndex
+                                    required property int currentIndex
+                                    required property bool isSelectedLine
+
                                     Rectangle {
                                         color: "black"
                                         opacity: .05
                                         anchors.fill: parent
-                                        visible: isFindIndex
+                                        visible: parent.isFindIndex
+                                    }
+                                    Rectangle {
+                                        color: "black"
+                                        opacity: .05
+                                        anchors.fill: parent
+                                        visible: parent.isSelectedLine
                                     }
                                     Text {
                                         id: line
                                         leftPadding: 4
                                         rightPadding: 10
                                         textFormat: viewModel.isFormatting ? Text.RichText : Text.PlainText
-                                        text: currentLine
+                                        text: parent.currentLine
                                         width: bodyContainer.width
                                         wrapMode: Text.Wrap
                                         font.pointSize: 9
                                     }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        acceptedButtons: Qt.RightButton
+                                        onPressed: {
+                                            if(!globalMouseViewModel.moveTracking) globalMouseViewModel.moveTracking = true;
+
+                                            viewModel.bodyModel.selectStartLine(parent.currentIndex);
+                                        }
+                                    }
+                                }
+                            }
+
+                            Connections {
+                                id: connection
+                                target: globalMouseViewModel
+                                function onMouseMoved(x, y) {
+                                    const point = listStrings.mapFromItem(root, x, y);
+                                    const child = listStrings.contentItem.childAt(point.x, point.y - 34 + listStrings.contentY);
+                                    if (!child) return;
+
+                                    const positionY = (point.y + listStrings.contentY) - 34 - child.y;
+                                    if (!viewModel.bodyModel.lineStarted) viewModel.bodyModel.selectStartLine(child.currentIndex);
+
+                                    viewModel.bodyModel.selectLine(child.currentIndex, child.width, child.height, point.x, positionY, viewModel.isFormatting);
                                 }
                             }
                         }

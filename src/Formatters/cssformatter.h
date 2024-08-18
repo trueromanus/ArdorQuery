@@ -16,7 +16,9 @@
 #ifndef CSSFORMATTER_H
 #define CSSFORMATTER_H
 
+#include <QMap>
 #include "outputformatter.h"
+#include "formatterline.h"
 
 class CssFormatter : public OutputFormatter
 {
@@ -31,6 +33,7 @@ private:
     const QString m_asteriks { "*" };
     const QString m_slash { "/" };
     const QString m_caretBack { "\r" };
+    const QString m_space { " " };
     const QString m_cssTab { "&nbsp;&nbsp;&nbsp;&nbsp;" };
     int m_stackSize { -1 };
     QString m_result { "" };
@@ -39,6 +42,8 @@ public:
     CssFormatter();
 
     QString format(const QString& data) override;
+    QMap<int, FormatterLine*> silentFormat(const QString &data) override;
+    int silentFormatTab() override { return 4; }
 
 private:
     void setOffset(int stackSize) noexcept;

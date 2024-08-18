@@ -16,6 +16,8 @@
 #ifndef BACKENDVIEWMODEL_H
 #define BACKENDVIEWMODEL_H
 
+#include <QFont>
+#include <QFontMetrics>
 #include <QObject>
 #include "../ViewModels/httpperformerviewmodel.h"
 #include "../ViewModels/textadvisorviewmodel.h"
@@ -47,6 +49,7 @@ class BackendViewModel : public QObject
     Q_PROPERTY(bool focusedHelpTextField READ focusedHelpTextField WRITE setFocusedHelpTextField NOTIFY focusedHelpTextFieldChanged FINAL)
     Q_PROPERTY(bool showGlobalVariablesPopup READ showGlobalVariablesPopup NOTIFY showGlobalVariablesPopupChanged FINAL)
     Q_PROPERTY(QString selectedGlobalVariable READ selectedGlobalVariable NOTIFY selectedGlobalVariableChanged FINAL)
+    Q_PROPERTY(QFontMetrics bodyFontMetrics READ bodyFontMetrics NOTIFY bodyFontMetricsChanged FINAL)
 
 private:
     HttpPerformerViewModel* m_requestPerformer { new HttpPerformerViewModel(this) };
@@ -68,6 +71,7 @@ private:
     bool m_focusedHelpTextField { false };
     bool m_showGlobalVariablesPopup { false };
     int m_selectedGlobalVariableIndex { -1 };
+    QFontMetrics m_bodyFontMetrics { QFontMetrics(QFont()) };
     QString m_selectedGlobalVariable { "" };
     QString m_globalVariablesPopupMode { "default" };
     const QString m_changeSelectedQueryCommand { "changeselectedquery" };
@@ -127,6 +131,8 @@ public:
     bool showGlobalVariablesPopup() const noexcept { return m_showGlobalVariablesPopup; }
     QString selectedGlobalVariable() const noexcept { return m_selectedGlobalVariable; }
 
+    QFontMetrics bodyFontMetrics() const noexcept { return m_bodyFontMetrics; }
+
     Q_INVOKABLE void addNewRequest(bool forceSelectedAddedItem = false);
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void refreshFindedIndex() noexcept;
@@ -137,6 +143,7 @@ public:
     Q_INVOKABLE void importFromOpenApi(int index, bool replaceCurrent) noexcept;
     Q_INVOKABLE void saveDownloadedFile(const QString& fileName) noexcept;
     Q_INVOKABLE void closeGlobalVariables() noexcept;
+    Q_INVOKABLE void setResultBodyFontFamily(const QString& family, int fontSize) noexcept;
 
     void deleteCurrentRequest() noexcept;
 
@@ -177,6 +184,7 @@ signals:
     void showGlobalVariablesPopupChanged();
     void selectedGlobalVariableChanged();
     void globalVariableSelected(int lastPosition);
+    void bodyFontMetricsChanged();
 
 private slots:
     void errorNotification(const QString& message, const QString& title);

@@ -30,6 +30,7 @@
 #include "ListModels/globalvariableslistmodel.h"
 #include "ListModels/responsebodylistmodel.h"
 #include "ViewModels/globaleventhandlermodel.h"
+#include "ViewModels/globalmouseviewmodel.h"
 #ifdef QT_DEBUG
 #include <QtTest/QtTest>
 #include "Tests/jsonformatterunittests.h"
@@ -37,6 +38,7 @@
 #include "Tests/textadvisorviewmodelunittests.h"
 #include "Tests/globalvariablesunittest.h"
 #include "Tests/cssformatterunittests.h"
+#include "Tests/xmlformatterunittests.h"
 #endif
 
 void registerQmlTypes();
@@ -104,6 +106,7 @@ void registerQmlTypes() {
     qmlRegisterType<GlobalVariablesListModel>("ArdorQuery.Backend", 1, 0, "GlobalVariablesListModel");
     qmlRegisterType<ResponseBodyListModel>("ArdorQuery.Backend", 1, 0, "ResponseBodyListModel");
     qmlRegisterType<GlobalEventHandlerModel>("ArdorQuery.Backend", 1, 0, "GlobalEventHandlerModel");
+    qmlRegisterType<GlobalMouseViewModel>("ArdorQuery.Backend", 1, 0, "GlobalMouseViewModel");
 }
 
 void adjustmentLocalStorage() {
@@ -123,5 +126,6 @@ void runTest(int argc, char *argv[]) {
     QTest::qExec(new TextAdvisorViewModelUnitTests, argc - 1, argv);
     QTest::qExec(new GlobalVariablesUnitTest, argc - 1, argv);
     QTest::qExec(new CssFormatterUnitTests, argc - 1, argv);
+    QTest::qExec(new XmlFormatterUnitTests, argc - 1, argv);
 }
 #endif

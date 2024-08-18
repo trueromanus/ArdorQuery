@@ -27,10 +27,16 @@ public:
 
 private slots:
     void htmlLowerHeader();
+    void htmlLowerHeaderSilent();
     void htmlUpperHeader();
+    void htmlUpperHeaderSilent();
     void emptyFullTag();
+    void emptyFullTagSilent();
     void attributeWithUrl();
+    void attributeWithUrlSilent();
     void commentTag();
+    void commentTagSilent();
+    void innerContentNewLine();
 };
 
 #endif // HTMLFORMATTERUNITTESTS_H

@@ -16,7 +16,9 @@
 #ifndef XMLFORMATTER_H
 #define XMLFORMATTER_H
 
+#include <QMap>
 #include "outputformatter.h"
+#include "formatterline.h"
 
 class XmlFormatter : public OutputFormatter
 {
@@ -36,14 +38,20 @@ class XmlFormatter : public OutputFormatter
     QString m_comment { "<!--" };
     int m_stackSize { -1 };
     QString m_result { "" };
+    FormatterLine* m_formatterLine { nullptr };
 
 public:
     XmlFormatter();
 
     QString format(const QString& data) override;
+    QMap<int, FormatterLine*> silentFormat(const QString &data) override;
+    int silentFormatTab() override { return 4; }
     void formatTagWithOffset(QString& tag);
+    void formatTagWithOffsetSilent(QString& tag, QMap<int, FormatterLine*>& result);
     void formatTag(QString& tag);
+    void formatTagSilent(QString& tag);
     void setOffset(int tabSize = 4) noexcept;
+
 };
 
 #endif // XMLFORMATTER_H
