@@ -17,6 +17,7 @@ public:
 
     QString format(const QString& data) override;
     QMap<int, FormatterLine*> silentFormat(const QString &data) override;
+    int silentFormatTab() override { return 1; }
 };
 
 #endif // PLAINTEXTFORMATTER_H

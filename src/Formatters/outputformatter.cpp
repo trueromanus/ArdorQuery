@@ -35,3 +35,8 @@ QMap<int, FormatterLine *> OutputFormatter::silentFormat(const QString &data)
     QMap<int, FormatterLine *> result;
     return result;
 }
+
+int OutputFormatter::silentFormatTab()
+{
+    return 0;
+}

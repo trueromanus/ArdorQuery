@@ -27,6 +27,7 @@ public:
 
     virtual QString format(const QString& data);
     virtual QMap<int, FormatterLine*> silentFormat(const QString& data);
+    virtual int silentFormatTab();
 };
 
 #endif // OUTPUTFORMATTER_H

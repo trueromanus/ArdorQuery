@@ -45,6 +45,7 @@ public:
 
     QString format(const QString& data) override;
     QMap<int, FormatterLine*> silentFormat(const QString &data) override;
+    int silentFormatTab() override { return 4; }
     void formatTagWithOffset(QString& tag);
     void formatTagWithOffsetSilent(QString& tag, QMap<int, FormatterLine*>& result);
     void formatTag(QString& tag);

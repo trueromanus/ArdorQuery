@@ -28,7 +28,7 @@ int ResponseBodyListModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) return 0;
 
-    return  m_lines.size();
+    return  m_silentLines.size();
 }
 
 QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
@@ -36,11 +36,11 @@ QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) return QVariant();
 
     auto currentIndex = index.row();
-    auto line = m_lines.at(currentIndex);
+    auto currentLine = m_silentLines.value(currentIndex);
 
     switch (role) {
         case CurrentLineRole: {
-            return QVariant(line);
+            return QVariant(currentLine->formattedLine(m_silentLinesTab));
         }
         case IndexRole: {
             return QVariant::fromValue(currentIndex);
@@ -118,12 +118,15 @@ void ResponseBodyListModel::setBody(const QByteArray &body, const QString& forma
 void ResponseBodyListModel::reformatting(const QString &formatter) noexcept
 {
     m_lines.clear();
+    m_silentLines.clear();
     auto body = getFullBody();
     auto isHasFormatter = !formatter.isEmpty();
     auto lines = body.split("\n");
     if (isHasFormatter) {
         auto formatterInstance = m_formatterFactory->getFormatter(formatter);
         lines = formatterInstance->format(body).split("\n");
+        m_silentLines = formatterInstance->silentFormat(body);
+        m_silentLinesTab = formatterInstance->silentFormatTab();
     }
     foreach (auto line, lines) {
         if (isHasFormatter || line.length() < 100) {

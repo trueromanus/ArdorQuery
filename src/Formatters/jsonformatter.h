@@ -45,6 +45,7 @@ public:
 
     QString format(const QString& data) override;
     QMap<int, FormatterLine*> silentFormat(const QString& data) override;
+    int silentFormatTab() override { return 4; }
     void setOffset(int stackSize, QString& target, bool newLine = false) noexcept;
 };
 

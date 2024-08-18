@@ -116,13 +116,24 @@ void HtmlFormatterUnitTests::commentTagSilent()
 
     QCOMPARE(result.size(), 3);
     QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="#8812a1">&lt;test&gt;</font>)");
-    qDebug() << R"(<font color="#008000">&lt;!-- comment --&gt;</font>)";
-    qDebug() << result.value(1)->formattedLine(1);
-    QCOMPARE(result.value(1)->formattedLine(1), R"(<font color="#008000">&lt;!-- comment --&gt;</font>)");
+    QCOMPARE(result.value(1)->formattedLine(1), R"(&nbsp;<font color="#008000">&lt;!-- comment --&gt;</font>)");
     QCOMPARE(result.value(2)->formattedLine(1), R"(<font color="#8812a1">&lt;/test&gt;</font>)");
 
     QCOMPARE(result.value(0)->line(), R"(<test>)");
     QCOMPARE(result.value(1)->line(), R"(<!-- comment -->)");
     QCOMPARE(result.value(2)->line(), R"(</test>)");
 
+}
+
+void HtmlFormatterUnitTests::innerContentNewLine()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat("<upper><test>luper</test></upper>");
+
+    QCOMPARE(result.size(), 5);
+    QCOMPARE(result.value(0)->formattedLine(1), R"(<font color="#8812a1">&lt;upper&gt;</font>)");
+    QCOMPARE(result.value(1)->formattedLine(1), R"(&nbsp;<font color="#8812a1">&lt;test&gt;</font>)");
+    QCOMPARE(result.value(2)->formattedLine(1), R"(&nbsp;&nbsp;luper)");
+    QCOMPARE(result.value(3)->formattedLine(1), R"(&nbsp;<font color="#8812a1">&lt;/test&gt;</font>)");
+    QCOMPARE(result.value(4)->formattedLine(1), R"(<font color="#8812a1">&lt;/upper&gt;</font>)");
 }

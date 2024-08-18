@@ -41,7 +41,6 @@ SOURCES += \
         Models/postscriptresultmodel.cpp \
         Models/shortcutsection.cpp \
         QuickControls/backendimage.cpp \
-        Tests/xmlformatterunittests.cpp \
         ViewModels/backendviewmodel.cpp \
         ViewModels/globaleventhandlermodel.cpp \
         ViewModels/globalmouseviewmodel.cpp \
@@ -99,7 +98,6 @@ HEADERS += \
     Models/postscriptresultmodel.h \
     Models/shortcutsection.h \
     QuickControls/backendimage.h \
-    Tests/xmlformatterunittests.h \
     ViewModels/backendviewmodel.h \
     ViewModels/globaleventhandlermodel.h \
     ViewModels/globalmouseviewmodel.h \

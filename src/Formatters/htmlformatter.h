@@ -49,6 +49,7 @@ public:
 
     QString format(const QString& data) override;
     QMap<int, FormatterLine*> silentFormat(const QString &data) override;
+    int silentFormatTab() override { return 4; }
     bool isSelfClosedTag(const QString &tag);
     void formatTagWithOffset(QString &tag);
     void formatTag(QString &tag);

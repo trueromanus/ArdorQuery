@@ -81,7 +81,7 @@ QString HtmlFormatter::format(const QString &data)
 QMap<int, FormatterLine *> HtmlFormatter::silentFormat(const QString &data)
 {
     QMap<int, FormatterLine*> result;
-    m_stackSize = -1;
+    m_stackSize = 0;
     QString currentFullTag = "";
     bool tagStarted = false;
     bool contentStarted = false;
@@ -96,9 +96,8 @@ QMap<int, FormatterLine *> HtmlFormatter::silentFormat(const QString &data)
             currentFullTag = latinCharacter;
             if (contentStarted) {
                 contentStarted = false;
-                //m_result.append("\n");
-                m_formatterLine = new FormatterLine(m_stackSize);
 
+                m_formatterLine = new FormatterLine(m_stackSize);
                 result[result.size()] = m_formatterLine;
             }
             continue;
@@ -113,15 +112,11 @@ QMap<int, FormatterLine *> HtmlFormatter::silentFormat(const QString &data)
         }
 
         if (!tagStarted && latinCharacter != m_newline && latinCharacter != m_caretBack && latinCharacter != m_space && latinCharacter != m_tabulator) {
-            if (!contentStarted) {
-                contentStarted = true;
-                //setOffset();
-            }
-            //m_result.append(character);
+            if (!contentStarted) contentStarted = true;
+
             m_formatterLine->increaseLineIterator(character);
         }
         if (latinCharacter == m_space && contentStarted) {
-            //m_result.append(m_space);
             m_formatterLine->increaseLineIterator(m_space[0]);
         }
         if (tagStarted && latinCharacter != m_newline) currentFullTag.append(character);
@@ -377,20 +372,20 @@ void HtmlFormatter::formatTagWithOffsetSilent(QString &tag, QMap<int, FormatterL
     }
 
     if (closedTag) {
-        if (!selfClosedTag) m_stackSize -= 1;
-        //setOffset();
+        if (!selfClosedTag) {
+            m_stackSize -= 1;
+            m_formatterLine->setOffset(m_stackSize);
+        }
         formatTagSilent(tag, result);
 
         m_formatterLine = new FormatterLine(m_stackSize);
         result[result.size()] = m_formatterLine;
     } else if (selfClosedTag) {
-        //setOffset();
         formatTagSilent(tag, result);
 
         m_formatterLine = new FormatterLine(m_stackSize);
         result[result.size()] = m_formatterLine;
     } else {
-        //setOffset();
         formatTagSilent(tag, result);
         m_stackSize += 1;
 

@@ -36,6 +36,7 @@ private slots:
     void attributeWithUrlSilent();
     void commentTag();
     void commentTagSilent();
+    void innerContentNewLine();
 };
 
 #endif // HTMLFORMATTERUNITTESTS_H

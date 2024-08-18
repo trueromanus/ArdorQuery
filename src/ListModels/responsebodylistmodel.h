@@ -40,6 +40,8 @@ class ResponseBodyListModel : public QAbstractListModel
 
 private:
     QStringList m_lines { QStringList() };
+    QMap<int, FormatterLine *> m_silentLines { QMap<int, FormatterLine *>() };
+    int m_silentLinesTab { 0 };
     QByteArray m_originalBody { "" };
     QList<std::tuple<int, int>> m_findedLines { QList<std::tuple<int, int>>() };
     QMap<int, int> m_findedLinesMap { QMap<int, int>() };

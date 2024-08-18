@@ -43,6 +43,7 @@ public:
 
     QString format(const QString& data) override;
     QMap<int, FormatterLine*> silentFormat(const QString &data) override;
+    int silentFormatTab() override { return 4; }
 
 private:
     void setOffset(int stackSize) noexcept;
