@@ -51,6 +51,9 @@ void BackendViewModel::addNewRequest(bool forceSelectedAddedItem)
     request->setTextAdvisor(m_textAdviser);
     request->setSelectedItem(0); // select first empty field for new request
 
+    auto result = model->resultModel();
+    result->bodyModel()->setFontMetrics(m_bodyFontMetrics);
+
     m_requests->addItem(model);
 
     if (forceSelectedAddedItem) {
@@ -289,6 +292,9 @@ void BackendViewModel::importFromOpenApi(int index, bool replaceCurrent) noexcep
     auto request = model->requestModel();
     request->setTextAdvisor(m_textAdviser);
 
+    auto result = model->resultModel();
+    result->bodyModel()->setFontMetrics(m_bodyFontMetrics);
+
     auto summary = route->summary();
     if (!summary.isEmpty()) request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::TitleType, route->summary());
 
@@ -370,6 +376,8 @@ void BackendViewModel::setResultBodyFontFamily(const QString &family, int fontSi
 {
     auto font = QFont(family, fontSize);
     m_bodyFontMetrics = QFontMetrics(font);
+
+    m_requests->fillFontMetrics(m_bodyFontMetrics);
 }
 
 void BackendViewModel::deleteCurrentRequest() noexcept

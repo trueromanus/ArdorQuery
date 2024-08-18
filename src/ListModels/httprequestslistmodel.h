@@ -55,6 +55,7 @@ public:
     QSharedPointer<QList<HttpRequestModel*>> getList() const noexcept;
 
     HttpRequestModel* getSelectedRequest() const noexcept;
+    void fillFontMetrics(const QFontMetrics fontMetrics);
 
     Q_INVOKABLE void selectItem(const int newIndex) noexcept;
     Q_INVOKABLE void selectItemById(const QUuid& id) noexcept;

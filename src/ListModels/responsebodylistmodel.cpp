@@ -36,6 +36,9 @@ QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) return QVariant();
 
     auto currentIndex = index.row();
+
+    if (!m_silentLines.contains(currentIndex)) return QVariant();
+
     auto currentLine = m_silentLines.value(currentIndex);
 
     switch (role) {
@@ -311,7 +314,6 @@ void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, 
     Q_UNUSED(width);
     Q_UNUSED(height);
     Q_UNUSED(x);
-    Q_UNUSED(y);
     Q_UNUSED(formatting);
 
     QString line = QString(m_lines.value(currentIndex));
@@ -341,6 +343,7 @@ void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, 
     int characterWidth = 0;
     int currentLine = 0;
     int characterIterator = 0;
+
     foreach (auto character, line) {
         auto newCharacterWidth = m_fontMetrics.boundingRect(QString(character)).width();
 
@@ -361,7 +364,6 @@ void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, 
         characterWidth += newCharacterWidth;
         characterIterator += 1;
     }
-
 }
 
 QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept
