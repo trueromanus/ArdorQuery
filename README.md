@@ -17,7 +17,7 @@ Each type of line has a different color to help visually identify that content.
 * Attaching files from the file system
 * Sending forms
 * Sending any body (aliases for JSON and XML)
-* Highlight responses for popular formats - JSON, XML, HTML
+* Highlight responses for popular formats - JSON, XML, HTML, CSS
 * Showing responses as images - JPEG, PNG, GIF, WEBP, SVG
 * Adding additional queries and switching between it
 * Search text in body
