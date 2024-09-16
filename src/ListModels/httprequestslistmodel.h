@@ -29,6 +29,7 @@ class HttpRequestsListModel : public QAbstractListModel
 
 private:
     QSharedPointer<QList<HttpRequestModel*>> m_requests { new QList<HttpRequestModel*>() };
+    QSharedPointer<TextAdvisorViewModel> m_textAdviser;
     int m_selectedIndex { 0 };
 
     enum HttpRequestsRoles {
@@ -46,6 +47,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+    void setup(QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept;
+
     HttpRequestModel* selectedItem() const noexcept { return m_requests->at(m_selectedIndex); }
 
     int addItem(const HttpRequestModel* model) noexcept;
@@ -53,6 +56,10 @@ public:
     void deleteSelectedItem() noexcept;
 
     QSharedPointer<QList<HttpRequestModel*>> getList() const noexcept;
+
+    QString getProfilePath() const noexcept;
+    void saveToProfile() const noexcept;
+    void loadFromProfile() const noexcept;
 
     HttpRequestModel* getSelectedRequest() const noexcept;
 

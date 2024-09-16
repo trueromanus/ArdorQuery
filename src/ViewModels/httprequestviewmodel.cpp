@@ -179,6 +179,14 @@ void HttpRequestViewModel::addItem(const int position, const HttpRequestViewMode
     setSelectedItem(actualPosition);
 }
 
+void HttpRequestViewModel::addRawLine(const QString line)
+{
+    auto item = new HttpRequestItem();
+    m_items->append(item);
+
+    setItemContent(m_items->size() - 1, line);
+}
+
 void HttpRequestViewModel::removeFirstItem()
 {
     beginResetModel();

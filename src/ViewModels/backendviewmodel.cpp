@@ -22,6 +22,8 @@
 BackendViewModel::BackendViewModel(QObject *parent)
     : QObject{parent}
 {
+    m_requests->setup(m_textAdviser);
+
     addNewRequest();
 
     m_requestsCommandPaletter->setup(m_requests->getList());
@@ -33,6 +35,9 @@ BackendViewModel::BackendViewModel(QObject *parent)
     fillMappings();
     fillCommands();
     fillHelpShortcuts();
+
+    m_requests->loadFromProfile(); // load profile if exists
+    m_requestsCommandPaletter->recreateHistory(); // recreate history if profile not empty
 }
 
 void BackendViewModel::setFocusedHelpTextField(bool focusedHelpTextField) noexcept
@@ -48,7 +53,6 @@ void BackendViewModel::addNewRequest(bool forceSelectedAddedItem)
     auto model = new HttpRequestModel(this);
 
     auto request = model->requestModel();
-    request->setTextAdvisor(m_textAdviser);
     request->setSelectedItem(0); // select first empty field for new request
 
     m_requests->addItem(model);
@@ -287,7 +291,6 @@ void BackendViewModel::importFromOpenApi(int index, bool replaceCurrent) noexcep
     }
 
     auto request = model->requestModel();
-    request->setTextAdvisor(m_textAdviser);
 
     auto summary = route->summary();
     if (!summary.isEmpty()) request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::TitleType, route->summary());
@@ -364,6 +367,11 @@ void BackendViewModel::closeGlobalVariables() noexcept
     m_selectedGlobalVariableIndex = -1;
     emit showGlobalVariablesPopupChanged();
     emit selectedGlobalVariableChanged();
+}
+
+void BackendViewModel::saveCurrentRequestsToProfile() noexcept
+{
+    m_requests->saveToProfile();
 }
 
 void BackendViewModel::deleteCurrentRequest() noexcept

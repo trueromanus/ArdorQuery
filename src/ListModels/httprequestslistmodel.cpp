@@ -13,6 +13,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
+#include <QStandardPaths>
 #include "httprequestslistmodel.h"
 
 HttpRequestsListModel::HttpRequestsListModel(QObject *parent)
@@ -80,8 +85,15 @@ QHash<int, QByteArray> HttpRequestsListModel::roleNames() const
     };
 }
 
+void HttpRequestsListModel::setup(QSharedPointer<TextAdvisorViewModel> textAdviser) noexcept
+{
+    m_textAdviser = textAdviser;
+}
+
 int HttpRequestsListModel::addItem(const HttpRequestModel* model) noexcept
 {
+    model->requestModel()->setTextAdvisor(m_textAdviser);
+
     beginResetModel();
 
     m_requests->append(const_cast<HttpRequestModel*>(model));
@@ -118,6 +130,80 @@ void HttpRequestsListModel::deleteSelectedItem() noexcept
 QSharedPointer<QList<HttpRequestModel *> > HttpRequestsListModel::getList() const noexcept
 {
     return m_requests;
+}
+
+QString HttpRequestsListModel::getProfilePath() const noexcept
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/ardorquery.profile";
+}
+
+void HttpRequestsListModel::saveToProfile() const noexcept
+{
+    QJsonArray array;
+    foreach (auto request, *m_requests) {
+        auto requestModel = request->requestModel();
+        auto lines = requestModel->getAllFieldsAsList();
+
+        if (lines.isEmpty()) continue; // not make sense save empty queries
+        if (lines.size() == 1 && lines.value(0).isEmpty()) continue; // not make sense save first query
+
+        QJsonArray linesArray;
+        foreach (auto line, lines) {
+            linesArray.append(line);
+        }
+        QJsonObject item;
+        item["lines"] = linesArray;
+        array.append(item);
+    }
+
+    QJsonDocument document(array);
+    auto json = document.toJson();
+
+    auto path = getProfilePath();
+    QFile profileFile(path);
+    if (!profileFile.open(QFile::WriteOnly | QFile::Text)) return;
+
+    profileFile.write(json);
+    profileFile.close();
+}
+
+void HttpRequestsListModel::loadFromProfile() const noexcept
+{
+    auto path = getProfilePath();
+    if (!QFile::exists(path)) return;
+
+    QFile profileFile(path);
+    if (!profileFile.open(QFile::ReadOnly | QFile::Text)) return;
+
+    auto json = profileFile.readAll();
+    profileFile.close();
+
+    auto document = QJsonDocument::fromJson(json);
+    auto array = document.array();
+    foreach (auto arrayItem, array) {
+        auto item = arrayItem.toObject();
+        if (!item.contains("lines")) continue;
+
+        auto lines = item.value("lines").toArray();
+        if (lines.isEmpty()) continue;
+
+        auto model = new HttpRequestModel(parent());
+
+        auto request = model->requestModel();
+        request->setTextAdvisor(m_textAdviser);
+
+        if (!lines.isEmpty()) request->removeFirstItem();
+
+        foreach (auto line, lines) {
+            request->addRawLine(line.toString());
+        }
+        request->setSelectedItem(0);
+
+        m_requests->append(model);
+    }
+
+    //if we load something from profile then need to remove first empty query
+    if (m_requests->size() > 1) m_requests->removeAt(0);
 }
 
 HttpRequestModel *HttpRequestsListModel::getSelectedRequest() const noexcept

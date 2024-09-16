@@ -248,4 +248,8 @@ ApplicationWindow {
     onActiveFocusItemChanged: {
         if (!window.activeFocusItem) globalEventHandler.clear();
     }
+
+    Component.onDestruction: {
+        backend.saveCurrentRequestsToProfile();
+    }
 }

@@ -85,6 +85,7 @@ public:
     void redrawAllItems() noexcept;
 
     Q_INVOKABLE void addItem(const int position, const HttpRequestViewModel::HttpRequestTypes itemType = HttpRequestTypes::UnknownType, const QString initialValue = "", const QString& alias = "");
+    Q_INVOKABLE void addRawLine(const QString line);
     Q_INVOKABLE void removeFirstItem();
     Q_INVOKABLE void refreshItem(const int position, const QString& content);
     Q_INVOKABLE void setItemContent(const int position, const QString& content);
