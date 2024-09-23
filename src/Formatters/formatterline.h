@@ -13,6 +13,8 @@ private:
     int m_offset { 0 };
     QMultiMap<int, std::tuple<QString, bool, bool>> m_indexes { QMultiMap<int, std::tuple<QString, bool, bool>>() };
     int m_lineIterator { -1 };
+    static const QString StartSelectionTag;
+    static const QString EndSelectionTag;
 
 public:
     FormatterLine();

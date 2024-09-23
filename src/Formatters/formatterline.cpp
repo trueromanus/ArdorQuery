@@ -1,6 +1,9 @@
 #include <QSet>
 #include "formatterline.h"
 
+const QString FormatterLine::StartSelectionTag = "<span style=\"background-color: #788a8a5c; color: white;\">";
+const QString FormatterLine::EndSelectionTag = "</span>";
+
 FormatterLine::FormatterLine() {}
 
 FormatterLine::FormatterLine(int offset)
@@ -82,14 +85,13 @@ QString FormatterLine::formattedLineWithSelection(int tabSize, int startSelectio
     tabs.fill("&nbsp;", tabSize);
     QString result = tabs.join("");
 
-    auto startSelectionTag = "<span style=\"background-color: #788a8a5c; color: white;\">";
-    auto endSelectionTag = "</span>";
-
     //need to select all line and don't need make ay other format
     if (startSelectionPosition == 0 && endSelectionPosition == fullCountLine) {
-        result.append(startSelectionTag);
+        result.append(FormatterLine::StartSelectionTag);
         result.append(m_line);
-        result.append(endSelectionTag);
+        result.append(FormatterLine::EndSelectionTag);
+    } else {
+
     }
 
     return result;
@@ -163,3 +165,5 @@ void FormatterLine::removeLastCharacter() noexcept
 {
     m_line.removeLast();
 }
+
+
