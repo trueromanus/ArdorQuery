@@ -121,6 +121,7 @@ void ResponseBodyListModel::setBody(const QByteArray &body, const QString& forma
 void ResponseBodyListModel::reformatting(const QString &formatter) noexcept
 {
     m_lines.clear();
+    foreach(auto silentLine, m_silentLines) delete silentLine;
     m_silentLines.clear();
     auto body = getFullBody();
     auto isHasFormatter = !formatter.isEmpty();

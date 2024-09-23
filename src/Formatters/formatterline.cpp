@@ -8,6 +8,13 @@ FormatterLine::FormatterLine(int offset)
     m_offset = offset;
 }
 
+FormatterLine::~FormatterLine()
+{
+    m_line.clear();
+    m_formattedLine.clear();
+    m_indexes.clear();
+}
+
 QString FormatterLine::formattedLine(int tabSize) noexcept
 {
     if (m_alreadyFormatted) return m_formattedLine;
@@ -63,6 +70,27 @@ QString FormatterLine::formattedLine(int tabSize) noexcept
 
     m_formattedLine = result;
     m_alreadyFormatted = true;
+
+    return result;
+}
+
+QString FormatterLine::formattedLineWithSelection(int tabSize, int startSelectionPosition, int endSelectionPosition) noexcept
+{
+    auto fullCountLine = tabSize + m_line.size();
+
+    QList<QString> tabs;
+    tabs.fill("&nbsp;", tabSize);
+    QString result = tabs.join("");
+
+    auto startSelectionTag = "<span style=\"background-color: #788a8a5c; color: white;\">";
+    auto endSelectionTag = "</span>";
+
+    //need to select all line and don't need make ay other format
+    if (startSelectionPosition == 0 && endSelectionPosition == fullCountLine) {
+        result.append(startSelectionTag);
+        result.append(m_line);
+        result.append(endSelectionTag);
+    }
 
     return result;
 }

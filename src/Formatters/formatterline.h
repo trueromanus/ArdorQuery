@@ -19,9 +19,13 @@ public:
 
     FormatterLine(int offset);
 
+    ~FormatterLine();
+
     QString line() const noexcept { return m_line; }
 
     QString formattedLine(int tabSize = 1) noexcept;
+
+    QString formattedLineWithSelection(int tabSize, int startSelectionPosition, int endSelectionPosition) noexcept;
 
     void setLine(const QString& line) noexcept;
 
