@@ -137,3 +137,33 @@ void HtmlFormatterUnitTests::innerContentNewLine()
     QCOMPARE(result.value(3)->formattedLine(1), R"(&nbsp;<font color="#8812a1">&lt;/test&gt;</font>)");
     QCOMPARE(result.value(4)->formattedLine(1), R"(<font color="#8812a1">&lt;/upper&gt;</font>)");
 }
+
+void HtmlFormatterUnitTests::formattedLineWithSelection_case1()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat("<head>");
+
+    QCOMPARE(result.size(), 1);
+    auto firstLine = result.value(0);
+    QCOMPARE(firstLine->formattedLineWithSelection(0, 0, -1), "<span style=\"background-color: #788a8a5c; color: white;\"><font >&lt;head&gt;</font></span>");
+}
+
+void HtmlFormatterUnitTests::formattedLineWithSelection_case2()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat("<head>");
+
+    QCOMPARE(result.size(), 1);
+    auto firstLine = result.value(0);
+    QCOMPARE(firstLine->formattedLineWithSelection(0, 0, 2), "<span style=\"background-color: #788a8a5c; color: white;\"><font >&lt;he</span>ad&gt;</font>");
+}
+
+void HtmlFormatterUnitTests::formattedLineWithSelection_case3()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat("<head>");
+
+    QCOMPARE(result.size(), 1);
+    auto firstLine = result.value(0);
+    QCOMPARE(firstLine->formattedLineWithSelection(0, 2, 4), "<font color=\"#8812a1\">&lt;h<span style=\"background-color: #788a8a5c; color: white;\">ead</span>&gt;</font>");
+}

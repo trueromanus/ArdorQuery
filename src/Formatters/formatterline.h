@@ -8,6 +8,7 @@ class FormatterLine
 {
 private:
     QString m_line { "" };
+    QString m_lineWithOffset { "" };
     QString m_formattedLine { "" };
     bool m_alreadyFormatted { false };
     int m_offset { 0 };
@@ -15,6 +16,7 @@ private:
     int m_lineIterator { -1 };
     static const QString StartSelectionTag;
     static const QString EndSelectionTag;
+    static const QRegularExpression ColorRegularExpression;
 
 public:
     FormatterLine();
@@ -25,9 +27,13 @@ public:
 
     QString line() const noexcept { return m_line; }
 
+    QString lineWithOffset() const noexcept { return m_lineWithOffset; }
+
     QString formattedLine(int tabSize = 1) noexcept;
 
     QString formattedLineWithSelection(int tabSize, int startSelectionPosition, int endSelectionPosition) noexcept;
+
+    void fillLineWithOffset(int tabSize = 1) noexcept;
 
     void setLine(const QString& line) noexcept;
 
@@ -50,6 +56,9 @@ public:
     bool containsCharacter(QChar character) const noexcept;
 
     void removeLastCharacter() noexcept;
+
+private:
+    std::tuple<QString,QString,QString> getContents(const QList<std::tuple<QString,bool,bool>>& items);
 
 };
 

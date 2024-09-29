@@ -37,6 +37,9 @@ private slots:
     void commentTag();
     void commentTagSilent();
     void innerContentNewLine();
+    void formattedLineWithSelection_case1();
+    void formattedLineWithSelection_case2();
+    void formattedLineWithSelection_case3();
 };
 
 #endif // HTMLFORMATTERUNITTESTS_H

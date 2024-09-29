@@ -309,11 +309,6 @@ void HtmlFormatter::formatTagSilent(QString &tag, QMap<int, FormatterLine*> resu
             closedPartStarted = true;
         }
 
-        /*if (latinCharacter == m_closedTag) {
-            m_result.append("/");
-            continue;
-        }*/
-
         if (latinCharacter == m_attributeDecorator) {
             if (stringStarted) {
                 stringStarted = false;
@@ -328,11 +323,9 @@ void HtmlFormatter::formatTagSilent(QString &tag, QMap<int, FormatterLine*> resu
         if (!tagNameStarted && !attributeStarted) {
             attributeStarted = true;
             m_formatterLine->addIndex("<font color=\"#994500\">", true, false);
-            //m_result.append("<font color=\"#994500\">");
         }
     }
 
-    //m_result.append("</font>\n");
     m_formatterLine->increaseLineIterator('>');
     m_formatterLine->addIndex("&gt;</font>", false, true);
 }
@@ -353,7 +346,6 @@ void HtmlFormatter::formatTagWithOffsetSilent(QString &tag, QMap<int, FormatterL
 
         m_formatterLine = new FormatterLine(m_stackSize);
         result[result.size()] = m_formatterLine;
-        //m_result.append("<font color=\"lightgray\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");
         return;
     }
 
@@ -366,8 +358,6 @@ void HtmlFormatter::formatTagWithOffsetSilent(QString &tag, QMap<int, FormatterL
 
         m_formatterLine = new FormatterLine(m_stackSize);
         result[result.size()] = m_formatterLine;
-        /*setOffset();
-        m_result.append("<font color=\"#008000\">" + tag.replace("<", "&lt;").replace(">", "&gt;") + "</font>\n");*/
         return;
     }
 

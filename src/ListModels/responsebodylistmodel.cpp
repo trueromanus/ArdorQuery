@@ -43,7 +43,32 @@ QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case CurrentLineRole: {
-            return QVariant(currentLine->formattedLine(m_silentLinesTab));
+            auto isSameLine = m_startSelectedLine > -1 && m_startSelectedLine == m_endSelectedLine && currentIndex == m_startSelectedLine;
+            if (isSameLine) {
+                qDebug() << "SAME LINE!!!";
+                if (m_startSelectedCharacter < m_endSelectedCharacter) {
+                    qDebug() << currentLine->formattedLineWithSelection(m_silentLinesTab, m_startSelectedCharacter, m_endSelectedCharacter);
+                    return QVariant(currentLine->formattedLineWithSelection(m_silentLinesTab, m_startSelectedCharacter, m_endSelectedCharacter));
+                } else {
+                    return QVariant(currentLine->formattedLineWithSelection(m_silentLinesTab, m_endSelectedCharacter, m_startSelectedCharacter));
+                }
+            }
+
+            auto isInsideSelectedLines = currentIndex >= m_startSelectedLine && currentIndex <= m_endSelectedLine;
+            if (m_startSelectedLine > -1 && isInsideSelectedLines) {
+                auto isStartLine = currentIndex == m_startSelectedLine;
+                auto isEndLine = currentIndex == m_endSelectedLine;
+
+                return QVariant(
+                    currentLine->formattedLineWithSelection(
+                        m_silentLinesTab,
+                        isStartLine ? m_startSelectedCharacter : 0,
+                        isEndLine ? m_endSelectedCharacter : -1
+                    )
+                );
+            } else {
+                return QVariant(currentLine->formattedLine(m_silentLinesTab));
+            }
         }
         case IndexRole: {
             return QVariant::fromValue(currentIndex);
@@ -243,6 +268,8 @@ void ResponseBodyListModel::setFontMetrics(const QFontMetrics &fontMetrics) noex
     emit fontMetricsChanged();
 
     m_fontHeight = m_fontMetrics.boundingRect(QString('A')).height();
+    m_defaultCharacterWidth = m_fontMetrics.boundingRect(QString('A')).width();
+    m_shortCharacterWidth = m_fontMetrics.boundingRect(QString('i')).width();
 }
 
 void ResponseBodyListModel::searchText(const QString &filter) noexcept
@@ -304,45 +331,22 @@ void ResponseBodyListModel::selectStartLine(int currentIndex) noexcept
 
     m_startSelectedLine = currentIndex;
     m_endSelectedLine = currentIndex;
+    m_startSelectedCharacter = -1;
+    m_endSelectedCharacter = -1;
     emit dataChanged(index(currentIndex), index(currentIndex));
 }
 
 void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, int x, int y, bool formatting) noexcept
 {
+    Q_UNUSED(height);
+    Q_UNUSED(formatting);
     auto oldEndSelectedLine = m_endSelectedLine;
     m_endSelectedLine = currentIndex;
-    emit dataChanged(index(oldEndSelectedLine), index(oldEndSelectedLine));
-    emit dataChanged(index(currentIndex), index(currentIndex));
 
-    m_startSelectedCharacter = -1;
-    m_endSelectedCharacter = -1;
+    FormatterLine* silentLine = m_silentLines.value(currentIndex);
+    silentLine->fillLineWithOffset(m_silentLinesTab);
 
-    Q_UNUSED(width);
-    Q_UNUSED(height);
-    Q_UNUSED(x);
-    Q_UNUSED(formatting);
-
-    QString line = QString(m_lines.value(currentIndex));
-
-    if (formatting) {
-        line = line
-            .replace("&nbsp;", " ")
-            .replace("&lt;", "<")
-            .replace("&quot;", "\"")
-            .replace("&gt;", ">")
-            .replace("</font>", "");
-        while (true) {
-            auto openTagIndex = line.indexOf("<font ");
-            if (openTagIndex == -1) break;
-
-            auto closeTagIndex = line.indexOf(">");
-            if (closeTagIndex == -1) break;
-            if (closeTagIndex < openTagIndex) break;
-
-            auto replacePart = line.mid(openTagIndex, closeTagIndex - openTagIndex + 1);
-            line = line.replace(replacePart, "");
-        }
-    }
+    QString line = silentLine->lineWithOffset();
 
     auto yLine = y / m_fontHeight;
 
@@ -351,7 +355,11 @@ void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, 
     int characterIterator = 0;
 
     foreach (auto character, line) {
-        auto newCharacterWidth = m_fontMetrics.boundingRect(QString(character)).width();
+        auto newCharacterWidth = m_defaultCharacterWidth;
+        qDebug() << QString::number(characterIterator);
+        if (m_shortCharacters.contains(character)) {
+            newCharacterWidth = m_shortCharacterWidth;
+        }
 
         if (characterWidth + newCharacterWidth > width) {
             currentLine += 1;
@@ -370,6 +378,10 @@ void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, 
         characterWidth += newCharacterWidth;
         characterIterator += 1;
     }
+
+    qDebug() << QString::number(m_startSelectedCharacter) << " - " << QString::number(m_endSelectedCharacter);
+    emit dataChanged(index(oldEndSelectedLine), index(oldEndSelectedLine));
+    emit dataChanged(index(currentIndex), index(currentIndex));
 }
 
 QString & ResponseBodyListModel::cleanLineFromTags(QString &line) noexcept

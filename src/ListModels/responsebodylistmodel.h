@@ -59,6 +59,9 @@ private:
     int m_startSelectedCharacter { -1 };
     int m_endSelectedCharacter { -1 };
     int m_fontHeight { 0 };
+    int m_defaultCharacterWidth { 0 };
+    int m_shortCharacterWidth { 0 };
+    const QString m_shortCharacters { "iIjl" };
     QFontMetrics m_fontMetrics { QFontMetrics(QFont()) };
 
     enum ResponseBodyRoles {

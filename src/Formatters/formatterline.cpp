@@ -1,8 +1,10 @@
 #include <QSet>
+#include <QRegularExpression>
 #include "formatterline.h"
 
 const QString FormatterLine::StartSelectionTag = "<span style=\"background-color: #788a8a5c; color: white;\">";
 const QString FormatterLine::EndSelectionTag = "</span>";
+const QRegularExpression FormatterLine::ColorRegularExpression = QRegularExpression(R"(color=\"[A-Za-z0-9\#]{0,}\")", QRegularExpression::CaseInsensitiveOption);
 
 FormatterLine::FormatterLine() {}
 
@@ -38,29 +40,10 @@ QString FormatterLine::formattedLine(int tabSize) noexcept
         if (m_indexes.contains(index)) {
             auto indexItems = m_indexes.values(index);
 
-            auto reversedIndexItems = QList<std::tuple<QString,bool,bool>>();
-            foreach (auto indexItem, indexItems) {
-                reversedIndexItems.insert(0, indexItem);
-            }
-
-            QString leftContent = "";
-            QString rightContent = "";
-            QString replaceContent = "";
-
-            foreach (auto indexItem, reversedIndexItems) {
-                auto content = std::get<0>(indexItem);
-                auto left = std::get<1>(indexItem);
-                auto replace = std::get<2>(indexItem);
-                if (replace) {
-                    replaceContent.append(content);
-                } else {
-                    if (left) {
-                        leftContent.append(content);
-                    } else {
-                        rightContent.append(content);
-                    }
-                }
-            }
+            auto tuple = getContents(indexItems);
+            QString leftContent = std::get<0>(tuple);
+            QString replaceContent = std::get<1>(tuple);
+            QString rightContent = std::get<2>(tuple);
 
             result.append(leftContent);
             result.append(replaceContent.isEmpty() ? character : replaceContent);
@@ -79,22 +62,66 @@ QString FormatterLine::formattedLine(int tabSize) noexcept
 
 QString FormatterLine::formattedLineWithSelection(int tabSize, int startSelectionPosition, int endSelectionPosition) noexcept
 {
-    auto fullCountLine = tabSize + m_line.size();
-
     QList<QString> tabs;
+    tabs.reserve(tabSize);
     tabs.fill("&nbsp;", tabSize);
     QString result = tabs.join("");
 
-    //need to select all line and don't need make ay other format
-    if (startSelectionPosition == 0 && endSelectionPosition == fullCountLine) {
-        result.append(FormatterLine::StartSelectionTag);
-        result.append(m_line);
-        result.append(FormatterLine::EndSelectionTag);
-    } else {
+    if (endSelectionPosition == -1) endSelectionPosition = m_line.size() - 1;
 
+    //need to select all line and don't need make ay other format
+    auto index = 0;
+
+    foreach (auto character, m_line) {
+        if (m_indexes.contains(index)) {
+            auto indexItems = m_indexes.values(index);
+
+            auto tuple = getContents(indexItems);
+            QString leftContent = std::get<0>(tuple);
+            QString replaceContent = std::get<1>(tuple);
+            QString rightContent = std::get<2>(tuple);
+
+            //if inside selection need to clear colors from all tags
+            if (index >= startSelectionPosition && index <= endSelectionPosition) {
+                if (!leftContent.isEmpty()) leftContent = leftContent.replace(FormatterLine::ColorRegularExpression, "");
+                if (!rightContent.isEmpty()) rightContent = rightContent.replace(FormatterLine::ColorRegularExpression, "");
+                if (!replaceContent.isEmpty()) replaceContent = replaceContent.replace(FormatterLine::ColorRegularExpression, "");
+            }
+
+            if (index == startSelectionPosition) leftContent = leftContent.insert(0, FormatterLine::StartSelectionTag);
+            if (index == endSelectionPosition) rightContent = rightContent.append(FormatterLine::EndSelectionTag);
+
+            result.append(leftContent);
+            result.append(replaceContent.isEmpty() ? character : replaceContent);
+            result.append(rightContent);
+        } else {
+            auto characterContent = QString(character);
+            if (index == startSelectionPosition) characterContent.insert(0, FormatterLine::StartSelectionTag);
+            if (index == endSelectionPosition) characterContent.append(FormatterLine::EndSelectionTag);
+
+            result.append(characterContent);
+        }
+        index++;
     }
 
     return result;
+}
+
+void FormatterLine::fillLineWithOffset(int tabSize) noexcept
+{
+    if (m_line.size() == 0) return;
+    if (m_line.size() > 0 && m_lineWithOffset.size() > 0) return;
+
+    auto offsetCharacters = m_offset * tabSize;
+    QString result;
+    result.reserve(offsetCharacters + m_line.size());
+
+    for(int i = 0; i < offsetCharacters; i++) {
+        result.append(" ");
+    }
+    result.append(m_line);
+
+    m_lineWithOffset = result;
 }
 
 void FormatterLine::setLine(const QString &line) noexcept
@@ -164,6 +191,37 @@ bool FormatterLine::containsCharacter(QChar character) const noexcept
 void FormatterLine::removeLastCharacter() noexcept
 {
     m_line.removeLast();
+}
+
+std::tuple<QString, QString, QString> FormatterLine::getContents(const QList<std::tuple<QString, bool, bool> > &items)
+{
+    auto reversedIndexItems = QList<std::tuple<QString,bool,bool>>();
+    foreach (auto indexItem, items) {
+        reversedIndexItems.insert(0, indexItem);
+    }
+
+    QString leftContent = "";
+    QString rightContent = "";
+    QString replaceContent = "";
+
+    foreach (auto indexItem, reversedIndexItems) {
+        auto content = std::get<0>(indexItem);
+        auto left = std::get<1>(indexItem);
+        auto replace = std::get<2>(indexItem);
+        if (replace) {
+            replaceContent.append(content);
+        } else {
+            if (left) {
+                leftContent.append(content);
+            } else {
+                rightContent.append(content);
+            }
+        }
+    }
+
+    reversedIndexItems.clear();
+
+    return std::make_tuple(leftContent, replaceContent, rightContent);
 }
 
 
