@@ -62,9 +62,10 @@ QString FormatterLine::formattedLine(int tabSize) noexcept
 
 QString FormatterLine::formattedLineWithSelection(int tabSize, int startSelectionPosition, int endSelectionPosition) noexcept
 {
+    auto countTabs = tabSize * m_offset;
     QList<QString> tabs;
-    tabs.reserve(tabSize);
-    tabs.fill("&nbsp;", tabSize);
+    tabs.reserve(countTabs);
+    tabs.fill("&nbsp;", countTabs);
     QString result = tabs.join("");
 
     if (endSelectionPosition == -1) endSelectionPosition = m_line.size() - 1;
