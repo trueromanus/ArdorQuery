@@ -167,3 +167,30 @@ void HtmlFormatterUnitTests::formattedLineWithSelection_case3()
     auto firstLine = result.value(0);
     QCOMPARE(firstLine->formattedLineWithSelection(0, 2, 4), "<font color=\"#8812a1\">&lt;h<span style=\"background-color: #788a8a5c; color: white;\">ead</span>&gt;</font>");
 }
+
+void HtmlFormatterUnitTests::formattedLineWithSelection_case4()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat(R"(<link rel="dns-prefetch href="https://github.com/blaballba">)");
+
+    QCOMPARE(result.size(), 1);
+    auto firstLine = result.value(0);
+    QCOMPARE(
+        firstLine->formattedLineWithSelection(0, 18, 14),
+        "<font color=\"#8812a1\">&lt;link</font><font color=\"#994500\"> rel=<font color=\"#2222dd\">&quot;dns<span style=\"background-color: #788a8a5c; color: white;\">-pref</span>etch href=&quot;</font>https://github.com/blaballba<font color=\"#2222dd\">&quot;&gt;</font>"
+    );
+}
+
+void HtmlFormatterUnitTests::formattedLineWithSelection_case5()
+{
+    HtmlFormatter formatter;
+    auto result = formatter.silentFormat(R"(<link rel="dns-prefetch href="https://github.com/blaballba">)");
+
+    QCOMPARE(result.size(), 1);
+    auto firstLine = result.value(0);
+    qDebug() << firstLine->formattedLineWithSelection(0, 14, 29);
+    QCOMPARE(
+        firstLine->formattedLineWithSelection(0, 14, 29),
+        "<font color=\"#8812a1\">&lt;link</font><font color=\"#994500\"> rel=<font color=\"#2222dd\">&quot;dns<span style=\"background-color: #788a8a5c; color: white;\">-prefetch href=&quot;</font></span>https://github.com/blaballba<font color=\"#2222dd\">&quot;&gt;</font>"
+    );
+}

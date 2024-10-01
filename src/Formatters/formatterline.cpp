@@ -69,6 +69,11 @@ QString FormatterLine::formattedLineWithSelection(int tabSize, int startSelectio
     QString result = tabs.join("");
 
     if (endSelectionPosition == -1) endSelectionPosition = m_line.size() - 1;
+    if (endSelectionPosition < startSelectionPosition) {
+        auto tempEndSelection = startSelectionPosition;
+        startSelectionPosition = endSelectionPosition;
+        endSelectionPosition = tempEndSelection;
+    }
 
     //need to select all line and don't need make ay other format
     auto index = 0;

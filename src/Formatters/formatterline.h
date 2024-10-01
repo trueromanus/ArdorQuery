@@ -39,6 +39,8 @@ public:
 
     void setOffset(int offset) noexcept { m_offset = offset; }
 
+    int offset() const noexcept { return m_offset; }
+
     void addIndex(const QString& content, bool left, bool replace = false) noexcept;
 
     void addCustomIndex(int index, const QString& content, bool left, bool replace = false, bool toTop = false) noexcept;

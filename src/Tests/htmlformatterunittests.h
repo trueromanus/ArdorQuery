@@ -40,6 +40,8 @@ private slots:
     void formattedLineWithSelection_case1();
     void formattedLineWithSelection_case2();
     void formattedLineWithSelection_case3();
+    void formattedLineWithSelection_case4();
+    void formattedLineWithSelection_case5();
 };
 
 #endif // HTMLFORMATTERUNITTESTS_H
