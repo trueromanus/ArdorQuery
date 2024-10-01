@@ -45,7 +45,6 @@ QVariant ResponseBodyListModel::data(const QModelIndex &index, int role) const
         case CurrentLineRole: {
             auto isSameLine = m_startSelectedLine > -1 && m_startSelectedLine == m_endSelectedLine && currentIndex == m_startSelectedLine;
             if (isSameLine) {
-                qDebug() << "SAME LINE!!!";
                 if (m_startSelectedCharacter < m_endSelectedCharacter) {
                     qDebug() << currentLine->formattedLineWithSelection(m_silentLinesTab, m_startSelectedCharacter, m_endSelectedCharacter);
                     return QVariant(currentLine->formattedLineWithSelection(m_silentLinesTab, m_startSelectedCharacter, m_endSelectedCharacter));
@@ -345,6 +344,7 @@ void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, 
 
     FormatterLine* silentLine = m_silentLines.value(currentIndex);
     silentLine->fillLineWithOffset(m_silentLinesTab);
+    qDebug() << "tab " << QString::number(m_silentLinesTab) << " " << QString::number(silentLine->offset());
 
     QString line = silentLine->lineWithOffset();
 
@@ -379,7 +379,7 @@ void ResponseBodyListModel::selectLine(int currentIndex, int width, int height, 
         characterIterator += 1;
     }
 
-    qDebug() << QString::number(m_startSelectedCharacter) << " - " << QString::number(m_endSelectedCharacter);
+    //qDebug() << QString::number(m_startSelectedCharacter) << " - " << QString::number(m_endSelectedCharacter);
     emit dataChanged(index(oldEndSelectedLine), index(oldEndSelectedLine));
     emit dataChanged(index(currentIndex), index(currentIndex));
 }

@@ -4,7 +4,7 @@
 
 const QString FormatterLine::StartSelectionTag = "<span style=\"background-color: #788a8a5c; color: white;\">";
 const QString FormatterLine::EndSelectionTag = "</span>";
-const QRegularExpression FormatterLine::ColorRegularExpression = QRegularExpression(R"(color=\"[A-Za-z0-9\#]{0,}\")", QRegularExpression::CaseInsensitiveOption);
+const QRegularExpression FormatterLine::ColorRegularExpression = QRegularExpression(R"(\<font\ color=\"[A-Za-z0-9\#]{0,}\"\>)", QRegularExpression::CaseInsensitiveOption);
 
 FormatterLine::FormatterLine() {}
 
@@ -89,9 +89,9 @@ QString FormatterLine::formattedLineWithSelection(int tabSize, int startSelectio
 
             //if inside selection need to clear colors from all tags
             if (index >= startSelectionPosition && index <= endSelectionPosition) {
-                if (!leftContent.isEmpty()) leftContent = leftContent.replace(FormatterLine::ColorRegularExpression, "");
-                if (!rightContent.isEmpty()) rightContent = rightContent.replace(FormatterLine::ColorRegularExpression, "");
-                if (!replaceContent.isEmpty()) replaceContent = replaceContent.replace(FormatterLine::ColorRegularExpression, "");
+                if (!leftContent.isEmpty()) leftContent = leftContent.replace(FormatterLine::ColorRegularExpression, "").replace("</font>", "");
+                if (!rightContent.isEmpty()) rightContent = rightContent.replace(FormatterLine::ColorRegularExpression, "").replace("</font>", "");
+                if (!replaceContent.isEmpty()) replaceContent = replaceContent.replace(FormatterLine::ColorRegularExpression, "").replace("</font>", "");
             }
 
             if (index == startSelectionPosition) leftContent = leftContent.insert(0, FormatterLine::StartSelectionTag);

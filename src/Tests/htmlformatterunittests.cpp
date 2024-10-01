@@ -145,7 +145,7 @@ void HtmlFormatterUnitTests::formattedLineWithSelection_case1()
 
     QCOMPARE(result.size(), 1);
     auto firstLine = result.value(0);
-    QCOMPARE(firstLine->formattedLineWithSelection(0, 0, -1), "<span style=\"background-color: #788a8a5c; color: white;\"><font >&lt;head&gt;</font></span>");
+    QCOMPARE(firstLine->formattedLineWithSelection(0, 0, -1), "<span style=\"background-color: #788a8a5c; color: white;\">&lt;head&gt;</span>");
 }
 
 void HtmlFormatterUnitTests::formattedLineWithSelection_case2()
@@ -155,7 +155,7 @@ void HtmlFormatterUnitTests::formattedLineWithSelection_case2()
 
     QCOMPARE(result.size(), 1);
     auto firstLine = result.value(0);
-    QCOMPARE(firstLine->formattedLineWithSelection(0, 0, 2), "<span style=\"background-color: #788a8a5c; color: white;\"><font >&lt;he</span>ad&gt;</font>");
+    QCOMPARE(firstLine->formattedLineWithSelection(0, 0, 2), "<span style=\"background-color: #788a8a5c; color: white;\">&lt;he</span>ad&gt;</font>");
 }
 
 void HtmlFormatterUnitTests::formattedLineWithSelection_case3()
@@ -191,6 +191,6 @@ void HtmlFormatterUnitTests::formattedLineWithSelection_case5()
     qDebug() << firstLine->formattedLineWithSelection(0, 14, 29);
     QCOMPARE(
         firstLine->formattedLineWithSelection(0, 14, 29),
-        "<font color=\"#8812a1\">&lt;link</font><font color=\"#994500\"> rel=<font color=\"#2222dd\">&quot;dns<span style=\"background-color: #788a8a5c; color: white;\">-prefetch href=&quot;</font></span>https://github.com/blaballba<font color=\"#2222dd\">&quot;&gt;</font>"
+        "<font color=\"#8812a1\">&lt;link</font><font color=\"#994500\"> rel=<font color=\"#2222dd\">&quot;dns<span style=\"background-color: #788a8a5c; color: white;\">-prefetch href=&quot;</span>https://github.com/blaballba<font color=\"#2222dd\">&quot;&gt;</font>"
     );
 }
