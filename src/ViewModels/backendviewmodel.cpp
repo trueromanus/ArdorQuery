@@ -291,6 +291,7 @@ void BackendViewModel::importFromOpenApi(int index, bool replaceCurrent) noexcep
     }
 
     auto request = model->requestModel();
+    request->setTextAdvisor(m_textAdviser);
 
     auto summary = route->summary();
     if (!summary.isEmpty()) request->addItem(-1, HttpRequestViewModel::HttpRequestTypes::TitleType, route->summary());
