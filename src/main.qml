@@ -51,7 +51,7 @@ ApplicationWindow {
         }
     }
 
-    CommandPalette {
+    HistoryRequestsPalette {
         id: commandPalette
         anchors.centerIn: parent
         visible: backend.openedCommandPalette

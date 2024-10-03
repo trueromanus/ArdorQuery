@@ -1,7 +1,6 @@
 #include <QString>
 #include <QDir>
 #include <QStandardPaths>
-#include "globalconstants.h"
 
 QString getCachePath(const QString& filename) noexcept;
 

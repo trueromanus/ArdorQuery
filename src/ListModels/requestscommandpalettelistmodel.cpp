@@ -52,6 +52,9 @@ QVariant RequestsCommandPaletteListModel::data(const QModelIndex &index, int rol
         case IsSelectedRole: {
             return QVariant(m_selected == itemIndex);
         }
+        case StatusIconRole: {
+            return QVariant(request->resultModel()->displayStatus());
+        }
     }
 
     return QVariant();
@@ -71,6 +74,10 @@ QHash<int, QByteArray> RequestsCommandPaletteListModel::roleNames() const
         {
             IsSelectedRole,
             "isSelected"
+        },
+        {
+            StatusIconRole,
+            "displayStatus"
         }
     };
 }
@@ -82,6 +89,7 @@ void RequestsCommandPaletteListModel::selectItem()
     m_history.insert(0, id);
     m_selected = 0;
     emit itemSelected(id);
+    emit itemIndexSelected(m_selected);
 }
 
 void RequestsCommandPaletteListModel::selectNext()
@@ -92,6 +100,7 @@ void RequestsCommandPaletteListModel::selectNext()
     if (m_selected >= m_requests->count()) m_selected = 0;
 
     refresh();
+    emit itemIndexSelected(m_selected);
 }
 
 void RequestsCommandPaletteListModel::forceSelectItem(QUuid id)

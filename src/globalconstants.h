@@ -13,6 +13,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#ifndef GLOBALCONSTANT_H
+#define GLOBALCONSTANT_H
+
 #include <QString>
 
 extern QString UrlPrefix;
@@ -32,6 +35,8 @@ extern QString PastryPrefix;
 extern QString RoutePrefix;
 extern QString OptionsPrefix;
 extern QString PostScriptPrefix;
+inline QString TimeoutPrefix = "timeout ";
+inline QString OrderPrefix = "order ";
 
 extern QString NotificationErrorTopic;
 extern QString NotificationInfoTopic;
@@ -46,3 +51,5 @@ extern QString OutputFormatPlainText;
 extern QString OutputFormatCss;
 
 extern bool IsPortable;
+
+#endif

@@ -34,7 +34,8 @@ private:
     enum CommandPaletterRoles {
         IdentifierRole = Qt::UserRole + 1,
         TitleRole,
-        IsSelectedRole
+        IsSelectedRole,
+        StatusIconRole
     };
 
 public:
@@ -54,6 +55,7 @@ public:
 
 signals:
     void itemSelected(const QUuid& id);
+    void itemIndexSelected(int index);
 
 };
 

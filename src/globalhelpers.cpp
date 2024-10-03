@@ -1,4 +1,5 @@
 #include "globalhelpers.h"
+#include "globalconstants.h"
 
 QString getCachePath(const QString& filename) noexcept
 {

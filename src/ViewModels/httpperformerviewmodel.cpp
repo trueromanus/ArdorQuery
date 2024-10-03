@@ -334,6 +334,9 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
         resultModel->setPostScript(postScript);
     }
 
+    auto timeout = requestModel->getTimeout();
+    if (timeout > 0) request.setTransferTimeout(timeout);
+
     auto method = requestModel->getMethod();
     method = m_globalVariable->replaceGlobalVariables(method).toLower();
     if (method == "get") {

@@ -81,6 +81,14 @@ void RequestExternalViewModel::parseFromString(const QString &input) noexcept
             type = HttpRequestViewModel::HttpRequestTypes::PostScriptType;
             isBodyType = false;
         }
+        if (line.startsWith(TimeoutPrefix)) {
+            type = HttpRequestViewModel::HttpRequestTypes::TimeoutType;
+            isBodyType = false;
+        }
+        if (line.startsWith(OrderPrefix)) {
+            type = HttpRequestViewModel::HttpRequestTypes::OrderType;
+            isBodyType = false;
+        }
         if (m_textAdvisor->isContainsHeader(line)) {
             type = HttpRequestViewModel::HttpRequestTypes::HeaderType;
             isBodyType = false;

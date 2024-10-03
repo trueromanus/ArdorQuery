@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 Item {
-    width: 280
+    width: 320
     height: 250
 
     Rectangle {
@@ -17,7 +17,9 @@ Item {
         anchors.fill: parent
         anchors.margins: 4
         model: backend.requestsCommandPaletter
+        clip: true
         delegate: Item {
+            id: itemRoot
             width: items.width
             height: 30
 
@@ -32,15 +34,33 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 4
                 anchors.right: parent.right
-                anchors.rightMargin: 4
+                anchors.rightMargin: 36
                 text: title
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
                 maximumLineCount: 2
             }
+
+            Image {
+                id: image
+                anchors.right: parent.right
+                anchors.rightMargin: 14
+                anchors.verticalCenter: parent.verticalCenter
+                width: 22
+                height: 22
+                source: storagePaths.icons + displayStatus + ".svg"
+                mipmap: true
+            }
         }
         ScrollBar.vertical: ScrollBar {
             active: true
+        }
+    }
+
+    Connections {
+        target: backend.requestsCommandPaletter
+        function onItemIndexSelected(id: int) {
+            items.positionViewAtIndex(id, ListView.Contain);
         }
     }
 }

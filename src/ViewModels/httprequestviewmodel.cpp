@@ -43,6 +43,8 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
 
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::OptionsType), 50);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::PostScriptType), 51);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::TimeoutType), 52);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::OrderType), 53);
 
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 60);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 1000);
@@ -278,6 +280,16 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
 
     if (lowerContent.startsWith(PostScriptPrefix) && itemType != HttpRequestTypes::PostScriptType) {
         item->setType(static_cast<int>(HttpRequestTypes::PostScriptType));
+        needRefresh = true;
+    }
+
+    if (lowerContent.startsWith(TimeoutPrefix) && itemType != HttpRequestTypes::TimeoutType) {
+        item->setType(static_cast<int>(HttpRequestTypes::TimeoutType));
+        needRefresh = true;
+    }
+
+    if (lowerContent.startsWith(OrderPrefix) && itemType != HttpRequestTypes::OrderType) {
+        item->setType(static_cast<int>(HttpRequestTypes::OrderType));
         needRefresh = true;
     }
 
@@ -576,6 +588,44 @@ QString HttpRequestViewModel::getPostScript() const noexcept
     return "";
 }
 
+int HttpRequestViewModel::getTimeout() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::TimeoutType;
+        }
+        );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text().replace(TimeoutPrefix, "", Qt::CaseInsensitive);
+        return text.toInt();
+    }
+
+    return 0;
+}
+
+int HttpRequestViewModel::getOrder() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::OrderType;
+        }
+        );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text().replace(OrderPrefix, "", Qt::CaseInsensitive);
+        return text.toInt();
+    }
+
+    return 0;
+}
+
 bool HttpRequestViewModel::isOnlyEmptyFirstItem() const noexcept
 {
     return m_items->count() == 1 && m_items->value(0)->text().isEmpty();
@@ -692,8 +742,9 @@ QString HttpRequestViewModel::getTypeColor(int type) const
         case HttpRequestTypes::RouteType:
             return "#78D34E24";
         case HttpRequestTypes::OptionsType:
-            return "#78FDB833";
         case HttpRequestTypes::PostScriptType:
+        case HttpRequestTypes::TimeoutType:
+        case HttpRequestTypes::OrderType:
             return "#78FDB833";
         default:
             return "#CDCDB4";
@@ -749,6 +800,12 @@ QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType, con
             break;
         case HttpRequestTypes::PostScriptType:
             prefix = PostScriptPrefix;
+            break;
+        case HttpRequestTypes::TimeoutType:
+            prefix = TimeoutPrefix;
+            break;
+        case HttpRequestTypes::OrderType:
+            prefix = OrderPrefix;
             break;
         default: prefix = "";
     }
