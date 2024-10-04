@@ -1,3 +1,4 @@
+#include <QUrl>
 #include "globalhelpers.h"
 #include "globalconstants.h"
 
@@ -64,4 +65,29 @@ QString removeFileProtocol(QString &value) noexcept
 #else
     return value.replace("file://", "");
 #endif
+}
+
+QString extractFileNameFromContentDisposition(const QString &value) noexcept
+{
+    auto contentDisposition = value.toLower();
+    QString downloadFileName = "";
+    if (contentDisposition.isEmpty()) return downloadFileName;
+
+    contentDisposition = contentDisposition.replace("content-disposition: ", "");
+
+    if (!value.contains("attachment", Qt::CaseInsensitive)) return downloadFileName;
+
+    auto parts = contentDisposition.split(";");
+    foreach (auto part, parts) {
+        auto nameParts = part.split("=");
+        if (nameParts.length() != 2) continue;
+
+        auto fileNamePart = nameParts[0].replace("\"","").trimmed().toLower();
+        if (fileNamePart != "filename" && fileNamePart != "filename*") continue;
+        bool isEncoded = fileNamePart == "filename*";
+        auto fileNameValue = nameParts[1].replace("\"","").replace("utf-8''", "");
+        downloadFileName = isEncoded ? QUrl::fromPercentEncoding(fileNameValue.toUtf8()) : fileNameValue;
+    }
+
+    return downloadFileName;
 }

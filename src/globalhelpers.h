@@ -9,3 +9,5 @@ void createIfNotExistsFile(const QString& path, const QString& defaultContent) n
 QString adjustShortcutsForDisplay(QString& value) noexcept;
 
 QString removeFileProtocol(QString& value) noexcept;
+
+QString extractFileNameFromContentDisposition(const QString& value) noexcept;

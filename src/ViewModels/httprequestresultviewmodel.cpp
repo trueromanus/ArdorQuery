@@ -18,6 +18,7 @@
 #include <QPainter>
 #include <QFile>
 #include "httprequestresultviewmodel.h"
+#include "../globalhelpers.h"
 
 HttpRequestResultViewModel::HttpRequestResultViewModel(QObject *parent)
     : QObject{parent}
@@ -325,7 +326,7 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
             continue;
         }
         if (header.startsWith("content-disposition ", Qt::CaseInsensitive)) {
-            contentDisposition = header.toLower();
+            contentDisposition = header;
             continue;
         }
     }
@@ -349,25 +350,7 @@ QString HttpRequestResultViewModel::getFormatFromContentType() noexcept
     }
 
     if (!contentDisposition.isEmpty()) {
-        m_defaultDownloadFile = "";
-        auto value = contentDisposition
-            .replace(StartHeaderTag, "")
-            .replace(EndHeaderTag, "")
-            .replace("content-disposition: ", "");
-        if (!value.contains("attachment", Qt::CaseInsensitive)) return "";
-        auto parts = value.split(";");
-        foreach (auto part, parts) {
-            auto nameParts = part.split("=");
-            if (nameParts.length() != 2) continue;
-
-            auto fileNamePart = nameParts[0].trimmed();
-            if (fileNamePart != "filename" && fileNamePart != "filename*") continue;
-            bool isEncoded = fileNamePart == "filename*";
-            auto fileNameValue = nameParts[1];
-            if (fileNameValue.size() > 2 && !isEncoded) fileNameValue = fileNameValue.mid(1, fileNameValue.size() - 2); // remove quotes
-            if (fileNameValue.size() > 8 && isEncoded) fileNameValue = fileNameValue.mid(7); // remove utf-8''
-            m_defaultDownloadFile = isEncoded ? QUrl::fromPercentEncoding(fileNameValue.toUtf8()) : fileNameValue;
-        }
+        m_defaultDownloadFile = extractFileNameFromContentDisposition(contentDisposition);
         return OutputNeedDownloaded;
     }
 
