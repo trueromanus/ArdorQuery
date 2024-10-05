@@ -43,6 +43,8 @@ private:
     QScopedPointer<QMap<QString, QString>> m_rawHeaders { new QMap<QString, QString>() };
     QMap<QString, HttpRequestResultViewModel*> m_runningRequests { QMap<QString, HttpRequestResultViewModel*>() };
     QSharedPointer<QList<HttpRequestModel*>> m_requests { nullptr };
+    QMultiMap<int, QUuid> m_orderedRequests { QMultiMap<int, QUuid>() };
+    int m_orderedRequestsIndex = 0;
     int m_countRequests { 0 };
     int m_countFinishedRequests { 0 };
     int m_countErrorRequests { 0 };
@@ -58,6 +60,8 @@ public:
     void performOneRequest(HttpRequestModel * request);
 
     void performAllRequest();
+
+    void performRequests(const QList<QUuid>& ids);
 
     int countRequests() const noexcept { return m_countRequests; }
 
@@ -80,6 +84,7 @@ private:
     void reduceFromCounter() noexcept;
     void increaseErrorCounter() noexcept;
     void runPostScript(const QString& script, QObject* properties, HttpRequestResultViewModel* result) noexcept;
+    void runMaintainQueries();
 
 private slots:
     void requestFinished(QNetworkReply *reply);

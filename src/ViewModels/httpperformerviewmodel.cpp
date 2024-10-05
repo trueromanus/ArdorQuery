@@ -71,6 +71,9 @@ void HttpPerformerViewModel::setup(QSharedPointer<QList<HttpRequestModel *> > re
 
 void HttpPerformerViewModel::cancelRequest()
 {
+    m_orderedRequests.clear();
+    m_orderedRequestsIndex = 0;
+
     foreach (auto item, m_runningRequests.values()) {
         if (!item->isRunning()) continue; // in case if it already not run
 
@@ -103,15 +106,51 @@ void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 
 void HttpPerformerViewModel::performAllRequest()
 {
-    if (m_runningRequests.isEmpty()) {
-        m_countErrorRequests = 0;
-        m_countFinishedRequests = 0;
-        emit countErrorRequestsChanged();
-        emit countFinishedRequestsChanged();
-    }
-    m_countRequests = m_requests->size();
+    if (!m_runningRequests.isEmpty() || !m_orderedRequests.isEmpty() || m_orderedRequestsIndex > 0) return;
+
+    m_orderedRequests.clear();
+    m_orderedRequestsIndex = 0;
+    m_countErrorRequests = 0;
+    m_countFinishedRequests = 0;
+    emit countErrorRequestsChanged();
+    emit countFinishedRequestsChanged();
+
+    QSet<int> orders;
     foreach (auto request, *m_requests) {
-        if (!performSingleRequest(request)) m_countRequests -= 1;
+        auto order = request->requestModel()->getOrder();
+        orders.insert(order);
+    }
+    QList<int> orderList(orders.begin(), orders.end());
+    std::sort(orderList.begin(), orderList.end(), [](int left, int right) { return left > right; });
+
+    foreach (auto request, *m_requests) {
+        auto order = request->requestModel()->getOrder();
+        auto index = orderList.indexOf(order);
+        m_orderedRequests.insert(index, request->requestId());
+    }
+
+    if (m_orderedRequests.isEmpty()) return;
+
+    auto firstRequests = m_orderedRequests.values(m_orderedRequestsIndex);
+
+    m_countRequests = 0;
+    foreach (auto request, *m_requests) {
+        auto id = request->requestId();
+        if (firstRequests.contains(id) && performSingleRequest(request)) {
+            m_countRequests = m_countRequests + 1;
+        }
+    }
+
+    emit countRequestsChanged();
+}
+
+void HttpPerformerViewModel::performRequests(const QList<QUuid> &ids)
+{
+    foreach (auto request, *m_requests) {
+        auto id = request->requestId();
+        if (ids.contains(id) && performSingleRequest(request)) {
+            m_countRequests = m_countRequests + 1;
+        }
     }
 
     emit countRequestsChanged();
@@ -453,6 +492,21 @@ void HttpPerformerViewModel::runPostScript(const QString &script, QObject* prope
     result->setCustomErrorResult(hasErrors, errorMessage);
 }
 
+void HttpPerformerViewModel::runMaintainQueries()
+{
+    emit countErrorRequestsChanged();
+    emit countFinishedRequestsChanged();
+
+    if (m_runningRequests.isEmpty() && m_orderedRequests.contains(m_orderedRequestsIndex + 1)) {
+        m_orderedRequestsIndex += 1;
+        auto nextRequests = m_orderedRequests.values(m_orderedRequestsIndex);
+        performRequests(nextRequests);
+    } else {
+        m_orderedRequests.clear();
+        m_orderedRequestsIndex = 0;
+    }
+}
+
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 {   
     auto id = reply->property("id").toString();
@@ -489,6 +543,8 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
     auto postScript = result->postScript();
     if (postScript.isEmpty()) {
         if (result->hasError()) increaseErrorCounter();
+
+        runMaintainQueries();
         return;
     }
 
@@ -501,4 +557,6 @@ void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)
 
     runPostScript(postScript, response, result);
     if (result->hasError()) increaseErrorCounter();
+
+    runMaintainQueries();
 }
