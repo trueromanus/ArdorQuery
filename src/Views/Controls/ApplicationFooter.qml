@@ -3,7 +3,7 @@ import QtQuick
 Item {
     width: parent.width
     height: 20
-    visible: backend.requestPerformer.countRequests > 1 || backend.requestPerformer.countFinishedRequests > 1
+    visible: backend.requestPerformer.countRequests > 0
 
     Text {
         text: backend.requestPerformer.countFinishedRequests + " ready requests out of " + backend.requestPerformer.countRequests +

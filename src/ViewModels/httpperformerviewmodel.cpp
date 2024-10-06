@@ -88,20 +88,16 @@ void HttpPerformerViewModel::cancelRequest()
 void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
 {
     if (m_runningRequests.contains(request->requestId().toString())) return;
+    if (!m_orderedRequests.isEmpty()) return;
 
-    if (performSingleRequest(request)) {
-        if (m_countFinishedRequests < m_countRequests) {
-            addToCounter(1);
-            emit countRequestsChanged();
-        } else {
-            m_countFinishedRequests = 0;
-            m_countRequests = 0;
-            m_countErrorRequests = 0;
-            emit countFinishedRequestsChanged();
-            emit countRequestsChanged();
-            emit countErrorRequestsChanged();
-        }
-    }
+    m_countFinishedRequests = 0;
+    m_countRequests = 0;
+    m_countErrorRequests = 0;
+    emit countFinishedRequestsChanged();
+    emit countRequestsChanged();
+    emit countErrorRequestsChanged();
+
+    performSingleRequest(request);
 }
 
 void HttpPerformerViewModel::performAllRequest()
@@ -121,7 +117,7 @@ void HttpPerformerViewModel::performAllRequest()
         orders.insert(order);
     }
     QList<int> orderList(orders.begin(), orders.end());
-    std::sort(orderList.begin(), orderList.end(), [](int left, int right) { return left > right; });
+    std::sort(orderList.begin(), orderList.end(), [](int left, int right) { return left < right; });
 
     foreach (auto request, *m_requests) {
         auto order = request->requestModel()->getOrder();
@@ -497,7 +493,7 @@ void HttpPerformerViewModel::runMaintainQueries()
     emit countErrorRequestsChanged();
     emit countFinishedRequestsChanged();
 
-    if (m_runningRequests.isEmpty() && m_orderedRequests.contains(m_orderedRequestsIndex + 1)) {
+    if (m_runningRequests.isEmpty() && m_orderedRequests.contains(m_orderedRequestsIndex + 1) && m_countErrorRequests == 0) {
         m_orderedRequestsIndex += 1;
         auto nextRequests = m_orderedRequests.values(m_orderedRequestsIndex);
         performRequests(nextRequests);
