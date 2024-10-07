@@ -25,12 +25,15 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.17" date="2024-05-12">
+		<release version="0.0.18" date="2024-10-07">
 			<description>
-				<p>Fixed crash on scroll in Query Editor.</p>
-				<p>Fixed select focused field after restore from help.</p>
-				<p>Fixed selected item in global variables list after reopen popup.</p>
-				<p>Added new shortcut Ctrl-9 in query editor. You can select from list predefined global variable and insert it to current line after position of cursor.</p>
+				<p>Save all opened queries on close application to user profile and restore queries after start application.</p>
+				<p>Show query status icon in Queries list.</p>
+				<p>Scroll to selected item in History list.</p>
+				<p>Added new timeout  field to configure the transfer timeout in milliseconds.</p>
+				<p>Added a new order  field to customize the execution multiple queries sequence.</p>
+				<p>Fixed file name detection in Content-Disposition header.</p>
+				<p>Support ordering (based on value in order  field) in run miltiple queries.</p>
 			</description>
 		</release>
 	</releases>
