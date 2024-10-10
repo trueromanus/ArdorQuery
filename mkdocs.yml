@@ -12,3 +12,4 @@ nav:
   - Options: options.md
   - Scripting: postscript.md
   - Global Variables: globalvariables.md
+  - Launch in a specific order: ordering.md
