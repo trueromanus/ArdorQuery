@@ -56,3 +56,6 @@ deploy/output
 deploy/*.zip
 
 .vs
+
+installer/ArdorQuery/Debug
+installer/ArdorQuery/Release

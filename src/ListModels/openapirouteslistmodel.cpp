@@ -60,7 +60,7 @@ QVariant OpenApiRoutesListModel::data(const QModelIndex &index, int role) const
             return QVariant(getMethodColor(item));
         }
         case IsSelectedRole: {
-            return QVariant(m_selectedRoute == currentIndex);
+            return QVariant(m_selectedRoute == item->identifier());
         }
     }
 
@@ -175,28 +175,45 @@ OpenApiRouteModel *OpenApiRoutesListModel::getSelectedRoute() const noexcept
 
 void OpenApiRoutesListModel::nextRoute() noexcept
 {
-    if (m_selectedRoute >= m_filteredRoutes.size() - 1) return;
+    int nextRouteIndex = 0;
+    if (m_selectedRoute > -1) {
+        auto route = getRouteByIndex(m_selectedRoute);
+
+        auto currentIndex = m_filteredRoutes.indexOf(route);
+        if (currentIndex == m_filteredRoutes.size() - 1) return;
+
+        nextRouteIndex = currentIndex + 1;
+    }
 
     beginResetModel();
 
-    m_selectedRoute++;
+    auto nextRoute = m_filteredRoutes.value(nextRouteIndex);
+    m_selectedRoute = nextRoute->identifier();
 
     endResetModel();
 
-    emit selectedItemChanged(m_selectedRoute);
+    emit selectedItemChanged(nextRouteIndex);
 }
 
 void OpenApiRoutesListModel::previousRoute() noexcept
 {
-    if (m_selectedRoute <= 0) return;
+    if (m_selectedRoute == -1) m_selectedRoute = 0;
+
+    auto route = getRouteByIndex(m_selectedRoute);
+
+    auto currentIndex = m_filteredRoutes.indexOf(route);
+    if (currentIndex == 0) return;
+
+    auto previousRouteIndex = currentIndex - 1;
 
     beginResetModel();
 
-    m_selectedRoute--;
+    auto previousRoute = m_filteredRoutes.value(previousRouteIndex);
+    m_selectedRoute = previousRoute->identifier();
 
     endResetModel();
 
-    emit selectedItemChanged(m_selectedRoute);
+    emit selectedItemChanged(previousRouteIndex);
 }
 
 QString OpenApiRoutesListModel::getMethodColor(const OpenApiRouteModel *route) const noexcept
