@@ -113,6 +113,8 @@ public:
     void refreshVariableNames() noexcept;
 
     bool hasVariableNames() const noexcept { return !m_variables.isEmpty(); }
+    bool hasVariableName(const QString& name) const noexcept { return m_variables.contains(name); }
+    QString getVariable(const QString& name) const noexcept { return m_variables.value(name); }
 
     Q_INVOKABLE bool shortcutHandler(const QString& shortcut) noexcept;
     Q_INVOKABLE void fillLines();

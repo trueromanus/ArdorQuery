@@ -157,6 +157,7 @@ void HttpPerformerViewModel::setGlobalVariable(const GlobalVariablesListModel *g
     if (m_globalVariable == globalVariable) return;
 
     m_globalVariable = const_cast<GlobalVariablesListModel*>( globalVariable );
+    m_globalVariablePostScript = new GlobalVariablesPostScriptModel(this, m_globalVariable);
     emit globalVariableChanged();
 }
 
@@ -476,6 +477,9 @@ void HttpPerformerViewModel::runPostScript(const QString &script, QObject* prope
     auto resultObject = new PostScriptResultModel();
     QJSValue interactScriptQObject = resultEngine.newQObject(resultObject);
     resultEngine.globalObject().setProperty("result", interactScriptQObject);
+
+    QJSValue globalVarsQObject = resultEngine.newQObject(m_globalVariablePostScript);
+    resultEngine.globalObject().setProperty("globals", globalVarsQObject);
 
     auto scriptResult = resultEngine.evaluate(script);
     if (scriptResult.isError()) {

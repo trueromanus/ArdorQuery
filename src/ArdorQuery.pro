@@ -19,6 +19,7 @@ SOURCES += \
         Formatters/xmlformatter.cpp \
         ListModels/addressespalettelistmodel.cpp \
         ListModels/globalvariableslistmodel.cpp \
+        Models/globalvariablespostscriptmodel.cpp \
         ListModels/httprequestslistmodel.cpp \
         ListModels/maintabslistmodel.cpp \
         ListModels/notificationlistmodel.cpp \
@@ -73,6 +74,7 @@ HEADERS += \
     Formatters/xmlformatter.h \
     ListModels/addressespalettelistmodel.h \
     ListModels/globalvariableslistmodel.h \
+    Models/globalvariablespostscriptmodel.h \
     ListModels/httprequestslistmodel.h \
     ListModels/maintabslistmodel.h \
     ListModels/notificationlistmodel.h \

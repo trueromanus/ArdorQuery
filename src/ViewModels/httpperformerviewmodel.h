@@ -29,6 +29,7 @@
 #include "httprequestresultviewmodel.h"
 #include "../Models/httprequestmodel.h"
 #include "../ListModels/globalvariableslistmodel.h"
+#include "../Models/globalvariablespostscriptmodel.h"
 
 class HttpPerformerViewModel : public QObject
 {
@@ -49,6 +50,7 @@ private:
     int m_countFinishedRequests { 0 };
     int m_countErrorRequests { 0 };
     GlobalVariablesListModel* m_globalVariable { nullptr };
+    GlobalVariablesPostScriptModel* m_globalVariablePostScript { nullptr };
 
 public:
     explicit HttpPerformerViewModel(QObject *parent = nullptr);
