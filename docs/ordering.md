@@ -10,19 +10,19 @@ We run multiple queries by pressing `Ctrl-m`, the progress can be seen in the wi
 ### Grouping with simultaneous launch inside groups
 In some cases, you may find it convenient to perform queries not one at a time like this:
 
-1 Query 1
-2 Query 2
-3 Query 3
-4 Query 4
-5 Query 5
-6 Query 6
+1. Query 1
+2. Query 2
+3. Query 3
+4. Query 4
+5. Query 5
+6. Query 6
   
 You can grouping run of queries like this:
 
-1 Query 1
-2 Query 2, Query 3, Query 4 (concurrently) 
-3 Query 5
-4 Query 6, Query 7 (concurrently)
+1. Query 1
+2. Query 2, Query 3, Query 4 (concurrently) 
+3. Query 5
+4. Query 6, Query 7 (concurrently)
 
 To do this, you need to fill in the `order X` field as follows:
 
