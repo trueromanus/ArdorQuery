@@ -39,10 +39,10 @@ Please see the latest documentation [here](https://trueromanus.github.io/ArdorQu
 * macOS 12+
 
 ## Install
-Flatpak  
+Flatpak (on Linux)  
 [<img src="https://dl.flathub.org/assets/badges/flathub-badge-en.png">](https://flathub.org/apps/org.emptyflow.ArdorQuery)  
 
-WinGet  
+WinGet (on Windows)  
 [<img src="https://winstall.app/assets/logo.svg" width=100 height=100>](https://winstall.app/apps/EmptyFlow.ArdorQuery)
 
 ## Build Requirements
