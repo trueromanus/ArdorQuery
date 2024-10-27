@@ -15,6 +15,7 @@
 
 #include <QClipboard>
 #include <QGuiApplication>
+#include <QDesktopServices>
 #include <QPainter>
 #include <QFile>
 #include "httprequestresultviewmodel.h"
@@ -416,5 +417,11 @@ QStringList HttpRequestResultViewModel::getHeaderLines()
     }
 
     return lines;
+}
+
+void HttpRequestResultViewModel::requestOnSaveFile(const QString &fileName, bool openAfterSave)
+{
+    saveBodyToFile(fileName);
+    if (openAfterSave) QDesktopServices::openUrl(QUrl(getFileProtocol() + fileName));
 }
 

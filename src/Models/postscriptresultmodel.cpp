@@ -21,3 +21,8 @@ void PostScriptResultModel::setErrorMessage(const QString &errorMessage) noexcep
     m_errorMessage = errorMessage;
     emit errorMessageChanged();
 }
+
+void PostScriptResultModel::saveToFile(const QString &fileName, bool openAfterSave)
+{
+    emit needSaveToFile(fileName, openAfterSave);
+}

@@ -10,4 +10,6 @@ QString adjustShortcutsForDisplay(QString& value) noexcept;
 
 QString removeFileProtocol(QString& value) noexcept;
 
+QString getFileProtocol() noexcept;
+
 QString extractFileNameFromContentDisposition(const QString& value) noexcept;

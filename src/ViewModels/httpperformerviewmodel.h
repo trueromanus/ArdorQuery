@@ -51,6 +51,7 @@ private:
     int m_countErrorRequests { 0 };
     GlobalVariablesListModel* m_globalVariable { nullptr };
     GlobalVariablesPostScriptModel* m_globalVariablePostScript { nullptr };
+    QObject* m_sessionObject { nullptr };
 
 public:
     explicit HttpPerformerViewModel(QObject *parent = nullptr);

@@ -17,8 +17,8 @@ Post scripts have access to global objects `response`, `result` and `globals`. O
 `hasErrors` (editable) - indicate if some error happened while postsctipr works.  
 `errorMessage` (editable) - may contain a description of the user's error, which is displayed next to the status code in the results tab.  
 ### globals Object
-`has(name)` (method) - if global variable set with name passed via parameter `name` it will be `true` in result, in other case `false`.  
-`get(name)` (method) - if global variable set with name passed via parameter `name` it will be value as string in result, in other case empty string.  
+`has(name)` (method) - if global variable set with name passed via parameter **name** it will be **true** in result, in other case **false**.  
+`get(name)` (method) - if global variable set with name passed via parameter **name** it will be value as string in result, in other case empty string.  
 ### Examples
 Check status code it is equal 200 (OK):
 ```js

@@ -90,6 +90,7 @@ void HttpPerformerViewModel::performOneRequest(HttpRequestModel *request)
     if (m_runningRequests.contains(request->requestId().toString())) return;
     if (!m_orderedRequests.isEmpty()) return;
 
+    m_sessionObject = nullptr;
     m_countFinishedRequests = 0;
     m_countRequests = 0;
     m_countErrorRequests = 0;
@@ -105,6 +106,7 @@ void HttpPerformerViewModel::performAllRequest()
     if (!m_runningRequests.isEmpty() || !m_orderedRequests.isEmpty() || m_orderedRequestsIndex > 0) return;
 
     m_orderedRequests.clear();
+    m_sessionObject = new QObject(this);
     m_orderedRequestsIndex = 0;
     m_countErrorRequests = 0;
     m_countFinishedRequests = 0;
@@ -474,12 +476,18 @@ void HttpPerformerViewModel::runPostScript(const QString &script, QObject* prope
     QJSValue myScriptQObject = resultEngine.newQObject(properties);
     resultEngine.globalObject().setProperty("response", myScriptQObject);
 
-    auto resultObject = new PostScriptResultModel();
+    auto resultObject = new PostScriptResultModel(this);
+    connect(resultObject, &PostScriptResultModel::needSaveToFile, result, &HttpRequestResultViewModel::requestOnSaveFile);
     QJSValue interactScriptQObject = resultEngine.newQObject(resultObject);
     resultEngine.globalObject().setProperty("result", interactScriptQObject);
 
     QJSValue globalVarsQObject = resultEngine.newQObject(m_globalVariablePostScript);
     resultEngine.globalObject().setProperty("globals", globalVarsQObject);
+
+    if (m_sessionObject != nullptr) {
+        QJSValue sessionQObject = resultEngine.newQObject(m_sessionObject);
+        resultEngine.globalObject().setProperty("session", sessionQObject);
+    }
 
     auto scriptResult = resultEngine.evaluate(script);
     if (scriptResult.isError()) {

@@ -144,6 +144,9 @@ private:
     void paintText(QPainter& painter, const QImage& image, int& currentLine, int& lineHeight, const QString& text, bool bold) noexcept;
     QStringList getHeaderLines();
 
+public slots:
+    void requestOnSaveFile(const QString& fileName, bool openAfterSave);
+
 signals:
     void statusCodeChanged();
     void headersChanged();

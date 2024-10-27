@@ -67,6 +67,15 @@ QString removeFileProtocol(QString &value) noexcept
 #endif
 }
 
+QString getFileProtocol() noexcept
+{
+#ifdef Q_OS_WIN
+    return "file:///";
+#else
+    return "file://";
+#endif
+}
+
 QString extractFileNameFromContentDisposition(const QString &value) noexcept
 {
     auto contentDisposition = value.toLower();
