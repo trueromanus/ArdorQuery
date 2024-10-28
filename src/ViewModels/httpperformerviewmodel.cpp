@@ -106,7 +106,7 @@ void HttpPerformerViewModel::performAllRequest()
     if (!m_runningRequests.isEmpty() || !m_orderedRequests.isEmpty() || m_orderedRequestsIndex > 0) return;
 
     m_orderedRequests.clear();
-    m_sessionObject = new QObject(this);
+    m_sessionObject = new PostScriptSessionModel(this);
     m_orderedRequestsIndex = 0;
     m_countErrorRequests = 0;
     m_countFinishedRequests = 0;
