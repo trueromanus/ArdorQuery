@@ -234,7 +234,7 @@ bool HttpPerformerViewModel::adjustHeaders(QNetworkRequest &request, const HttpR
     QSet<QString> m_usedHeaders;
     auto headers = model->getHeaders();
     foreach (auto rawHeader, headers) {
-        auto header = m_globalVariable->replaceGlobalVariables(rawHeader);
+        auto header = applyGlobalVariables(rawHeader);
         auto spaceIndex = header.indexOf(" ");
         if (spaceIndex == -1) {
             auto lowerHeader = header.toLower();
@@ -318,6 +318,7 @@ void HttpPerformerViewModel::startTrackRequest(QNetworkReply *reply, const QUuid
 void HttpPerformerViewModel::adjustOptions(QStringList options, QNetworkRequest &request)
 {
     foreach (auto option, options) {
+        option = applyGlobalVariables(option);
         auto loweredOption = option.trimmed().toLower();
         if (loweredOption == "noautoredirect") {
             request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
@@ -350,7 +351,7 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     resultModel->reset();
 
     auto url = requestModel->getUrl();
-    url = m_globalVariable->replaceGlobalVariables(url);
+    url = applyGlobalVariables(url);
     auto requestUrl = QUrl(url);
 
     QNetworkRequest request(requestUrl);
@@ -362,7 +363,7 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     if (!headersValid) return false;
 
     auto protocol = requestModel->getProtocol();
-    protocol = m_globalVariable->replaceGlobalVariables(protocol);
+    protocol = applyGlobalVariables(protocol);
     if (protocol == "1.1") request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
 
     auto postScript = requestModel->getPostScript();
@@ -373,10 +374,14 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     }
 
     auto timeout = requestModel->getTimeout();
-    if (timeout > 0) request.setTransferTimeout(timeout);
+    if (!timeout.isEmpty()) {
+        timeout = applyGlobalVariables(timeout);
+        auto timeoutInt = timeout.toInt();
+        if (timeoutInt > 0) request.setTransferTimeout(timeoutInt);
+    }
 
     auto method = requestModel->getMethod();
-    method = m_globalVariable->replaceGlobalVariables(method).toLower();
+    method = applyGlobalVariables(method).toLower();
     if (method == "get") {
         auto getReply = m_networkManager->get(request);
         startTrackRequest(getReply, id, resultModel);
@@ -392,12 +397,12 @@ bool HttpPerformerViewModel::performSingleRequest(HttpRequestModel *modelRequest
     auto forms = requestModel->getFormParameters();
     for (auto i = 0; i < forms.count(); i++) {
         auto item = forms[i];
-        forms[i] = m_globalVariable->replaceGlobalVariables(item);
+        forms[i] = applyGlobalVariables(item);
     }
     auto files = requestModel->getFileParameters();
     for (auto i = 0; i < files.count(); i++) {
         auto fileItem = files[i];
-        files[i] = m_globalVariable->replaceGlobalVariables(fileItem);
+        files[i] = applyGlobalVariables(fileItem);
     }
 
     auto isBodyAndFormEmpty = body.isEmpty() && forms.isEmpty() && files.empty();
@@ -513,6 +518,14 @@ void HttpPerformerViewModel::runMaintainQueries()
         m_orderedRequests.clear();
         m_orderedRequestsIndex = 0;
     }
+}
+
+QString HttpPerformerViewModel::applyGlobalVariables(const QString &value)
+{
+    auto remapValues = m_emptyRemapDictionary;
+    if (m_sessionObject != nullptr) remapValues = m_sessionObject->getRemapValues();
+
+    return m_globalVariable->replaceGlobalVariables(value, remapValues);
 }
 
 void HttpPerformerViewModel::requestFinished(QNetworkReply *reply)

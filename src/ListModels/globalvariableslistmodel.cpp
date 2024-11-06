@@ -16,6 +16,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QRegularExpression>
 #include "globalvariableslistmodel.h"
 #include "../globalhelpers.h"
 
@@ -88,22 +89,37 @@ QHash<int, QByteArray> GlobalVariablesListModel::roleNames() const
     };
 }
 
-QString GlobalVariablesListModel::replaceGlobalVariables(const QString &value)
+QString GlobalVariablesListModel::replaceGlobalVariables(const QString &value, QMap<QString, QString>& remappedValues)
 {
     QString result = value;
 
-    if (!m_variables.isEmpty()) {
-        foreach (auto variable, m_variables.keys()) {
-            auto fullVariable = "{{" + variable + "}}";
-            auto fullVariableSpaces = "{{ " + variable + " }}";
-            auto value = m_variables.value(variable);
-            result = result.replace(fullVariable, value).replace(fullVariableSpaces, value);
-        }
-    }
+    static QRegularExpression regularExpression("{{(.*?)}}");
+    auto iterator = regularExpression.globalMatch(value);
+    while (iterator.hasNext()) {
+        auto match = iterator.next();
+        if (!match.hasMatch()) continue;
 
-    foreach (auto key, m_globalVariableHandlers.keys()) {
-        auto item = m_globalVariableHandlers.value(key);
-        result = std::invoke(item, this, result);
+        QString original = match.captured(0);
+        QString variable = QString(original).replace("{{", "").replace("}}", "").trimmed();
+
+        //check first remapped collection
+        if (remappedValues.contains(variable)) {
+            result = result.replace(original, remappedValues.value(variable));
+            continue;
+        }
+
+        //second check global variables
+        if (m_variables.contains(variable)) {
+            result = result.replace(original, m_variables.value(variable));
+            continue;
+        }
+
+        //as last step check global handlers
+        if (m_globalVariableHandlers.contains(variable)) {
+            auto item = m_globalVariableHandlers.value(variable);
+            auto handlerValue = std::invoke(item, this, variable);
+            result = result.replace(original, handlerValue);
+        }
     }
 
     return result;
@@ -481,33 +497,21 @@ void GlobalVariablesListModel::fillHelpShortcuts()
 
 QString GlobalVariablesListModel::dateTimeNowVariable(const QString &content)
 {
-    if (content.indexOf(m_dateTimeNowGlobalVariable) == -1) return content;
-
+    Q_UNUSED(content);
     QDateTime date = QDateTime::currentDateTime();
-    QString dateAsAstring = date.toString(Qt::ISODate);
-    auto nospaced = "{{" + m_dateTimeNowGlobalVariable + "}}";
-    auto spaced = "{{ " + m_dateTimeNowGlobalVariable + " }}";
-    return QString(content).replace(nospaced, dateAsAstring).replace(spaced, dateAsAstring);
+    return date.toString(Qt::ISODate);
 }
 
 QString GlobalVariablesListModel::dateTimeUtcNowVariable(const QString &content)
 {
-    if (content.indexOf(m_dateTimeUtcNowGlobalVariable) == -1) return content;
-
+    Q_UNUSED(content);
     QDateTime date = QDateTime::currentDateTimeUtc();
-    QString dateAsAstring = date.toString(Qt::ISODate);
-    auto nospaced = "{{" + m_dateTimeUtcNowGlobalVariable + "}}";
-    auto spaced = "{{ " + m_dateTimeUtcNowGlobalVariable + " }}";
-    return QString(content).replace(nospaced, dateAsAstring).replace(spaced, dateAsAstring);
+    return date.toString(Qt::ISODate);
 }
 
 QString GlobalVariablesListModel::timeNowVariable(const QString &content)
 {
-    if (content.indexOf(m_time24HoursNowGlobalVariable) == -1) return content;
-
+    Q_UNUSED(content);
     auto time = QDateTime::currentDateTimeUtc().time();
-    QString timeAsAstring = time.toString("hh:mm:ss");
-    auto nospaced = "{{" + m_time24HoursNowGlobalVariable + "}}";
-    auto spaced = "{{ " + m_time24HoursNowGlobalVariable + " }}";
-    return QString(content).replace(nospaced, timeAsAstring).replace(spaced, timeAsAstring);
+    return time.toString("hh:mm:ss");
 }

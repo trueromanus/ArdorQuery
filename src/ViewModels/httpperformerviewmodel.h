@@ -53,6 +53,7 @@ private:
     GlobalVariablesListModel* m_globalVariable { nullptr };
     GlobalVariablesPostScriptModel* m_globalVariablePostScript { nullptr };
     PostScriptSessionModel* m_sessionObject { nullptr };
+    QMap<QString, QString> m_emptyRemapDictionary { QMap<QString, QString>() };
 
 public:
     explicit HttpPerformerViewModel(QObject *parent = nullptr);
@@ -89,6 +90,7 @@ private:
     void increaseErrorCounter() noexcept;
     void runPostScript(const QString& script, QObject* properties, HttpRequestResultViewModel* result) noexcept;
     void runMaintainQueries();
+    QString applyGlobalVariables(const QString& value);
 
 private slots:
     void requestFinished(QNetworkReply *reply);

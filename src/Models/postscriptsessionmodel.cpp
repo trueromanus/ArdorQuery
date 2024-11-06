@@ -22,4 +22,20 @@ void PostScriptSessionModel::setShared(const QVariant& shared)
     emit sharedChanged();
 }
 
+void PostScriptSessionModel::setRemapValue(const QString &name, const QString &remapValue)
+{
+    if (m_remapValues.contains(name)) {
+        m_remapValues[name] = remapValue;
+    } else {
+        m_remapValues.insert(name, remapValue);
+    }
+}
+
+QString PostScriptSessionModel::getRemapValue(const QString &name)
+{
+    if (m_remapValues.contains(name)) return m_remapValues.value(name);
+
+    return "";
+}
+
 

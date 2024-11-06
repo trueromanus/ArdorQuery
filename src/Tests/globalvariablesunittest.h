@@ -20,6 +20,8 @@ private slots:
     void parseLines_singlecorrectVariable();
     void parseLines_singleEmptyVariable();
     void parseLines_singleIncorrectVariable();
+    void parseLines_remappingWithGlobalVariable();
+    void parseLines_remappingWithoutGlobalVariable();
     void parseLines_dateTimeUtcNowPredefinedVariable();
     void parseLines_dateTimeNowPredefinedVariable();
     void parseLines_ttime24HoursNowPredefinedVariable();

@@ -81,7 +81,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    QString replaceGlobalVariables(const QString& value);
+    QString replaceGlobalVariables(const QString& value, QMap<QString, QString>& remappedValues);
 
     int selected() const noexcept { return m_selected; }
     void setSelected(int selected) noexcept;

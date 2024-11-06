@@ -588,7 +588,7 @@ QString HttpRequestViewModel::getPostScript() const noexcept
     return "";
 }
 
-int HttpRequestViewModel::getTimeout() const noexcept
+QString HttpRequestViewModel::getTimeout() const noexcept
 {
     auto iterator = std::find_if(
         m_items->begin(),
@@ -601,10 +601,10 @@ int HttpRequestViewModel::getTimeout() const noexcept
     if (iterator != m_items->end()) {
         auto item = *iterator;
         auto text = item->text().replace(TimeoutPrefix, "", Qt::CaseInsensitive);
-        return text.toInt();
+        return text;
     }
 
-    return 0;
+    return "";
 }
 
 int HttpRequestViewModel::getOrder() const noexcept
