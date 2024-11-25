@@ -52,7 +52,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Configure MSVC
-      uses: ilammy/msvc-dev-cmd@v1.12.1
+      uses: ilammy/msvc-dev-cmd@v1.13.0
       with:
         arch: x64
         spectre: true
@@ -68,4 +68,4 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: windows
-        path: AniLibria.exe
+        path: src/AniLibria.exe
