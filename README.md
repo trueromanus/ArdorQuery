@@ -27,6 +27,7 @@ Each type of line has a different color to help visually identify that content.
 * Scripting in modern JavaScript
 * Control over redirection and SSL checks
 * Global variables
+* Session object tools for run multiple queries (shared object, override value in global variables, create session variables)
 * Execute queries in a specific order
 
 ## Documentation
