@@ -25,15 +25,13 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.18" date="2024-10-07">
+		<release version="0.0.19" date="2024-11-25">
 			<description>
-				<p>Save all opened queries on close application to user profile and restore queries after start application.</p>
-				<p>Show query status icon in Queries list.</p>
-				<p>Scroll to selected item in History list.</p>
-				<p>Added new timeout  field to configure the transfer timeout in milliseconds.</p>
-				<p>Added a new order  field to customize the execution multiple queries sequence.</p>
-				<p>Fixed file name detection in Content-Disposition header.</p>
-				<p>Support ordering (based on value in order  field) in run miltiple queries.</p>
+				<p>Fixed select route in Import Open API from keyboard shortcut.</p>
+				<p>Added method saveToFile(fileName, openAfterSave) to object result in postscript.</p>
+				<p>Added object session.shared in postscript for save any value and share it in all further queries in one session of execution.</p>
+				<p>Added session.setRemapValue(name, value) method to create an override or remap global variables that will be replaced in future requests.</p>
+				<p>Added session.getRemapValue(name) method for get already exists remap value.</p>
 			</description>
 		</release>
 	</releases>
