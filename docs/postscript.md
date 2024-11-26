@@ -17,6 +17,7 @@ Object `globals` usings for get access to global variables. The `session` object
 ### result object
 `hasErrors` (editable) - indicate if some error happened while postsctipr works.  
 `errorMessage` (editable) - may contain a description of the user's error, which is displayed next to the status code in the results tab.  
+`saveToFile(fileName, openAfterSave)` (method) - save body from query result as file with path from parameter `fileName`, if you need open saved file in linked application you can pass true to parameter `openAfterSave`.  
 ### globals Object
 `has(name)` (method) - if global variable set with name passed via parameter **name** it will be **true** in result, in other case **false**.  
 `get(name)` (method) - if global variable set with name passed via parameter **name** it will be value as string in result, in other case empty string.  
