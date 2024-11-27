@@ -76,7 +76,7 @@ Item {
                     if (backend.tabs.currentTab !== 'Request') return; //dirty hack but I don't know how to resolve it
                     if (backend.focusedHelpTextField) return; // fixing for text field in help
 
-                    if (isNeedFocused && !textArea.activeFocus) {
+                    if (isNeedFocused && !textArea.activeFocus && !textArea.focus) {
                         textArea.focus = true;
                     }
                 }
