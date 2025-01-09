@@ -107,6 +107,7 @@ Item {
             id: globalVariablesListView
             anchors.fill: parent
             model: backend.globalVariables.variableNames
+            clip: true
             delegate: Item {
                 width: globalVariablesListView.width
                 height: 30
