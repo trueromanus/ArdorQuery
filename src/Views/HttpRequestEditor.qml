@@ -135,6 +135,8 @@ Item {
             onVisibleChanged: {
                 if (!globalVariablesPopup.visible) return;
 
+                globalVariablesListView.positionViewAtBeginning();
+
                 let activeItem;
                 for (const item of listView.contentItem.children) {
                     if (item.isActive) activeItem = item;
@@ -170,6 +172,11 @@ Item {
 
             const textField = activeItem.children[0];
             textField.cursorPosition = lastPosition;
+        }
+
+        function onSelectedGlobalVariableChanged() {
+            const newVariableIndex = backend.getSelectedGlobalVariableIndex();
+            if (newVariableIndex > -1) globalVariablesListView.positionViewAtIndex(newVariableIndex, ListView.Contain);
         }
     }
 

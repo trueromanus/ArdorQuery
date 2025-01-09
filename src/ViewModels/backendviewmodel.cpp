@@ -375,6 +375,11 @@ void BackendViewModel::saveCurrentRequestsToProfile() noexcept
     m_requests->saveToProfile();
 }
 
+int BackendViewModel::getSelectedGlobalVariableIndex() noexcept
+{
+    return m_selectedGlobalVariableIndex;
+}
+
 void BackendViewModel::deleteCurrentRequest() noexcept
 {
     if (m_requests->singleRequest()) addNewRequest();

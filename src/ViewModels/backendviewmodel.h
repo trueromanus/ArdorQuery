@@ -138,6 +138,7 @@ public:
     Q_INVOKABLE void saveDownloadedFile(const QString& fileName) noexcept;
     Q_INVOKABLE void closeGlobalVariables() noexcept;
     Q_INVOKABLE void saveCurrentRequestsToProfile() noexcept;
+    Q_INVOKABLE int getSelectedGlobalVariableIndex() noexcept;
 
     void deleteCurrentRequest() noexcept;
 
