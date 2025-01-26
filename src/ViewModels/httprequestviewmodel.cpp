@@ -48,6 +48,8 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
 
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::BodyType), 60);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UnknownType), 1000);
+
+    fillPrefixMappings();
 }
 
 int HttpRequestViewModel::rowCount(const QModelIndex &parent) const
@@ -213,98 +215,17 @@ void HttpRequestViewModel::setItemContent(const int position, const QString &con
     auto item = m_items->value(position);
     item->setText(content);
 
-    auto lowerContent = content.toLower();
     auto itemType = static_cast<HttpRequestTypes>(item->type());
     bool needRefresh = false;
 
-    if (lowerContent.startsWith(UrlPrefix) && itemType != HttpRequestTypes::UrlType) {
-        item->setType(static_cast<int>(HttpRequestTypes::UrlType));
-        needRefresh = true;
-    }
-    if (lowerContent.startsWith(MethodPrefix) && itemType != HttpRequestTypes::MethodType) {
-        item->setType(static_cast<int>(HttpRequestTypes::MethodType));
-        needRefresh = true;
-    }
+    auto contentType = tryGetRequestType(content);
 
-    if ((lowerContent.startsWith(BodyPrefix) || lowerContent.startsWith(JsonPrefix) || lowerContent.startsWith(XmlPrefix)) &&
-        itemType != HttpRequestTypes::BodyType) {
-        item->setType(static_cast<int>(HttpRequestTypes::BodyType));
+    if (itemType != contentType) {
+        item->setType(static_cast<int>(contentType));
         needRefresh = true;
     }
 
-    if (lowerContent.startsWith(FormPrefix) && itemType != HttpRequestTypes::FormItemType) {
-        item->setType(static_cast<int>(HttpRequestTypes::FormItemType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(FilePrefix) && itemType != HttpRequestTypes::FormFileType) {
-        item->setType(static_cast<int>(HttpRequestTypes::FormFileType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(ProtocolPrefix) && itemType != HttpRequestTypes::HttpProtocolType) {
-        item->setType(static_cast<int>(HttpRequestTypes::HttpProtocolType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(BearerPrefix) && itemType != HttpRequestTypes::BearerType) {
-        item->setType(static_cast<int>(HttpRequestTypes::BearerType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(TitlePrefix) && itemType != HttpRequestTypes::TitleType) {
-        item->setType(static_cast<int>(HttpRequestTypes::TitleType));
-        emit titleChanged();
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(ParamPrefix) && itemType != HttpRequestTypes::ParamType) {
-        item->setType(static_cast<int>(HttpRequestTypes::ParamType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(PastryPrefix) && itemType != HttpRequestTypes::PastryType) {
-        item->setType(static_cast<int>(HttpRequestTypes::PastryType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(RoutePrefix) && itemType != HttpRequestTypes::RouteType) {
-        item->setType(static_cast<int>(HttpRequestTypes::RouteType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(OptionsPrefix) && itemType != HttpRequestTypes::OptionsType) {
-        item->setType(static_cast<int>(HttpRequestTypes::OptionsType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(PostScriptPrefix) && itemType != HttpRequestTypes::PostScriptType) {
-        item->setType(static_cast<int>(HttpRequestTypes::PostScriptType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(TimeoutPrefix) && itemType != HttpRequestTypes::TimeoutType) {
-        item->setType(static_cast<int>(HttpRequestTypes::TimeoutType));
-        needRefresh = true;
-    }
-
-    if (lowerContent.startsWith(OrderPrefix) && itemType != HttpRequestTypes::OrderType) {
-        item->setType(static_cast<int>(HttpRequestTypes::OrderType));
-        needRefresh = true;
-    }
-
-    if (itemType != HttpRequestTypes::UnknownType && content.isEmpty()) {
-        item->setType(static_cast<int>(HttpRequestTypes::UnknownType));
-
-        needRefresh = true;
-    }
-
-    if (itemType == HttpRequestTypes::UnknownType && m_textAdvisor->isContainsHeader(content)) {
-        item->setType(static_cast<int>(HttpRequestTypes::HeaderType));
-        needRefresh = true;
-    }
-
-    if (itemType == HttpRequestTypes::TitleType) emit titleChanged();
+    if (contentType == HttpRequestTypes::TitleType) emit titleChanged();
 
     if (needRefresh) emit dataChanged(index(position, 0), index(position, 0));
 }
@@ -811,4 +732,45 @@ QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType, con
     }
 
     return initialValue.startsWith(prefix) ? "" : prefix;
+}
+
+HttpRequestViewModel::HttpRequestTypes HttpRequestViewModel::tryGetRequestType(const QString &content)
+{
+    auto spaceIndex = content.indexOf(" ");
+    if (spaceIndex == -1) return HttpRequestTypes::UnknownType;
+
+    auto prefix = content.mid(0, spaceIndex + 1).toLower();
+    if (m_prefixMapping.contains(prefix)) return m_prefixMapping.value(prefix);
+
+    if (m_textAdvisor != nullptr && m_textAdvisor->isContainsHeader(prefix)) return HttpRequestTypes::HeaderType;
+
+    return HttpRequestTypes::UnknownType;
+}
+
+void HttpRequestViewModel::fillPrefixMappings()
+{
+    m_prefixMapping.insert(UrlPrefix, HttpRequestTypes::UrlType);
+    m_prefixMapping.insert(MethodPrefix, HttpRequestTypes::MethodType);
+    m_prefixMapping.insert(HeaderPrefix, HttpRequestTypes::HeaderType);
+    m_prefixMapping.insert(BodyPrefix, HttpRequestTypes::BodyType);
+    m_prefixMapping.insert(JsonPrefix, HttpRequestTypes::BodyType);
+    m_prefixMapping.insert(XmlPrefix, HttpRequestTypes::BodyType);
+    m_prefixMapping.insert(FormPrefix, HttpRequestTypes::FormItemType);
+    m_prefixMapping.insert(FilePrefix, HttpRequestTypes::FormFileType);
+    m_prefixMapping.insert(ProtocolPrefix, HttpRequestTypes::HttpProtocolType);
+    m_prefixMapping.insert(BearerPrefix, HttpRequestTypes::BearerType);
+    m_prefixMapping.insert(TitlePrefix, HttpRequestTypes::TitleType);
+    m_prefixMapping.insert(ParamPrefix, HttpRequestTypes::ParamType);
+    m_prefixMapping.insert(PastryPrefix, HttpRequestTypes::PastryType);
+    m_prefixMapping.insert(RoutePrefix, HttpRequestTypes::RouteType);
+    m_prefixMapping.insert(OptionsPrefix, HttpRequestTypes::OptionsType);
+    m_prefixMapping.insert(PostScriptPrefix, HttpRequestTypes::PostScriptType);
+    m_prefixMapping.insert(TimeoutPrefix, HttpRequestTypes::TimeoutType);
+    m_prefixMapping.insert(OrderPrefix, HttpRequestTypes::OrderType);
+
+    auto keys = m_prefixMapping.keys();
+    foreach (auto key, keys) {
+        auto type = m_prefixMapping.value(key);
+        if (!m_requestTypesMapping.contains(type)) m_requestTypesMapping.insert(type, key);
+    }
 }

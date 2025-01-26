@@ -59,6 +59,8 @@ private:
     const QString m_unnamed { "Unnamed" };
     bool m_visibleAddGlobalVariablePopup { false };
     bool m_hideItems { false };
+    QMap<QString, HttpRequestTypes> m_prefixMapping { QMap<QString, HttpRequestTypes>() };
+    QMap<HttpRequestTypes, QString> m_requestTypesMapping { QMap<HttpRequestTypes, QString>() };
 
     enum HttpRequestRoles {
         TypeRole = Qt::UserRole + 1,
@@ -123,6 +125,8 @@ private:
     QString getTypeColor(int type) const;
     QString getTextFromClipboard() const noexcept;
     QString getItemPrefix(const HttpRequestViewModel::HttpRequestTypes itemType, const QString& initialValue) const noexcept;
+    HttpRequestTypes tryGetRequestType(const QString& content);
+    void fillPrefixMappings();
 
 signals:
     void selectedItemChanged();
