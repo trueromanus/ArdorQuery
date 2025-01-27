@@ -675,61 +675,15 @@ QString HttpRequestViewModel::getTypeColor(int type) const
 QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType, const QString& initialValue) const noexcept
 {
     QString prefix = "";
-    switch (itemType) {
-        case HttpRequestTypes::UrlType:
-            prefix = UrlPrefix;
-            break;
-        case HttpRequestTypes::MethodType:
-            prefix = MethodPrefix;
-            break;
-        case HttpRequestTypes::HeaderType:
-            if (initialValue.startsWith("X-") || m_textAdvisor->isContainsHeader(initialValue)) {
-                prefix = "";
-            } else {
-                prefix = HeaderPrefix;
-            }
-            break;
-        case HttpRequestTypes::BodyType:
-            prefix = BodyPrefix;
-            break;
-        case HttpRequestTypes::FormItemType:
-            prefix = FormPrefix;
-            break;
-        case HttpRequestTypes::FormFileType:
-            prefix = FilePrefix;
-            break;
-        case HttpRequestTypes::HttpProtocolType:
-            prefix = ProtocolPrefix;
-            break;
-        case HttpRequestTypes::BearerType:
-            prefix = BearerPrefix;
-            break;
-        case HttpRequestTypes::TitleType:
-            prefix = TitlePrefix;
-            break;
-        case HttpRequestTypes::ParamType:
-            prefix = ParamPrefix;
-            break;
-        case HttpRequestTypes::PastryType:
-            prefix = PastryPrefix;
-            break;
-        case HttpRequestTypes::RouteType:
-            prefix = RoutePrefix;
-            break;
-        case HttpRequestTypes::OptionsType:
-            prefix = OptionsPrefix;
-            break;
-        case HttpRequestTypes::PostScriptType:
-            prefix = PostScriptPrefix;
-            break;
-        case HttpRequestTypes::TimeoutType:
-            prefix = TimeoutPrefix;
-            break;
-        case HttpRequestTypes::OrderType:
-            prefix = OrderPrefix;
-            break;
-        default: prefix = "";
+    if (itemType == HttpRequestTypes::HeaderType) {
+        if (initialValue.startsWith("X-") || (m_textAdvisor != nullptr && m_textAdvisor->isContainsHeader(initialValue))) {
+            prefix = "";
+        } else {
+            prefix = HeaderPrefix;
+        }
     }
+
+    prefix = m_requestTypesMapping.contains(itemType) ? m_requestTypesMapping.value(itemType) : "";
 
     return initialValue.startsWith(prefix) ? "" : prefix;
 }
