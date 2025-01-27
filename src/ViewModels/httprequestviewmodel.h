@@ -61,6 +61,7 @@ private:
     bool m_hideItems { false };
     QMap<QString, HttpRequestTypes> m_prefixMapping { QMap<QString, HttpRequestTypes>() };
     QMap<HttpRequestTypes, QString> m_requestTypesMapping { QMap<HttpRequestTypes, QString>() };
+    QMap<HttpRequestTypes, QString> m_colorsMapping { QMap<HttpRequestTypes, QString>() };
 
     enum HttpRequestRoles {
         TypeRole = Qt::UserRole + 1,

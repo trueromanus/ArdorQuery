@@ -635,41 +635,7 @@ QString HttpRequestViewModel::getTypeColor(int type) const
 {
     auto requestType = static_cast<HttpRequestTypes>(type);
 
-    switch (requestType) {
-        case HttpRequestTypes::UnknownType:
-            return "#CDCDB4";
-        case HttpRequestTypes::UrlType:
-            return  "#78D34E24";
-        case HttpRequestTypes::MethodType:
-            return "#788332AC";
-        case HttpRequestTypes::HeaderType:
-            return "#8FBDD3";
-        case HttpRequestTypes::BodyType:
-            return "#D7A86E";
-        case HttpRequestTypes::FormItemType:
-            return "#9FC088";
-        case HttpRequestTypes::FormFileType:
-            return "#9FC088";
-        case HttpRequestTypes::HttpProtocolType:
-            return "#8FBDD3";
-        case HttpRequestTypes::BearerType:
-            return "#8FBDD3";
-        case HttpRequestTypes::TitleType:
-            return "#C8E3D4";
-        case HttpRequestTypes::ParamType:
-            return "#78D34E24";
-        case HttpRequestTypes::PastryType:
-            return "#8FBDD3";
-        case HttpRequestTypes::RouteType:
-            return "#78D34E24";
-        case HttpRequestTypes::OptionsType:
-        case HttpRequestTypes::PostScriptType:
-        case HttpRequestTypes::TimeoutType:
-        case HttpRequestTypes::OrderType:
-            return "#78FDB833";
-        default:
-            return "#CDCDB4";
-    }
+    return m_colorsMapping.value(requestType);
 }
 
 QString HttpRequestViewModel::getItemPrefix(const HttpRequestTypes itemType, const QString& initialValue) const noexcept
@@ -727,4 +693,22 @@ void HttpRequestViewModel::fillPrefixMappings()
         auto type = m_prefixMapping.value(key);
         if (!m_requestTypesMapping.contains(type)) m_requestTypesMapping.insert(type, key);
     }
+
+    m_colorsMapping.insert(HttpRequestTypes::UnknownType, "#CDCDB4");
+    m_colorsMapping.insert(HttpRequestTypes::UrlType, "#78D34E24");
+    m_colorsMapping.insert(HttpRequestTypes::MethodType, "#788332AC");
+    m_colorsMapping.insert(HttpRequestTypes::HeaderType, "#8FBDD3");
+    m_colorsMapping.insert(HttpRequestTypes::BodyType, "#D7A86E");
+    m_colorsMapping.insert(HttpRequestTypes::FormItemType, "#9FC088");
+    m_colorsMapping.insert(HttpRequestTypes::FormFileType, "#9FC088");
+    m_colorsMapping.insert(HttpRequestTypes::HttpProtocolType, "#8FBDD3");
+    m_colorsMapping.insert(HttpRequestTypes::BearerType, "#8FBDD3");
+    m_colorsMapping.insert(HttpRequestTypes::TitleType, "#C8E3D4");
+    m_colorsMapping.insert(HttpRequestTypes::ParamType, "#78D34E24");
+    m_colorsMapping.insert(HttpRequestTypes::PastryType, "#8FBDD3");
+    m_colorsMapping.insert(HttpRequestTypes::RouteType, "#78D34E24");
+    m_colorsMapping.insert(HttpRequestTypes::OptionsType, "#78FDB833");
+    m_colorsMapping.insert(HttpRequestTypes::PostScriptType, "#78FDB833");
+    m_colorsMapping.insert(HttpRequestTypes::TimeoutType, "#78FDB833");
+    m_colorsMapping.insert(HttpRequestTypes::OrderType, "#78FDB833");
 }
