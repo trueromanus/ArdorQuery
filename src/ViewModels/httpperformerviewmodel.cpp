@@ -159,7 +159,7 @@ void HttpPerformerViewModel::setGlobalVariable(const GlobalVariablesListModel *g
     if (m_globalVariable == globalVariable) return;
 
     m_globalVariable = const_cast<GlobalVariablesListModel*>( globalVariable );
-    m_globalVariablePostScript = new GlobalVariablesPostScriptModel(this, m_globalVariable);
+    m_globalVariablePostScript = new GlobalVariablesPostScriptModel(this, m_globalVariable, m_requests);
     emit globalVariableChanged();
 }
 

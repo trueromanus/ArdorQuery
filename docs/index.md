@@ -14,9 +14,9 @@ Installation instructions for your operating system at this [link](install.md).
 ## Getting started
 
 * [Getting started and Basic shortcuts](basicshortcuts.md)
-* [Fields](commonfields.md)
-* [Options](options.md)
-* [Postscripting](postscripting.md)
+* [Basic Fields](commonfields.md)
+* [Available query options](options.md)
+* [Write a scripts](postscript.md)
 
 ## Feedback
 

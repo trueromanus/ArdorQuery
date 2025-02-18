@@ -37,6 +37,7 @@ extern QString OptionsPrefix;
 extern QString PostScriptPrefix;
 inline QString TimeoutPrefix = "timeout ";
 inline QString OrderPrefix = "order ";
+inline QString IdentifierPrefix = "unique ";
 
 extern QString NotificationErrorTopic;
 extern QString NotificationInfoTopic;

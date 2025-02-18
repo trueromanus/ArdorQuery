@@ -48,7 +48,8 @@ public:
         OptionsType,
         PostScriptType,
         TimeoutType,
-        OrderType
+        OrderType,
+        IdentifierType,
     };
 
 private:
@@ -115,6 +116,7 @@ public:
     QString getPostScript() const noexcept;
     QString getTimeout() const noexcept;
     int getOrder() const noexcept;
+    QString getIdentifier() const noexcept;
     bool isOnlyEmptyFirstItem() const noexcept;
     int countItems() const noexcept;
     void sortingFields(const bool descending) noexcept;

@@ -26,6 +26,7 @@ HttpRequestViewModel::HttpRequestViewModel(QObject *parent)
     m_items->append(zeroItem);
 
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::TitleType), 1);
+    m_sortWeight->insert(static_cast<int>(HttpRequestTypes::IdentifierType), 2);
 
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::UrlType), 10);
     m_sortWeight->insert(static_cast<int>(HttpRequestTypes::RouteType), 11);
@@ -547,6 +548,25 @@ int HttpRequestViewModel::getOrder() const noexcept
     return 0;
 }
 
+QString HttpRequestViewModel::getIdentifier() const noexcept
+{
+    auto iterator = std::find_if(
+        m_items->begin(),
+        m_items->end(),
+        [](const HttpRequestItem* item) {
+            auto type = static_cast<HttpRequestTypes>(item->type());
+            return type == HttpRequestTypes::IdentifierType;
+        }
+        );
+    if (iterator != m_items->end()) {
+        auto item = *iterator;
+        auto text = item->text().replace(IdentifierPrefix, "", Qt::CaseInsensitive);
+        return text;
+    }
+
+    return "";
+}
+
 bool HttpRequestViewModel::isOnlyEmptyFirstItem() const noexcept
 {
     return m_items->count() == 1 && m_items->value(0)->text().isEmpty();
@@ -687,6 +707,7 @@ void HttpRequestViewModel::fillPrefixMappings()
     m_prefixMapping.insert(PostScriptPrefix, HttpRequestTypes::PostScriptType);
     m_prefixMapping.insert(TimeoutPrefix, HttpRequestTypes::TimeoutType);
     m_prefixMapping.insert(OrderPrefix, HttpRequestTypes::OrderType);
+    m_prefixMapping.insert(IdentifierPrefix, HttpRequestTypes::IdentifierType);
 
     auto keys = m_prefixMapping.keys();
     foreach (auto key, keys) {
@@ -711,4 +732,5 @@ void HttpRequestViewModel::fillPrefixMappings()
     m_colorsMapping.insert(HttpRequestTypes::PostScriptType, "#78FDB833");
     m_colorsMapping.insert(HttpRequestTypes::TimeoutType, "#78FDB833");
     m_colorsMapping.insert(HttpRequestTypes::OrderType, "#78FDB833");
+    m_colorsMapping.insert(HttpRequestTypes::IdentifierType, "#C8E3D4");
 }
