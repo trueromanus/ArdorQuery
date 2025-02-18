@@ -18,22 +18,6 @@
 ShortcutsListModel::ShortcutsListModel(QObject *parent)
     : QObject{parent}
 {
-    /*auto getOpenApiSchemeSection = new ShortcutSection();
-    getOpenApiSchemeSection->setMode(m_openApiMode);
-    getOpenApiSchemeSection->setTitle("Getting Open API Schema");
-    getOpenApiSchemeSection->setDescription("Load or reaload OpenAPI scheme from remote server");
-    getOpenApiSchemeSection->addShortcut("Ctrl-Z or F5", "Load scheme");
-    getOpenApiSchemeSection->addShortcut("Ctrl-B or F4", "Cancel load scheme");
-    m_sections.append(getOpenApiSchemeSection);
-
-    auto addressesManagement = new ShortcutSection();
-    addressesManagement->setMode(m_openApiMode);
-    addressesManagement->setTitle("Addresses management");
-    addressesManagement->setDescription("Create SavedOption and select it later");
-    addressesManagement->addShortcut("Ctrl-Insert", "Create a new SavedOption from the currently filled fields");
-    addressesManagement->addShortcut("Ctrl-Home", "Edit current selected SavedOption");
-    addressesManagement->addShortcut("Ctrl-Tab", "holding Ctrl and further pressing Tab change selected SavedOption");
-    m_sections.append(addressesManagement);*/
 }
 
 void ShortcutsListModel::setFilter(const QString &filter) noexcept

@@ -79,6 +79,8 @@ public:
     QStringList headers() const noexcept { return m_displayHeaders; }
     void setHeaders(const QStringList& headers) noexcept;
 
+    QStringList rawHeaders() const noexcept { return m_headers; }
+
     void setBody(const QByteArray& body) noexcept;
     void reformatting() noexcept;
 

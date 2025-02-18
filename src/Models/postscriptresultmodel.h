@@ -22,6 +22,7 @@ public:
     QString errorMessage() const noexcept { return m_errorMessage; }
     void setErrorMessage(const QString& errorMessage) noexcept;
 
+    Q_INVOKABLE void enableError(const QString& message);
     Q_INVOKABLE void saveToFile(const QString& fileName, bool openAfterSave);
 
 signals:

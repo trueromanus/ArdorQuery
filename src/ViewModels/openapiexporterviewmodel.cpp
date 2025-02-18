@@ -637,7 +637,6 @@ void OpenApiExporterViewModel::writeCache(const QString& cacheFile, const QList<
 void OpenApiExporterViewModel::fillMappings()
 {
     m_shortcutCommandMapping.insert("f5", m_loadSchemaCommand);
-    m_shortcutCommandMapping.insert("control-z", m_loadSchemaCommand);
 
     m_shortcutCommandMapping.insert("f4", m_cancelLoadSchemaCommand);
     m_shortcutCommandMapping.insert("control-b", m_cancelLoadSchemaCommand);

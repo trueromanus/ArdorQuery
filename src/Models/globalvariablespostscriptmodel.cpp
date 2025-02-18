@@ -1,3 +1,18 @@
+/*
+    ArdorQuery http tester
+    Copyright (C) 2022 Roman Vladimirov
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "globalvariablespostscriptmodel.h"
 
 GlobalVariablesPostScriptModel::GlobalVariablesPostScriptModel(QObject *parent, GlobalVariablesListModel* globalVariables,
@@ -38,7 +53,7 @@ QVariantMap GlobalVariablesPostScriptModel::getQueryStatus(const QString &unique
     map["hasErrors"] = item->resultModel()->hasError();
     map["errorMessage"] = item->resultModel()->networkError();
     map["status"] = item->resultModel()->statusCode();
-    map["responseSize"] = item->resultModel()->responseSize();
+    map["responseSize"] = item->resultModel()->originResponseSize();
 
     return map;
 }
@@ -59,6 +74,6 @@ QList<QString> GlobalVariablesPostScriptModel::getQueryHeaders(const QString &un
 
     auto item = *iterator;
 
-    result.append(item->resultModel()->headers());
+    result.append(item->resultModel()->rawHeaders());
     return result;
 }

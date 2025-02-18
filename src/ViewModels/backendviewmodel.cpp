@@ -427,7 +427,6 @@ void BackendViewModel::fillMappings()
 #endif
     m_shortcutCommandMapping.insert("control-backspace", m_changeSelectedQueryCommand);
     m_shortcutCommandMapping.insert("control-m", m_performQueriesMultipleCommand);
-    m_shortcutCommandMapping.insert("control-z", m_performQueryCommand);
     m_shortcutCommandMapping.insert("f5", m_performQueryCommand);
     m_shortcutCommandMapping.insert("control-b", m_cancelQueryCommand);
     m_shortcutCommandMapping.insert("f4", m_cancelQueryCommand);
