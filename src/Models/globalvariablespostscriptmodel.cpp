@@ -53,7 +53,7 @@ QVariantMap GlobalVariablesPostScriptModel::getQueryStatus(const QString &unique
     map["hasErrors"] = item->resultModel()->hasError();
     map["errorMessage"] = item->resultModel()->networkError();
     map["status"] = item->resultModel()->statusCode();
-    map["responseSize"] = item->resultModel()->originResponseSize();
+    map["responseSize"] = static_cast<unsigned long long>(item->resultModel()->originResponseSize());
 
     return map;
 }

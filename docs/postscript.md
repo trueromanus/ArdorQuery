@@ -17,10 +17,13 @@ Object `globals` usings for get access to global variables. The `session` object
 ### result object
 `hasErrors` (editable) - indicate if some error happened while postsctipr works.  
 `errorMessage` (editable) - may contain a description of the user's error, which is displayed next to the status code in the results tab.  
+`enableError(message)` (method) - it sugar for case when you need enable errors and adjust his message as one step. You can replace `result.hasErrors = true; result.errorMessage = "Error result!!!";` on `result.enableError("Error result!!!")`.  
 `saveToFile(fileName, openAfterSave)` (method) - save body from query result as file with path from parameter `fileName`, if you need open saved file in linked application you can pass true to parameter `openAfterSave`.  
 ### globals Object
 `has(name)` (method) - if global variable set with name passed via parameter **name** it will be **true** in result, in other case **false**.  
 `get(name)` (method) - if global variable set with name passed via parameter **name** it will be value as string in result, in other case empty string.  
+`getQueryStatus(unique)` (method) - if you have any query with filled field `unique` you can get info about these query. In result will be or empty object or object with fields `hasErrors`, `errorMessage`,`status` and `responseSize`.  
+`getQueryHeaders(unique)` (method) - if you have any query with filled field `unique` you can get headers from these query. In result will be or empty array or array containing all query headers.  
 ### session Object
 `shared` (member) - this member can be used to store any type of variable (string/number/object/array etc). This member can be useful in cases where we are making multiple requests and need to manage intermediate state between requests. Example: the first request does authorization and stores the username and userid in the `session.shared` profile, and uses it for checks in subsequent queries.  
 `setRemapValue(name, value)` (method) - create (and redefine, if a global variable with the same name exists) a session variable. Created/redefined session variables can be used in subsequent requests in the same way as a simple global variable in the format `{{ name }}`.  

@@ -25,13 +25,13 @@
 	</screenshots>
 
 	<releases>
-		<release version="0.0.19" date="2024-11-25">
+		<release version="0.0.20" date="2025-02-18">
 			<description>
-				<p>Fixed select route in Import Open API from keyboard shortcut.</p>
-				<p>Added method saveToFile(fileName, openAfterSave) to object result in postscript.</p>
-				<p>Added object session.shared in postscript for save any value and share it in all further queries in one session of execution.</p>
-				<p>Added session.setRemapValue(name, value) method to create an override or remap global variables that will be replaced in future requests.</p>
-				<p>Added session.getRemapValue(name) method for get already exists remap value.</p>
+				<p>Fixed a crash when scrolling the editor with a large body field height.</p>
+				<p>Remove shortcut Ctrl-Z from all places. It bacause Ctrl-Z in many OSes binded as Undo operation.</p>
+				<p>Added new field type unique can be used for access in postscript for read results from other queries for single run queries mode.</p>
+				<p>Added new method enableError(message) in result object.</p>
+				<p>Added new methods globals.getQueryStatus and globals.getQueryHeaders. You can use it for get info about another query with unique X.</p>
 			</description>
 		</release>
 	</releases>
