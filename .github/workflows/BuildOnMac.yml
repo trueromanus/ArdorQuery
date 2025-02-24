@@ -11,9 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install Qt dependencies
-      uses: jurplel/install-qt-action@v3.3.0
+      uses: jurplel/install-qt-action@v4
       with:
-        version: 6.5.3
+        version: 6.7.1
         cache: true
         modules: 'qtscxml qt5compat qtshadertools qtimageformats qtwebsockets'
     - name: run qmake
@@ -57,7 +57,7 @@ jobs:
         arch: x64
         spectre: true
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3.3.0
+      uses: jurplel/install-qt-action@v4
       with:
         version: 6.6.0
         modules: qtscxml qt5compat qtimageformats qtwebsockets
