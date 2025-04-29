@@ -1,0 +1,1008 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Roman Vladimirov">
+      
+      
+      
+        <link rel="prev" href="../basicshortcuts/">
+      
+      
+        <link rel="next" href="../fieldaliases/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Basic fields - ArdorQuery</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fields" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ArdorQuery" class="md-header__button md-logo" aria-label="ArdorQuery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ArdorQuery
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Basic fields
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/trueromanus/ArdorQuery" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    trueromanus/ArdorQuery
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ArdorQuery" class="md-nav__button md-logo" aria-label="ArdorQuery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ArdorQuery
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/trueromanus/ArdorQuery" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    trueromanus/ArdorQuery
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Install
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../basicshortcuts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Basic fields
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Basic fields
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#url-x-single" class="md-nav__link">
+    <span class="md-ellipsis">
+      url X [single]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-x-single" class="md-nav__link">
+    <span class="md-ellipsis">
+      method X [single]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#body-x-single" class="md-nav__link">
+    <span class="md-ellipsis">
+      body X [single]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#form-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Form fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Form fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#form-xy" class="md-nav__link">
+    <span class="md-ellipsis">
+      form X=Y
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-xy" class="md-nav__link">
+    <span class="md-ellipsis">
+      file X=Y
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#header-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Header fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Header fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header-name-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      &lt;header name&gt; &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#x-header-name-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      X-&lt;header name&gt; &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-header-name-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      header &lt;header name&gt; &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pastry-cookie-namevalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      pastry &lt;cookie name&gt;=&lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protocol-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      protocol &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#url-improve-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      URL improve fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="URL improve fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#param-parameter-namevalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      param &lt;parameter name&gt;=&lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-route-namevalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      route &lt;route name&gt;=&lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scripting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scripting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postscript-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      postscript &lt;script&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extra fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#title-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      title &lt;name&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options-option1option2option3" class="md-nav__link">
+    <span class="md-ellipsis">
+      options &lt;option1&gt;,&lt;option2&gt;,&lt;option3&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fieldaliases/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Field aliases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Options
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postscript/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scripting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../globalvariables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Global Variables
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ordering/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Launch in a specific order
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#url-x-single" class="md-nav__link">
+    <span class="md-ellipsis">
+      url X [single]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-x-single" class="md-nav__link">
+    <span class="md-ellipsis">
+      method X [single]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#body-x-single" class="md-nav__link">
+    <span class="md-ellipsis">
+      body X [single]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#form-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Form fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Form fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#form-xy" class="md-nav__link">
+    <span class="md-ellipsis">
+      form X=Y
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-xy" class="md-nav__link">
+    <span class="md-ellipsis">
+      file X=Y
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#header-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Header fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Header fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header-name-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      &lt;header name&gt; &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#x-header-name-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      X-&lt;header name&gt; &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-header-name-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      header &lt;header name&gt; &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pastry-cookie-namevalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      pastry &lt;cookie name&gt;=&lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protocol-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      protocol &lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#url-improve-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      URL improve fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="URL improve fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#param-parameter-namevalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      param &lt;parameter name&gt;=&lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-route-namevalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      route &lt;route name&gt;=&lt;value&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scripting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scripting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postscript-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      postscript &lt;script&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extra fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#title-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      title &lt;name&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options-option1option2option3" class="md-nav__link">
+    <span class="md-ellipsis">
+      options &lt;option1&gt;,&lt;option2&gt;,&lt;option3&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="fields">Fields</h1>
+<p>Fields marked <strong>[single]</strong> must only be specified once in the request. If you specify them several times, the value will be taken from the last line in order.</p>
+<h2 id="basic-fields">Basic fields</h2>
+<h4 id="url-x-single"><code>url X</code> <strong>[single]</strong></h4>
+<p>Specifies URL for the HTTP request, where X it full URL.<br />
+Example: <code>url https://github.com</code></p>
+<h4 id="method-x-single"><code>method X</code> <strong>[single]</strong></h4>
+<p>Specifies the HTTP request method. Where X can be one of the possible values: <strong>GET</strong>, <strong>POST</strong>, <strong>PUT</strong>, <strong>DELETE</strong>, <strong>PATCH</strong>.<br />
+Example: <code>method POST</code></p>
+<h4 id="body-x-single"><code>body X</code> <strong>[single]</strong></h4>
+<p>Specify the content in the body for the HTTP request.<br />
+Example: <code>body {"jsonField": "jsonValue" }</code></p>
+<h2 id="form-fields">Form fields</h2>
+<h4 id="form-xy"><code>form X=Y</code></h4>
+<p>Add form field where X it name of field and Y it value.<br />
+Example: <code>form count=100</code></p>
+<h4 id="file-xy"><code>file X=Y</code></h4>
+<p>Add file field where X it name of file field and Y it full path for file in filesystem.<br />
+Example: <code>file poster=~/images/poster.jpg</code></p>
+<h2 id="header-fields">Header fields</h2>
+<h4 id="header-name-value"><code>&lt;header name&gt; &lt;value&gt;</code></h4>
+<p>Add header field for one of standart headers, where <strong>header name</strong> it name of standart header and <strong>value</strong> it header value.<br />
+You can see full list of standard headers <a href="https://en.wikipedia.org/wiki/List_of_HTTP_header_fields#Standard_request_fields">on this page</a>.  </p>
+<p>Example: <code>Content-Type application/json</code></p>
+<h4 id="x-header-name-value"><code>X-&lt;header name&gt; &lt;value&gt;</code></h4>
+<p>Add header field for non standart headers, where <strong>header name</strong> it name of header and <strong>value</strong> it header value.<br />
+For a while there was a format for custom headers like <code>X-&lt;Header Name&gt;</code>.</p>
+<p>Example: <code>X-USERID 550</code></p>
+<h4 id="header-header-name-value"><code>header &lt;header name&gt; &lt;value&gt;</code></h4>
+<p>Add header field for non standart headers, where <strong>header name</strong> it name of header and <strong>value</strong> it header value.  </p>
+<p>Example: <code>header USERID 550</code></p>
+<h4 id="pastry-cookie-namevalue"><code>pastry &lt;cookie name&gt;=&lt;value&gt;</code></h4>
+<p>Adding parameter to <code>Cookie</code> header, where <strong>cookie name</strong> it name of header and <strong>value</strong> it value.  </p>
+<p>Example: <code>header USERID 550</code></p>
+<h4 id="protocol-value"><code>protocol &lt;value&gt;</code></h4>
+<p>By default, all HTTPS requests will attempt to use the HTTP/2 protocol. If this is undesirable behavior, you can force requests to run over HTTP/1.1 defining this field.  </p>
+<p>Example: <code>protocol 1.1</code></p>
+<h2 id="url-improve-fields">URL improve fields</h2>
+<h4 id="param-parameter-namevalue"><code>param &lt;parameter name&gt;=&lt;value&gt;</code></h4>
+<p>Adding a URL parameter, where <strong>parameter name</strong> is the name of the parameter and <strong>value</strong> is its value.
+For ease of readability, it may be helpful if the URL itself and its parameters are separated. For example, I have a full URL <strong>http://test.com?id=20</strong>.
+We can split it in the application into two lines: the first <code>url http://test.com</code> and the second <code>param id=20</code>.  </p>
+<p>Example: <code>param userId=1</code></p>
+<h4 id="route-route-namevalue"><code>route &lt;route name&gt;=&lt;value&gt;</code></h4>
+<p>Adding a URL parameter, where <strong>route name</strong> is the name of the parameter and <strong>value</strong> is its value.
+The modern way is to add URL parameters as part of the route, like <strong>http://test.com/products/20/product</strong>, where <strong>20</strong> is actually an  parameter like identifier.
+We can split it in the application into two lines: the first <code>url http://test.com/products/{id}/product</code> and the second <code>route id=20</code>.
+The application supports placing the same segment in multiple places, for example <code>http://test.com/products/{id}/product/{id}</code>.  </p>
+<p>Example: <code>route segment=2</code></p>
+<h2 id="scripting">Scripting</h2>
+<h4 id="postscript-script"><code>postscript &lt;script&gt;</code></h4>
+<p>Adding a postscript, where <strong>script</strong> is a script written in JavaScript to process the request result.<br />
+The script can be used to validate results using custom logic. You can read more about scripting on <a href="../postscript/">this page</a>.</p>
+<p>Example: <code>postscript result.hasErrors = response.statusCode != 200;</code></p>
+<h2 id="extra-fields">Extra fields</h2>
+<h4 id="title-name"><code>title &lt;name&gt;</code></h4>
+<p>Adding title for query, where <strong>name</strong> is the name of the query.<br />
+The title will appear in the request list and can be used as a human-readable description.</p>
+<p>Example: <code>title Query for get all products</code></p>
+<h4 id="options-option1option2option3"><code>options &lt;option1&gt;,&lt;option2&gt;,&lt;option3&gt;</code></h4>
+<p>Adding options for performing query, where <strong>optionX</strong> is the name of the option.<br />
+You can check the list of all options on <a href="../options/">this page</a>.</p>
+<p>Example: <code>options noautoredirect,weaksslcheck</code></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>
