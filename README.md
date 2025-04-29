@@ -46,6 +46,9 @@ Flatpak (on Linux)
 WinGet (on Windows)  
 [<img src="https://winstall.app/assets/logo.svg" width=100 height=100>](https://winstall.app/apps/EmptyFlow.ArdorQuery)
 
+Install DMG (on macOS)  
+You can download dmg file [here](https://github.com/trueromanus/ArdorQuery/releases).
+
 ## Build Requirements
 * Qt >= 6.2.3
 ## Build instructions
