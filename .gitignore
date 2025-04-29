@@ -59,3 +59,4 @@ deploy/*.zip
 
 installer/ArdorQuery/Debug
 installer/ArdorQuery/Release
+/src/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug
